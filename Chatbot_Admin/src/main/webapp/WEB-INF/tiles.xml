@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	<definition name="base.definition" template="/WEB-INF/views/layout/layout.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="header" value="/WEB-INF/views/layout/header.jsp" />
+		<put-attribute name="left" value="/WEB-INF/views/layout/left.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/views/layout/footer.jsp" />
+
+	</definition>
+	<definition name="login.definition" template="/WEB-INF/jsp/layouts/layoutLogin.jsp">
+		<put-attribute name="title" value="" />
+
+		<put-attribute name="body" value="" />
+	</definition>
+
+	<!-- Begin Auth Page -->
+	<!-- *************************************************************************** -->
+
+
+	<!-- Begin Manage Entity Page -->
+	<!-- *************************************************************************** -->
+	<definition name="entityList" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/entity/updateEntity.jsp" />
+	</definition>
+	
+	<!-- Begin Blank Page -->
+	<!-- *************************************************************************** -->
+	<definition name="blank" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/blank/export.jsp" />
+	</definition>
+</tiles-definitions>
