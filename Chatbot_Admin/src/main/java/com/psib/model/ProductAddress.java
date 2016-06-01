@@ -10,8 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Food_Address")
-public class FoodAddress implements Serializable {
+@Table(name = "Product_Address")
+public class ProductAddress implements Serializable {
 
 
 	@Id
@@ -50,12 +50,12 @@ public class FoodAddress implements Serializable {
 	private String districtName;
 	
 	
-	public FoodAddress() {
+	public ProductAddress() {
 		// TODO Auto-generated constructor stub
 	}
 
 
-	public FoodAddress(long foodId, long addressId, String name, String urlRelate, String thumbPath, String rate,
+	public ProductAddress(long foodId, long addressId, String name, String urlRelate, String thumbPath, String rate,
 			int numOfSearch, double longitude, double latitude, String restaurantName, String districtName) {
 		super();
 		this.foodId = foodId;

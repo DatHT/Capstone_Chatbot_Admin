@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.psib.common.json.Entity;
 import com.psib.common.json.Entry;
-import com.psib.model.Food;
+import com.psib.model.Product;
 import com.psib.service.IFoodManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.JsonFileCreator;
@@ -50,7 +50,7 @@ public class HomeController {
 	
 	@RequestMapping(value = "exportJson", method = RequestMethod.GET)
 	public String exportJson() {
-		List<Food> foods = manager.getAll();
+		List<Product> foods = manager.getAll();
 		Entity eFood = new Entity();
 		eFood.setName("Food");
 //		Entity eStreet = new Entity();
@@ -65,7 +65,7 @@ public class HomeController {
 //			listEntry.add(entryFood);
 //		}
 		
-		for(Food food : foods) {
+		for(Product food : foods) {
 			List<String> listSynonym = Arrays.asList(CommonUtils.generateSynonym(food.getName()));
 			for(String synonym : listSynonym) {
 				Entry entryFood = new Entry();

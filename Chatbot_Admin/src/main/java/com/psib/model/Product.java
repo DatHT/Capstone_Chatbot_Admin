@@ -11,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Food")
-public class Food implements Serializable {
+@Table(name = "Product")
+public class Product implements Serializable {
 
 	@Id
 	@Column(name = "Id", nullable = false)
@@ -37,11 +37,11 @@ public class Food implements Serializable {
 	@Column(name = "numOfSearch", columnDefinition = "Integer default '0'")
 	private int numOfSearch;
 
-	public Food() {
+	public Product() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Food(long id, String name, String urlRelate, String thumbPath, String rate, String source, int numOfSearch) {
+	public Product(long id, String name, String urlRelate, String thumbPath, String rate, String source, int numOfSearch) {
 		super();
 		this.id = id;
 		this.name = name;

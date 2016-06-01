@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.psib.dao.IBaseDao;
 import com.psib.dao.IFoodDao;
-import com.psib.model.Food;
+import com.psib.model.Product;
 import com.psib.service.IFoodManager;
 
 @Service
@@ -19,21 +19,21 @@ public class FoodManager implements IFoodManager {
 	private IFoodDao foodDao;
 	
 	@Override
-	public void insert(Food food) {
+	public void insert(Product food) {
 		//foodDao.insert(food);
 		
 	}
 
 	@Override
 	@Transactional
-	public List<Food> getAll() {
+	public List<Product> getAll() {
 		// TODO Auto-generated method stub
 		return foodDao.getAllFoods();
 	}
 
 	@Override
 	@Transactional
-	public Food getById(long id) {
+	public Product getById(long id) {
 		// TODO Auto-generated method stub
 		return foodDao.getFoodById(id);
 	}
