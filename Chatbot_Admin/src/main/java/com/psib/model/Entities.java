@@ -10,23 +10,33 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Province")
-public class Province implements Serializable {
+@Table(name = "Entity")
+public class Entities implements Serializable {
 
 	@Id
-	@Column(name = "ID", nullable = false)
+	@Column(name = "Id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	int Id;
 
-	@Column(name = "name", nullable = false, length = 128)
-	private String name;
+	@Column(name = "name", nullable = false, length = 512)
+	String name;
 
-	public long getId() {
-		return id;
+	public Entities() {
+		// TODO Auto-generated constructor stub
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public Entities(int id, String name) {
+		super();
+		Id = id;
+		this.name = name;
+	}
+
+	public int getId() {
+		return Id;
+	}
+
+	public void setId(int id) {
+		Id = id;
 	}
 
 	public String getName() {
@@ -37,8 +47,4 @@ public class Province implements Serializable {
 		this.name = name;
 	}
 
-	
-	public Province() {
-		// TODO Auto-generated constructor stub
-	}
 }

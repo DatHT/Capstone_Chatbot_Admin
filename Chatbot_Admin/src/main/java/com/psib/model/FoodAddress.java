@@ -15,32 +15,171 @@ public class FoodAddress implements Serializable {
 
 
 	@Id
-	@Column(name = "food_id", nullable = false)
+	@Column(name = "foodId", nullable = false)
 	private long foodId;
 	
 	@Id
-	@Column(name = "address_id", nullable = false)
+	@Column(name = "addressId", nullable = false)
 	private long addressId;
+	
+	@Column(name = "name", nullable = false, length = 4000)
+	private String name;
+	
+	@Column(name = "urlrelate", nullable = false, length = 500)
+	private String urlRelate;
+
+	@Column(name = "thumbpath")
+	private String thumbPath;
+
+	@Column(name = "rate")
+	private String rate;
+
+	@Column(name = "numOfSearch", columnDefinition = "Integer default '0'")
+	private int numOfSearch;
+
+	@Column(name = "longitude", nullable = false)
+	private double longitude;
+
+	@Column(name = "latitude", nullable = false)
+	private double latitude;
+
+	@Column(name = "restaurantName")
+	private String restaurantName;
+
+	@Column(name = "districtName", nullable = false, length = 128)
+	private String districtName;
+	
 	
 	public FoodAddress() {
 		// TODO Auto-generated constructor stub
 	}
 
+
+	public FoodAddress(long foodId, long addressId, String name, String urlRelate, String thumbPath, String rate,
+			int numOfSearch, double longitude, double latitude, String restaurantName, String districtName) {
+		super();
+		this.foodId = foodId;
+		this.addressId = addressId;
+		this.name = name;
+		this.urlRelate = urlRelate;
+		this.thumbPath = thumbPath;
+		this.rate = rate;
+		this.numOfSearch = numOfSearch;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.restaurantName = restaurantName;
+		this.districtName = districtName;
+	}
+
+
 	public long getFoodId() {
 		return foodId;
 	}
+
 
 	public void setFoodId(long foodId) {
 		this.foodId = foodId;
 	}
 
+
 	public long getAddressId() {
 		return addressId;
 	}
 
+
 	public void setAddressId(long addressId) {
 		this.addressId = addressId;
 	}
-	
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getUrlRelate() {
+		return urlRelate;
+	}
+
+
+	public void setUrlRelate(String urlRelate) {
+		this.urlRelate = urlRelate;
+	}
+
+
+	public String getThumbPath() {
+		return thumbPath;
+	}
+
+
+	public void setThumbPath(String thumbPath) {
+		this.thumbPath = thumbPath;
+	}
+
+
+	public String getRate() {
+		return rate;
+	}
+
+
+	public void setRate(String rate) {
+		this.rate = rate;
+	}
+
+
+	public int getNumOfSearch() {
+		return numOfSearch;
+	}
+
+
+	public void setNumOfSearch(int numOfSearch) {
+		this.numOfSearch = numOfSearch;
+	}
+
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+
+	public String getRestaurantName() {
+		return restaurantName;
+	}
+
+
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
+	}
+
+
+	public String getDistrictName() {
+		return districtName;
+	}
+
+
+	public void setDistrictName(String districtName) {
+		this.districtName = districtName;
+	}
+
 	
 }

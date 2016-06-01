@@ -14,7 +14,7 @@ import javax.persistence.Table;
 public class Address implements Serializable{
 
 	@Id
-	@Column(name = "ID", nullable = false)
+	@Column(name = "Id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
@@ -27,7 +27,7 @@ public class Address implements Serializable{
 	@Column(name = "latitude", nullable = false)
 	private double latitude;
 
-	@Column(name = "restaurant_name")
+	@Column(name = "restaurantName")
 	private String restaurantName;
 	
 	@Column(name = "district_id")

@@ -15,27 +15,15 @@ import javax.persistence.Table;
 public class Food implements Serializable {
 
 	@Id
-	@Column(name = "ID", nullable = false)
+	@Column(name = "Id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(name = "name", nullable = false, length = 128)
+	@Column(name = "name", nullable = false, length = 4000)
 	private String name;
 	
 	@Column(name = "urlrelate", nullable = false, length = 500)
 	private String urlRelate;
-
-	@Column(name = "longitude", nullable = false)
-	private double longitude;
-
-	@Column(name = "latitude", nullable = false)
-	private double latitude;
-
-	@Column(name = "address", nullable = false)
-	private String address;
-
-	@Column(name = "price")
-	private String price;
 
 	@Column(name = "thumbpath")
 	private String thumbPath;
@@ -46,20 +34,22 @@ public class Food implements Serializable {
 	@Column(name = "source")
 	private String source;
 	
-	@Column(name = "num_search", columnDefinition = "Integer default '0'")
+	@Column(name = "numOfSearch", columnDefinition = "Integer default '0'")
 	private int numOfSearch;
-	
-	@Column(name = "district")
-	private String district;
-	
-	@Column(name = "province")
-	private String province;
-	
-	@Column(name = "restaurant_name")
-	private String restaurantName;
 
 	public Food() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public Food(long id, String name, String urlRelate, String thumbPath, String rate, String source, int numOfSearch) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.urlRelate = urlRelate;
+		this.thumbPath = thumbPath;
+		this.rate = rate;
+		this.source = source;
+		this.numOfSearch = numOfSearch;
 	}
 
 	public long getId() {
@@ -84,38 +74,6 @@ public class Food implements Serializable {
 
 	public void setUrlRelate(String urlRelate) {
 		this.urlRelate = urlRelate;
-	}
-
-	public double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
-
-	public double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getPrice() {
-		return price;
-	}
-
-	public void setPrice(String price) {
-		this.price = price;
 	}
 
 	public String getThumbPath() {
@@ -150,29 +108,5 @@ public class Food implements Serializable {
 		this.numOfSearch = numOfSearch;
 	}
 
-	public String getDistrict() {
-		return district;
-	}
-
-	public void setDistrict(String district) {
-		this.district = district;
-	}
-
-	public String getProvince() {
-		return province;
-	}
-
-	public void setProvince(String province) {
-		this.province = province;
-	}
-
-	public String getRestaurantName() {
-		return restaurantName;
-	}
-
-	public void setRestaurantName(String restaurantName) {
-		this.restaurantName = restaurantName;
-	}
-	
 	
 }

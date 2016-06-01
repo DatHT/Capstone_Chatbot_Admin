@@ -9,45 +9,50 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
-@Table(name = "District")
-public class District implements Serializable {
+@Table(name = "Role")
+public class Role implements Serializable {
 
 	@Id
-	@Column(name = "ID", nullable = false)
+	@Column(name = "Id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	int Id;
 
-	@Column(name = "name", nullable = false, length = 128)
-	private String name;
-	
-	
-	public District() {
+	@Column(name = "name", nullable = false, length = 512)
+	String name;
+
+
+	public Role() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public long getId() {
-		return id;
+
+	public Role(int id, String name) {
+		super();
+		Id = id;
+		this.name = name;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+
+	public int getId() {
+		return Id;
 	}
+
+
+	public void setId(int id) {
+		Id = id;
+	}
+
 
 	public String getName() {
 		return name;
 	}
 
+
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public District(long id, String name) {
-		super();
-		this.id = id;
-		this.name = name;
-	}
-
-
+	
 	
 }
