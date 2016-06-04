@@ -41,11 +41,11 @@ public class HomeController {
 		return "blank";
 	}
 	
-	@RequestMapping(value = "/export", method = RequestMethod.GET)
-	public String export() {
-		
-		return "entityList";
-	}
+//	@RequestMapping(value = "/export", method = RequestMethod.GET)
+//	public String export(Model model) {
+//		model.addAttribute("ACTIVE", "yes");
+//		return "entityList";
+//	}
 	
 	
 	@RequestMapping(value = "exportJson", method = RequestMethod.GET)

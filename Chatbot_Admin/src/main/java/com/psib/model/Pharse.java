@@ -9,30 +9,35 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
-@Table(name = "Dictionary")
-public class Dictionary implements Serializable {
+@Table(name = "Pharse")
+public class Pharse implements Serializable{
 
 	@Id
 	@Column(name = "Id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int Id;
-	
+
 	@Column(name = "name", nullable = false, length = 512)
 	String name;
 
-	@Column(name = "dictionaryId")
-	int dictionaryId;
+	@Column(name = "isAsynchronized")
+	boolean isAsynchronized;
 	
-	public Dictionary() {
+	@Column(name = "pharseId")
+	int pharseId;
+	
+	public Pharse() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Dictionary(int id, String name, int dictionaryId) {
+	public Pharse(int id, String name, boolean isAsynchronized, int pharseId) {
 		super();
 		Id = id;
 		this.name = name;
-		this.dictionaryId = dictionaryId;
+		this.isAsynchronized = isAsynchronized;
+		this.pharseId = pharseId;
 	}
 
 	public int getId() {
@@ -51,14 +56,23 @@ public class Dictionary implements Serializable {
 		this.name = name;
 	}
 
-	public int getDictionaryId() {
-		return dictionaryId;
+	public boolean isAsynchronized() {
+		return isAsynchronized;
 	}
 
-	public void setDictionaryId(int dictionaryId) {
-		this.dictionaryId = dictionaryId;
+	public void setAsynchronized(boolean isAsynchronized) {
+		this.isAsynchronized = isAsynchronized;
 	}
+
 	
+	public int getPharseId() {
+		return pharseId;
+	}
+
+	public void setPharseId(int pharseId) {
+		this.pharseId = pharseId;
+	}
+
 	
 	
 }

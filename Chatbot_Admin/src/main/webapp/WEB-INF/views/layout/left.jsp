@@ -1,17 +1,20 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<c:set var="active" value="${ACTIVE}" />
         <!-- navbar side -->
         <nav class="navbar-default navbar-static-side" role="navigation">
             <!-- sidebar-collapse -->
             <div class="sidebar-collapse">
                 <!-- side-menu -->
                 <ul class="nav" id="side-menu">
-                    <li>
+                    <li class="nav-inner">
                         <!-- user image section-->
                         <div class="user-section">
                             <div class="user-section-inner">
                                 <img src="resources/assets/img/user.jpg" alt="">
                             </div>
                             <div class="user-info">
-                                <div>Huynh <strong>Dat</strong></div>
+                                <div>Huynh <strong>Dat</strong> adasda ${current}</div>
                                 <div class="user-text-online">
                                     <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
                                 </div>
@@ -20,89 +23,34 @@
                         <!--end user image section-->
                     </li>
                    
-                    <li class="">
-                        <a href="index.html"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+                    <li class="${current == 'dataConfig' ? 'selected' : ''}">
+                        <a href="dataConfig"><i class="fa fa-dashboard fa-fw"></i>Data Config</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Charts<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Training Bot<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li>
-                                <a href="flot.html">Flot Charts</a>
+                            <li class="${current == 'lexicalCategory' ? 'selected' : ''}">
+                                <a href="lexical">Lexical Category</a>
                             </li>
                             <li>
-                                <a href="morris.html">Morris Charts</a>
+                                <a href="example">Example</a>
                             </li>
                         </ul>
                         <!-- second-level-items -->
                     </li>
                      <li>
-                        <a href="export"><i class="fa fa-flask fa-fw"></i>Export Json</a>
+                        <a href="manageLog"><i class="fa fa-flask fa-fw"></i>Manage log</a>
                     </li>
+                    
+                    
                     <li>
-                        <a href="tables.html"><i class="fa fa-table fa-fw"></i>Tables</a>
-                    </li>
-                    <li>
-                        <a href="forms.html"><i class="fa fa-edit fa-fw"></i>Forms</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-wrench fa-fw"></i>UI Elements<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-files-o fa-fw"></i>Manage Information<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="panels-wells.html">Panels and Wells</a>
+                                <a href="product">Product</a>
                             </li>
                             <li>
-                                <a href="buttons.html">Buttons</a>
-                            </li>
-                            <li>
-                                <a href="notifications.html">Notifications</a>
-                            </li>
-                            <li>
-                                <a href="typography.html">Typography</a>
-                            </li>
-                            <li>
-                                <a href="grid.html">Grid</a>
-                            </li>
-                        </ul>
-                        <!-- second-level-items -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-sitemap fa-fw"></i>Multi-Level Dropdown<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#">Second Level Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Second Level Item</a>
-                            </li>
-                            <li>
-                                <a href="#">Third Level <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Third Level Item</a>
-                                    </li>
-                                </ul>
-                                <!-- third-level-items -->
-                            </li>
-                        </ul>
-                        <!-- second-level-items -->
-                    </li>
-                    <li class="active">
-                        <a href="#"><i class="fa fa-files-o fa-fw"></i>Sample Pages<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li class="selected">
-                                <a href="blank.html">Blank Page</a>
-                            </li>
-                            <li>
-                                <a href="login.html">Login Page</a>
+                                <a href="synonym">Synonym</a>
                             </li>
                         </ul>
                         <!-- second-level-items -->

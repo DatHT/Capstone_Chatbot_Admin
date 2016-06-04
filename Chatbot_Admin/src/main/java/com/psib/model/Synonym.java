@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "Synonym")
 public class Synonym implements Serializable {
@@ -17,17 +16,28 @@ public class Synonym implements Serializable {
 	@Id
 	@Column(name = "Id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int Id;
-
-	@Column(name = "name", nullable = false, length = 512)
-	String name;
+	private int Id;
 	
-	@Column(name = "entryId")
-	int entryId;
+	@Column(name = "name", nullable = false, length = 512)
+	private String name;
 
+	@Column(name = "synonymId")
+	private int synonymId;
+	
 	public Synonym() {
 		// TODO Auto-generated constructor stub
 	}
+
+	
+
+	public Synonym(int id, String name, int synonymId) {
+		super();
+		Id = id;
+		this.name = name;
+		this.synonymId = synonymId;
+	}
+
+
 
 	public int getId() {
 		return Id;
@@ -45,20 +55,20 @@ public class Synonym implements Serializable {
 		this.name = name;
 	}
 
-	public int getEntryId() {
-		return entryId;
+
+
+	public int getSynonymId() {
+		return synonymId;
 	}
 
-	public void setEntryId(int entryId) {
-		this.entryId = entryId;
+
+
+	public void setSynonymId(int synonymId) {
+		this.synonymId = synonymId;
 	}
 
-	public Synonym(int id, String name, int entryId) {
-		super();
-		Id = id;
-		this.name = name;
-		this.entryId = entryId;
-	}
 
+	
+	
 	
 }

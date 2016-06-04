@@ -8,7 +8,6 @@
 		<put-attribute name="title" value="" />
 		<put-attribute name="body" value="" />
 		<put-attribute name="header" value="/WEB-INF/views/layout/header.jsp" />
-		<put-attribute name="left" value="/WEB-INF/views/layout/left.jsp" />
 		<put-attribute name="footer" value="/WEB-INF/views/layout/footer.jsp" />
 
 	</definition>
@@ -22,12 +21,60 @@
 	<!-- *************************************************************************** -->
 
 
-	<!-- Begin Manage Entity Page -->
+	<!-- Begin Manage Lexical Catergory Page -->
 	<!-- *************************************************************************** -->
-	<definition name="entityList" extends="base.definition">
+	<definition name="lexicalCategory" extends="base.definition">
 		<put-attribute name="title" value="Entity Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/entity/updateEntity.jsp" />
+			
+		<put-attribute name="current" value="lexicalCategory"/>
+	</definition>
+	
+	<!-- Begin Dataconfig Page -->
+	<!-- *************************************************************************** -->
+	<definition name="dataConfig" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/entity/updateEntity.jsp" />
+		<put-attribute name="current" value="dataConfig"/>
+	</definition>
+	
+	<!-- Begin Example Page -->
+	<!-- *************************************************************************** -->
+	<definition name="example" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/entity/updateEntity.jsp" />
+		<put-attribute name="current" value="example"/>
+	</definition>
+	
+	<!-- Begin Manage Log Page -->
+	<!-- *************************************************************************** -->
+	<definition name="log" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/entity/updateEntity.jsp" />
+		<put-attribute name="current" value="log"/>
+	</definition>
+	
+	<!-- Begin Manage Product Page -->
+	<!-- *************************************************************************** -->
+	<definition name="product" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/entity/updateEntity.jsp" />
+		<put-attribute name="current" value="product"/>
+	</definition>
+	
+	
+	<!-- Begin Manage Synonym Page -->
+	<!-- *************************************************************************** -->
+	<definition name="synonym" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/entity/updateEntity.jsp" />
+		<put-attribute name="current" value="synonym"/>
 	</definition>
 	
 	<!-- Begin Blank Page -->
@@ -36,5 +83,6 @@
 		<put-attribute name="title" value="Entity Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/blank/export.jsp" />
+		<put-attribute name="current" value="abc"/>
 	</definition>
 </tiles-definitions>

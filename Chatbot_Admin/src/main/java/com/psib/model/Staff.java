@@ -16,22 +16,22 @@ public class Staff implements Serializable {
 
 	@Id
 	@Column(name = "username", nullable = false)
-	String username;
+	private String username;
 
 	@Column(name = "password", nullable = false, length = 50)
-	String password;
+	private String password;
 
 	@Column(name = "email")
-	String email;
+	private String email;
 	
 	@Column(name = "phone")
-	String phone;
+	private String phone;
 	
 	@Column(name = "address")
-	String address;
+	private String address;
 	
 	@Column(name = "role")
-	int roleId;
+	private int roleId;
 	
 	public Staff() {
 		// TODO Auto-generated constructor stub

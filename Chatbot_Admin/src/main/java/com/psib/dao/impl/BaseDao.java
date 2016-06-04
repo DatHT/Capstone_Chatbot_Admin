@@ -14,6 +14,11 @@ import org.springframework.stereotype.Repository;
 
 import com.psib.dao.IBaseDao;
 
+
+/**
+ * @author DatHT
+ * Jun 4, 2016
+ */
 @Repository
 public class BaseDao<Model, Id> implements IBaseDao<Model, Id> {
 
