@@ -14,7 +14,7 @@ import com.psib.common.JsonParser;
 public class JsonFileCreator {
 
 	protected static final ObjectMapper JSON_MAPPER = new ObjectMapper();
-	protected static final JsonParser PARSER = new JsonParser(JSON_MAPPER);
+	protected static final JsonParser PARSER = new JsonParser();
 
 	public static <T> boolean createFile(T model, String name) {
 		String json = PARSER.toJson(model);

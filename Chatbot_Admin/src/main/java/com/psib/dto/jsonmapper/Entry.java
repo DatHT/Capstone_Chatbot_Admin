@@ -1,4 +1,4 @@
-package com.psib.common.json;
+package com.psib.dto.jsonmapper;
 
 import java.io.Serializable;
 import java.util.List;

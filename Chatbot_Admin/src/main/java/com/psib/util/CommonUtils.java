@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.psib.common.json.Entry;
+import com.psib.dto.jsonmapper.Entry;
 
 public class CommonUtils {
 

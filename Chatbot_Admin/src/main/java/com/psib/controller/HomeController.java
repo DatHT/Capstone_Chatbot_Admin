@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.psib.common.json.Entity;
-import com.psib.common.json.Entry;
+import com.psib.dto.jsonmapper.Entity;
+import com.psib.dto.jsonmapper.Entry;
 import com.psib.model.Product;
 import com.psib.service.IFoodManager;
 import com.psib.util.CommonUtils;
