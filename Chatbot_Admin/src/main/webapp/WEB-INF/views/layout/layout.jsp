@@ -1,8 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="UTF-8"%>
-
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page session="true"%>
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -48,7 +48,7 @@
 						</div>
 						<div class="user-info">
 							<div>
-								Huynh <strong>Dat</strong>
+								Huỳnh <strong>Đạt</strong>
 							</div>
 							<div class="user-text-online">
 								<span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online

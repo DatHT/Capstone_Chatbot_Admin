@@ -4,20 +4,19 @@
 package com.psib.dto.jsonmapper;
 
 import java.io.Serializable;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author DatHT
- * Jun 6, 2016
+ * Jun 5, 2016
  * @Email: datht0601@gmail.com
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LexicalDto implements Serializable {
+public class LexicalCategoryDto implements Serializable {
 
-	private static final long serialVersionUID = 3830458921746008044L;
+	private static final long serialVersionUID = 1L;
 
 	@JsonProperty("id")
 	private String id;
@@ -25,8 +24,8 @@ public class LexicalDto implements Serializable {
 	@JsonProperty("name")
 	private String name;
 	
-	@JsonProperty("entries")
-	private List<Entry> entries;
+	@JsonProperty("count")
+	private int count;
 
 	public String getId() {
 		return id;
@@ -44,12 +43,12 @@ public class LexicalDto implements Serializable {
 		this.name = name;
 	}
 
-	public List<Entry> getEntries() {
-		return entries;
+	public int getCount() {
+		return count;
 	}
 
-	public void setEntries(List<Entry> entries) {
-		this.entries = entries;
+	public void setCount(int count) {
+		this.count = count;
 	}
 	
 	

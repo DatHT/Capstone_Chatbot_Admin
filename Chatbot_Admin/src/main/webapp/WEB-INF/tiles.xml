@@ -77,6 +77,15 @@
 		<put-attribute name="current" value="synonym"/>
 	</definition>
 	
+	<!-- Begin Error Page -->
+	<!-- *************************************************************************** -->
+	<definition name="error" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/error/error.jsp" />
+		
+	</definition>
+	
 	<!-- Begin Blank Page -->
 	<!-- *************************************************************************** -->
 	<definition name="blank" extends="base.definition">

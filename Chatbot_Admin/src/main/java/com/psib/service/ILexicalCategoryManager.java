@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.psib.common.restclient.RestfulException;
+import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
 
 /**
@@ -15,5 +16,6 @@ import com.psib.dto.jsonmapper.LexicalDto;
  * @Email: datht0601@gmail.com
  */
 public interface ILexicalCategoryManager{
-	List<LexicalDto> getApiLexicals()  throws IOException, RestfulException;
+	List<LexicalCategoryDto> getApiLexicals()  throws IOException, RestfulException;
+	LexicalDto getApiLexicalById(String id)  throws IOException, RestfulException;
 }
