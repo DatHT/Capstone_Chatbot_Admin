@@ -63,11 +63,7 @@ public class LexicalCategoryController {
 		String responseText = "";
 		try {
 			LexicalDto dto = manager.getApiLexicalById(id);
-			for (int i = 0; i < dto.getEntries().size(); i++) {
-				System.out.println(dto.getEntries().get(i).getValue());
-			}
 			responseText = JsonParser.toJson(dto);
-			System.out.println("ASDASDADAS: " + responseText);
 			
 			
 		} catch (IOException | RestfulException e) {

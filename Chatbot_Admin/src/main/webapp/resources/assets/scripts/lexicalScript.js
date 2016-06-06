@@ -33,6 +33,8 @@ var resultLexical = "";
 
  	function loadPharse(id) {
  		
+ 		document.getElementById("tableHeader").innerHTML = id.options[id.selectedIndex].text;
+ 		
  		if (window.XMLHttpRequest) {
  			xmlhttp = new XMLHttpRequest();
  		} else xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");

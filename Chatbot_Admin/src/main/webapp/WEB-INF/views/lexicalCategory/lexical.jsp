@@ -34,12 +34,12 @@
                 <div class="col-lg-12">
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
-                        <div class="panel-heading">
+                        <div class="panel-heading" id="tableHeader">
                              Advanced Tables
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="lexicalTable">
+                                <table class="table table-striped table-bordered table-hover" >
                                     <thead>
                                         <tr>
                                             <th>No.</th>
@@ -47,7 +47,7 @@
                                             
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="lexicalTable">
                             
                                     </tbody>
                                 </table>

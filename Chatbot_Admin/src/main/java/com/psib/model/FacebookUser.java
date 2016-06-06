@@ -15,10 +15,19 @@ public class FacebookUser implements Serializable {
 	@Column(name = "userId", nullable = false)
 	private String userId;
 	
-	@Column(name = "name", nullable = false, length = 512)
-	private String name;
+	@Column(name = "firstName")
+	private String firstName;
 	
-	@Column(name = "isBanned")
+	@Column(name = "lastName")
+	private String lastName;
+	
+	@Column(name = "locale")
+	private String locale;
+	
+	@Column(name = "gender")
+	private boolean gender;
+	
+	@Column(name = "isBanned", columnDefinition = "Boolean default '0'")
 	private boolean isBanned;
 	
 	public FacebookUser() {
@@ -27,12 +36,18 @@ public class FacebookUser implements Serializable {
 
 	
 
-	public FacebookUser(String userId, String name, boolean isBanned) {
+
+	public FacebookUser(String userId, String firstName, String lastName, String locale, boolean gender,
+			boolean isBanned) {
 		super();
 		this.userId = userId;
-		this.name = name;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.locale = locale;
+		this.gender = gender;
 		this.isBanned = isBanned;
 	}
+
 
 
 
@@ -56,14 +71,62 @@ public class FacebookUser implements Serializable {
 		this.userId = userId;
 	}
 
-	public String getName() {
-		return name;
+
+
+
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+
+
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
-	
+
+
+
+
+	public String getLastName() {
+		return lastName;
+	}
+
+
+
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+
+
+
+	public String getLocale() {
+		return locale;
+	}
+
+
+
+
+	public void setLocale(String locale) {
+		this.locale = locale;
+	}
+
+
+
+
+	public boolean isGender() {
+		return gender;
+	}
+
+
+
+
+	public void setGender(boolean gender) {
+		this.gender = gender;
+	}
+
 	
 
 }
