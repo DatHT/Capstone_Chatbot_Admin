@@ -3,8 +3,10 @@ package com.psib.service.impl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,23 +17,65 @@ public class LogManager implements ILogManager {
 
 	private static String START_LOG = ">>>>>";
 	private static String END_LOG = "<<<<<";
-	
+
 	private static String status_code = "statusCode";
 	private static String log_json = "logJson";
-	
+
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
-	
-	private List<String> noEntryList;
-	private List<String> notFoundList;
-	
+
+	private static String logPath = "/Users/HuyTCM/Desktop/log";
+
+	public JSONObject logJson;
+
+	public JSONObject getLogJson() throws JSONException, IOException {
+		if (logJson == null) {
+			BufferedReader bufferedReader = FileUtils.readFile(logPath);
+			StringBuilder stringBuilder = new StringBuilder();
+			String tempString = null;
+			while ((tempString = bufferedReader.readLine()) != null) {
+				stringBuilder.append(tempString);
+			}
+			logJson = new JSONObject(stringBuilder.toString());
+		}
+		return logJson;
+	}
+
+	public void updateLog() throws JSONException, IOException {
+		JSONObject logJson = this.getLogJson();
+		List<JSONObject> logs = this.getLogs();
+
+		JSONArray jsonArray = new JSONArray();
+		JSONObject log;
+		for (JSONObject jsonObject : logs) {
+			int statusCode = Integer.parseInt(jsonObject.get(status_code).toString());
+
+			log = null;
+			if (statusCode == NOT_FOUND_CODE) {
+				log = this.getNotFoundLog(jsonObject);
+			} else if (statusCode == NO_ENTRY_CODE) {
+				log = this.getNotFoundLog(jsonObject);
+			}
+			if (log != null) {
+				jsonArray.put(log);
+			}
+		}
+
+		logJson.put("contents", jsonArray);
+		logJson.put("modifiedDate", new Date());
+
+		this.logJson = logJson;
+		FileUtils.writleFile(logPath, this.logJson.toString());
+	}
+
 	/**
-     * Get logs from logs file.
-     * @return logs List of JSON log file format {'statusCode' : code, 'log' : log}
-     */
+	 * Get logs from logs file.
+	 * 
+	 * @return logs List of JSON log file format {'statusCode' : code, 'log' :
+	 *         log}
+	 */
 	@Override
 	public List<JSONObject> getLogs() throws IOException, JSONException {
-		// TODO Auto-generated method stub
 		String filePath = "/Users/HuyTCM/Desktop/121904288222129";
 		BufferedReader bufferedReader = FileUtils.readFile(filePath);
 		String line;
@@ -48,11 +92,11 @@ public class LogManager implements ILogManager {
 			}
 			if (line.subSequence(0, 5).equals(END_LOG)) {
 				int logCode = Integer.valueOf(line.substring(5, 8));
-				
+
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put(status_code, logCode);
 				jsonObject.put(log_json, new JSONObject(log.toString()));
-				
+
 				logs.add(jsonObject);
 				continue;
 			}
@@ -60,28 +104,25 @@ public class LogManager implements ILogManager {
 		}
 		return logs;
 	}
-	public List<String> getNoEntryLogs() throws IOException, JSONException {
-		this.noEntryList = new ArrayList<String>();
-		
-		List<JSONObject> logs = this.getLogs();
-		for (JSONObject log : logs) {
-			if (log.getInt(status_code) == NO_ENTRY_CODE) {
-				String userSay = log.getJSONObject(log_json).getJSONObject("result").getString("resolvedQuery");
-				this.noEntryList.add(userSay);
-			}
-		}
-		return this.noEntryList;
+
+	public JSONObject getNoEntryLog(JSONObject log) throws IOException, JSONException {
+		String userSay = log.getJSONObject(log_json).getJSONObject("result").getString("resolvedQuery");
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("errCode", log.getInt(status_code));
+		jsonObject.put("userSay", userSay);
+
+		return jsonObject;
 	}
-	public List<String> getNotFoundLogs() throws IOException, JSONException {
-		this.notFoundList = new ArrayList<String>();
-		
-		List<JSONObject> logs = this.getLogs();
-		for (JSONObject log : logs) {
-			if (log.getInt(status_code) == NOT_FOUND_CODE) {
-				String userSay = log.getJSONObject(log_json).getJSONObject("result").getString("resolvedQuery");
-				this.notFoundList.add(userSay);
-			}
-		}
-		return this.noEntryList;
+
+	public JSONObject getNotFoundLog(JSONObject log) throws IOException, JSONException {
+		JSONObject contextJson = log.getJSONObject(log_json).getJSONObject("result").getJSONArray("contexts")
+				.getJSONObject(0).getJSONObject("parameters");
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("errCode", log.getInt(status_code));
+		jsonObject.put("contexts", contextJson);
+
+		return contextJson;
 	}
 }

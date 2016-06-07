@@ -1,8 +1,10 @@
 package com.psib.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,6 +17,20 @@ public class FileUtils {
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 		return bufferedReader;
+	}
+
+	public static void writleFile(String filePath, String data) throws IOException {
+		File file = new File(filePath);
+
+		FileWriter fileWriter = null;
+		try {
+			fileWriter = new FileWriter(file);
+			
+			fileWriter.write(data);
+			fileWriter.flush();
+		} finally {
+			fileWriter.close();
+		}
 	}
 
 	public static List<String> getAllFiles(String directoryPath) throws IOException {
