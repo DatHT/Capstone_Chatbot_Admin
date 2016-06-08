@@ -43,7 +43,7 @@ public class LogManager implements ILogManager {
 
 	public void updateLog() throws JSONException, IOException {
 		JSONObject logJson = this.getLogJson();
-		List<JSONObject> logs = this.getLogs();
+		List<JSONObject> logs = this.getAllLogs();
 
 		JSONArray jsonArray = new JSONArray();
 		JSONObject log;
@@ -54,7 +54,7 @@ public class LogManager implements ILogManager {
 			if (statusCode == NOT_FOUND_CODE) {
 				log = this.getNotFoundLog(jsonObject);
 			} else if (statusCode == NO_ENTRY_CODE) {
-				log = this.getNotFoundLog(jsonObject);
+				log = this.getNoEntryLog(jsonObject);
 			}
 			if (log != null) {
 				jsonArray.put(log);
@@ -75,7 +75,7 @@ public class LogManager implements ILogManager {
 	 *         log}
 	 */
 	@Override
-	public List<JSONObject> getLogs() throws IOException, JSONException {
+	public List<JSONObject> getAllLogs() throws IOException, JSONException {
 		String filePath = "/Users/HuyTCM/Desktop/121904288222129";
 		BufferedReader bufferedReader = FileUtils.readFile(filePath);
 		String line;
@@ -105,7 +105,7 @@ public class LogManager implements ILogManager {
 		return logs;
 	}
 
-	public JSONObject getNoEntryLog(JSONObject log) throws IOException, JSONException {
+	private JSONObject getNoEntryLog(JSONObject log) throws IOException, JSONException {
 		String userSay = log.getJSONObject(log_json).getJSONObject("result").getString("resolvedQuery");
 
 		JSONObject jsonObject = new JSONObject();
@@ -115,7 +115,7 @@ public class LogManager implements ILogManager {
 		return jsonObject;
 	}
 
-	public JSONObject getNotFoundLog(JSONObject log) throws IOException, JSONException {
+	private JSONObject getNotFoundLog(JSONObject log) throws IOException, JSONException {
 		JSONObject contextJson = log.getJSONObject(log_json).getJSONObject("result").getJSONArray("contexts")
 				.getJSONObject(0).getJSONObject("parameters");
 

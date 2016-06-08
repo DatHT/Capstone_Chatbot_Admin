@@ -7,5 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public interface ILogManager {
-	public List<JSONObject> getLogs() throws IOException, JSONException;
+	
+	public JSONObject getLogJson() throws JSONException, IOException;
+	public void updateLog() throws JSONException, IOException;
+	public List<JSONObject> getAllLogs() throws IOException, JSONException;
 }
