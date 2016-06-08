@@ -80,21 +80,32 @@ function addNewPhrase() {
 	var name = document.getElementById("txtPhraseName").value;
 	var cate = document.getElementById("selectCategory");
 	var categoryId = cate.options[cate.selectedIndex].value;
-	
+	if(name != "") {
+		if(categoryId != "") {
+			//action here
+			if (window.XMLHttpRequest) {
+				xmlhttp = new XMLHttpRequest();
+			} else
+				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+			
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					alert(xmlhttp.responseText);
+					loadPharse(cate);
+				}
 
-	if (window.XMLHttpRequest) {
-		xmlhttp = new XMLHttpRequest();
-	} else
-		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	
-	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			alert(xmlhttp.responseText);
-			loadPharse(cate);
+			}
+			xmlhttp.open("POST", "/chatbot_admin/lexical/add" , true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+			xmlhttp.send("name=" + name + "&id=" + categoryId);
+			//action here
+			
+		}else {
+			alert("Please select Lexical Category");
 		}
-
+	}else {
+		alert("Please input a phrase");
 	}
-	xmlhttp.open("POST", "/chatbot_admin/lexical/add" , true);
-	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-	xmlhttp.send("name=" + name + "&id=" + categoryId);
+
+
 }
