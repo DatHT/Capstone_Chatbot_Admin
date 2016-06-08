@@ -45,7 +45,7 @@
 	<definition name="example" extends="base.definition">
 		<put-attribute name="title" value="Entity Manager" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/entity/updateEntity.jsp" />
+			value="/WEB-INF/views/example/example.jsp" />
 		<put-attribute name="current" value="example"/>
 	</definition>
 	
