@@ -9,10 +9,12 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
 import com.psib.service.ILogManager;
 import com.psib.util.FileUtils;
 
+@Service
 public class LogManager implements ILogManager {
 
 	private static String START_LOG = ">>>>>";
@@ -28,6 +30,7 @@ public class LogManager implements ILogManager {
 
 	public JSONObject logJson;
 
+	@Override
 	public JSONObject getLogJson() throws JSONException, IOException {
 		if (logJson == null) {
 			BufferedReader bufferedReader = FileUtils.readFile(logPath);
@@ -41,6 +44,7 @@ public class LogManager implements ILogManager {
 		return logJson;
 	}
 
+	@Override
 	public void updateLog() throws JSONException, IOException {
 		JSONObject logJson = this.getLogJson();
 		List<JSONObject> logs = this.getAllLogs();
@@ -109,7 +113,7 @@ public class LogManager implements ILogManager {
 		String userSay = log.getJSONObject(log_json).getJSONObject("result").getString("resolvedQuery");
 
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("errCode", log.getInt(status_code));
+		jsonObject.put("errCode", log.getString(status_code));
 		jsonObject.put("userSay", userSay);
 
 		return jsonObject;
@@ -120,9 +124,9 @@ public class LogManager implements ILogManager {
 				.getJSONObject(0).getJSONObject("parameters");
 
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("errCode", log.getInt(status_code));
+		jsonObject.put("errCode", log.getString(status_code));
 		jsonObject.put("contexts", contextJson);
 
-		return contextJson;
+		return jsonObject;
 	}
 }
