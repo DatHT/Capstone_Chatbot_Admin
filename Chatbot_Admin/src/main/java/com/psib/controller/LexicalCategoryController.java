@@ -4,6 +4,7 @@
 package com.psib.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -17,10 +18,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.psib.common.JsonParser;
 import com.psib.common.restclient.RestfulException;
+import com.psib.constant.CodeManager;
+import com.psib.constant.StatusCode;
+import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
 import com.psib.service.ILexicalCategoryManager;
@@ -73,6 +78,40 @@ public class LexicalCategoryController {
 		}
 		return responseText;
 		
+	}
+	
+	@RequestMapping(path="/add", method = RequestMethod.POST)
+	public @ResponseBody String insertPharse(@RequestParam("name") String name,
+			@RequestParam("id") String id, Model model) {
+		String responseText = "";
+		Entry entry = new Entry();
+		entry.setValue(name);
+		List<String> synonym = new ArrayList<>();
+		synonym.add(name);
+		entry.setSynonyms(synonym);
+		try {
+			StatusCode code = manager.addPhrase(entry, id);
+			switch (code) {
+			case SUCCESS:
+				responseText = CodeManager.SUCCESS;
+				break;
+			case ERROR:
+				responseText = CodeManager.SUCCESS;
+				break;
+			case CONFLICT:
+				responseText = CodeManager.SUCCESS;
+				break;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			model.addAttribute(ERROR, e.getMessage());
+		} catch (RestfulException e) {
+			// TODO Auto-generated catch block
+			model.addAttribute(ERROR, e.getMessage());
+		}
+		
+		
+		return responseText;
 	}
 	
 	

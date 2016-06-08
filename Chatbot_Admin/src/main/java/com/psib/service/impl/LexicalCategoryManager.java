@@ -11,8 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.psib.common.factory.LexicalCategoryFactory;
 import com.psib.common.restclient.RestfulException;
+import com.psib.constant.StatusCode;
+import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
+import com.psib.dto.jsonmapper.StatusDto;
 import com.psib.service.ILexicalCategoryManager;
 
 /**
@@ -43,6 +46,23 @@ public class LexicalCategoryManager implements ILexicalCategoryManager {
 	public LexicalDto getApiLexicalById(String id) throws IOException, RestfulException {
 		// TODO Auto-generated method stub
 		return factory.getLexicalById(id);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.psib.service.ILexicalCategoryManager#addPhrase(com.psib.dto.jsonmapper.Entry)
+	 */
+	@Override
+	public StatusCode addPhrase(Entry entry, String id) throws IOException, RestfulException {
+		StatusDto status = factory.insertPhrase(entry, id);
+		switch (status.getCode()) {
+		case 200:
+			return StatusCode.SUCCESS;
+		case 409:
+			return StatusCode.CONFLICT;
+		default:
+			return StatusCode.ERROR;
+		}
+		
 	}
 
 }
