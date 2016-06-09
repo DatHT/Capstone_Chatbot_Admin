@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -48,10 +49,13 @@ public class LogManager implements ILogManager {
 				logJson = new JSONObject(stringBuilder.toString());
 			} else {
 				logJson = new JSONObject();
-				logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(new Date()));
+
+				Calendar calendar = Calendar.getInstance();
+				calendar.add(Calendar.DATE, -1);
+
+				logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(calendar.getTime()));
 				logJson.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
 			}
-
 		}
 		return logJson;
 	}
@@ -62,8 +66,9 @@ public class LogManager implements ILogManager {
 		List<JSONObject> logs = this.getAllLogs();
 
 		JSONArray jsonArray;
-//		// uncomment when run in production by timer.
-//		jsonArray = new JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
+		// // uncomment when run in production by timer.
+		// jsonArray = new
+		// JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
 		jsonArray = new JSONArray();
 
 		JSONObject log;
