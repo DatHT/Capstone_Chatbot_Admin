@@ -26,7 +26,7 @@ public class LogManager implements ILogManager {
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
 
-	private static String logPath = "/Users/HuyTCM/Desktop/log";
+	private static String logPath = "D:/log/121904288222129";
 
 	public JSONObject logJson;
 
@@ -80,7 +80,7 @@ public class LogManager implements ILogManager {
 	 */
 	@Override
 	public List<JSONObject> getAllLogs() throws IOException, JSONException {
-		String filePath = "/Users/HuyTCM/Desktop/121904288222129";
+		String filePath = "D:/log/121904288222129";
 		BufferedReader bufferedReader = FileUtils.readFile(filePath);
 		String line;
 		StringBuffer log = new StringBuffer();
