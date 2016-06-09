@@ -43,7 +43,7 @@
 			<div class="panel-heading" id="tableHeader">Tables</div>
 			<div class="panel-body">
 				<div class="table-responsive">
-					<table class="table table-striped table-bordered table-hover">
+					<table class="table table-striped table-bordered table-hover" id="phraseTable">
 						<thead>
 							<tr>
 								<th>No.</th>
@@ -61,6 +61,6 @@
 			</div>
 		</div>
 		<!--End Advanced Tables -->
+		
 	</div>
 </div>
-

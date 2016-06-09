@@ -108,6 +108,8 @@
 	<script src="resources/assets/plugins/pace/pace.js"></script>
 	<script src="resources/assets/scripts/siminta.js"></script>
 	<script src="resources/assets/scripts/commonScript.js"></script>
+	<script src="resources/assets/plugins/dataTables/jquery.dataTables.js"></script>
+	<script src="resources/assets/plugins/dataTables/dataTables.bootstrap.js"></script>
 </body>
 
 
