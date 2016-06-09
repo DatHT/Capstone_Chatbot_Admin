@@ -1,5 +1,8 @@
 package com.psib.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -62,5 +65,9 @@ public class CommonUtils {
 			
 		}
 		return false;
+	}
+	public static String getDateStringFormat(Date date) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		return dateFormat.format(date);
 	}
 }

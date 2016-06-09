@@ -1,6 +1,7 @@
 package com.psib.service.impl;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import com.psib.service.ILogManager;
+import com.psib.util.CommonUtils;
 import com.psib.util.FileUtils;
 
 @Service
@@ -26,8 +28,11 @@ public class LogManager implements ILogManager {
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
 
-	private static String logPath = "/Users/HuyTCM/Desktop/log";
+	private static String chatLogsFolder = "/Users/HuyTCM/Desktop/Logs";
+	private static String logPath = chatLogsFolder + "/log";
 
+	private static String LOG_JSON_FORMAT_MODIFIED_DATE = "modifiedDate";
+	private static String LOG_JSON_FORMAT_CONTENTS = "contents";
 	public JSONObject logJson;
 
 	@Override
@@ -39,7 +44,14 @@ public class LogManager implements ILogManager {
 			while ((tempString = bufferedReader.readLine()) != null) {
 				stringBuilder.append(tempString);
 			}
-			logJson = new JSONObject(stringBuilder.toString());
+			if (stringBuilder.length() != 0) {
+				logJson = new JSONObject(stringBuilder.toString());
+			} else {
+				logJson = new JSONObject();
+				logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(new Date()));
+				logJson.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
+			}
+
 		}
 		return logJson;
 	}
@@ -49,7 +61,11 @@ public class LogManager implements ILogManager {
 		JSONObject logJson = this.getLogJson();
 		List<JSONObject> logs = this.getAllLogs();
 
-		JSONArray jsonArray = new JSONArray();
+		JSONArray jsonArray;
+//		// uncomment when run in production by timer.
+//		jsonArray = new JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
+		jsonArray = new JSONArray();
+
 		JSONObject log;
 		for (JSONObject jsonObject : logs) {
 			int statusCode = Integer.parseInt(jsonObject.get(status_code).toString());
@@ -65,8 +81,8 @@ public class LogManager implements ILogManager {
 			}
 		}
 
-		logJson.put("contents", jsonArray);
-		logJson.put("modifiedDate", new Date());
+		logJson.put(LOG_JSON_FORMAT_CONTENTS, jsonArray);
+		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(new Date()));
 
 		this.logJson = logJson;
 		FileUtils.writleFile(logPath, this.logJson.toString());
@@ -80,32 +96,40 @@ public class LogManager implements ILogManager {
 	 */
 	@Override
 	public List<JSONObject> getAllLogs() throws IOException, JSONException {
-		String filePath = "/Users/HuyTCM/Desktop/121904288222129";
-		BufferedReader bufferedReader = FileUtils.readFile(filePath);
-		String line;
-		StringBuffer log = new StringBuffer();
 		List<JSONObject> logs = new ArrayList<JSONObject>();
-		while ((line = bufferedReader.readLine()) != null) {
-			if (line.length() < 5) {
-				log.append(line);
-				continue;
-			}
-			if (line.subSequence(0, 5).equals(START_LOG)) {
-				log = new StringBuffer();
-				continue;
-			}
-			if (line.subSequence(0, 5).equals(END_LOG)) {
-				int logCode = Integer.valueOf(line.substring(5, 8));
 
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put(status_code, logCode);
-				jsonObject.put(log_json, new JSONObject(log.toString()));
+		List<String> fileList = getNewFileLog();
 
-				logs.add(jsonObject);
-				continue;
+		if (fileList != null) {
+			for (String filePath : fileList) {
+				BufferedReader bufferedReader = FileUtils.readFile(filePath);
+				String line;
+				StringBuffer log = new StringBuffer();
+
+				while ((line = bufferedReader.readLine()) != null) {
+					if (line.length() < 5) {
+						log.append(line);
+						continue;
+					}
+					if (line.subSequence(0, 5).equals(START_LOG)) {
+						log = new StringBuffer();
+						continue;
+					}
+					if (line.subSequence(0, 5).equals(END_LOG)) {
+						int logCode = Integer.valueOf(line.substring(5, 8));
+
+						JSONObject jsonObject = new JSONObject();
+						jsonObject.put(status_code, logCode);
+						jsonObject.put(log_json, new JSONObject(log.toString()));
+
+						logs.add(jsonObject);
+						continue;
+					}
+					log.append(line);
+				}
 			}
-			log.append(line);
 		}
+
 		return logs;
 	}
 
@@ -128,5 +152,28 @@ public class LogManager implements ILogManager {
 		jsonObject.put("contexts", contextJson);
 
 		return jsonObject;
+	}
+
+	private List<String> getNewFileLog() throws JSONException, IOException {
+		List<String> newFileLogPath = new ArrayList<String>();
+
+		String lastModifiedDate = getLogJson().get(LOG_JSON_FORMAT_MODIFIED_DATE).toString();
+		File file = new File(chatLogsFolder);
+		if (!file.isDirectory()) {
+			return null;
+		}
+
+		for (File dirList : file.listFiles()) {
+			if (!dirList.isDirectory()) {
+				continue;
+			}
+			if (dirList.getName().compareTo(lastModifiedDate) > 0) {
+				for (File logFile : dirList.listFiles()) {
+					newFileLogPath.add(logFile.getPath());
+				}
+			}
+		}
+
+		return newFileLogPath;
 	}
 }
