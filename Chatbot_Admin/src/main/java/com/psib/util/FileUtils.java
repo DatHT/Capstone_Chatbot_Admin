@@ -2,7 +2,6 @@ package com.psib.util;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,8 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
-	public static BufferedReader readFile(String filePath) throws FileNotFoundException {
-		FileReader fileReader = new FileReader(filePath);
+	public static BufferedReader readFile(String filePath) throws IOException {
+		File file = new File(filePath);
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		FileReader fileReader = new FileReader(file);
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 		return bufferedReader;
