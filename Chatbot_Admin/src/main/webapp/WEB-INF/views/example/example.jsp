@@ -66,7 +66,7 @@
 						<div class="panel-heading">
 							<h4 class="panel-title">
 								<a data-toggle="collapse" data-parent="#accordion"
-									href="#collapseTwo">Video Tuitorial</a>
+										href="#collapseTwo">Video Tuitorial</a>
 							</h4>
 						</div>
 						<div id="collapseTwo" class="panel-collapse collapse">
