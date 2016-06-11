@@ -56,9 +56,12 @@
 		<!-- Modal content -->
 		<div class="modal-content">
 			<span class="close">×</span>
-			<p id="user-say-in-modal"></p>
+			<div id="user-say-container">
+				<p id="user-say-in-modal"></p>
+			</div>
 			<div id="list-phrase"></div>
 		</div>
+
 	</div>
 </div>
 <div class="row">

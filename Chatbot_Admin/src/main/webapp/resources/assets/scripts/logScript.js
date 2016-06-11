@@ -24,36 +24,17 @@ function createRowNoEntry(id, data) {
 	tdNo.addEventListener('click', function() {
 		// Get the modal
 		var modal = document.getElementById('myModal');
+		var pContainer = document.getElementById('user-say-container');
 		var p = document.getElementById('user-say-in-modal').innerHTML = data.userSay;
 		modal.style.display = "block";
 		// Get the <span> element that closes the modal
 		var span = document.getElementsByClassName("close")[0];
 
 		// When the user clicks on <span> (x), close the modal
-		modal.addEventListener('mouseup', function() {
-			var text = "";
-			if (window.getSelection) {
-				text = window.getSelection().toString();
-				if (window.getSelection().empty) {  // Chrome
-				    window.getSelection().empty();
-				  } else if (window.getSelection().removeAllRanges) {  // Firefox
-				    window.getSelection().removeAllRanges();
-				  }
-			} else if (document.selection //IE
-					&& document.selection.type != "Control") {
-				text = document.selection.createRange().text;
-				document.selection.empty();
-			}
-			
+		pContainer.addEventListener('mouseup', function() {
+			var text = getTextSelection();
 			if (text) {
-				var hr = document.createElement('hr');
-				var phrase = document.createElement('div');
-				var phraseContent = document.createElement('p');
-				var pText = document.createTextNode(text);
-				phraseContent.appendChild(pText);
-				phrase.appendChild(phraseContent);
-				listPhraseContent.appendChild(hr);
-				listPhraseContent.appendChild(phrase);
+				listPhraseContent.appendChild(createPhraseElement(text));
 			}
 		});
 		span.onclick = function() {
@@ -72,10 +53,12 @@ function createRowNoEntry(id, data) {
 			}
 		}
 	});
+	
 	tdNo.appendChild(tdText);
 	tr.appendChild(tdNo);
 	tableBody.appendChild(tr);
 }
+
 function createRowNotFound(id, data) {
 	var tableBody = document.getElementById(id);
 	var tr = document.createElement('tr');
@@ -92,6 +75,34 @@ function createRowNotFound(id, data) {
 	tableBody.appendChild(tr);
 }
 
-// function creaeModalBox(data) {
-// var modalBox = do
-// }
+ function getTextSelection() {
+	 var text = "";
+		if (window.getSelection) {
+			text = window.getSelection().toString();
+			if (window.getSelection().empty) {  // Chrome
+			    window.getSelection().empty();
+			  } else if (window.getSelection().removeAllRanges) {  // Firefox
+			    window.getSelection().removeAllRanges();
+			  }
+		} else if (document.selection //IE
+				&& document.selection.type != "Control") {
+			text = document.selection.createRange().text;
+			document.selection.empty();
+		}
+		return text;
+ }
+
+ function createPhraseElement(text) {
+	 var hr = document.createElement('hr');
+	 var phrase = document.createElement('div');
+	 var phraseContent = document.createElement('p');
+	 var pText = document.createTextNode(text);
+	 phrase.addEventListener('click', function() {
+		 phrase.parentElement.removeChild(this);
+	 });
+	 phrase.appendChild(hr);
+	 phraseContent.appendChild(pText);
+	 phrase.appendChild(phraseContent);
+	 
+	 return phrase;
+ }
