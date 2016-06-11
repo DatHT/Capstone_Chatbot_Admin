@@ -41,9 +41,7 @@ public class ManageLogController {
 		String response = "";
 
 		try {
-			logManager.updateLog();
 			response = logManager.getLogJson().toString();
-
 		} catch (JSONException | IOException e) {
 			model.addAttribute(ERROR, e.getMessage());
 			e.printStackTrace();
@@ -51,6 +49,19 @@ public class ManageLogController {
 		}
 
 		return response;
+	}
+	
+	@RequestMapping(value = "/updateLog", method = RequestMethod.GET)
+	public void updateLog() {
+		try {
+			logManager.updateLog();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

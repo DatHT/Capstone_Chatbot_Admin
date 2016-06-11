@@ -36,6 +36,18 @@ public class LogManager implements ILogManager {
 	private static String LOG_JSON_FORMAT_CONTENTS = "contents";
 	public JSONObject logJson;
 
+	public LogManager() throws JSONException, IOException {
+		logJson = new JSONObject();
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+
+		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(calendar.getTime()));
+		logJson.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
+		
+		this.updateLog();
+	}
+	
 	@Override
 	public JSONObject getLogJson() throws JSONException, IOException {
 		if (logJson == null) {
@@ -47,14 +59,6 @@ public class LogManager implements ILogManager {
 			}
 			if (stringBuilder.length() != 0) {
 				logJson = new JSONObject(stringBuilder.toString());
-			} else {
-				logJson = new JSONObject();
-
-				Calendar calendar = Calendar.getInstance();
-				calendar.add(Calendar.DATE, -1);
-
-				logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(calendar.getTime()));
-				logJson.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
 			}
 		}
 		return logJson;
@@ -67,9 +71,9 @@ public class LogManager implements ILogManager {
 
 		JSONArray jsonArray;
 		// // uncomment when run in production by timer.
-		// jsonArray = new
-		// JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
-		jsonArray = new JSONArray();
+		 jsonArray = new
+		 JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
+//		jsonArray = new JSONArray();
 
 		JSONObject log;
 		for (JSONObject jsonObject : logs) {
