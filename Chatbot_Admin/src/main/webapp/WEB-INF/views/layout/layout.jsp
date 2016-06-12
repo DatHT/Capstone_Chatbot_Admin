@@ -19,6 +19,7 @@
 <link href="resources/assets/css/style.css" rel="stylesheet" />
 <link href="resources/assets/css/main-style.css" rel="stylesheet" />
 
+
 </head>
 
 <body>
@@ -102,6 +103,8 @@
 	<!-- end wrapper -->
 
 	<!-- Core Scripts - Include with every page -->
+	<script src="//kendo.cdn.telerik.com/2016.2.607/js/jquery.min.js"></script>
+	<script src="//kendo.cdn.telerik.com/2016.2.607/js/kendo.all.min.js"></script>
 	<script src="resources/assets/plugins/jquery-1.10.2.js"></script>
 	<script src="resources/assets/plugins/bootstrap/bootstrap.min.js"></script>
 	<script src="resources/assets/plugins/metisMenu/jquery.metisMenu.js"></script>
@@ -110,6 +113,8 @@
 	<script src="resources/assets/scripts/commonScript.js"></script>
 	<script src="resources/assets/plugins/dataTables/jquery.dataTables.js"></script>
 	<script src="resources/assets/plugins/dataTables/dataTables.bootstrap.js"></script>
+	
+	
 </body>
 
 
