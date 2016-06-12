@@ -257,12 +257,23 @@ public class DataConfigController {
 						}
 					}
 				}
+<<<<<<< HEAD
 
 				double latitude = common.splitLat(map);
 				double longitude = common.splitLong(map);
 
 				String district = common.splitDistrict(address);
 				String newAddress = common.splitAddress(address);
+=======
+				CommonUtils getLongLat = common.splitLongLat(map);
+				CommonUtils getAddress = common.splitAddress(address);
+
+				double latitude = getLongLat.getLatitude();
+				double longitude = getLongLat.getLongitude();
+
+				String district = getAddress.getDistrict();
+				String newAddress = getAddress.getAddress();
+>>>>>>> 32fd3d636da60e3a94e453bb919dc9286905d8ec
 
 				Product productDAO = new Product();
 				District districtDAO = new District();
