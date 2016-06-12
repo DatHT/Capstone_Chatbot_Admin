@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.psib.dao.IBaseDao;
 import com.psib.dao.IFoodDao;
 import com.psib.model.Product;
 import com.psib.service.IFoodManager;
