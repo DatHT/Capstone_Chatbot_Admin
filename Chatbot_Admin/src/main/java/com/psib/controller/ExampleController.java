@@ -42,14 +42,15 @@ public class ExampleController {
 		try {
 			List<IntentDto> list = manager.getIntents();
 			model.addAttribute(INTENTS, list);
+			return "example";
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			model.addAttribute(ERROR, e.getMessage());
+			return "error";
+			
 		} catch (RestfulException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			model.addAttribute(ERROR, e.getMessage());
+			return "error";
 		}
 		
-		return "example";
 	}
 }

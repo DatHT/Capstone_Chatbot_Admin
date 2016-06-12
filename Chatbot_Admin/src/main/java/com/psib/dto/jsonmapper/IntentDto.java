@@ -17,6 +17,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IntentDto implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8497345071035379916L;
+
 	@JsonProperty("id")
 	private String id;
 	
