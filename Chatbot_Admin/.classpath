@@ -33,5 +33,52 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/android-google-maps-api11.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/apache-collections-commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/apache-mime4j-0.6.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/bsh-2.0b4.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/com.mysql.jdbc_5.1.5.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/commons-exec-1.3.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/commons-fileupload-1.2.2.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/commons-lang3-3.4.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/cssparser-0.9.18.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/geocoder-1.0.0.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/google-maps-apis.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/gson-2.3.1.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/guava-19.0.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/hamcrest-library-1.3.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/htmlunit-2.21.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/htmlunit-core-js-2.17.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/httpclient-4.5.2.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/httpcore-4.4.4.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/httpmime-4.5.2.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/java-json.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/jcommander-1.48.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/jetty-io-9.2.15.v20160210.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/jetty-util-9.2.15.v20160210.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/jna-4.1.0.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/jna-platform-4.1.0.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/junit-4.12.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/neko-htmlunit-2.21.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/netty-3.5.7.Final.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/phantomjsdriver-1.2.1.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/sac-1.3.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/selenium-java-2.53.0.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/selenium-java-2.53.0-srcs.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/selenium-server-standalone-2.53.0.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/serializer-2.7.2.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/sqljdbc4.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/testng-6.9.9.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/websocket-api-9.2.15.v20160210.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/websocket-client-9.2.15.v20160210.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/websocket-common-9.2.15.v20160210.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/xalan-2.7.2.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/xercesImpl-2.11.0.jar"/>
+	<classpathentry kind="lib" path="D:/Capstone/Capstone_Chatbot_Crawler/Crawler/lib/xml-apis-1.4.01.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

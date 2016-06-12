@@ -2,12 +2,112 @@ package com.psib.util;
 
 import java.util.List;
 
+import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.psib.dto.jsonmapper.Entry;
 
 public class CommonUtils {
+	private double longitude;
+    private double latitude;
+    private String province;
+    private String district;
+    private String address;
+    private String name;
 
+    public CommonUtils() {
+    }
+
+    public CommonUtils(double longitude, double latitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
+    public CommonUtils(String province, String district, String address) {
+        this.province = province;
+        this.district = district;
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public CommonUtils(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public CommonUtils splitLongLat(String url) throws ArrayIndexOutOfBoundsException {
+        String[] list = url.split("_");
+        String splitLat = null;
+        String splitLong = null;
+        if (list.length == 3) {
+            splitLat = list[list.length - 2];
+            splitLat = splitLat.replace("-", ".");
+            splitLong = list[list.length - 1].substring(0, list[2].indexOf("."));
+            splitLong = splitLong.replace("-", ".");
+            latitude = Double.parseDouble(splitLat);
+            longitude = Double.parseDouble(splitLong);
+        }
+
+        CommonUtils common = new CommonUtils(longitude, latitude);
+        return common;
+    }
+
+    public CommonUtils splitAddress(String addressname) throws IndexOutOfBoundsException {
+        String[] listAddress = addressname.split(",");
+        province = listAddress[listAddress.length - 1];
+        district = listAddress[listAddress.length - 2];
+        String add="";
+        for (int i = 0; i < listAddress.length - 2; i++) {
+            add = add + listAddress[i];
+        }
+        
+        CommonUtils common = new CommonUtils(province, district, add);
+        return common;
+    }
+
+    public String splitName(String stringname) throws ArrayIndexOutOfBoundsException, IndexOutOfBoundsException {
+        boolean check = stringname.contains("Mì sườn ");
+        boolean check2 = stringname.contains(" Mì cay ông trí");
+        if (check) {
+            stringname = "Mì sườn";
+            return stringname;
+
+        } else if (check2) {
+            stringname = " Mì cay ông trí";
+            return stringname;
+        } else if (stringname.length() > 250) {
+            stringname = stringname.substring(0, 250);
+            return stringname;
+        }
+        return stringname;
+    }
+	
 	public static String[] generateSynonym(String tempString) {
 		Integer count = 0;
 		String[] elements = tempString.split("\\s+");
@@ -48,6 +148,37 @@ public class CommonUtils {
 		String tmp = StringUtils.substringAfter(url, "(");
 		return StringUtils.substringBeforeLast(tmp, ")");
 	}
+//	public static String getPath() throws UnsupportedEncodingException {
+//        String path = new Object(){}.getClass().getClassLoader().getResource("").getPath();
+//        String fullPath = URLDecoder.decode(path, "UTF-8");
+//        String pathArr[] = fullPath.split("classes/");
+//        System.out.println("full path: "+fullPath);
+//        System.out.println("path: "+pathArr[0]);
+//        fullPath = pathArr[0] + "/web";
+//
+//        String reponsePath = "";
+//        // to read a file from webcontent
+//        reponsePath = new File(fullPath).getPath();
+//        return reponsePath;
+//    }
+	public static String htmlEncode(final String string) {
+        final StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < string.length(); i++) {
+            final Character character = string.charAt(i);
+            if (CharUtils.isAscii(character)) {
+                // Encode common HTML equivalent characters
+                stringBuffer.append(
+                        //StringEscapeUtils.escapeHtml4(character.toString()));
+                        character.toString());
+            } else {
+                // Why isn't this done in escapeHtml4()?
+                stringBuffer.append(
+                        String.format("&#x%x;",
+                                Character.codePointAt(string, i)));
+            }
+        }
+        return stringBuffer.toString();
+    }
 	
 	public static boolean checkExistName(String name, List<Entry> list) {
 		

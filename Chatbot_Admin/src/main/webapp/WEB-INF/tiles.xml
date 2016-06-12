@@ -36,8 +36,56 @@
 	<definition name="dataConfig" extends="base.definition">
 		<put-attribute name="title" value="Entity Manager" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/entity/updateEntity.jsp" />
+			value="/WEB-INF/views/crawler/homepage.jsp" />
 		<put-attribute name="current" value="dataConfig"/>
+	</definition>
+	<definition name="manualAddFood" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/manualAddFood.jsp" />
+		<put-attribute name="current" value="manualAddFood"/>
+	</definition>
+	<definition name="htmlContent" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/abc.jsp" />
+		<put-attribute name="current" value="htmlContent"/>
+	</definition>
+	<definition name="Configuration" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/welcome.jsp" />
+		<put-attribute name="current" value="Configuration"/>
+	</definition>
+	<definition name="success" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/success.jsp" />
+		<put-attribute name="current" value="success"/>
+	</definition>
+	<definition name="error" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/success.jsp" />
+		<put-attribute name="current" value="error"/>
+	</definition>
+	<definition name="SetListPage" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/setPageList.jsp" />
+		<put-attribute name="current" value="SetListPage"/>
+	</definition>
+	<definition name="SetParserConfig" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/setPageConfig.jsp" />
+		<put-attribute name="current" value="SetParserConfig"/>
+	</definition>
+	<definition name="ParseManually" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/parseManually.jsp" />
+		<put-attribute name="current" value="ParseManually"/>
 	</definition>
 	
 	<!-- Begin Example Page -->

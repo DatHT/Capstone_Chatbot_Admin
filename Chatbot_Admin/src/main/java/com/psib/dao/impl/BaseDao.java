@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.psib.dao.IBaseDao;
+import com.thoughtworks.selenium.Selenium;
 
 
 /**
@@ -66,5 +67,4 @@ public class BaseDao<Model, Id> implements IBaseDao<Model, Id> {
 		List<Model> list = query.list();
 		return list;
 	}
-
 }

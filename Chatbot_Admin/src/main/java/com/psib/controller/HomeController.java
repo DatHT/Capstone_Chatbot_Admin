@@ -20,6 +20,7 @@ import com.psib.dto.jsonmapper.Entity;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.model.Product;
 import com.psib.service.IFoodManager;
+import com.psib.service.IForceParserManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.JsonFileCreator;
 
@@ -34,7 +35,6 @@ public class HomeController {
 	
 	@Autowired
 	private IFoodManager manager;
-	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		
@@ -81,9 +81,5 @@ public class HomeController {
 		eFood.setEntries(listEntry);
 		JsonFileCreator.createFile(eFood, eFood.getName());
 		return "export";
-	}
-	
-	
-	
-	
+	}	
 }
