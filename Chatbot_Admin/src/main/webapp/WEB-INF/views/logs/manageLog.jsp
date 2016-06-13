@@ -30,7 +30,7 @@
 
 .btn-save {
 	float: right;
-	border: 1px solid #888;
+	/* border: 1px solid #888; */
 	width: 15%;
 	/*cursor: not-allowed;*/
 	border-radius: 6px;

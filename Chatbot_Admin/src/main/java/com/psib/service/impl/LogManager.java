@@ -6,19 +6,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.psib.common.restclient.RestfulException;
+import com.psib.constant.StatusCode;
+import com.psib.dto.jsonmapper.Entry;
+import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.FileUtils;
 
 @Service
 public class LogManager implements ILogManager {
+	@Autowired 
+	private ILexicalCategoryManager lexicalCategoryManager;
 
 	private static String START_LOG = ">>>>>";
 	private static String END_LOG = "<<<<<";
@@ -195,7 +203,7 @@ public class LogManager implements ILogManager {
 		int statusCode = Integer.parseInt(jsonObject.get(errCode).toString());
 		boolean isExist = false;
 		int i = 0;
-		while(i < jsonArray.length() && !isExist) {
+		while (i < jsonArray.length() && !isExist) {
 			JSONObject log = jsonArray.getJSONObject(i);
 			int logStatusCode = Integer.parseInt(log.get(errCode).toString());
 			if (statusCode == logStatusCode) {
@@ -210,7 +218,55 @@ public class LogManager implements ILogManager {
 			}
 			i++;
 		}
-		
+
 		return isExist;
+	}
+	public void deleteLog(String logString) throws JSONException, IOException {
+		JSONObject logJson = this.getLogJson();
+		
+		JSONArray jsonArray = new JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
+		JSONArray newJson = new JSONArray();
+		for(int i = 0; i < jsonArray.length(); i++) {
+			JSONObject log = jsonArray.getJSONObject(i);
+			int logStatusCode = Integer.parseInt(log.get(errCode).toString());
+			if(logStatusCode == NO_ENTRY_CODE) {
+				if (!log.get(userSay).equals(logString)) {
+					newJson.put(log);
+				}
+			}
+		}
+		logJson.put(LOG_JSON_FORMAT_CONTENTS, jsonArray);
+		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(new Date()));
+
+		this.logJson = logJson;
+		FileUtils.writleFile(logPath, this.logJson.toString());
+	}
+
+	@Override
+	public boolean addPhrase(String listPhrase) throws JSONException, IOException, RestfulException {
+		JSONObject jsonObject = new JSONObject(listPhrase);
+
+		@SuppressWarnings("unchecked")
+		Iterator<String> keys = jsonObject.keys();
+		while (keys.hasNext()) {
+			String key = keys.next();
+			String value = jsonObject.getString(key);
+			
+			Entry entry = new Entry();
+			entry.setValue(key);
+			List<String> synonym = new ArrayList<>();
+			synonym.add(key);
+			entry.setSynonyms(synonym);
+			
+			StatusCode code = lexicalCategoryManager.addPhrase(entry, value);
+			switch (code) {
+			case SUCCESS:
+				deleteLog(key);
+				return true;
+			default: 
+				return false;
+			}
+		}
+		return true;
 	}
 }

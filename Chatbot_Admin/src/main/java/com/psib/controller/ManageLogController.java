@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.psib.common.restclient.RestfulException;
@@ -62,6 +63,16 @@ public class ManageLogController {
 		}
 
 		return response;
+	}
+	@RequestMapping(value = "/addPhrase", method = RequestMethod.POST)
+	public @ResponseBody boolean addPhrase(@RequestParam("listPhrase") String listPhrase) {
+		try {
+			return logManager.addPhrase(listPhrase);
+		} catch (JSONException | IOException | RestfulException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	@RequestMapping(value = "/updateLog", method = RequestMethod.GET)

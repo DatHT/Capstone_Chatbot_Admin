@@ -38,6 +38,29 @@ function createRowNoEntry(id, data) {
 				listPhraseContent.appendChild(createPhraseElement(text));
 			}
 		});
+		
+		var saveButton = document.getElementById('save-button');
+		saveButton.addEventListener('click', function() {
+			var xmlhttp;
+			if (window.XMLHttpRequest) {
+				xmlhttp = new XMLHttpRequest();
+			} else
+				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					if(xmlhttp.responseText == 'true') {
+						alert('Success!');
+						modal.style.display = "none";
+					}
+				}
+			}
+			
+			xmlhttp.open("POST", "/chatbot_admin/addPhrase", true);
+			xmlhttp.setRequestHeader("Content-type",
+					"application/x-www-form-urlencoded;charset=utf-8");
+			xmlhttp.send("listPhrase=" + JSON.stringify(listPhrase));
+		});
+		
 		span.onclick = function() {
 			modal.style.display = "none";
 			while (listPhraseContent.firstChild) {
@@ -138,6 +161,7 @@ function createRowNotFound(id, data) {
 			 saveButton.disabled = true;
 		 }
 	 });
+	 
 	 element.appendChild(span);
 
 	 return element;
