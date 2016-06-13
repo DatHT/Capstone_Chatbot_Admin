@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="lexicals" value="${LEXICALS}" />
 <script src="resources/assets/scripts/logScript.js"></script>
 <style>
 /* The Modal (background) */
@@ -8,7 +9,7 @@
 	display: none; /* Hidden by default */
 	position: fixed; /* Stay in place */
 	z-index: 1; /* Sit on top */
-	padding-top: 100px; /* Location of the box */
+	padding-top: 10%; /* Location of the box */
 	left: 0;
 	top: 0;
 	width: 100%; /* Full width */
@@ -27,18 +28,54 @@
 	width: 50%;
 }
 
+.btn-save {
+	float: right;
+	border: 1px solid #888;
+	width: 15%;
+	/*cursor: not-allowed;*/
+	border-radius: 6px;
+}
+
 /* The Close Button */
 .close {
-	color: #aaaaaa;
+	color: #ffffff;
 	float: right;
-	font-size: 28px;
+	font-size: 15px;
 	font-weight: bold;
+	margin-top: -8%;
+	margin-right: -10px;
 }
 
 .close:hover, .close:focus {
 	color: #000;
 	text-decoration: none;
 	cursor: pointer;
+}
+
+.remove {
+	color: #aaaaaa;
+	float: right;
+	font-size: 10px;
+	font-weight: bold;
+	margin-top: 15px;
+}
+
+.remove:hover, .remove:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.phrase-el {
+	width: 30%;
+}
+
+.lexical-el {
+	width: 50%;
+}
+
+.listLexical {
+	display: none;
 }
 </style>
 <div class="row">
@@ -50,19 +87,23 @@
 </div>
 <div>
 	<button onclick="updateLog()">Update Log</button>
-
 	<div id="myModal" class="modal">
-
 		<!-- Modal content -->
 		<div class="modal-content">
-			<span class="close">×</span>
+			<span class="close">CLOSE</span>
+			<button id="save-button" class="btn-save" disabled>SAVE</button>
 			<div id="user-say-container">
 				<p id="user-say-in-modal"></p>
 			</div>
 			<div id="list-phrase"></div>
 		</div>
-
 	</div>
+	<select class="listLexical btn btn-block">
+		<option value="">----Please select----</option>
+		<c:forEach var="lexical" items="${lexicals}">
+			<option value="${lexical.id}">${lexical.name}</option>
+		</c:forEach>
+	</select>
 </div>
 <div class="row">
 	<script>

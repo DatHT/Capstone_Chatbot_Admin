@@ -4,6 +4,7 @@
 package com.psib.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.psib.common.restclient.RestfulException;
+import com.psib.dto.jsonmapper.LexicalCategoryDto;
+import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
 
 /**
@@ -29,10 +33,19 @@ public class ManageLogController {
 
 	@Autowired
 	private ILogManager logManager;
+	@Autowired
+	private ILexicalCategoryManager lexicalManager;
 
 	@RequestMapping(value = "/manageLog", method = RequestMethod.GET)
 	public String loadLog(Model model) {
-		model.addAttribute("ACTIVE", "manageLog");
+		try {
+			List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
+			model.addAttribute("LEXICALS", lexicals);
+		} catch (IOException | RestfulException e) {
+			// TODO Auto-generated catch block
+			model.addAttribute(ERROR, e.getMessage());
+			return "error";
+		}
 		return "log";
 	}
 

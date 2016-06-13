@@ -2,6 +2,8 @@
  * 
  */
 
+var listPhrase = {};
+
 function updateLog() {
 	var xmlhttp;
 	if (window.XMLHttpRequest) {
@@ -30,7 +32,6 @@ function createRowNoEntry(id, data) {
 		// Get the <span> element that closes the modal
 		var span = document.getElementsByClassName("close")[0];
 
-		// When the user clicks on <span> (x), close the modal
 		pContainer.addEventListener('mouseup', function() {
 			var text = getTextSelection();
 			if (text) {
@@ -93,16 +94,51 @@ function createRowNotFound(id, data) {
  }
 
  function createPhraseElement(text) {
+	 var saveButton = document.getElementById('save-button');
+	 
+	 var element = document.createElement('div');
+	 element.className = 'row';
+	 
 	 var hr = document.createElement('hr');
+	 element.appendChild(hr);
+	 
 	 var phrase = document.createElement('div');
+	 phrase.className = 'col-md-4';
 	 var phraseContent = document.createElement('p');
 	 var pText = document.createTextNode(text);
-	 phrase.addEventListener('click', function() {
-		 phrase.parentElement.removeChild(this);
-	 });
-	 phrase.appendChild(hr);
+	 listPhrase[text] = "";
+	 
 	 phraseContent.appendChild(pText);
 	 phrase.appendChild(phraseContent);
+	 element.appendChild(phrase);
 	 
-	 return phrase;
+	 var lexicalCategory = document.createElement('div');
+	 lexicalCategory.className = 'col-md-4';
+	 var lexicalList = document.getElementsByClassName('listLexical')[0].cloneNode(true);
+	 lexicalList.onchange = function(event) {
+		 listPhrase[text] = event.target.value;
+		 if(event.target.value) {
+			 saveButton.disabled = false;
+		 } else {
+			 saveButton.disabled = true;
+		 }
+	 }
+	 lexicalList.style.display = 'block';
+	 
+	 lexicalCategory.appendChild(lexicalList);
+	 element.appendChild(lexicalCategory);
+	 
+	 var span = document.createElement('span');
+	 span.className = 'remove col-md-1';
+	 span.innerHTML = 'Cancel';
+	 span.addEventListener('click', function() {
+		 element.parentElement.removeChild(element);
+		 delete listPhrase[text];
+		 if(Object.keys(listPhrase).length == 0) {
+			 saveButton.disabled = true;
+		 }
+	 });
+	 element.appendChild(span);
+
+	 return element;
  }
