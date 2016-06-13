@@ -45,12 +45,6 @@
 			value="/WEB-INF/views/crawler/manualAddFood.jsp" />
 		<put-attribute name="current" value="manualAddFood"/>
 	</definition>
-	<definition name="htmlContent" extends="base.definition">
-		<put-attribute name="title" value="Entity Manager" />
-		<put-attribute name="body"
-			value="/WEB-INF/views/crawler/abc.jsp" />
-		<put-attribute name="current" value="htmlContent"/>
-	</definition>
 	<definition name="Configuration" extends="base.definition">
 		<put-attribute name="title" value="Entity Manager" />
 		<put-attribute name="body"
@@ -63,11 +57,17 @@
 			value="/WEB-INF/views/crawler/success.jsp" />
 		<put-attribute name="current" value="success"/>
 	</definition>
-	<definition name="error" extends="base.definition">
+	<definition name="successParse" extends="base.definition">
 		<put-attribute name="title" value="Entity Manager" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/crawler/success.jsp" />
-		<put-attribute name="current" value="error"/>
+			value="/WEB-INF/views/crawler/successParse.jsp" />
+		<put-attribute name="current" value="successParse"/>
+	</definition>
+	<definition name="errorPage" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/error.jsp" />
+		<put-attribute name="current" value="Configuration"/>
 	</definition>
 	<definition name="SetListPage" extends="base.definition">
 		<put-attribute name="title" value="Entity Manager" />

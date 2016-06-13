@@ -113,7 +113,7 @@
 								<label class="header-customize-font">Set Parser Config</label>
 							</header>
 							<div class="panel-body">
-								<form action="ProcessServlet">
+								<form action="ProcessServlet" onsubmit="return checkInputConfig(this)">
 									<div class="form-group">
 										<label for="input-01">URL of input page (required):</label> <input
 											type="url" class="form-control" size="45" name="txtURL"
@@ -177,27 +177,33 @@
 												name="txtNoPage" id="input-no" onchange="changeNum()" />
 										</div>
 									</div>
-									<input type="submit" class="btn btn-primary m-b-10"
-										value="ForceParse" name="btnAction"
-										onclick="getVal(this.value)" style="float: left;"
-										id="forceParse" />
-									<div style="display: none; float: left;" id="loading_image">
-										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-										<input class="btn btn-danger" type="submit" value="STOP"
-											name="btnAction" />
-									</div>
+									<input type="submit" data-toggle="modal" href="#parsing"
+										class="btn btn-info m-b-10" value="ForceParse"
+										name="btnAction" />
 								</form>
 								<!-- Modal -->
-								<form action="ProcessServlet">
+								<form action="ForceParse">
 									<div aria-hidden="true" aria-labelledby="myModalLabel"
 										role="dialog" tabindex="-1" id="parsing" class="modal fade">
 										<div class="modal-dialog">
 											<div class="modal-content">
 												<div class="modal-header">
-													<h4 class="modal-title">Your system is parsing now</h4>
+													<h4 class="modal-title">Your system is parsing now</h4>	
 												</div>
-												<div class="modal-body"></div>
+												<div class="modal-body">
+													<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+													<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+													<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+													<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+													<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+													<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+													<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+													<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+													<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+													<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />															
+												</div>
 												<div class="modal-footer">
+												
 													<input class="btn btn-info" type="submit" value="STOP"
 														name="btnAction" />
 												</div>

@@ -15,7 +15,6 @@ and open the template in the editor.
                 history.pushState(null, null, 'pagename');
             });
         </script>
-        <link rel="shortcut icon" href="img/ico/tripleh.png">
 
         <!--right slidebar-->
         <link href="css/slidebars.css" rel="stylesheet">

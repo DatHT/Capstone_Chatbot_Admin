@@ -18,27 +18,27 @@
 	});
 </script>
 <!--right slidebar-->
-<link href="css/slidebars.css" rel="stylesheet">
+<link href="/resources/crawler/cssboostrap/slidebars.css" rel="stylesheet">
 
 <!--switchery-->
-<link href="js/switchery/switchery.min.css" rel="stylesheet"
+<link href="/resources/crawler/js/switchery/switchery.min.css" rel="stylesheet"
 	type="text/css" media="screen" />
 
 <!--jquery-ui-->
-<link href="js/jquery-ui/jquery-ui-1.10.1.custom.min.css"
+<link href="/resources/crawler/js/jquery-ui/jquery-ui-1.10.1.custom.min.css"
 	rel="stylesheet" />
 
 <!--iCheck-->
-<link href="js/icheck/skins/all.css" rel="stylesheet">
+<link href="/resources/crawler/js/icheck/skins/all.css" rel="stylesheet">
 
-<link href="css/owl.carousel.css" rel="stylesheet">
+<link href="/resources/crawler/css/owl.carousel.css" rel="stylesheet">
 
 
 <!--common style-->
-<link href="css/style.css" rel="stylesheet">
-<link href="css/style-responsive.css" rel="stylesheet">
+<link href="/resources/crawler/css/style.css" rel="stylesheet">
+<link href="/resources/crawler/css/style-responsive.css" rel="stylesheet">
 
-<link href="cssCode/customize.css" rel="stylesheet">
+<link href="/resources/crawler/cssCode/customize.css" rel="stylesheet">
 <style>
 .modal-body {
 	left: 0px;
@@ -144,14 +144,14 @@
 												name="txtNoPage" id="input-no" onchange="changeNum()" />
 										</div>
 									</div>
-
+									<input name="txtLinkPage" value="${sessionScope.CONFIG}" type="hidden"/>
 									<input type="submit" data-toggle="modal" href="#parsing"
 										class="btn btn-info m-b-10" value="ForceParse"
 										name="btnAction" />
 								</form>
 							</div>
 							<!-- Modal -->
-							<form action="ProcessServlet">
+							<form action="ForceParse">
 								<div aria-hidden="true" aria-labelledby="myModalLabel"
 									role="dialog" tabindex="-1" id="parsing" class="modal fade">
 									<div class="modal-dialog">
@@ -159,8 +159,20 @@
 											<div class="modal-header">
 												<h4 class="modal-title">Your system is parsing now</h4>
 											</div>
-											<div class="modal-body"></div>
+											<div class="modal-body">
+												<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+												<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+												<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+												<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+												<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+												<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+												<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+												<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+												<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+												<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />															
+											</div>
 											<div class="modal-footer">
+											
 												<input class="btn btn-info" type="submit" value="STOP"
 													name="btnAction" />
 											</div>
@@ -176,42 +188,41 @@
 		</div>
 	</section>
 	<!-- Placed js at the end of the document so the pages load faster -->
-	<script src="js/jquery-1.10.2.min.js"></script>
+	<script src="<c:url value="/resources/crawler/js/jquery-1.10.2.min.js" />"></script>
 
 	<!--jquery-ui-->
-	<script src="js/jquery-ui/jquery-ui-1.10.1.custom.min.js"
+	<script
+		src="<c:url value ="/resources/crawler/js/jquery-ui/jquery-ui-1.10.1.custom.min.js" />"
 		type="text/javascript"></script>
 
-	<script src="js/jquery-migrate.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/modernizr.min.js"></script>
+	<script src="<c:url value="/resources/crawler/js/jquery-migrate.js"/>"></script>
+	<script src="<c:url value="/resources/crawler/js/bootstrap.min.js" />"></script>
+	<script src="<c:url value="/resources/crawler/js/modernizr.min.js" />"></script>
 
 	<!--Nice Scroll-->
-	<script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+	<%--         <script src="<c:url value="/resources/crawler/js/jquery.nicescroll.js" type="text/javascript" />"> </script> --%>
 
 	<!--right slidebar-->
-	<script src="js/slidebars.min.js"></script>
+	<script src="<c:url value="/resources/crawler/js/slidebars.min.js" />"></script>
 
 	<!--switchery-->
-	<script src="js/switchery/switchery.min.js"></script>
-	<script src="js/switchery/switchery-init.js"></script>
+	<script src="<c:url value="/resources/crawler/js/switchery/switchery.min.js" />"></script>
+	<script
+		src="<c:url value= "/resources/crawler/js/switchery/switchery-init.js" />"></script>
 
 	<!--Icheck-->
-	<script src="js/icheck/skins/icheck.min.js"></script>
-	<script src="js/todo-init.js"></script>
+	<script src="<c:url value="/resources/crawler/js/icheck/skins/icheck.min.js" />"></script>
+	<script src="<c:url value="/resources/crawler/js/todo-init.js" />"></script>
 
 	<!--jquery countTo-->
-	<script src="js/jquery-countTo/jquery.countTo.js"
-		type="text/javascript"></script>
+	<%--         <script src="<c:url value="/resources/crawler/js/jquery-countTo/jquery.countTo.js"  type="text/javascript" />"></script> --%>
 
 	<!--owl carousel-->
-	<script src="js/owl.carousel.js"></script>
+	<script src="<c:url value="/resources/crawler/js/owl.carousel.js" />"></script>
 
 
 	<!--common scripts for all pages-->
-
-	<script src="js/scripts.js"></script>
-
+	<script src="<c:url value="/resources/crawler/js/scripts.js" />"></script>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -243,6 +254,12 @@
 		function changeNum() {
 			document.getElementById("zero").selected = "true";
 		}
+	</script>
+	<script>
+		$('#parseForm').submit(function() {
+			$('#loading_image').show(); // show animation
+			return true; // allow regular form submission
+		});
 	</script>
 </body>
 </html>

@@ -13,7 +13,7 @@ $(document).ready(function () {
     var iframeDoc = document.getElementById('myframe').contentWindow;
     $(iframeDoc).click(function (event) {
         event.preventDefault();
-        if (count < 9) {
+        if (count < 4) {
             urlXPath = createXPathFromElement(event.target);
             content = event.target.innerHTML;
             //alert(standardContent(content));
@@ -182,7 +182,7 @@ function standardContent(content) {
 
 function next() {
     var haveData = 0;
-    if ((count <= 9)) {
+    if ((count <= 4)) {
         if ((flagClick != 0) || (indexComplete[currentPosition] != "")) {
 //            if(indexComplete[currentPosition]==""){
 //                indexComplete[count] = value;
@@ -197,7 +197,7 @@ function next() {
             document.getElementById("showXPath").innerHTML = "";
 
             //show current content
-            if (indexComplete[currentPosition] != "" && currentPosition < 9 && flagClickNew != 1 && flagEditXPath != 1) {
+            if (indexComplete[currentPosition] != "" && currentPosition < 4 && flagClickNew != 1 && flagEditXPath != 1) {
                 var newX = indexComplete[currentPosition];
                 value = indexComplete[currentPosition];
                 var a = window.frames[0].document.evaluate(newX
@@ -263,7 +263,7 @@ function next() {
             }
             showCart(indexComplete[currentPosition - 1] + "'\'", 'tbMain', 2);
             addToCart(indexComplete[currentPosition - 1]);
-            if (count == 9) {
+            if (count == 4) {
                 //            alert("FINISHED");
                 //            document.myForm.submit();
                 //                openpopup('popup');
@@ -325,7 +325,7 @@ function back() {
 
 
 
-        if (count == 9) {
+        if (count == 4) {
             document.getElementById("btnNext").disabled = false;
 //            document.getElementById("btnPreview").disabled = true;
 //            document.getElementById("btnAdd").disabled = true;
@@ -595,29 +595,9 @@ function addRow(tableId, cells, type) {
                     break;
                 case 3:
                     newCell.innerHTML =
-                            '<input type="hidden" name="PROFILE_IMAGE" value="' + cells[i] + '" size="78"/>';
-                    break;
-                case 4:
-                    newCell.innerHTML =
-                            '<input type="hidden" name="PRICE" value="' + cells[i] + '" size="78"/>';
-                    break;
-                case 5:
-                    newCell.innerHTML =
-                            '<input type="hidden" name="TIME" value="' + cells[i] + '" size="78"/>';
-                    break;
-                case 6:
-                    newCell.innerHTML =
-                            '<input type="hidden" name="RATE" value="' + cells[i] + '" size="78"/>';
-                    break;
-                case 7:
-                    newCell.innerHTML =
                             '<input type="hidden" name="USER_RATE" value="' + cells[i] + '" size="78"/>';
                     break;
-                case 8:
-                    newCell.innerHTML =
-                            '<input type="hidden" name="GALLERY" value="' + cells[i] + '" size="78"/>';
-                    break;
-                case 9:
+                case 4:
                     newCell.innerHTML =
                             '<input type="hidden" name="MAP" value="' + cells[i] + '" size="78"/>';
                     break;
@@ -660,7 +640,7 @@ function showXPath() {
 }
 
 function addNew() {
-    while (currentPosition < 9) {
+    while (currentPosition < 4) {
         count++;
         progressBar();
         showCart(indexComplete[currentPosition] + "'\'", 'tbMain', 2);
@@ -748,70 +728,12 @@ function appendcontents(item) {
         }
         b = a.iterateNext();
     }
-    content = content + alertText + '</td></tr><tr><td><strong>Profile Image</strong></td><td style="width: '
-            + '200px;  vertical-align: top">';
-
-    //getImage
-    a = window.frames[0].document.evaluate(item[2] + '/@src'
-            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-    b = a.iterateNext();
-    alertText = ""
-    while (b) {
-        alertText += b.textContent;
-        b = a.iterateNext();
-    }
-    content = content + alertText + '</td></tr><tr><td><strong>Price</strong></td><td>';
-
-    //getTime
-    a = window.frames[0].document.evaluate(item[3]
-            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-    b = a.iterateNext();
-    alertText = "";
-    while (b) {
-        alertText += b.textContent + '<br/>';
-        b = a.iterateNext();
-    }
-    content = content + alertText + '</td></tr><td><strong>Time</strong></td><td>';
-
+    content = content + alertText + '</td></tr><tr><td><strong>User Rate</strong></td><td>';
     //getRate
-    a = window.frames[0].document.evaluate(item[4]
+    a = window.frames[0].document.evaluate(item[2]
             , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
     b = a.iterateNext();
     alertText = "";
-    while (b) {
-        alertText += b.textContent + '<br/>';
-        b = a.iterateNext();
-    }
-    content = content + alertText + '</td></tr><td><strong>Rate</strong></td><td>';
-
-    //getRate
-    a = window.frames[0].document.evaluate(item[5]
-            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-    b = a.iterateNext();
-    alertText = "";
-    while (b) {
-        alertText += b.textContent + ',';
-        b = a.iterateNext();
-    }
-    content = content + alertText + '</td></tr><td><strong>UserRate</strong></td><td>';
-
-    //getRate
-    a = window.frames[0].document.evaluate(item[6]
-            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-    b = a.iterateNext();
-    alertText = "";
-    while (b) {
-        alertText += b.textContent + '</br>';
-        b = a.iterateNext();
-    }
-    content = content + alertText + '</td></tr><tr><td><strong>Gallery</strong></td><td style="width: '
-            + '200px;  vertical-align: top">';
-
-    //getImage
-    a = window.frames[0].document.evaluate(item[7] + '/@src'
-            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-    b = a.iterateNext();
-    alertText = ""
     while (b) {
         alertText += b.textContent + '</br>';
         b = a.iterateNext();
@@ -819,7 +741,7 @@ function appendcontents(item) {
     content = content + alertText + '</td></tr><tr><td><strong>Map</strong></td><td style="width: '
             + '200px;  vertical-align: top">';
     //getIngredient
-    a = window.frames[0].document.evaluate(item[8] + '/@src'
+    a = window.frames[0].document.evaluate(item[3] + '/@src'
             , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
     b = a.iterateNext();
     alertText = "";
@@ -830,6 +752,6 @@ function appendcontents(item) {
     content = content + alertText + '</td></tr></tbody></table>';
 
     appendto = document.getElementById('popup');
-    appendto.innerHTML = content + '<input type="button" class="btn btn-info m-b-10" name="btnAction" value="AddNewConfiguration" onclick="addNew()"/>';
+    appendto.innerHTML = content + '<input type="submit" class="btn btn-info m-b-10" id="btnAdd" name="btnAction" value="AddNewConfiguration" onclick="addNew()"/>';
 //    sessionStorage.cart = '';
 }

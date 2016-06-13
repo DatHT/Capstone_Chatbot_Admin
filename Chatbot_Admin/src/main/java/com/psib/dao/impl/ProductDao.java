@@ -43,7 +43,6 @@ public class ProductDao extends BaseDao<Product, Long> implements IProductDao{
 		query.setParameter("urlrelate", link);
 		Product result = (Product) query.setMaxResults(1).uniqueResult();
 		if(result!=null){
-			System.out.println("co product");
 			return true;			
 		}
 		return false;
