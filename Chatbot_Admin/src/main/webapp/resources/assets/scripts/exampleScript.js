@@ -115,7 +115,7 @@ function insertPattern(tableId) {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					alert(xmlhttp.responseText);
 					loadIntent(cate);
-					moveDiv("droptarget", "box-dragable");
+					//moveDiv("droptarget", "box-dragable");
 				}
 
 			}
