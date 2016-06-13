@@ -33,8 +33,8 @@ function createRowNoEntry(id, data) {
 		var span = document.getElementsByClassName("close")[0];
 
 		pContainer.addEventListener('mouseup', function() {
-			var text = getTextSelection();
-			if (text) {
+			var text = getTextSelection().trim();
+			if (text && listPhrase[text] === undefined) {
 				listPhraseContent.appendChild(createPhraseElement(text));
 			}
 		});

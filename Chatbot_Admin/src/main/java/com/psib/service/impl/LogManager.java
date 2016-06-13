@@ -29,11 +29,16 @@ public class LogManager implements ILogManager {
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
 
-	private static String chatLogsFolder = "G:/OneDrive/Documents/FPT/NewFPTOnedrive/Semester9/Capstone/Chatbot/repository/engine/Capstone_Chatbot_Engine/bin";
+	private static String chatLogsFolder = "/Users/HuyTCM/Desktop/Logs";
 	private static String logPath = chatLogsFolder + "/log";
 
 	private static String LOG_JSON_FORMAT_MODIFIED_DATE = "modifiedDate";
 	private static String LOG_JSON_FORMAT_CONTENTS = "contents";
+
+	private static String errCode = "errCode";
+	private static String userSay = "userSay";
+	private static String contexts = "contexts";
+
 	public JSONObject logJson;
 
 	public LogManager() throws JSONException, IOException {
@@ -44,10 +49,10 @@ public class LogManager implements ILogManager {
 
 		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(calendar.getTime()));
 		logJson.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
-		
+
 		this.updateLog();
 	}
-	
+
 	@Override
 	public JSONObject getLogJson() throws JSONException, IOException {
 		if (logJson == null) {
@@ -71,9 +76,8 @@ public class LogManager implements ILogManager {
 
 		JSONArray jsonArray;
 		// // uncomment when run in production by timer.
-		 jsonArray = new
-		 JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
-//		jsonArray = new JSONArray();
+		jsonArray = new JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
+		// jsonArray = new JSONArray();
 
 		JSONObject log;
 		for (JSONObject jsonObject : logs) {
@@ -85,7 +89,7 @@ public class LogManager implements ILogManager {
 			} else if (statusCode == NO_ENTRY_CODE) {
 				log = this.getNoEntryLog(jsonObject);
 			}
-			if (log != null) {
+			if (log != null && !checkExistLog(jsonArray, log)) {
 				jsonArray.put(log);
 			}
 		}
@@ -146,8 +150,8 @@ public class LogManager implements ILogManager {
 		String userSay = log.getJSONObject(log_json).getJSONObject("result").getString("resolvedQuery");
 
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("errCode", log.getString(status_code));
-		jsonObject.put("userSay", userSay);
+		jsonObject.put(errCode, log.getString(status_code));
+		jsonObject.put(LogManager.userSay, userSay);
 
 		return jsonObject;
 	}
@@ -157,8 +161,8 @@ public class LogManager implements ILogManager {
 				.getJSONObject(0).getJSONObject("parameters");
 
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("errCode", log.getString(status_code));
-		jsonObject.put("contexts", contextJson);
+		jsonObject.put(errCode, log.getString(status_code));
+		jsonObject.put(contexts, contextJson);
 
 		return jsonObject;
 	}
@@ -184,5 +188,29 @@ public class LogManager implements ILogManager {
 		}
 
 		return newFileLogPath;
+	}
+
+	public boolean checkExistLog(JSONArray jsonArray, JSONObject jsonObject)
+			throws NumberFormatException, JSONException {
+		int statusCode = Integer.parseInt(jsonObject.get(errCode).toString());
+		boolean isExist = false;
+		int i = 0;
+		while(i < jsonArray.length() && !isExist) {
+			JSONObject log = jsonArray.getJSONObject(i);
+			int logStatusCode = Integer.parseInt(log.get(errCode).toString());
+			if (statusCode == logStatusCode) {
+				if (statusCode == NO_ENTRY_CODE) {
+					isExist = jsonObject.get(userSay).equals(log.get(userSay));
+				} else if (statusCode == NOT_FOUND_CODE) {
+					isExist = jsonObject.getJSONObject(contexts).get("Food")
+							.equals(log.getJSONObject(contexts).get("Food"))
+							&& jsonObject.getJSONObject(contexts).get("Location")
+									.equals(log.getJSONObject(contexts).get("Location"));
+				}
+			}
+			i++;
+		}
+		
+		return isExist;
 	}
 }
