@@ -739,6 +739,6 @@ function appendcontents(item) {
     content = content + alertText + '</td></tr></tbody></table>';
 
     appendto = document.getElementById('popup');
-    appendto.innerHTML = content + '<input type="button" class="btn btn-info m-b-10" value="AddNewConfiguration" onclick="addNew()"/>';
+    appendto.innerHTML = content + '<input type="button" class="btn btn-info m-b-10" name="btnAction" value="AddNewConfiguration" onclick="addNew()"/>';
 //    sessionStorage.cart = '';
 }
