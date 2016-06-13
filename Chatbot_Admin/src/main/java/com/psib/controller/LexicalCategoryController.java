@@ -96,10 +96,10 @@ public class LexicalCategoryController {
 				responseText = CodeManager.SUCCESS;
 				break;
 			case ERROR:
-				responseText = CodeManager.SUCCESS;
+				responseText = CodeManager.ERROR;
 				break;
 			case CONFLICT:
-				responseText = CodeManager.SUCCESS;
+				responseText = CodeManager.EXISTED;
 				break;
 			}
 		} catch (IOException e) {
