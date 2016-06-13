@@ -31,25 +31,3 @@ function abc() {
 		xmlhttp.send();
 	}
 }
-
-
-
-
-function addRow(table, cells) {
-
-	var newRow = table.insertRow(table.rows.length);
-	var newCell;
-	for (var i = 0; i < cells.length; i++) {
-		newCell = newRow.insertCell(newRow.cells.length);
-		newCell.innerHTML = cells[i];
-	}
-}
-
-
-
-function deleteRows(table) {
-	while (table.rows.length > 0) {
-		table.deleteRow(0);
-	}
-}
-

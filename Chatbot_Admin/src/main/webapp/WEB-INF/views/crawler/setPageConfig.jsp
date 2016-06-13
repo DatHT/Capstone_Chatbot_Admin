@@ -12,30 +12,30 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Get element Xpath of Selected Items</title>
-        <link href="<c:url value = "/resources/crawler/cssCode/runnable.css"/>" rel="stylesheet">
-        <link href='<c:url value="/resources/crawler/cssCode/popup.css"/>' rel="stylesheet">
-        <script src="<c:url value ="/resources/crawler/configscripts/jquery-2.2.0.js"/>"></script>
-        <script src='<c:url value="/resources/crawler/configscripts/parse.js" />'></script>
+        <link href="<c:url value = "/resources/assets/cssCode/runnable.css"/>" rel="stylesheet">
+        <link href='<c:url value="/resources/assets/cssCode/popup.css"/>' rel="stylesheet">
+        <script src="<c:url value ="/resources/assets/configscripts/jquery-2.2.0.js"/>"></script>
+        <script src='<c:url value="/resources/assets/configscripts/parse.js" />'></script>
         
         <!--right slidebar-->
-        <link href="<c:url value="/resources/crawler/cssboostrap/slidebars.css"/>" rel="stylesheet">
+        <link href="<c:url value="/resources/assets/cssboostrap/slidebars.css"/>" rel="stylesheet">
 
         <!--switchery-->
-        <link href="<c:url value="/resources/crawler/js/switchery/switchery.min.css" />" rel="stylesheet" type="text/css" media="screen" />
+        <link href="<c:url value="/resources/assets/js/switchery/switchery.min.css" />" rel="stylesheet" type="text/css" media="screen" />
 
         <!--jquery-ui-->
-        <link href="<c:url value="/resources/crawler/js/jquery-ui/jquery-ui-1.10.1.custom.min.css" />" rel="stylesheet" />
+        <link href="<c:url value="/resources/assets/js/jquery-ui/jquery-ui-1.10.1.custom.min.css" />" rel="stylesheet" />
 
         <!--iCheck-->
-        <link href="<c:url value="/resources/crawler/js/icheck/skins/all.css" />" rel="stylesheet">
+        <link href="<c:url value="/resources/assets/js/icheck/skins/all.css" />" rel="stylesheet">
 
-        <link href="<c:url value="/resource/cssboostrap/owl.carousel.css" />" rel="stylesheet">
+        <link href="<c:url value="/resources/assets/cssboostrap/owl.carousel.css" />" rel="stylesheet">
 
         <!--common style-->
-        <link href="<c:url value="/resources/crawler/css/style.css" />" rel="stylesheet">
-        <link href="<c:url value="/resources/crawler/css/style-responsive.css" />" rel="stylesheet">
+        <link href="<c:url value="/resources/assets/css/style.css" />" rel="stylesheet">
+        <link href="<c:url value="/resources/assets/css/style-responsive.css" />" rel="stylesheet">
         
-        <link href="<c:url value="/resources/crawler/cssCode/customize.css" />" rel="stylesheet">
+        <link href="<c:url value="/resources/assets/cssCode/customize.css" />" rel="stylesheet">
     </head>
     <body class="sticky-header">
         <%
@@ -157,37 +157,37 @@
             </div>
         </section>
         <!-- Placed js at the end of the document so the pages load faster -->
-        <script src="<c:url value="/resources/crawler/js/jquery-1.10.2.min.js" />"></script>
+        <script src="<c:url value="/resources/assets/js/jquery-1.10.2.min.js" />"></script>
 
         <!--jquery-ui-->
-        <script src="<c:url value ="/resources/crawler/js/jquery-ui/jquery-ui-1.10.1.custom.min.js" />" type="text/javascript"></script>
+        <script src="<c:url value ="/resources/assets/js/jquery-ui/jquery-ui-1.10.1.custom.min.js" />" type="text/javascript"></script>
 
-        <script src="<c:url value="/resources/crawler/js/jquery-migrate.js"/>"></script>
-        <script src="<c:url value="/resources/crawler/js/bootstrap.min.js" />"></script>
-        <script src="<c:url value="/resources/crawler/js/modernizr.min.js" />"></script>
+        <script src="<c:url value="/resources/assets/js/jquery-migrate.js"/>"></script>
+        <script src="<c:url value="/resources/assets/js/bootstrap.min.js" />"></script>
+        <script src="<c:url value="/resources/assets/js/modernizr.min.js" />"></script>
 
         <!--Nice Scroll-->
-<%--         <script src="<c:url value="/resources/crawler/js/jquery.nicescroll.js" type="text/javascript" />"> </script> --%>
+<%--         <script src="<c:url value="/resource/js/jquery.nicescroll.js" type="text/javascript" />"> </script> --%>
 
         <!--right slidebar-->
-        <script src="<c:url value="/resources/crawler/js/slidebars.min.js" />"></script>
+        <script src="<c:url value="/resources/assets/js/slidebars.min.js" />"></script>
 
         <!--switchery-->
-        <script src="<c:url value="/resources/crawler/js/switchery/switchery.min.js" />"></script>
-        <script src="<c:url value= "/resources/crawler/js/switchery/switchery-init.js" />"></script>
+        <script src="<c:url value="/resources/assets/js/switchery/switchery.min.js" />"></script>
+        <script src="<c:url value= "/resources/assets/js/switchery/switchery-init.js" />"></script>
 
         <!--Icheck-->
-        <script src="<c:url value="/resources/crawler/js/icheck/skins/icheck.min.js" />"></script>
-        <script src="<c:url value="/resources/crawler/js/todo-init.js" />"></script>
+        <script src="<c:url value="/resources/assets/js/icheck/skins/icheck.min.js" />"></script>
+        <script src="<c:url value="/resources/assets/js/todo-init.js" />"></script>
 
         <!--jquery countTo-->
-<%--         <script src="<c:url value="/resources/crawler/js/jquery-countTo/jquery.countTo.js"  type="text/javascript" />"></script> --%>
+<%--         <script src="<c:url value="/resource/js/jquery-countTo/jquery.countTo.js"  type="text/javascript" />"></script> --%>
 
         <!--owl carousel-->
-        <script src="<c:url value="/resources/crawler/js/owl.carousel.js" />"></script>
+        <script src="<c:url value="/resources/assets/js/owl.carousel.js" />"></script>
 
 
         <!--common scripts for all pages-->
-        <script src="<c:url value="/resources/crawler/js/scripts.js" />"></script>
+        <script src="<c:url value="/resources/assets/js/scripts.js" />"></script>
     </body>
 </html>
