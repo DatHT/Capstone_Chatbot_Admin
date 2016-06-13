@@ -116,7 +116,6 @@
                                                     <span class="title">UserRate</span>
                                                 </div>
                                                 <span class="bar"></span>
-                                                <span class="bar"></span>
                                                 <div class="circle">
                                                     <span class="labelRecipe">4</span>
                                                     <span class="title">Map</span>
@@ -129,7 +128,7 @@
                                             <input type="button" class="btn btn-info m-b-10" id="btnPreview" value="PREVIEW" onclick="openpopup('popup')" disabled/>
                                             <input type="submit" class="btn btn-info m-b-10" id="btnAdd" name="btnAction" value="AddNewConfiguration" onclick="addNew()" disabled/>
 
-                                            <input type="button" class="btn btn-info m-b-10" value="HOME" onclick="window.location = 'welcome.jsp'"/>
+                                            <input type="button" class="btn btn-info m-b-10" value="HOME" onclick="window.location = 'configData'"/>
                                             <div class="table-responsive" style="min-height: 70px">
 
                                                 <table class="table" id="tbItems" border="1" width="550">

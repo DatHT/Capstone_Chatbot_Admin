@@ -99,7 +99,7 @@ public class DataConfigController {
 			String url = request.getParameter("txtLinkPage");
 			System.out.println("url =" + url);
 			// lay config page
-			String xmlFilePath = "E:/parserconfig.xml";
+			String xmlFilePath = "D:/Capstone/parserconfig.xml";
 			ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
 			List<ConfigDTO> configs = tmp.getConfig();
 			System.out.println("Config Size: " + configs.size());
@@ -122,7 +122,7 @@ public class DataConfigController {
 				System.out.println("Xpath: " + xpath);
 			}
 			// lay url page
-			xmlFilePath = "E:/pageconfig.xml";
+			xmlFilePath = "D:/Capstone/pageconfig.xml";
 			PageDTOList tmpPage = XMLUtils.unmarshallPage(xmlFilePath);
 
 			List<PageDTO> pageConfigs = tmpPage.getConfig();
@@ -338,7 +338,7 @@ public class DataConfigController {
 			throws UnsupportedEncodingException {
 		// String realPath = CommonUtils.getPath();
 		// get Config
-		String xmlFilePath = "E:/parserconfig.xml";
+		String xmlFilePath = "D:/Capstone/parserconfig.xml";
 		ConfigDTOList configs = XMLUtils.unmarshall(xmlFilePath);
 		HttpSession session = request.getSession();
 		String str = XMLUtils.marshallConfigToString(configs);
@@ -349,7 +349,7 @@ public class DataConfigController {
 		session.setAttribute("INFOCONFIG", str);
 
 		// get Page
-		xmlFilePath = "E:/pageconfig.xml";
+		xmlFilePath = "D:/Capstone/pageconfig.xml";
 		PageDTOList pages = XMLUtils.unmarshallPage(xmlFilePath);
 
 		str = XMLUtils.marshallPageToString(pages);
@@ -363,7 +363,7 @@ public class DataConfigController {
 	public String configGuration(@RequestParam String btnAction, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		if(btnAction.equals("STOP")){
-			String xmlFilePath = "E:/parserconfig.xml";
+			String xmlFilePath = "D:/Capstone/parserconfig.xml";
 			ConfigDTOList configs = XMLUtils.unmarshall(xmlFilePath);
 			HttpSession session = request.getSession();
 			String str = XMLUtils.marshallConfigToString(configs);
@@ -374,7 +374,7 @@ public class DataConfigController {
 			session.setAttribute("INFOCONFIG", str);
 
 			// get Page
-			xmlFilePath = "E:/pageconfig.xml";
+			xmlFilePath = "D:/Capstone/pageconfig.xml";
 			PageDTOList pages = XMLUtils.unmarshallPage(xmlFilePath);
 
 			str = XMLUtils.marshallPageToString(pages);
@@ -534,7 +534,7 @@ public class DataConfigController {
 			// }
 			PageDTO newPage = new PageDTO(url, linkPage, xpaths.get(0), xpaths.get(1), xpaths.get(2), next);
 
-			String xmlFilePath = "E:/pageconfig.xml";
+			String xmlFilePath = "D:/Capstone/pageconfig.xml";
 			PageDTOList pages = XMLUtils.unmarshallPage(xmlFilePath);
 			System.out.println(xmlFilePath);
 
@@ -590,7 +590,7 @@ public class DataConfigController {
 			ConfigDTO newConfig = new ConfigDTO(url, xpaths.get(0), xpaths.get(1), xpaths.get(2), xpaths.get(3));
 
 			// Load file XPath cÃ³ sáºµn
-			String xmlFilePath = "E:/parserconfig.xml";
+			String xmlFilePath = "D:/Capstone/parserconfig.xml";
 			ConfigDTOList configs = XMLUtils.unmarshall(xmlFilePath);
 
 			// ...
