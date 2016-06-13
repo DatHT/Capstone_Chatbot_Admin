@@ -93,6 +93,26 @@ function insertPattern(tableId) {
 			jsonData.templates.push(newPattern);
 			console.log(JSON.stringify(jsonData));
 			
+			var cate = document.getElementById("selectIntent");
+			var intentId = cate.options[cate.selectedIndex].value;
+			// action here
+			if (window.XMLHttpRequest) {
+				xmlhttp = new XMLHttpRequest();
+			} else
+				xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					alert(xmlhttp.responseText);
+					loadIntent(cate);
+				}
+
+			}
+			xmlhttp.open("POST", "/chatbot_admin/example/add", true);
+			xmlhttp.setRequestHeader("Content-type",
+					"application/x-www-form-urlencoded;charset=utf-8");
+			xmlhttp.send("pattern=" + JSON.stringify(jsonData) + "&id=" + intentId);
+			// action here
 			
 			
 		}else {

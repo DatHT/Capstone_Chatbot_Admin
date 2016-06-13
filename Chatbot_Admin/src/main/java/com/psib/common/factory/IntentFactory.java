@@ -8,9 +8,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.psib.common.JsonParser;
 import com.psib.common.restclient.RequestMethod;
 import com.psib.common.restclient.RestResult;
 import com.psib.common.restclient.RestfulException;
+import com.psib.dto.jsonmapper.StatusDto;
 import com.psib.dto.jsonmapper.intent.IntentDto;
 import com.psib.dto.jsonmapper.intent.IntentsDto;
 
@@ -43,5 +45,17 @@ public class IntentFactory extends AbstractFactory {
 				.addRoute(id)
 				.invoke();
 		return responseString(result);
+	}
+	
+	public StatusDto insertPattern(String pattern, String id) throws IOException, RestfulException {
+		Object obj = JsonParser.toObject(pattern, Object.class);
+		
+		RestResult result = client.createInvoker(RequestMethod.PUT)
+				.addHeader(AUTH_KEY, AUTH_VALUE)
+				.addRoute(id)
+				.invoke(obj);
+		
+		return response(result, StatusDto.class);
+				
 	}
 }

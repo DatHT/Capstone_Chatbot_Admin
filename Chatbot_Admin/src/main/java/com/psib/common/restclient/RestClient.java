@@ -230,6 +230,7 @@ public class RestClient {
 			routes.add(valStr);
 			return this;
 		}
+		
 
 		public RestRequest addRoute(Object value, String encoding) {
 			String valStr = toQueryParameter(value, encoding);

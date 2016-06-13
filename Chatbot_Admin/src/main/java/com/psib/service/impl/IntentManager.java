@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.psib.common.factory.IntentFactory;
 import com.psib.common.restclient.RestfulException;
+import com.psib.constant.StatusCode;
+import com.psib.dto.jsonmapper.StatusDto;
 import com.psib.dto.jsonmapper.intent.IntentDto;
 import com.psib.dto.jsonmapper.intent.IntentsDto;
 import com.psib.service.IIntentManager;
@@ -43,6 +45,24 @@ public class IntentManager implements IIntentManager {
 	public String getIntentById(String id) throws IOException, RestfulException {
 		// TODO Auto-generated method stub
 		return factory.getIntentById(id);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.psib.service.IIntentManager#addPattern(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public StatusCode addPattern(String pattern, String id) throws IOException, RestfulException {
+		StatusDto status = factory.insertPattern(pattern, id);
+		switch (status.getCode()) {
+		case 200:
+			return StatusCode.SUCCESS;
+		case 0:
+			return StatusCode.SUCCESS;
+		case 409:
+			return StatusCode.CONFLICT;
+		default:
+			return StatusCode.ERROR;
+		}
 	}
 
 }
