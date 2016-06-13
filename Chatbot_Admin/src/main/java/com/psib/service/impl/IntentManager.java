@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.psib.common.factory.IntentFactory;
 import com.psib.common.restclient.RestfulException;
-import com.psib.dto.jsonmapper.IntentDto;
+import com.psib.dto.jsonmapper.intent.IntentDto;
+import com.psib.dto.jsonmapper.intent.IntentsDto;
 import com.psib.service.IIntentManager;
 
 /**
@@ -30,9 +31,18 @@ public class IntentManager implements IIntentManager {
 	 * @see com.psib.service.IIntentManager#getIntents()
 	 */
 	@Override
-	public List<IntentDto> getIntents() throws IOException, RestfulException {
+	public List<IntentsDto> getIntents() throws IOException, RestfulException {
 		// TODO Auto-generated method stub
 		return factory.getIntents();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.psib.service.IIntentManager#getIntentById(java.lang.String)
+	 */
+	@Override
+	public String getIntentById(String id) throws IOException, RestfulException {
+		// TODO Auto-generated method stub
+		return factory.getIntentById(id);
 	}
 
 }

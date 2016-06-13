@@ -43,7 +43,16 @@ public class AbstractFactory {
 	protected <T> List<T> responseList(RestResult result, Class<T> clazz) throws IOException, RestfulException, IOException {
 		if (result.isOk()) {
 			return result.toList(clazz);
+			
 		}
+		throw new RestfulException(result);
+	}
+	
+	protected <T> String responseString(RestResult result) throws RestfulException, IOException {
+		if (result.isOk()) {
+			return result.toString();
+		}
+		
 		throw new RestfulException(result);
 	}
 }

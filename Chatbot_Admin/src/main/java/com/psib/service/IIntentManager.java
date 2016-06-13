@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.List;
 
 import com.psib.common.restclient.RestfulException;
-import com.psib.dto.jsonmapper.IntentDto;
+import com.psib.dto.jsonmapper.intent.IntentDto;
+import com.psib.dto.jsonmapper.intent.IntentsDto;
 
 /**
  * @author DatHT
@@ -16,5 +17,7 @@ import com.psib.dto.jsonmapper.IntentDto;
  */
 public interface IIntentManager {
 
-	List<IntentDto> getIntents()  throws IOException, RestfulException;;
+	List<IntentsDto> getIntents()  throws IOException, RestfulException;
+	
+	String getIntentById(String id) throws IOException, RestfulException;
 }

@@ -14,6 +14,18 @@ function insertRowToAddNewPhrase(tableId) {
 	addFirstRow(tableElem, cells);
 }
 
+
+
+function addFirstRow(table, cells) {
+
+	var newRow = table.insertRow(0);
+	var newCell;
+	for (var i = 0; i < cells.length; i++) {
+		newCell = newRow.insertCell(newRow.cells.length);
+		newCell.innerHTML = cells[i];
+	}
+}
+
 function addRows(tableId, data) {
 	var jsonData = JSON.parse(data);
 	var tableElem = document.getElementById(tableId);
@@ -29,31 +41,6 @@ function addRows(tableId, data) {
 
 }
 
-function addRow(table, cells) {
-
-	var newRow = table.insertRow(table.rows.length);
-	var newCell;
-	for (var i = 0; i < cells.length; i++) {
-		newCell = newRow.insertCell(newRow.cells.length);
-		newCell.innerHTML = cells[i];
-	}
-}
-
-function addFirstRow(table, cells) {
-
-	var newRow = table.insertRow(0);
-	var newCell;
-	for (var i = 0; i < cells.length; i++) {
-		newCell = newRow.insertCell(newRow.cells.length);
-		newCell.innerHTML = cells[i];
-	}
-}
-
-function deleteRows(table) {
-	while (table.rows.length > 0) {
-		table.deleteRow(0);
-	}
-}
 
 function loadPharse(id) {
 

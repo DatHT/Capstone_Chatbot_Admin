@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.psib.dto.jsonmapper;
+package com.psib.dto.jsonmapper.intent;
 
 import java.io.Serializable;
 
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class IntentDto implements Serializable {
+public class IntentsDto implements Serializable {
 
 	/**
 	 * 
@@ -44,7 +44,7 @@ public class IntentDto implements Serializable {
 		this.name = name;
 	}
 
-	public IntentDto(String id, String name) {
+	public IntentsDto(String id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -53,7 +53,7 @@ public class IntentDto implements Serializable {
 	/**
 	 * 
 	 */
-	public IntentDto() {
+	public IntentsDto() {
 		// TODO Auto-generated constructor stub
 	}
 }
