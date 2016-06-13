@@ -57,6 +57,8 @@ public class LexicalCategoryManager implements ILexicalCategoryManager {
 		switch (status.getCode()) {
 		case 200:
 			return StatusCode.SUCCESS;
+		case 0:
+			return StatusCode.SUCCESS;
 		case 409:
 			return StatusCode.CONFLICT;
 		default:

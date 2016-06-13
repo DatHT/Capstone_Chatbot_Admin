@@ -9,10 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "Pharse")
-public class Pharse implements Serializable{
+public class Pharse implements Serializable {
 
 	@Id
 	@Column(name = "Id", nullable = false)
@@ -24,20 +23,20 @@ public class Pharse implements Serializable{
 
 	@Column(name = "isAsynchronized")
 	boolean isAsynchronized;
-	
-	@Column(name = "pharseId")
-	int pharseId;
-	
+
+	@Column(name = "lexicalId")
+	int lexicalId;
+
 	public Pharse() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Pharse(int id, String name, boolean isAsynchronized, int pharseId) {
+	public Pharse(int id, String name, boolean isAsynchronized, int lexicalId) {
 		super();
 		Id = id;
 		this.name = name;
 		this.isAsynchronized = isAsynchronized;
-		this.pharseId = pharseId;
+		this.lexicalId = lexicalId;
 	}
 
 	public int getId() {
@@ -64,15 +63,12 @@ public class Pharse implements Serializable{
 		this.isAsynchronized = isAsynchronized;
 	}
 
-	
-	public int getPharseId() {
-		return pharseId;
+	public int getLexicalId() {
+		return lexicalId;
 	}
 
-	public void setPharseId(int pharseId) {
-		this.pharseId = pharseId;
+	public void setLexicalId(int lexicalId) {
+		this.lexicalId = lexicalId;
 	}
 
-	
-	
 }

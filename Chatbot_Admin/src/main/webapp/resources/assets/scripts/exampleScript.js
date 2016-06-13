@@ -30,11 +30,21 @@ function addIntentRows(tableId, data) {
 		var cells = [];
 		cells[0] = i + 1;
 		cells[1] = jsonData.templates[i];
-		cells[2] = "<button type='button' class='btn btn-warning btn-circle'><i class='fa fa-pencil'></i></button>";
-		cells[3] = "<button type='button' class='btn btn-danger btn-circle'><i class='fa fa-minus'></i></button>";
+		cells[2] = "<button type='button' class='btn btn-danger btn-circle'><i class='fa fa-minus'></i></button>";
 		addRow(tableElem, cells);
 	}
 
+}
+
+function moveDiv(divFromId, divToId) {
+	var divFrom = document.getElementById(divFromId);
+	var divTo = document.getElementById(divToId);
+	var divs = divFrom.getElementsByTagName("div");
+	var num = divs.length;
+	for(var i = 0; i , i < num; i++) {
+		divTo.appendChild(divs[i]);
+		//divFrom.removeChild(divs[i]);
+	}
 }
 
 
@@ -105,6 +115,7 @@ function insertPattern(tableId) {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					alert(xmlhttp.responseText);
 					loadIntent(cate);
+					moveDiv("droptarget", "box-dragable");
 				}
 
 			}

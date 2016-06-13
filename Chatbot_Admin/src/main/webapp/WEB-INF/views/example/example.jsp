@@ -58,7 +58,7 @@
 								<th>No.</th>
 								<th>Name</th>
 								<th>Action</th>
-								<th>Action</th>
+								
 							</tr>
 						</thead>
 						<tbody id="intentTable">
@@ -174,7 +174,8 @@
 	height: 30px;
 	background-color: #03a9f4;
 	text-align: center;
-	border-radius: 30%;
+	border-radius: 0%;
+	padding: 5px;
 	display: inline-block;
 	margin: 5px;
 	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.23), 0 3px 10px
