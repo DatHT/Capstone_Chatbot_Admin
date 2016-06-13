@@ -3,6 +3,7 @@
 
 <script src="resources/assets/scripts/exampleScript.js"></script>
 <c:set var="intents" value="${INTENTS}" />
+<c:set var="lexicals" value="${LEXICAL}" />
 <div class="row">
 
 	<!--  page header -->
@@ -15,14 +16,14 @@
 </div>
 
 <div class="row">
-	<div class="col-lg-3">
+	<div class="col-lg-5">
 
 		<form role="form">
 			<div class="form-group">
 				<div class="form-group">
-					<label>Intents</label> <select class="form-control"
-						id="selectIntent">
-						<option value="">----Please select----</option>
+					<label>Intents</label> <select onchange="loadIntent(this)"
+						class="form-control" id="selectIntent">
+						<option value="">--------Please select--------</option>
 						<c:forEach var="intent" items="${intents}">
 							<option value="${intent.id}">${intent.name}</option>
 						</c:forEach>
@@ -33,7 +34,7 @@
 		</form>
 	</div>
 
-	<div class="col-lg-8">
+	<div class="col-lg-7">
 		<div class="panel panel-info">
 			<div class="panel-heading">Explaination</div>
 			<div class="panel-body">
@@ -41,6 +42,30 @@
 					what action should be taken by your software.</p>
 				<p>Example here is a "User say". Examples are written in natural
 					language and annotated so that parameter values can be extracted</p>
+			</div>
+
+		</div>
+	</div>
+	<div class="col-lg-8">
+		<div class="panel panel-primary">
+			<div class="panel-heading">Your templete</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover"
+						id="intentTable">
+						<thead>
+							<tr>
+								<th>No.</th>
+								<th>Name</th>
+								<th>Action</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody id="intentTable">
+
+						</tbody>
+					</table>
+				</div>
 			</div>
 
 		</div>
@@ -64,17 +89,34 @@
 						</div>
 						<div id="collapseOne" class="panel-collapse collapse in">
 							<div class="panel-body">
-								<div id="droptarget" ondrop="drop(event)"
-									ondragover="allowDrop(event)"></div>
-								<br>
+							<div class="col-lg-4">
 								<div id="box-dragable" ondrop="drop(event)"
 									ondragover="allowDrop(event)">
-									<div id="any" class="draggable" draggable="true" ondragstart="drag(event)"
-										>Dat ne</div>
-									<div id="any1" class="draggable" draggable="true" ondragstart="drag(event)"
-										>siu nhan ne</div>
 
+									<c:forEach begin="1" end="4" varStatus="counter">
+										<div id="any${counter.count}" class="draggable"
+											draggable="true" ondragstart="drag(event)">any</div>
+									</c:forEach>
+									<c:forEach var="dragItem" items="${lexicals}"
+										varStatus="counter">
+										<div id="${dragItem.name}" class="draggable" draggable="true"
+											ondragstart="drag(event)">${dragItem.name}</div>
+									</c:forEach>
 								</div>
+								
+							</div>
+							<div class="col-lg-8">
+								<div id="droptarget" ondrop="drop(event)"
+									ondragover="allowDrop(event)"></div>
+									
+								<div id="buttonadd">
+									<button type="button" onclick="insertPattern('intentTable')"
+									 class="btn btn-primary btn-lg btn-block">Add New Pattern</button>
+								</div>
+								
+		
+							</div>
+								
 
 							</div>
 						</div>
@@ -106,13 +148,19 @@
 
 <style>
 #box-dragable {
-  width: 70%;
-  background: #eee;
-  margin: 10px auto;
-  height: 40px;
+	width: 100%;
+	background: #eee;
+	margin: 10px auto;
+	height: auto;
 }
+
+#buttonadd {
+	margin: 10px auto;
+	padding: 10px;
+}
+
 #droptarget {
-	width: 60%;
+	width: 100%;
 	height: 70px;
 	padding: 10px;
 	margin: 0 auto;
@@ -122,13 +170,13 @@
 
 .draggable {
 	cursor: move;
-	width: 100px;
+	width: auto;
 	height: 30px;
 	background-color: #03a9f4;
-	text-align:center;
+	text-align: center;
 	border-radius: 30%;
-	display:inline-block;
-  	margin: 5px;
+	display: inline-block;
+	margin: 5px;
 	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.23), 0 3px 10px
 		rgba(0, 0, 0, 0.16);
 }

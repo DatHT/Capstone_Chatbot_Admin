@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 import com.psib.common.restclient.RequestMethod;
 import com.psib.common.restclient.RestResult;
 import com.psib.common.restclient.RestfulException;
-import com.psib.dto.jsonmapper.IntentDto;
+import com.psib.dto.jsonmapper.intent.IntentDto;
+import com.psib.dto.jsonmapper.intent.IntentsDto;
 
 /**
  * @author DatHT
@@ -26,12 +27,21 @@ public class IntentFactory extends AbstractFactory {
 		super("/intents");
 	}
 	
-	public List<IntentDto> getIntents() throws IOException, RestfulException {
+	public List<IntentsDto> getIntents() throws IOException, RestfulException {
 		
 		RestResult result = client.createInvoker(RequestMethod.GET)
 				.addHeader(AUTH_KEY, AUTH_VALUE)
 				.invoke();
 		
-		return responseList(result, IntentDto.class);
+		return responseList(result, IntentsDto.class);
+	}
+	
+	public String getIntentById(String id) throws IOException, RestfulException {
+		
+		RestResult result = client.createInvoker(RequestMethod.GET)
+				.addHeader(AUTH_KEY, AUTH_VALUE)
+				.addRoute(id)
+				.invoke();
+		return responseString(result);
 	}
 }
