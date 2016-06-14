@@ -24,6 +24,7 @@ function createRowNoEntry(id, data) {
 	var listPhraseContent = document.getElementById('list-phrase');
 	
 	tdNo.addEventListener('click', function() {
+		listPhrase = {};
 		// Get the modal
 		var modal = document.getElementById('myModal');
 		var pContainer = document.getElementById('user-say-container');
@@ -40,6 +41,7 @@ function createRowNoEntry(id, data) {
 		});
 		
 		var saveButton = document.getElementById('save-button');
+		saveButton.disabled = true;
 		saveButton.addEventListener('click', function() {
 			var xmlhttp;
 			if (window.XMLHttpRequest) {
@@ -50,6 +52,7 @@ function createRowNoEntry(id, data) {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					if(xmlhttp.responseText == 'true') {
 						alert('Success!');
+						listPhrase = {};
 						modal.style.display = "none";
 					}
 				}
@@ -118,6 +121,7 @@ function createRowNotFound(id, data) {
 
  function createPhraseElement(text) {
 	 var saveButton = document.getElementById('save-button');
+	 saveButton.disabled = true;
 	 
 	 var element = document.createElement('div');
 	 element.className = 'row';

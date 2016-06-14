@@ -4,54 +4,10 @@
 <c:set var="lexicals" value="${LEXICALS}" />
 <script src="resources/assets/scripts/logScript.js"></script>
 <style>
-/* The Modal (background) */
 .modal {
-	display: none; /* Hidden by default */
-	position: fixed; /* Stay in place */
-	z-index: 1; /* Sit on top */
-	padding-top: 10%; /* Location of the box */
-	left: 0;
-	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
-	overflow: auto; /* Enable scroll if needed */
 	background-color: rgb(0, 0, 0); /* Fallback color */
 	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
-
-/* Modal Content */
-.modal-content {
-	background-color: #fefefe;
-	margin: auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 50%;
-}
-
-.btn-save {
-	float: right;
-	/* border: 1px solid #888; */
-	width: 15%;
-	/*cursor: not-allowed;*/
-	border-radius: 6px;
-}
-
-/* The Close Button */
-.close {
-	color: #ffffff;
-	float: right;
-	font-size: 15px;
-	font-weight: bold;
-	margin-top: -8%;
-	margin-right: -10px;
-}
-
-.close:hover, .close:focus {
-	color: #000;
-	text-decoration: none;
-	cursor: pointer;
-}
-
 .remove {
 	color: #aaaaaa;
 	float: right;
@@ -87,8 +43,23 @@
 </div>
 <div>
 	<button onclick="updateLog()">Update Log</button>
-	<div id="myModal" class="modal">
-		<!-- Modal content -->
+	<div class="modal fade in" id="myModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div id="user-say-container" class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h4 id="user-say-in-modal" class="modal-title" id="myModalLabel"></h4>
+				</div>
+				<div id="list-phrase" class="modal-body"></div>
+				<div class="modal-footer">
+					<button id="save-button" class="btn btn-primary">Save
+						changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <div id="myModal" class="modal">
+		Modal content
 		<div class="modal-content">
 			<span class="close">CLOSE</span>
 			<button id="save-button" class="btn-save" disabled>SAVE</button>
@@ -97,7 +68,7 @@
 			</div>
 			<div id="list-phrase"></div>
 		</div>
-	</div>
+	</div> -->
 	<select class="listLexical btn btn-block">
 		<option value="">----Please select----</option>
 		<c:forEach var="lexical" items="${lexicals}">
