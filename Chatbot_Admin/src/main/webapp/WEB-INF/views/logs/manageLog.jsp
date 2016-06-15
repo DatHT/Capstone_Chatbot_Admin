@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<c:set var="intents" value="${INTENTS}" />
 <c:set var="lexicals" value="${LEXICALS}" />
 <script src="resources/assets/scripts/logScript.js"></script>
 <style>
@@ -57,6 +58,14 @@
 				</div>
 				<p class="choose-phrase-guide">Select text to choose phrase</p>
 				<div id="list-phrase" class="modal-body"></div>
+				<div class="modal-footer">
+					<select class="form-control" id="selectIntent">
+						<option value="">--------Please select--------</option>
+						<c:forEach var="intent" items="${intents}">
+							<option value="${intent.id}">${intent.name}</option>
+						</c:forEach>
+					</select>
+				</div>
 				<div class="modal-footer">
 					<button id="save-button" type="button" class="btn btn-primary">Save
 						changes</button>

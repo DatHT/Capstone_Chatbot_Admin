@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.psib.common.restclient.RestfulException;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
+import com.psib.dto.jsonmapper.intent.IntentsDto;
+import com.psib.service.IIntentManager;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
 
@@ -36,12 +38,16 @@ public class ManageLogController {
 	private ILogManager logManager;
 	@Autowired
 	private ILexicalCategoryManager lexicalManager;
+	@Autowired
+	private IIntentManager intentManager;
 
 	@RequestMapping(value = "/manageLog", method = RequestMethod.GET)
 	public String loadLog(Model model) {
 		try {
+			List<IntentsDto> list = intentManager.getIntents();
+			model.addAttribute(ExampleController.INTENTS, list);
 			List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
-			model.addAttribute("LEXICALS", lexicals);
+			model.addAttribute(LexicalCategoryController.LEXICALS, lexicals);
 		} catch (IOException | RestfulException e) {
 			// TODO Auto-generated catch block
 			model.addAttribute(ERROR, e.getMessage());
