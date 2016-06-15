@@ -10,6 +10,7 @@ function drop(ev) {
 	ev.preventDefault();
 	var data = ev.dataTransfer.getData("text");
 	ev.target.appendChild(document.getElementById(data));
+	//abc
 	// document.getElementById("here").innerHtml = "Dat";
 //	var node = document.createElement("DIV");
 //	var textnode = document.createTextNode("Dat");
