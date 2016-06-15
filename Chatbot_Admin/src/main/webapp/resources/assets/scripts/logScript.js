@@ -28,6 +28,8 @@ function createRowNoEntry(id, data) {
 	var tableBody = document.getElementById(id);
 	var tr = document.createElement('tr');
 	var tdNo = document.createElement('td');
+	tdNo.setAttribute("data-toggle", "modal");
+	tdNo.setAttribute("data-target", "#myModal");
 	var tdText = document.createTextNode(data.userSay);
 
 	var listPhraseContent = document.getElementById('list-phrase');
@@ -71,8 +73,7 @@ function createRowNoEntry(id, data) {
 
 function closeModalDialog() {
 	listPhrase = {};
-	var modal = document.getElementById('myModal');
-	modal.style.display = "none";
+	$('#myModal').modal('hide');
 	var listPhraseContent = document.getElementById('list-phrase');
 	while (listPhraseContent.firstChild) {
 		listPhraseContent.removeChild(listPhraseContent.firstChild);
@@ -89,7 +90,6 @@ function requestAddPhrase() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			if (xmlhttp.responseText == 'true') {
 				alert('Success!');
-				var modal = document.getElementById('myModal');
 				closeModalDialog();
 			}
 		}

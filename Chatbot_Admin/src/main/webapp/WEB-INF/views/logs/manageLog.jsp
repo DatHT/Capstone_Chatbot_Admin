@@ -9,12 +9,16 @@
 	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
+.modal-footer {
+	margin-top: 0px;
+}
+
 .remove {
 	color: #aaaaaa;
 	float: right;
 	font-size: 10px;
 	font-weight: bold;
-	margin-top: 15px;
+	margin: 10px 20px;
 }
 
 .remove:hover, .remove:focus {
@@ -23,22 +27,13 @@
 	cursor: pointer;
 }
 
-.phrase-el {
-	width: 30%;
-}
-
-.lexical-el {
-	width: 50%;
-}
-
 .listLexical {
 	display: none;
 }
 
 .choose-phrase-guide {
 	float: left;
-	margin-left: 10px;
-	margin-top: -10px;
+	margin: 11px 0px 0px 15px;
 }
 </style>
 <div class="row">
@@ -50,40 +45,34 @@
 	<!-- end  page header -->
 </div>
 <div>
-	<div class="modal fade in" id="myModal">
+	<!--  Modals-->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div id="user-say-container" class="modal-header">
-					<button type="button" class="close">×</button>
-					<h4 id="user-say-in-modal" class="modal-title" id="myModalLabel"></h4>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="user-say-in-modal">Modal title</h4>
 				</div>
-				<div id="list-phrase" class="modal-body">
-					<p class="choose-phrase-guide">Select text to choose phrase</p>
-				</div>
+				<p class="choose-phrase-guide">Select text to choose phrase</p>
+				<div id="list-phrase" class="modal-body"></div>
 				<div class="modal-footer">
-					<button id="save-button" class="btn btn-primary">Save
+					<button id="save-button" type="button" class="btn btn-primary">Save
 						changes</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- <div id="myModal" class="modal">
-		Modal content
-		<div class="modal-content">
-			<span class="close">CLOSE</span>
-			<button id="save-button" class="btn-save" disabled>SAVE</button>
-			<div id="user-say-container">
-				<p id="user-say-in-modal"></p>
-			</div>
-			<div id="list-phrase"></div>
-		</div>
-	</div> -->
+	<!-- End modal -->
+	<!-- Lexical list -->
 	<select class="listLexical btn btn-block">
 		<option value="">----Please select----</option>
 		<c:forEach var="lexical" items="${lexicals}">
 			<option value="${lexical.id}">${lexical.name}</option>
 		</c:forEach>
 	</select>
+	<!-- End lexical list -->
 </div>
 <div class="row">
 	<script>
