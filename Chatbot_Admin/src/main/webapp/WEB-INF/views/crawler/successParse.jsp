@@ -111,7 +111,7 @@
 								<label class="header-customize-font"> Force parse </label>
 							</header>
 							<div class="panel-body">
-								<form class="form-horizontal tasi-form" action="ForceParse">
+								<form class="form-horizontal tasi-form" action="forceParse">
 									<div id="selected" class="form-group">
 										<label class="col-sm-3 control-label" style="text-align: left">Number
 											of page(*):</label>

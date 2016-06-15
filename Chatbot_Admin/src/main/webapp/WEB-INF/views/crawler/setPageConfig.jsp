@@ -93,7 +93,7 @@
                                     </label>
                                 </header>                                
                                 <div class="panel-body">
-                                    <form name="myForm" id="myForm" action="ProcessServlet" method="GET">
+                                    <form name="myForm" id="myForm" action="processServlet" method="GET">
                                         <div class="form-group">
                                             <div class="progressRecipe">
                                                 <div class="circle done">
@@ -141,7 +141,7 @@
                                         <div id="popup" class="popup"></div>
                                         <div id="bg" class="popup_bg"></div> 
                                         <div class="col-sm-12">
-                                            <iframe style="width: 100%" sandbox="allow-same-origin allow-pointer-lock allow-scripts allow-popups allow-forms" width="700" height="500" 
+                                            <iframe style="width: 100%" sandbox="allow-same-origin" width="700" height="500" 
                                                     id="myframe" src="<c:url value="/resources/tmp.html"/>" onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
                                             </iframe>
                                         </div>

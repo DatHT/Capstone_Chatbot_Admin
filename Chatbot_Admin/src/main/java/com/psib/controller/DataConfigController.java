@@ -61,7 +61,8 @@ import com.psib.util.XMLUtils;
 
 @Controller
 public class DataConfigController {
-
+	private static final String pageConfigXML = "D:/Capstone/pageconfig.xml";
+	private static final String parserConfigXML = "D:/Capstone/parserconfig.xml";
 	private static final Logger logger = LoggerFactory.getLogger(DataConfigController.class);
 
 	@Autowired
@@ -84,12 +85,18 @@ public class DataConfigController {
 		return "manualAddFood";
 	}
 
-	@RequestMapping(value = "/ForceParse", method = RequestMethod.GET)
+	@RequestMapping(value = "/forceParse", method = RequestMethod.GET)
 	public String forceParse(@RequestParam String btnAction, Model model, HttpServletRequest request,
 			HttpServletRequest response) throws InterruptedException {
 		WebDriver driver = new FirefoxDriver();
 		if (btnAction.equals("STOP")) {
-			driver.quit();
+			String parentWindow = driver.getWindowHandle();
+			Set<String> allWindows = driver.getWindowHandles();
+			for (String curWindow : allWindows) {
+				driver.switchTo().window(curWindow);
+			}
+			driver.close();
+			driver.switchTo().window(parentWindow);
 			HttpSession session = request.getSession();
 			System.out.println("STOP PARSING");
 			session.setAttribute("MESSAGE", "The force parse process has been stopped!");
@@ -105,7 +112,7 @@ public class DataConfigController {
 				String url = request.getParameter("txtLinkPage");
 				System.out.println("url =" + url);
 				// lay config page
-				String xmlFilePath = "D:/log/config/parserconfig.xml";
+				String xmlFilePath = parserConfigXML;
 				ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
 				List<ConfigDTO> configs = tmp.getConfig();
 				System.out.println("Config Size: " + configs.size());
@@ -128,7 +135,7 @@ public class DataConfigController {
 					System.out.println("Xpath: " + xpath);
 				}
 				// lay url page
-				xmlFilePath = "D:/log/config/pageconfig.xml";
+				xmlFilePath = pageConfigXML;
 				PageDTOList tmpPage = XMLUtils.unmarshallPage(xmlFilePath);
 
 				List<PageDTO> pageConfigs = tmpPage.getConfig();
@@ -331,6 +338,7 @@ public class DataConfigController {
 						countExits++;
 					}
 				}
+				driver.close();
 				System.out.println("Sucessfull Added Record: " + countAdded);
 				System.out.println("Exit Record: " + countExits);
 				long estimatedTime = System.nanoTime() - startTime;
@@ -355,7 +363,7 @@ public class DataConfigController {
 			throws UnsupportedEncodingException {
 		// String realPath = CommonUtils.getPath();
 		// get Config
-		String xmlFilePath = "D:/log/config/parserconfig.xml";
+		String xmlFilePath = parserConfigXML;
 		ConfigDTOList configs = XMLUtils.unmarshall(xmlFilePath);
 		HttpSession session = request.getSession();
 		String str = XMLUtils.marshallConfigToString(configs);
@@ -366,17 +374,17 @@ public class DataConfigController {
 		session.setAttribute("INFOCONFIG", str);
 
 		// get Page
-		xmlFilePath = "D:/log/config/pageconfig.xml";
+		xmlFilePath = pageConfigXML;
 		PageDTOList pages = XMLUtils.unmarshallPage(xmlFilePath);
 
 		str = XMLUtils.marshallPageToString(pages);
 		str = str.replace('"', c);
 		session.setAttribute("INFOPAGE", str);
 
-		return "Configuration";
+		return "configuration";
 	}
 
-	@RequestMapping(value = "/ProcessServlet", method = RequestMethod.GET)
+	@RequestMapping(value = "/processServlet", method = RequestMethod.GET)
 	public String configGuration(@RequestParam String btnAction, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		if (btnAction.equals("Set List Page")) {
@@ -439,7 +447,7 @@ public class DataConfigController {
 			System.out.println(result);
 			session.setAttribute("URL", result);
 			session.setAttribute("LINKPAGE", str);
-			return "SetListPage";
+			return "setListPage";
 		}
 		if (btnAction.equals("Set Parser Config")) {
 			String str = request.getParameter("txtURL");
@@ -501,130 +509,133 @@ public class DataConfigController {
 			System.out.println(result);
 			session.setAttribute("URL", result);
 			session.setAttribute("LINKPAGE", str);
-			return "SetParserConfig";
-		}if(btnAction.equals("AddNewPageList"))
-
-	{
-		String xpath = request.getParameter("PAGE");
-		HttpSession session = request.getSession();
-		String url = (String) session.getAttribute("URL");
-		String linkPage = (String) session.getAttribute("LINKPAGE");
-		String foodname = request.getParameter("FOODNAME");
-		String image = request.getParameter("IMAGE");
-		String nextPage = request.getParameter("NEXTPAGE");
-
-		String next = "";
-		if (nextPage == "") {
-
-			next = "N/A";
+			return "setParserConfig";
 		}
-		System.out.println("Next Page: " + next);
-		// get numNextPage
-		List<String> xpaths = new ArrayList<String>();
-		xpaths.add(request.getParameter("PAGE"));
-		xpaths.add(request.getParameter("FOODNAME"));
-		xpaths.add(request.getParameter("IMAGE"));
+		if (btnAction.equals("AddNewPageList"))
 
-		// Parse to List combine links
-		// for (String : xpaths) {
-		// System.out.println(xpath);
-		// }
-		PageDTO newPage = new PageDTO(url, linkPage, xpaths.get(0), xpaths.get(1), xpaths.get(2), next);
+		{
+			String xpath = request.getParameter("PAGE");
+			HttpSession session = request.getSession();
+			String url = (String) session.getAttribute("URL");
+			String linkPage = (String) session.getAttribute("LINKPAGE");
+			String foodname = request.getParameter("FOODNAME");
+			String image = request.getParameter("IMAGE");
+			String nextPage = request.getParameter("NEXTPAGE");
 
-		String xmlFilePath = "D:/Capstone/pageconfig.xml";
-		PageDTOList pages = XMLUtils.unmarshallPage(xmlFilePath);
-		System.out.println(xmlFilePath);
+			String next = "";
+			if (nextPage == "") {
 
-		boolean add;
-		if (pages == null) {
-			pages = new PageDTOList();
-			PageDTO page = new PageDTO();
-			page.getPages();
+				next = "N/A";
+			}
+			System.out.println("Next Page: " + next);
+			// get numNextPage
+			List<String> xpaths = new ArrayList<String>();
+			xpaths.add(request.getParameter("PAGE"));
+			xpaths.add(request.getParameter("FOODNAME"));
+			xpaths.add(request.getParameter("IMAGE"));
 
-		} else {
-			System.out.println("Khac NULL");
-		}
-		boolean exist = false;
-		List<PageDTO> checkExist = pages.getConfig();
-		int pos = -1;
-		for (PageDTO cfg : checkExist) {
-			pos++;
-			if (cfg.getSite().equals(url)) {
-				exist = true;
-				break;
+			// Parse to List combine links
+			// for (String : xpaths) {
+			// System.out.println(xpath);
+			// }
+			PageDTO newPage = new PageDTO(url, linkPage, xpaths.get(0), xpaths.get(1), xpaths.get(2), next);
+
+			String xmlFilePath = pageConfigXML;
+			PageDTOList pages = XMLUtils.unmarshallPage(xmlFilePath);
+			System.out.println(xmlFilePath);
+
+			boolean add;
+			if (pages == null) {
+				pages = new PageDTOList();
+				PageDTO page = new PageDTO();
+				page.getPages();
+
+			} else {
+				System.out.println("Khac NULL");
+			}
+			boolean exist = false;
+			List<PageDTO> checkExist = pages.getConfig();
+			int pos = -1;
+			for (PageDTO cfg : checkExist) {
+				pos++;
+				if (cfg.getSite().equals(url)) {
+					exist = true;
+					break;
+				}
+			}
+			System.out.println(exist);// Existed
+			// solution update
+			if (exist) {
+				pages.getConfig().remove(pos);
+			}
+			checkExist.add(newPage);
+			add = XMLUtils.marshallToFilePage(pages, xmlFilePath);
+			System.out.println(add);
+			if (add) {
+				session.setAttribute("MESSAGE", "New page configuration has been inserted to storage!");
+				return "success";
+			} else {
+				session.setAttribute("MESSAGE", "Page configuration fails!");
+				return "errorPage";
 			}
 		}
-		System.out.println(exist);// Existed
-		// solution update
-		if (exist) {
-			pages.getConfig().remove(pos);
-		}
-		checkExist.add(newPage);
-		add = XMLUtils.marshallToFilePage(pages, xmlFilePath);
-		System.out.println(add);
-		if (add) {
-			session.setAttribute("MESSAGE", "New page configuration has been inserted to storage!");
-			return "success";
-		} else {
-			session.setAttribute("MESSAGE", "Page configuration fails!");
-			return "errorPage";
-		}
-	}if(btnAction.equals("AddNewConfiguration"))
-	{
-		HttpSession session = request.getSession();
-		String url = (String) session.getAttribute("URL");
-		// session.setAttribute("URL", null);
-		List<String> xpaths = new ArrayList<String>();
-		xpaths.add(request.getParameter("NAME"));
-		xpaths.add(request.getParameter("ADDRESS"));
-		xpaths.add(request.getParameter("USER_RATE"));
-		xpaths.add(request.getParameter("MAP"));
+		if (btnAction.equals("AddNewConfiguration")) {
+			HttpSession session = request.getSession();
+			String url = (String) session.getAttribute("URL");
+			// session.setAttribute("URL", null);
+			List<String> xpaths = new ArrayList<String>();
+			xpaths.add(request.getParameter("NAME"));
+			xpaths.add(request.getParameter("ADDRESS"));
+			xpaths.add(request.getParameter("USER_RATE"));
+			xpaths.add(request.getParameter("MAP"));
 
-		for (String xpath : xpaths) {
-			System.out.println(xpath);
-		}
+			for (String xpath : xpaths) {
+				System.out.println(xpath);
+			}
 
-		ConfigDTO newConfig = new ConfigDTO(url, xpaths.get(0), xpaths.get(1), xpaths.get(2), xpaths.get(3));
+			ConfigDTO newConfig = new ConfigDTO(url, xpaths.get(0), xpaths.get(1), xpaths.get(2), xpaths.get(3));
 
-		// Load file XPath cÃ³ sáºµn
-		String xmlFilePath = "D:/Capstone/parserconfig.xml";
-		ConfigDTOList configs = XMLUtils.unmarshall(xmlFilePath);
+			// Load file XPath cÃ³ sáºµn
+			String xmlFilePath = parserConfigXML;
+			ConfigDTOList configs = XMLUtils.unmarshall(xmlFilePath);
 
-		// ...
-		boolean add;
-		if (configs == null) {
-			configs = new ConfigDTOList();
-			ConfigDTO config = new ConfigDTO();
-			config.getConfigs();
+			// ...
+			boolean add;
+			if (configs == null) {
+				configs = new ConfigDTOList();
+				ConfigDTO config = new ConfigDTO();
+				config.getConfigs();
 
-		} else {
-			System.out.println("Khac NULL");
-		}
-		boolean exist = false;
-		List<ConfigDTO> checkExist = configs.getConfig();
-		int pos = -1;
-		for (ConfigDTO cfg : checkExist) {
-			pos++;
-			if (cfg.getSite().equals(url)) {
-				exist = true;
-				break;
+			} else {
+				System.out.println("Khac NULL");
+			}
+			boolean exist = false;
+			List<ConfigDTO> checkExist = configs.getConfig();
+			int pos = -1;
+			for (ConfigDTO cfg : checkExist) {
+				pos++;
+				if (cfg.getSite().equals(url)) {
+					exist = true;
+					break;
+				}
+			}
+			System.out.println("EXIST" + exist + pos);// Existed
+			// solution update
+			if (exist) {
+				checkExist.remove(pos);
+			}
+			checkExist.add(newConfig);
+			add = XMLUtils.marshallToFile(configs, xmlFilePath);
+			session.setAttribute("CONFIG", newConfig.getSite());
+			System.out.println(add);
+			if (add) {
+				session.setAttribute("MESSAGE", "New page configuration has been inserted to storage!");
+				return "successParse";
+			} else {
+				session.setAttribute("MESSAGE", "Page configuration fails!");
+				return "errorPage";
 			}
 		}
-		System.out.println("EXIST" + exist + pos);// Existed
-		// solution update
-		if (exist) {
-			checkExist.remove(pos);
-		}
-		checkExist.add(newConfig);
-		add = XMLUtils.marshallToFile(configs, xmlFilePath);
-		session.setAttribute("CONFIG", newConfig.getSite());
-		System.out.println(add);
-		if (add) {
-			session.setAttribute("MESSAGE", "New page configuration has been inserted to storage!");
-			return "successParse";
-		} else {
-			session.setAttribute("MESSAGE", "Page configuration fails!");
-			return "errorPage";
-		}
-	}return"";
-}}
+		return "";
+	}
+}

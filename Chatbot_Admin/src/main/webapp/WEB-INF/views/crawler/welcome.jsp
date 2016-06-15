@@ -91,7 +91,7 @@
 								<label class="header-customize-font">Setup List Page</label>
 							</header>
 							<div class="panel-body">
-								<form action="ProcessServlet"
+								<form action="processServlet"
 									onsubmit="return checkInputConfig(this)">
 									<div class="form-group">
 										<label for="input-01">URL of input page (required):</label> <input
@@ -113,7 +113,7 @@
 								<label class="header-customize-font">Set Parser Config</label>
 							</header>
 							<div class="panel-body">
-								<form action="ProcessServlet" onsubmit="return checkInputConfig(this)">
+								<form action="processServlet" onsubmit="return checkInputConfig(this)">
 									<div class="form-group">
 										<label for="input-01">URL of input page (required):</label> <input
 											type="url" class="form-control" size="45" name="txtURL"
@@ -134,7 +134,7 @@
 								<label class="header-customize-font">Force Parse</label>
 							</header>
 							<div class="panel-body">
-								<form class="form-horizontal tasi-form" action="ForceParse"
+								<form class="form-horizontal tasi-form" action="forceParse"
 									id="parseForm">
 									<div class="form-group">
 										<label class="col-sm-3 control-label" for="selectSite"
@@ -182,7 +182,7 @@
 										name="btnAction" />
 								</form>
 								<!-- Modal -->
-								<form action="ForceParse">
+								<form action="forceParse">
 									<div aria-hidden="true" aria-labelledby="myModalLabel"
 										role="dialog" tabindex="-1" id="parsing" class="modal fade">
 										<div class="modal-dialog">
