@@ -20,7 +20,7 @@ import com.psib.common.restclient.RestfulException;
 public class AbstractFactory {
 
 	protected static final String AUTH_KEY = "Authorization";
-	protected static final String AUTH_VALUE = "Bearer 3f37b4cef46d45ad801a627559865999";
+	protected static final String AUTH_VALUE = "Bearer f3d71301c93646e59acbe09ec080cf14";
 	protected RestClient client;
 	protected static final String url = "https://api.api.ai/v1";
 	
