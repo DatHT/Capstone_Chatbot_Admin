@@ -8,6 +8,7 @@
 	background-color: rgb(0, 0, 0); /* Fallback color */
 	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
+
 .remove {
 	color: #aaaaaa;
 	float: right;
@@ -33,6 +34,12 @@
 .listLexical {
 	display: none;
 }
+
+.choose-phrase-guide {
+	float: left;
+	margin-left: 10px;
+	margin-top: -10px;
+}
 </style>
 <div class="row">
 	<!--  page header -->
@@ -43,14 +50,16 @@
 </div>
 <div>
 	<button onclick="updateLog()">Update Log</button>
-	<div class="modal fade in" id="myModal" tabindex="-1" role="dialog">
+	<div class="modal fade in" id="myModal">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div id="user-say-container" class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">×</button>
+					<button type="button" class="close">×</button>
 					<h4 id="user-say-in-modal" class="modal-title" id="myModalLabel"></h4>
 				</div>
-				<div id="list-phrase" class="modal-body"></div>
+				<div id="list-phrase" class="modal-body">
+					<p class="choose-phrase-guide">Select text to choose phrase</p>
+				</div>
 				<div class="modal-footer">
 					<button id="save-button" class="btn btn-primary">Save
 						changes</button>
