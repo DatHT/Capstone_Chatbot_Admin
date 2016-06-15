@@ -29,7 +29,7 @@ public class LogManager implements ILogManager {
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
 
-	private static String chatLogsFolder = "D:/Logs";
+	private static String chatLogsFolder = "D:/log/Logs";
 	private static String logPath = chatLogsFolder + "/log";
 
 	private static String LOG_JSON_FORMAT_MODIFIED_DATE = "modifiedDate";
