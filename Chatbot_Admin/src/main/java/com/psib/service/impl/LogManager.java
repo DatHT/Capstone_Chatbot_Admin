@@ -25,7 +25,7 @@ import com.psib.util.FileUtils;
 
 @Service
 public class LogManager implements ILogManager {
-	@Autowired 
+	@Autowired
 	private ILexicalCategoryManager lexicalCategoryManager;
 
 	private static String START_LOG = ">>>>>";
@@ -46,6 +46,8 @@ public class LogManager implements ILogManager {
 	private static String errCode = "errCode";
 	private static String userSay = "userSay";
 	private static String contexts = "contexts";
+	private static String action = "action";
+	private static String intentName = "intentName";
 
 	public JSONObject logJson;
 
@@ -98,6 +100,10 @@ public class LogManager implements ILogManager {
 				log = this.getNoEntryLog(jsonObject);
 			}
 			if (log != null && !checkExistLog(jsonArray, log)) {
+				log.put(action, jsonObject.getJSONObject(log_json).getJSONObject("result").get(action));
+				log.put(intentName, jsonObject.getJSONObject(log_json).getJSONObject("result").getJSONObject("metadata")
+						.get(intentName));
+
 				jsonArray.put(log);
 			}
 		}
@@ -224,15 +230,16 @@ public class LogManager implements ILogManager {
 
 		return isExist;
 	}
+
 	public void deleteLog(String logString) throws JSONException, IOException {
 		JSONObject logJson = this.getLogJson();
-		
+
 		JSONArray jsonArray = new JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
 		JSONArray newJson = new JSONArray();
-		for(int i = 0; i < jsonArray.length(); i++) {
+		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject log = jsonArray.getJSONObject(i);
 			int logStatusCode = Integer.parseInt(log.get(errCode).toString());
-			if(logStatusCode == NO_ENTRY_CODE) {
+			if (logStatusCode == NO_ENTRY_CODE) {
 				if (!log.get(userSay).equals(logString)) {
 					newJson.put(log);
 				}
@@ -254,19 +261,19 @@ public class LogManager implements ILogManager {
 		while (keys.hasNext()) {
 			String key = keys.next();
 			String value = jsonObject.getString(key);
-			
+
 			Entry entry = new Entry();
 			entry.setValue(key);
 			List<String> synonym = new ArrayList<>();
 			synonym.add(key);
 			entry.setSynonyms(synonym);
-			
+
 			StatusCode code = lexicalCategoryManager.addPhrase(entry, value);
 			switch (code) {
 			case SUCCESS:
 				deleteLog(key);
 				return true;
-			default: 
+			default:
 				return false;
 			}
 		}

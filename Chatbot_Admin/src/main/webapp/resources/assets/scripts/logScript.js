@@ -27,14 +27,21 @@ function updateLog() {
 function createRowNoEntry(id, data) {
 	var tableBody = document.getElementById(id);
 	var tr = document.createElement('tr');
-	var tdNo = document.createElement('td');
-	tdNo.setAttribute("data-toggle", "modal");
-	tdNo.setAttribute("data-target", "#myModal");
-	var tdText = document.createTextNode(data.userSay);
+	tr.setAttribute("data-toggle", "modal");
+	tr.setAttribute("data-target", "#myModal");
+	
+	var tdUserSay = document.createElement('td');
+	var textUserSay = document.createTextNode(data.userSay);
+	
+	var tdAction = document.createElement('td');
+	var textAction = document.createTextNode(data.action);
+	
+	var tdIntent = document.createElement('td');
+	var textIntent = document.createTextNode(data.intentName);
 
 	var listPhraseContent = document.getElementById('list-phrase');
 
-	tdNo.addEventListener('click', function() {
+	tr.addEventListener('click', function() {
 		// Get the modal
 		var modal = document.getElementById('myModal');
 		var pContainer = document.getElementById('user-say-container');
@@ -66,8 +73,15 @@ function createRowNoEntry(id, data) {
 		}
 	});
 
-	tdNo.appendChild(tdText);
-	tr.appendChild(tdNo);
+	tdUserSay.appendChild(textUserSay);
+	tr.appendChild(tdUserSay);
+	
+	tdAction.appendChild(textAction);
+	tr.appendChild(tdAction);
+	
+	tdIntent.appendChild(textIntent);
+	tr.appendChild(tdIntent);
+	
 	tableBody.appendChild(tr);
 }
 
@@ -105,14 +119,27 @@ function createRowNotFound(id, data) {
 	var tableBody = document.getElementById(id);
 	var tr = document.createElement('tr');
 	var tdFood = document.createElement('td');
-	var tdFoodText = document.createTextNode(data.Food);
+	var tdFoodText = document.createTextNode(data.contexts.Food);
 	tdFood.appendChild(tdFoodText);
 	var tdLocation = document.createElement('td');
-	var tdLocationText = document.createTextNode(data.Location);
+	var tdLocationText = document.createTextNode(data.contexts.Location);
+	
+	var tdAction = document.createElement('td');
+	var textAction = document.createTextNode(data.action);
+	
+	var tdIntent = document.createElement('td');
+	var textIntent = document.createTextNode(data.intentName);
+
 	tdLocation.appendChild(tdLocationText);
 
 	tr.appendChild(tdFood);
 	tr.appendChild(tdLocation);
+	
+	tdAction.appendChild(textAction);
+	tr.appendChild(tdAction);
+	
+	tdIntent.appendChild(textIntent);
+	tr.appendChild(tdIntent);
 
 	tableBody.appendChild(tr);
 }

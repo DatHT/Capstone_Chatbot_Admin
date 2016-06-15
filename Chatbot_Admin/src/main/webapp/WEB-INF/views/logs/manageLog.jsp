@@ -92,7 +92,7 @@
 								listContent[int]);
 					} else if (listContent[int].errCode == '404') {
 						createRowNotFound("not-found-table-body",
-								listContent[int].contexts);
+								listContent[int]);
 					}
 				}
 			}
@@ -110,6 +110,8 @@
 						<thead>
 							<tr>
 								<th>User say</th>
+								<th>Action</th>
+								<th>Intent</th>
 							</tr>
 						</thead>
 						<tbody id="no-entry-table-body">
@@ -131,6 +133,8 @@
 							<tr>
 								<th>Food</th>
 								<th>Location</th>
+								<th>Action</th>
+								<th>Intent</th>
 							</tr>
 						</thead>
 						<tbody id="not-found-table-body">
