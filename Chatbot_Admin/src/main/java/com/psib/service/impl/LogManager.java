@@ -37,7 +37,7 @@ public class LogManager implements ILogManager {
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
 
-	private static String chatLogsFolder = "G:/OneDrive/Documents/FPT/NewFPTOnedrive/Semester9/Capstone/Chatbot/repository/engine/Capstone_Chatbot_Engine/bin";
+	private static String chatLogsFolder = "/Users/HuyTCM/Desktop/Logs";
 	private static String logPath = chatLogsFolder + "/log";
 
 	private static String LOG_JSON_FORMAT_MODIFIED_DATE = "modifiedDate";
@@ -53,7 +53,7 @@ public class LogManager implements ILogManager {
 		logJson = new JSONObject();
 
 		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, -1);
+		calendar.add(Calendar.DATE, 0);
 
 		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(calendar.getTime()));
 		logJson.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
@@ -188,7 +188,7 @@ public class LogManager implements ILogManager {
 			if (!dirList.isDirectory()) {
 				continue;
 			}
-			if (dirList.getName().compareTo(lastModifiedDate) > 0) {
+			if (dirList.getName().compareTo(lastModifiedDate) >= 0) {
 				for (File logFile : dirList.listFiles()) {
 					newFileLogPath.add(logFile.getPath());
 				}
@@ -203,6 +203,9 @@ public class LogManager implements ILogManager {
 		int statusCode = Integer.parseInt(jsonObject.get(errCode).toString());
 		boolean isExist = false;
 		int i = 0;
+		if (jsonArray.length() == 0) {
+			return false;
+		}
 		while (i < jsonArray.length() && !isExist) {
 			JSONObject log = jsonArray.getJSONObject(i);
 			int logStatusCode = Integer.parseInt(log.get(errCode).toString());

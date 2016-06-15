@@ -76,16 +76,14 @@ public class ManageLogController {
 	}
 	
 	@RequestMapping(value = "/updateLog", method = RequestMethod.GET)
-	public void updateLog() {
+	public @ResponseBody boolean updateLog() {
 		try {
 			logManager.updateLog();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (JSONException | IOException e1) {
+			e1.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 
 }

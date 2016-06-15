@@ -45,11 +45,11 @@
 	<!--  page header -->
 	<div class="col-lg-12">
 		<h1 class="page-header">Logs Manager</h1>
+		<button onclick="updateLog()">Update Log</button>
 	</div>
 	<!-- end  page header -->
 </div>
 <div>
-	<button onclick="updateLog()">Update Log</button>
 	<div class="modal fade in" id="myModal">
 		<div class="modal-dialog">
 			<div class="modal-content">
