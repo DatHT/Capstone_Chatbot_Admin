@@ -18,7 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.psib.common.restclient.RestfulException;
+import com.psib.constant.CodeManager;
+import com.psib.constant.StatusCode;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
+import com.psib.dto.jsonmapper.intent.IntentsDto;
+import com.psib.service.IIntentManager;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
 
@@ -36,14 +40,19 @@ public class ManageLogController {
 	private ILogManager logManager;
 	@Autowired
 	private ILexicalCategoryManager lexicalManager;
+	@Autowired
+	private IIntentManager intentManager;
 
 	@RequestMapping(value = "/manageLog", method = RequestMethod.GET)
 	public String loadLog(Model model) {
 		try {
+			logManager.initialLogManager();
+
+			List<IntentsDto> list = intentManager.getIntents();
+			model.addAttribute(ExampleController.INTENTS, list);
 			List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
-			model.addAttribute("LEXICALS", lexicals);
-		} catch (IOException | RestfulException e) {
-			// TODO Auto-generated catch block
+			model.addAttribute(LexicalCategoryController.LEXICALS, lexicals);
+		} catch (IOException | RestfulException | JSONException e) {
 			model.addAttribute(ERROR, e.getMessage());
 			return "error";
 		}
@@ -64,28 +73,39 @@ public class ManageLogController {
 
 		return response;
 	}
+
 	@RequestMapping(value = "/addPhrase", method = RequestMethod.POST)
-	public @ResponseBody boolean addPhrase(@RequestParam("listPhrase") String listPhrase) {
+	public @ResponseBody String addPhrase(@RequestParam("listPhrase") String listPhrase, Model model) {
+		String responseText = "";
 		try {
-			return logManager.addPhrase(listPhrase);
+			StatusCode code = logManager.addPhrase(listPhrase);
+			switch (code) {
+			case SUCCESS:
+				responseText = CodeManager.SUCCESS;
+				break;
+			case ERROR:
+				responseText = CodeManager.ERROR;
+				break;
+			case CONFLICT:
+				responseText = CodeManager.EXISTED;
+				break;
+			}
 		} catch (JSONException | IOException | RestfulException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			model.addAttribute(ERROR, e.getMessage());
 		}
-		return false;
+		return responseText;
 	}
-	
+
 	@RequestMapping(value = "/updateLog", method = RequestMethod.GET)
-	public void updateLog() {
+	public @ResponseBody boolean updateLog() {
 		try {
 			logManager.updateLog();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (JSONException | IOException e1) {
+			e1.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 
 }

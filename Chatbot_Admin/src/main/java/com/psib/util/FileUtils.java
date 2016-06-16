@@ -26,14 +26,12 @@ public class FileUtils {
 		File file = new File(filePath);
 
 		FileWriter fileWriter = null;
-		try {
-			fileWriter = new FileWriter(file);
-			
-			fileWriter.write(data);
-			fileWriter.flush();
-		} finally {
-			fileWriter.close();
-		}
+		fileWriter = new FileWriter(file);
+
+		fileWriter.write(data);
+		fileWriter.flush();
+		
+		fileWriter.close();
 	}
 
 	public static List<String> getAllFiles(String directoryPath) throws IOException {

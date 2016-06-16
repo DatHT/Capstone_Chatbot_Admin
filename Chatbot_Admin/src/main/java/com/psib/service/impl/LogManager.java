@@ -25,7 +25,7 @@ import com.psib.util.FileUtils;
 
 @Service
 public class LogManager implements ILogManager {
-	@Autowired 
+	@Autowired
 	private ILexicalCategoryManager lexicalCategoryManager;
 
 	private static String START_LOG = ">>>>>";
@@ -37,7 +37,7 @@ public class LogManager implements ILogManager {
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
 
-	private static String chatLogsFolder = "G:/OneDrive/Documents/FPT/NewFPTOnedrive/Semester9/Capstone/Chatbot/repository/engine/Capstone_Chatbot_Engine/bin";
+	private static String chatLogsFolder = "/Users/HuyTCM/Desktop/Logs";
 	private static String logPath = chatLogsFolder + "/log";
 
 	private static String LOG_JSON_FORMAT_MODIFIED_DATE = "modifiedDate";
@@ -46,14 +46,16 @@ public class LogManager implements ILogManager {
 	private static String errCode = "errCode";
 	private static String userSay = "userSay";
 	private static String contexts = "contexts";
+	private static String action = "action";
+	private static String intentName = "intentName";
 
 	public JSONObject logJson;
 
-	public LogManager() throws JSONException, IOException {
+	public void initialLogManager() throws JSONException, IOException {
 		logJson = new JSONObject();
 
 		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, -1);
+		calendar.add(Calendar.DATE, 0);
 
 		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(calendar.getTime()));
 		logJson.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
@@ -98,6 +100,10 @@ public class LogManager implements ILogManager {
 				log = this.getNoEntryLog(jsonObject);
 			}
 			if (log != null && !checkExistLog(jsonArray, log)) {
+				log.put(action, jsonObject.getJSONObject(log_json).getJSONObject("result").get(action));
+				log.put(intentName, jsonObject.getJSONObject(log_json).getJSONObject("result").getJSONObject("metadata")
+						.get(intentName));
+
 				jsonArray.put(log);
 			}
 		}
@@ -188,7 +194,7 @@ public class LogManager implements ILogManager {
 			if (!dirList.isDirectory()) {
 				continue;
 			}
-			if (dirList.getName().compareTo(lastModifiedDate) > 0) {
+			if (dirList.getName().compareTo(lastModifiedDate) >= 0) {
 				for (File logFile : dirList.listFiles()) {
 					newFileLogPath.add(logFile.getPath());
 				}
@@ -203,6 +209,9 @@ public class LogManager implements ILogManager {
 		int statusCode = Integer.parseInt(jsonObject.get(errCode).toString());
 		boolean isExist = false;
 		int i = 0;
+		if (jsonArray.length() == 0) {
+			return false;
+		}
 		while (i < jsonArray.length() && !isExist) {
 			JSONObject log = jsonArray.getJSONObject(i);
 			int logStatusCode = Integer.parseInt(log.get(errCode).toString());
@@ -221,15 +230,16 @@ public class LogManager implements ILogManager {
 
 		return isExist;
 	}
+
 	public void deleteLog(String logString) throws JSONException, IOException {
 		JSONObject logJson = this.getLogJson();
-		
+
 		JSONArray jsonArray = new JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
 		JSONArray newJson = new JSONArray();
-		for(int i = 0; i < jsonArray.length(); i++) {
+		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject log = jsonArray.getJSONObject(i);
 			int logStatusCode = Integer.parseInt(log.get(errCode).toString());
-			if(logStatusCode == NO_ENTRY_CODE) {
+			if (logStatusCode == NO_ENTRY_CODE) {
 				if (!log.get(userSay).equals(logString)) {
 					newJson.put(log);
 				}
@@ -243,30 +253,24 @@ public class LogManager implements ILogManager {
 	}
 
 	@Override
-	public boolean addPhrase(String listPhrase) throws JSONException, IOException, RestfulException {
+	public StatusCode addPhrase(String listPhrase) throws JSONException, IOException, RestfulException {
 		JSONObject jsonObject = new JSONObject(listPhrase);
 
 		@SuppressWarnings("unchecked")
 		Iterator<String> keys = jsonObject.keys();
-		while (keys.hasNext()) {
+		StatusCode code = StatusCode.SUCCESS;
+		while (keys.hasNext() && code == StatusCode.SUCCESS) {
 			String key = keys.next();
 			String value = jsonObject.getString(key);
-			
+
 			Entry entry = new Entry();
 			entry.setValue(key);
 			List<String> synonym = new ArrayList<>();
 			synonym.add(key);
 			entry.setSynonyms(synonym);
-			
-			StatusCode code = lexicalCategoryManager.addPhrase(entry, value);
-			switch (code) {
-			case SUCCESS:
-				deleteLog(key);
-				return true;
-			default: 
-				return false;
-			}
+
+			code = lexicalCategoryManager.addPhrase(entry, value);
 		}
-		return true;
+		return code;
 	}
 }
