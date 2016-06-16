@@ -10,6 +10,7 @@ import com.psib.common.restclient.RestfulException;
 
 public interface ILogManager {
 	
+	public void initialLogManager() throws JSONException, IOException;
 	JSONObject getLogJson() throws JSONException, IOException;
 	void updateLog() throws JSONException, IOException;
 	List<JSONObject> getAllLogs() throws IOException, JSONException;

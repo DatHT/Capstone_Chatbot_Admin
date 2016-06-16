@@ -27,8 +27,8 @@
 		<put-attribute name="title" value="Entity Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/lexicalCategory/lexical.jsp" />
-			
-		<put-attribute name="current" value="lexicalCategory"/>
+
+		<put-attribute name="current" value="lexicalCategory" />
 	</definition>
 
 	<!-- Begin Dataconfig Page -->
@@ -44,9 +44,8 @@
 	<!-- *************************************************************************** -->
 	<definition name="example" extends="base.definition">
 		<put-attribute name="title" value="Entity Manager" />
-		<put-attribute name="body"
-			value="/WEB-INF/views/example/example.jsp" />
-		<put-attribute name="current" value="example"/>
+		<put-attribute name="body" value="/WEB-INF/views/example/example.jsp" />
+		<put-attribute name="current" value="example" />
 	</definition>
 
 	<!-- Begin Manage Log Page -->
@@ -75,16 +74,16 @@
 			value="/WEB-INF/views/entity/updateEntity.jsp" />
 		<put-attribute name="current" value="synonym" />
 	</definition>
-	
+
 	<!-- Begin Error Page -->
 	<!-- *************************************************************************** -->
 	<definition name="error" extends="base.definition">
-		<put-attribute name="title" value="Entity Manager" />
-		<put-attribute name="body"
-			value="/WEB-INF/views/error/error.jsp" />
-		
+		<put-attribute name="title" value="Error page" />
+		<put-attribute name="current" value="error" />
+		<put-attribute name="body" value="/WEB-INF/views/error/error.jsp" />
+
 	</definition>
-	
+
 	<!-- Begin Blank Page -->
 	<!-- *************************************************************************** -->
 	<definition name="blank" extends="base.definition">

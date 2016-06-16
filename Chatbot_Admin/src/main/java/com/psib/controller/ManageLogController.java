@@ -44,12 +44,13 @@ public class ManageLogController {
 	@RequestMapping(value = "/manageLog", method = RequestMethod.GET)
 	public String loadLog(Model model) {
 		try {
+			logManager.initialLogManager();
+			
 			List<IntentsDto> list = intentManager.getIntents();
 			model.addAttribute(ExampleController.INTENTS, list);
 			List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
 			model.addAttribute(LexicalCategoryController.LEXICALS, lexicals);
-		} catch (IOException | RestfulException e) {
-			// TODO Auto-generated catch block
+		} catch (IOException | RestfulException | JSONException e) {
 			model.addAttribute(ERROR, e.getMessage());
 			return "error";
 		}

@@ -37,7 +37,7 @@ public class LogManager implements ILogManager {
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
 
-	private static String chatLogsFolder = "/Users/HuyTCM/Desktop/Logs";
+	private static String chatLogsFolder = "/Users/HuyTCM/Desxktop/Loxgs";
 	private static String logPath = chatLogsFolder + "/log";
 
 	private static String LOG_JSON_FORMAT_MODIFIED_DATE = "modifiedDate";
@@ -51,7 +51,7 @@ public class LogManager implements ILogManager {
 
 	public JSONObject logJson;
 
-	public LogManager() throws JSONException, IOException {
+	public void initialLogManager() throws JSONException, IOException {
 		logJson = new JSONObject();
 
 		Calendar calendar = Calendar.getInstance();
