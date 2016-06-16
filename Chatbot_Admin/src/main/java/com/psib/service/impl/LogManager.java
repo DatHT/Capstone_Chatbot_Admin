@@ -37,7 +37,7 @@ public class LogManager implements ILogManager {
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
 
-	private static String chatLogsFolder = "/Users/HuyTCM/Desxktop/Loxgs";
+	private static String chatLogsFolder = "/Users/HuyTCM/Desktop/Logs";
 	private static String logPath = chatLogsFolder + "/log";
 
 	private static String LOG_JSON_FORMAT_MODIFIED_DATE = "modifiedDate";
@@ -253,12 +253,13 @@ public class LogManager implements ILogManager {
 	}
 
 	@Override
-	public boolean addPhrase(String listPhrase) throws JSONException, IOException, RestfulException {
+	public StatusCode addPhrase(String listPhrase) throws JSONException, IOException, RestfulException {
 		JSONObject jsonObject = new JSONObject(listPhrase);
 
 		@SuppressWarnings("unchecked")
 		Iterator<String> keys = jsonObject.keys();
-		while (keys.hasNext()) {
+		StatusCode code = StatusCode.SUCCESS;
+		while (keys.hasNext() && code == StatusCode.SUCCESS) {
 			String key = keys.next();
 			String value = jsonObject.getString(key);
 
@@ -268,15 +269,8 @@ public class LogManager implements ILogManager {
 			synonym.add(key);
 			entry.setSynonyms(synonym);
 
-			StatusCode code = lexicalCategoryManager.addPhrase(entry, value);
-			switch (code) {
-			case SUCCESS:
-				deleteLog(key);
-				return true;
-			default:
-				return false;
-			}
+			code = lexicalCategoryManager.addPhrase(entry, value);
 		}
-		return true;
+		return code;
 	}
 }

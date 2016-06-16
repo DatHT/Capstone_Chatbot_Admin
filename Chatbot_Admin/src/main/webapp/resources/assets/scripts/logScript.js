@@ -102,8 +102,8 @@ function requestAddPhrase() {
 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			if (xmlhttp.responseText == 'true') {
-				alert('Success!');
+			if (xmlhttp.responseText) {
+				alert(xmlhttp.responseText);
 				closeModalDialog();
 			}
 		}
