@@ -1,0 +1,16 @@
+/* 
+    Document   : highlight
+    Created on : Jan 14, 2016, 11:25:14 PM
+    Author     : Dell
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.outline-element
+{
+    border: 1px solid red;
+}
+.outline-element-clicked
+{
+    border: 1px solid green
+}
