@@ -7,114 +7,155 @@
 
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title><tiles:insertAttribute name="title" ignore="true" /></title>
-<!-- Core CSS - Include with every page -->
-<link href="resources/assets/plugins/bootstrap/bootstrap.css"
-	rel="stylesheet" />
-<link href="resources/assets/font-awesome/css/font-awesome.css"
-	rel="stylesheet" />
-<link href="resources/assets/plugins/pace/pace-theme-big-counter.css"
-	rel="stylesheet" />
-<link href="resources/assets/css/style.css" rel="stylesheet" />
-<link href="resources/assets/css/main-style.css" rel="stylesheet" />
+
+<!-- Vendor CSS -->
+<link href="resources/assets/vendors/bower_components/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet">
+<link href="resources/assets/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+<link href="resources/assets/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+<link href="resources/assets/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">        
+<link href="resources/assets/vendors/bower_components/google-material-color/dist/palette.css" rel="stylesheet">
+<link href="resources/assets/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+<link href="resources/assets/vendors/bower_components/nouislider/distribute/jquery.nouislider.min.css" rel="stylesheet">
+<link href="resources/assets/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="resources/assets/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+<link href="resources/assets/vendors/bower_components/chosen/chosen.min.css" rel="stylesheet">
+<link href="resources/assets/vendors/summernote/dist/summernote.css" rel="stylesheet">
+<link href="resources/assets/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css" rel="stylesheet">
 
 
+<!-- CSS -->
+<link href="resources/assets/css/app.min.1.css" rel="stylesheet">
+<link href="resources/assets/css/app.min.2.css" rel="stylesheet"> 
+     
 </head>
 
-<body>
+<body data-ma-header="teal">
 	<%@ taglib uri="http://tiles.apache.org/tags-tiles-extras"
 		prefix="tilesx"%>
 	<tilesx:useAttribute name="current" />
-	<!--  wrapper -->
-	<div id="wrapper">
+
 		<!-- Header -->
 		<tiles:insertAttribute name="header" />
+		<!-- End Header -->
+	<!--  wrapper -->
+	<section id="main">
 
 		<!-- nvbar slide left -->
 
 
 		
 		<!-- navbar side -->
-		<nav class="navbar-default navbar-static-side" role="navigation">
-		<!-- sidebar-collapse -->
-		<div class="sidebar-collapse">
-			<!-- side-menu -->
-			<ul class="nav" id="side-menu">
-				<li class="nav-inner">
-					<!-- user image section-->
-					<div class="user-section">
-						<div class="user-section-inner">
-							<img src="resources/assets/img/user.jpg" alt="">
-						</div>
-						<div class="user-info">
-							<div>
-								Huỳnh <strong>Đạt</strong>
-							</div>
-							<div class="user-text-online">
-								<span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
-							</div>
-						</div>
-					</div> <!--end user image section-->
-				</li>
+		
+		   <aside id="s-main-menu" class="sidebar">
+                <div class="smm-header">
+                    <i class="zmdi zmdi-long-arrow-left" data-ma-action="sidebar-close"></i>
+                </div>
+			
+				
 
-				<li class="${current == 'dataConfig' ? 'selected' : ''}"><a
-					href="dataConfig"><i class="fa fa-dashboard fa-fw"></i>Data
-						Config</a></li>
-				<li><a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Training
-						Bot<span class="fa arrow"></span></a>
-					<ul class="nav nav-second-level">
-						<li class="${current == 'lexicalCategory' ? 'selected' : ''}">
-							<a href="lexical">Lexical Category</a>
-						</li>
-						<li class="${current == 'example' ? 'selected' : ''}">
-						<a href="example">Example</a></li>
-					</ul> <!-- second-level-items --></li>
-				<li class="${current == 'log' ? 'selected' : ''}">
-				<a href="manageLog"><i class="fa fa-flask fa-fw"></i>Manage
-						log</a></li>
+                <ul class="main-menu">
+                    <li class="${current == 'dataConfig' ? 'selected' : ''}">
+                        <a href="dataConfig"><i class="zmdi zmdi-home"></i> Data Config</a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-view-compact"></i> Training Bot</a>
 
+                        <ul>
+                            <li class="${current == 'lexicalCategory' ? 'selected' : ''}">
+                            	<a href="lexical">Lexical Category</a>
+                            </li>
+                            <li class="${current == 'example' ? 'selected' : ''}">
+								<a href="example">Example</a>
+							</li>
+                        </ul>
+                    </li>
+                    
+                    <li class="${current == 'log' ? 'selected' : ''}">
+                    <a href="manageLog">
+                    <i class="zmdi zmdi-format-underlined"></i> Manage Log
+                    </a>
+                    </li>
+                    
+                    <li class="sub-menu">
+                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-collection-text"></i> Manage Information</a>
 
-				<li><a href="#"><i class="fa fa-files-o fa-fw"></i>Manage
-						Information<span class="fa arrow"></span></a>
-					<ul class="nav nav-second-level">
-						<li class="${current == 'product' ? 'selected' : ''}">
-						<a href="product">Product</a></li>
-						<li class="${current == 'synonym' ? 'selected' : ''}">
-						<a href="synonym">Synonym</a></li>
-					</ul> <!-- second-level-items --></li>
-			</ul>
-			<!-- end side-menu -->
-		</div>
-		<!-- end sidebar-collapse --> </nav>
+                        <ul>
+                            <li class="${current == 'product' ? 'selected' : ''}">
+                            	<a href="product">Product</a>
+                            </li>
+                            <li class="${current == 'synonym' ? 'selected' : ''}">
+                            	<a href="synonym">Synonym</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+
+                </ul>
+            </aside>
+		
+		
+		
 		<!-- end navbar side -->
+		
+		
+		
 		<!--  page-wrapper -->
-		<div id="page-wrapper">
-
-			<tiles:insertAttribute name="body" />
-
-		</div>
+		<section id="content">
+                <div class="container">
+                
+            		<tiles:insertAttribute name="body" />    
+                </div>
+         </section>
 		<!-- end page-wrapper -->
 
 		<!-- footer -->
 		<tiles:insertAttribute name="footer" />
 
-	</div>
-	<!-- end wrapper -->
+	</section>
+	<!-- end section main -->
+	
+	
+	
+     <!-- Page Loader -->
+     <div class="page-loader palette-Teal bg">
+         <div class="preloader pl-xl pls-white">
+             <svg class="pl-circular" viewBox="25 25 50 50">
+                 <circle class="plc-path" cx="50" cy="50" r="20"/>
+             </svg>
+         </div>
+     </div>
 
 	<!-- Core Scripts - Include with every page -->
-	<script src="//kendo.cdn.telerik.com/2016.2.607/js/jquery.min.js"></script>
-	<script src="//kendo.cdn.telerik.com/2016.2.607/js/kendo.all.min.js"></script>
-	<script src="resources/assets/plugins/jquery-1.10.2.js"></script>
-	<script src="resources/assets/plugins/bootstrap/bootstrap.min.js"></script>
-	<script src="resources/assets/plugins/metisMenu/jquery.metisMenu.js"></script>
-	<script src="resources/assets/plugins/pace/pace.js"></script>
-	<script src="resources/assets/scripts/siminta.js"></script>
-	<script src="resources/assets/scripts/commonScript.js"></script>
-	<script src="resources/assets/plugins/dataTables/jquery.dataTables.js"></script>
-	<script src="resources/assets/plugins/dataTables/dataTables.bootstrap.js"></script>
-	
-	
+	<!-- Javascript Libraries -->
+        <script src="resources/assets/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="resources/assets/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="resources/assets/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script src="resources/assets/vendors/bower_components/Waves/dist/waves.min.js"></script>
+        <script src="resources/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+        <script src="resources/assets/vendors/bower_components/moment/min/moment.min.js"></script>
+        <script src="resources/assets/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+        <script src="resources/assets/vendors/bower_components/nouislider/distribute/jquery.nouislider.all.min.js"></script>
+        <script src="resources/assets/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+        <script src="resources/assets/vendors/bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>
+        <script src="resources/assets/vendors/summernote/dist/summernote-updated.min.js"></script>
+        <!-- Placeholder for IE9 -->
+        <!--[if IE 9 ]>
+            <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+        <![endif]-->
+        <script src="resources/assets/vendors/bower_components/chosen/chosen.jquery.min.js"></script>
+        <script src="resources/assets/vendors/fileinput/fileinput.min.js"></script>
+        <script src="resources/assets/vendors/input-mask/input-mask.min.js"></script>
+        <script src="resources/assets/vendors/farbtastic/farbtastic.min.js"></script>
+        
+        <script src="resources/assets/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.min.js"></script>
+        
+        <script src="resources/assets/js/functions.js"></script>
+        <script src="resources/assets/js/actions.js"></script>
+        <script src="resources/assets/js/demo.js"></script>		
 </body>
 
 

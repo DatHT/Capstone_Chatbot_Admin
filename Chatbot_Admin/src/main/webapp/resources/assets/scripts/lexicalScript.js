@@ -9,8 +9,10 @@ function insertRowToAddNewPhrase(tableId) {
 	cells[1] = "<div class='form-group'>"
 			+ "<input class='form-control' placeholder='Enter text' id='txtPhraseName'>"
 			+ "</div>";
-	cells[2] = "<button onclick='addNewPhrase()' type='button' class='btn btn-primary btn-circle'><i class='fa fa-plus'></i></button>";
-	cells[3] = "<button type='button' class='btn btn-danger btn-circle'><i class='fa fa-minus'></i></button>";
+	
+	
+	cells[2] = "<button onclick='addNewPhrase()' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>";
+	cells[3] = "<button class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
 	addFirstRow(tableElem, cells);
 }
 
@@ -34,8 +36,8 @@ function addRows(tableId, data) {
 		var cells = [];
 		cells[0] = i + 1;
 		cells[1] = jsonData.entries[i].value;
-		cells[2] = "<button type='button' class='btn btn-warning btn-circle'><i class='fa fa-pencil'></i></button>";
-		cells[3] = "<button type='button' class='btn btn-danger btn-circle'><i class='fa fa-minus'></i></button>";
+		cells[2] = "<button class='btn btn-warning btn-icon waves-effect waves-circle waves-float'><i class='zmdi zmdi-edit zmdi-hc-fw'></i></button>";
+		cells[3] = "<button class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
 		addRow(tableElem, cells);
 	}
 
@@ -80,7 +82,8 @@ function addNewPhrase() {
 
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					alert(xmlhttp.responseText);
+					swal("Good job!", xmlhttp.responseText, "success");
+					
 					loadPharse(cate);
 				}
 
@@ -98,5 +101,8 @@ function addNewPhrase() {
 		alert("Please input a phrase");
 	}
 }
+
+
+
 
 
