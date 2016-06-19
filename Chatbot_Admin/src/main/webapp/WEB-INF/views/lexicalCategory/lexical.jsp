@@ -29,10 +29,12 @@
 			<select class="chosen" data-placeholder="Choose a Lexical Category..."
 				onchange="loadPharse(this)" id="selectCategory">
 				<option value=""></option>
-				<c:forEach var="lexical" items="${lexicals}">
-					<option value="${lexical.id}">${lexical.name}</option>
-				</c:forEach>
-
+				
+				<c:if test="${not empty lexicals}">
+					<c:forEach var="lexical" items="${lexicals}">
+						<option value="${lexical.id}">${lexical.name}</option>
+					</c:forEach>
+				</c:if>
 
 			</select>
 		

@@ -1,5 +1,8 @@
 
-<script src="resources/assets/vendors/bower_components/chosen/chosen.jquery.min.js"></script>
+<script
+	src="resources/assets/vendors/bower_components/chosen/chosen.jquery.min.js"></script>
+	
+<script src="resources/assets/js/function.js"></script>
 
 <!-- 
 	<form action="exportJson">
@@ -36,7 +39,11 @@
 	<div class="card-body card-padding">
 		<p class="lead">Vivamus sagittis lacus vel augue laoreet rutrum
 			faucibus dolor auctor. Duis mollis, est non commodo luctus.</p>
+
 		
+		<div class="col-sm-2 col-xs-6">
+                                    <a href="#" class="btn btn-warning" data-type="warning">Warning</a>
+                                </div>
 	</div>
 </div>
 

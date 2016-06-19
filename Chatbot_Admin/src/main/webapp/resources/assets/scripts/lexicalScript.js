@@ -6,10 +6,15 @@ function insertRowToAddNewPhrase(tableId) {
 	var tableElem = document.getElementById(tableId);
 	var cells = [];
 	cells[0] = "*";
-	cells[1] = "<div class='form-group'>"
-			+ "<input class='form-control' placeholder='Enter text' id='txtPhraseName'>"
-			+ "</div>";
 	
+	
+	
+
+	cells[1] = "<div class='form-group fg-float'>"	
+					+ "<div class='fg-line'>"
+						+ "<input type='text' class='form-control fg-input' id='txtPhraseName' placeholer='Enter Text' >"
+					+ "</div>"
+				+ "</div>";
 	
 	cells[2] = "<button onclick='addNewPhrase()' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>";
 	cells[3] = "<button class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";

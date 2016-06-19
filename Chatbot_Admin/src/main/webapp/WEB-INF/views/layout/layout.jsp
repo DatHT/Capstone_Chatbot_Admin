@@ -152,6 +152,7 @@
         <script src="resources/assets/vendors/farbtastic/farbtastic.min.js"></script>
         
         <script src="resources/assets/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.min.js"></script>
+        <script src="resources/assets/vendors/bower_components/autosize/dist/autosize.min.js"></script>
         
         <script src="resources/assets/js/functions.js"></script>
         <script src="resources/assets/js/actions.js"></script>

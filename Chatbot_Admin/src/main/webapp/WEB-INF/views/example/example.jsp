@@ -1,75 +1,89 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
+<script src="resources/assets/scripts/commonScript.js"></script>
 <script src="resources/assets/scripts/exampleScript.js"></script>
 <c:set var="intents" value="${INTENTS}" />
 <c:set var="lexicals" value="${LEXICAL}" />
-<div class="row">
 
-	<!--  page header -->
-	<div class="col-lg-12">
-		<h1 class="page-header">Traing Bot By Example</h1>
-	</div>
-	<!-- end  page header -->
+<div class="c-header">
+	<h2>Training Bot By Example</h2>
 
-
+	<ul class="actions a-alt">
+		<li><a href="#"> <i class="zmdi zmdi-trending-up"></i>
+		</a></li>
+		<li><a href="#"> <i class="zmdi zmdi-check-all"></i>
+		</a></li>
+	</ul>
 </div>
 
 <div class="row">
 	<div class="col-lg-5">
 
-		<form role="form">
-			<div class="form-group">
-				<div class="form-group">
-					<label>Intents</label> <select onchange="loadIntent(this)"
-						class="form-control" id="selectIntent">
-						<option value="">--------Please select--------</option>
-						<c:forEach var="intent" items="${intents}">
-							<option value="${intent.id}">${intent.name}</option>
-						</c:forEach>
-					</select>
-				</div>
+		<div class="card">
+			<div class="card-header">
+				<h2>Intent</h2>
 			</div>
 
-		</form>
+			<div class="card-body card-padding">
+
+				<div class="row">
+						<select class="chosen" data-placeholder="Choose a Intent..."
+							onchange="loadIntent(this)" class="form-control"
+							id="selectIntent">
+							<option value=""></option>
+
+							<c:if test="${not empty intents}">
+								<c:forEach var="intent" items="${intents}">
+									<option value="${intent.id}">${intent.name}</option>
+								</c:forEach>
+							</c:if>
+
+						</select>
+				</div>
+
+			</div>
+		</div>
 	</div>
 
 	<div class="col-lg-7">
-		<div class="panel panel-info">
-			<div class="panel-heading">Explaination</div>
-			<div class="panel-body">
+
+		<div class="card">
+			<div class="card-header">
+				<h2>Explaination</h2>
+			</div>
+			<div class="card-body card-padding">
 				<p>An intent represents a mapping between what a user says and
 					what action should be taken by your software.</p>
 				<p>Example here is a "User say". Examples are written in natural
 					language and annotated so that parameter values can be extracted</p>
 			</div>
-
 		</div>
 	</div>
-	<div class="col-lg-8">
-		<div class="panel panel-primary">
-			<div class="panel-heading">Your templete</div>
-			<div class="panel-body">
-				<div class="table-responsive">
-					<table class="table table-striped table-bordered table-hover"
-						id="intentTable">
-						<thead>
-							<tr>
-								<th>No.</th>
-								<th>Name</th>
-								<th>Action</th>
-								
-							</tr>
-						</thead>
-						<tbody id="intentTable">
+</div>
+<div class="col-lg-8">
+	<div class="panel panel-primary">
+		<div class="panel-heading">Your templete</div>
+		<div class="panel-body">
+			<div class="table-responsive">
+				<table class="table table-striped table-bordered table-hover"
+					id="intentTable">
+					<thead>
+						<tr>
+							<th>No.</th>
+							<th>Name</th>
+							<th>Action</th>
 
-						</tbody>
-					</table>
-				</div>
+						</tr>
+					</thead>
+					<tbody id="intentTable">
+
+					</tbody>
+				</table>
 			</div>
-
 		</div>
+
 	</div>
+</div>
 
 </div>
 <div class="row">
@@ -89,34 +103,35 @@
 						</div>
 						<div id="collapseOne" class="panel-collapse collapse in">
 							<div class="panel-body">
-							<div class="col-lg-4">
-								<div id="box-dragable" ondrop="drop(event)"
-									ondragover="allowDrop(event)">
+								<div class="col-lg-4">
+									<div id="box-dragable" ondrop="drop(event)"
+										ondragover="allowDrop(event)">
 
-									<c:forEach begin="1" end="4" varStatus="counter">
-										<div id="any${counter.count}" class="draggable"
-											draggable="true" ondragstart="drag(event)">any</div>
-									</c:forEach>
-									<c:forEach var="dragItem" items="${lexicals}"
-										varStatus="counter">
-										<div id="${dragItem.name}" class="draggable" draggable="true"
-											ondragstart="drag(event)">${dragItem.name}</div>
-									</c:forEach>
+										<c:forEach begin="1" end="4" varStatus="counter">
+											<div id="any${counter.count}" class="draggable"
+												draggable="true" ondragstart="drag(event)">any</div>
+										</c:forEach>
+										<c:forEach var="dragItem" items="${lexicals}"
+											varStatus="counter">
+											<div id="${dragItem.name}" class="draggable" draggable="true"
+												ondragstart="drag(event)">${dragItem.name}</div>
+										</c:forEach>
+									</div>
+
 								</div>
-								
-							</div>
-							<div class="col-lg-8">
-								<div id="droptarget" ondrop="drop(event)"
-									ondragover="allowDrop(event)"></div>
-									
-								<div id="buttonadd">
-									<button type="button" onclick="insertPattern('intentTable')"
-									 class="btn btn-primary btn-lg btn-block">Add New Pattern</button>
+								<div class="col-lg-8">
+									<div id="droptarget" ondrop="drop(event)"
+										ondragover="allowDrop(event)"></div>
+
+									<div id="buttonadd">
+										<button type="button" onclick="insertPattern('intentTable')"
+											class="btn btn-primary btn-lg btn-block">Add New
+											Pattern</button>
+									</div>
+
+
 								</div>
-								
-		
-							</div>
-								
+
 
 							</div>
 						</div>

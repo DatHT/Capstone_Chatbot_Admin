@@ -161,11 +161,14 @@ function insertPattern(tableId) {
 			// action here
 
 		} else {
-			alert("Please drag an item to the box");
+		
+			notify("Please drag an item to the box", "warning");
 		}
 
 	} else {
-		alert("Please select intent category first");
+		notify("Please select intent category first", "warning");
 	}
+	
+	
 
 }
