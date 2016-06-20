@@ -43,11 +43,14 @@ public class LogManager implements ILogManager {
 	private static String LOG_JSON_FORMAT_MODIFIED_DATE = "modifiedDate";
 	private static String LOG_JSON_FORMAT_CONTENTS = "contents";
 
+	private static String id = "id";
 	private static String errCode = "errCode";
 	private static String userSay = "userSay";
 	private static String contexts = "contexts";
 	private static String action = "action";
 	private static String intentName = "intentName";
+
+	private static String count = "count";
 
 	public JSONObject logJson;
 
@@ -90,19 +93,28 @@ public class LogManager implements ILogManager {
 		// jsonArray = new JSONArray();
 
 		JSONObject log;
+		JSONObject tempJson;
 		for (JSONObject jsonObject : logs) {
 			int statusCode = Integer.parseInt(jsonObject.get(status_code).toString());
 
 			log = null;
+			tempJson = jsonObject.getJSONObject(log_json);
+
 			if (statusCode == NOT_FOUND_CODE) {
-				log = this.getNotFoundLog(jsonObject);
+				log = this.getNotFoundLog(tempJson);
 			} else if (statusCode == NO_ENTRY_CODE) {
-				log = this.getNoEntryLog(jsonObject);
+				log = this.getNoEntryLog(tempJson);
 			}
-			if (log != null && !checkExistLog(jsonArray, log)) {
-				log.put(action, jsonObject.getJSONObject(log_json).getJSONObject("result").get(action));
-				log.put(intentName, jsonObject.getJSONObject(log_json).getJSONObject("result").getJSONObject("metadata")
-						.get(intentName));
+			if (log == null) {
+				continue;
+			}
+
+			log.put(id, tempJson.get(id));
+			log.put(errCode, statusCode);
+
+			if (!checkExistLog(jsonArray, log)) {
+				log.put(action, tempJson.getJSONObject("result").get(action));
+				log.put(intentName, tempJson.getJSONObject("result").getJSONObject("metadata").get(intentName));
 
 				jsonArray.put(log);
 			}
@@ -161,21 +173,27 @@ public class LogManager implements ILogManager {
 	}
 
 	private JSONObject getNoEntryLog(JSONObject log) throws IOException, JSONException {
-		String userSay = log.getJSONObject(log_json).getJSONObject("result").getString("resolvedQuery");
+		String userSay = log.getJSONObject("result").getString("resolvedQuery");
 
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(errCode, log.getString(status_code));
 		jsonObject.put(LogManager.userSay, userSay);
+
+		JSONArray arrId = new JSONArray();
+
+		JSONObject idObj = new JSONObject();
+		idObj.put(id, log.get(id));
+		arrId.put(idObj);
+
+		jsonObject.put(count, arrId);
 
 		return jsonObject;
 	}
 
 	private JSONObject getNotFoundLog(JSONObject log) throws IOException, JSONException {
-		JSONObject contextJson = log.getJSONObject(log_json).getJSONObject("result").getJSONArray("contexts")
-				.getJSONObject(0).getJSONObject("parameters");
+		JSONObject contextJson = log.getJSONObject("result").getJSONArray("contexts").getJSONObject(0)
+				.getJSONObject("parameters");
 
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(errCode, log.getString(status_code));
 		jsonObject.put(contexts, contextJson);
 
 		return jsonObject;
@@ -217,7 +235,26 @@ public class LogManager implements ILogManager {
 			int logStatusCode = Integer.parseInt(log.get(errCode).toString());
 			if (statusCode == logStatusCode) {
 				if (statusCode == NO_ENTRY_CODE) {
-					isExist = jsonObject.get(userSay).equals(log.get(userSay));
+					if (jsonObject.get(userSay).equals(log.get(userSay))) {
+						if (!jsonObject.get(id).equals(log.get(id))) {
+							JSONArray arrId = log.getJSONArray(count);
+
+							boolean isCount = true;
+							for (int j = 0; j < arrId.length(); j++) {
+								JSONObject jsonId = arrId.getJSONObject(j);
+								if (jsonId.get(id).equals(jsonObject.get(id))) {
+									isCount = false;
+								}
+							}
+
+							if (isCount) {
+								JSONObject idObj = new JSONObject();
+								idObj.put(id, jsonObject.get(id));
+								arrId.put(idObj);
+							}
+						}
+						return true;
+					}
 				} else if (statusCode == NOT_FOUND_CODE) {
 					isExist = jsonObject.getJSONObject(contexts).get("Food")
 							.equals(log.getJSONObject(contexts).get("Food"))
