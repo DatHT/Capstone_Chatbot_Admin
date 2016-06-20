@@ -60,13 +60,20 @@
 		</div>
 	</div>
 </div>
-<div class="col-lg-8">
-	<div class="panel panel-primary">
-		<div class="panel-heading">Your templete</div>
-		<div class="panel-body">
-			<div class="table-responsive">
+
+<div class="row">
+
+	<div class="col-lg-8">
+	<div class="card">
+		<div class="card-header">
+			<h2 id="tableHeader">Your templete</h2>
+		</div>
+			<div class="card-body card-padding">
+	<div class="panel panel-default">
+			<div class="panel-body">
+		<div class="table-responsive">
 				<table class="table table-striped table-bordered table-hover"
-					id="intentTable">
+					>
 					<thead>
 						<tr>
 							<th>No.</th>
@@ -80,17 +87,24 @@
 					</tbody>
 				</table>
 			</div>
-		</div>
-
+			</div>
+			</div>
+		
 	</div>
-</div>
+	</div>
+	
 
+</div>
 </div>
 <div class="row">
-	<div class="col-lg-12">
-		<!--Collapsible Accordion Panel Group   -->
+	<div class="card">
+			<div class="card-header">
+				<h2>Manage Example</h2>
+			</div>
+			<div class="card-body card-padding">
+				<!--Collapsible Accordion Panel Group   -->
 		<div class="panel panel-default">
-			<div class="panel-heading">Manage Example</div>
+			
 			<div class="panel-body">
 				<div class="panel-group" id="accordion">
 					<div class="panel panel-default">
@@ -157,7 +171,11 @@
 			</div>
 		</div>
 		<!--End Collapsible Accordion Panel Group   -->
+				
+			</div>
 	</div>
+		
+	
 </div>
 
 

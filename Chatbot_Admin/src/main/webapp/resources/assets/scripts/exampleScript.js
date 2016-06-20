@@ -32,7 +32,7 @@ function addIntentRows(tableId, data) {
 		cells[1] = jsonData.templates[i];
 		cells[2] = "<button id='"
 				+ jsonData.templates[i]
-				+ "' onclick='deletePhrase(this.id)' type='button' class='btn btn-danger btn-circle'><i class='fa fa-minus'></i></button>";
+				+ "' onclick='deletePhrase(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
 		addRow(tableElem, cells);
 	}
 
@@ -58,7 +58,7 @@ function deletePhrase(id) {
 
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			alert(xmlhttp.responseText);
+			swal("Good job!", xmlhttp.responseText, "success");
 			loadIntent(cate);
 			// moveDiv("droptarget", "box-dragable");
 		}
@@ -147,7 +147,7 @@ function insertPattern(tableId) {
 
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					alert(xmlhttp.responseText);
+					swal("Good job!", xmlhttp.responseText, "success");
 					loadIntent(cate);
 					// moveDiv("droptarget", "box-dragable");
 				}
