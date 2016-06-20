@@ -235,23 +235,21 @@ public class LogManager implements ILogManager {
 			if (statusCode == logStatusCode) {
 				if (statusCode == NO_ENTRY_CODE) {
 					if (jsonObject.get(userSay).equals(log.get(userSay))) {
-						if (!jsonObject.get(id).equals(log.get(id))) {
-							JSONArray arrId = log.getJSONArray(count);
-
-							boolean isCount = true;
-							for (int j = 0; j < arrId.length(); j++) {
-								JSONObject jsonId = arrId.getJSONObject(j);
-								if (jsonId.get(id).equals(jsonObject.get(id))) {
-									isCount = false;
-								}
-							}
-
-							if (isCount) {
-								JSONObject idObj = new JSONObject();
-								idObj.put(id, jsonObject.get(id));
-								arrId.put(idObj);
+						JSONArray arrId = log.getJSONArray(count);
+						boolean isCount = true;
+						for (int j = 0; j < arrId.length(); j++) {
+							JSONObject jsonId = arrId.getJSONObject(j);
+							if (jsonId.get(id).equals(jsonObject.get(id))) {
+								isCount = false;
 							}
 						}
+
+						if (isCount) {
+							JSONObject idObj = new JSONObject();
+							idObj.put(id, jsonObject.get(id));
+							arrId.put(idObj);
+						}
+						log.put("totalCount", arrId.length());
 						return true;
 					}
 				} else if (statusCode == NOT_FOUND_CODE) {
