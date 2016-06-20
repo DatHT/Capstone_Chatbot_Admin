@@ -222,8 +222,7 @@ public class LogManager implements ILogManager {
 		return newFileLogPath;
 	}
 
-	public boolean checkExistLog(JSONArray jsonArray, JSONObject jsonObject)
-			throws NumberFormatException, JSONException {
+	public boolean checkExistLog(JSONArray jsonArray, JSONObject jsonObject) throws JSONException {
 		int statusCode = Integer.parseInt(jsonObject.get(errCode).toString());
 		boolean isExist = false;
 		int i = 0;
