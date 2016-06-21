@@ -54,32 +54,36 @@ public class LogManager implements ILogManager {
 
 	public JSONObject logJson;
 
-	public void initialLogManager() throws JSONException, IOException {
-		logJson = new JSONObject();
-
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, 0);
-
-		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(calendar.getTime()));
-		logJson.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
-
-		this.updateLog();
-	}
-
 	@Override
 	public JSONObject getLogJson() throws JSONException, IOException {
+		if (logJson != null) {
+			return logJson;
+		}
+
+		logJson = readJsonLogFile(logPath);
 		if (logJson == null) {
-			BufferedReader bufferedReader = FileUtils.readFile(logPath);
-			StringBuilder stringBuilder = new StringBuilder();
-			String tempString = null;
-			while ((tempString = bufferedReader.readLine()) != null) {
-				stringBuilder.append(tempString);
-			}
-			if (stringBuilder.length() != 0) {
-				logJson = new JSONObject(stringBuilder.toString());
-			}
+			logJson = new JSONObject();
+
+			Calendar calendar = Calendar.getInstance();
+			calendar.add(Calendar.DATE, 0);
+
+			logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(calendar.getTime()));
+			logJson.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
 		}
 		return logJson;
+	}
+
+	private JSONObject readJsonLogFile(String logPath) throws IOException, JSONException {
+		BufferedReader bufferedReader = FileUtils.readFile(logPath);
+		StringBuilder stringBuilder = new StringBuilder();
+		String tempString = null;
+		while ((tempString = bufferedReader.readLine()) != null) {
+			stringBuilder.append(tempString);
+		}
+		if (stringBuilder.length() != 0) {
+			return new JSONObject(stringBuilder.toString());
+		}
+		return null;
 	}
 
 	@Override
