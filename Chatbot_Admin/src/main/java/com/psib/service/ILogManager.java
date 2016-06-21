@@ -10,10 +10,12 @@ import com.psib.common.restclient.RestfulException;
 import com.psib.constant.StatusCode;
 
 public interface ILogManager {
-	
-	public void initialLogManager() throws JSONException, IOException;
+
 	JSONObject getLogJson() throws JSONException, IOException;
+
 	void updateLog() throws JSONException, IOException;
+
 	List<JSONObject> getAllLogs() throws IOException, JSONException;
+
 	public StatusCode addPhrase(String listPhrase) throws JSONException, IOException, RestfulException;
 }
