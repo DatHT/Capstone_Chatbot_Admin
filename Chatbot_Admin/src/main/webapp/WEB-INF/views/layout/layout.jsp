@@ -25,6 +25,7 @@
 <link href="resources/assets/vendors/bower_components/chosen/chosen.min.css" rel="stylesheet">
 <link href="resources/assets/vendors/summernote/dist/summernote.css" rel="stylesheet">
 <link href="resources/assets/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css" rel="stylesheet">
+<link href="resources/assets/vendors/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
 
 
 <!-- CSS -->
@@ -142,6 +143,7 @@
         <script src="resources/assets/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
         <script src="resources/assets/vendors/bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>
         <script src="resources/assets/vendors/summernote/dist/summernote-updated.min.js"></script>
+        <script src="resources/assets/vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
         <!-- Placeholder for IE9 -->
         <!--[if IE 9 ]>
             <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>

@@ -61,9 +61,28 @@ function loadPharse(id) {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			resultLexical = xmlhttp.responseText;
+			$('#phraseTable').bootgrid("destroy");
 			addRows("lexicalTable", resultLexical);
-//			var data = document.getElementById("phraseTable");
-//			data.dataTable();
+//			var table = document.getElementById('phraseTable');
+//			table.bootgrid();
+			
+			$('#phraseTable').bootgrid({
+                css: {
+                    icon: 'zmdi icon',
+                    iconColumns: 'zmdi-view-module',
+                    iconDown: 'zmdi-expand-more',
+                    iconRefresh: 'zmdi-refresh',
+                    iconUp: 'zmdi-expand-less'
+                },
+                formatters: {
+                    "commandsUpdate": function (column, row) {
+                        return "<button class='btn btn-warning btn-icon waves-effect waves-circle waves-float'><i class='zmdi zmdi-edit zmdi-hc-fw'></i></button>";
+                    },
+                    "commandsDelete": function (column, row) {
+                        return "<button class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+                    }
+                }
+            });
 			
 		}
 

@@ -55,7 +55,7 @@
 
 	<div class="card-body card-padding">
 	
-	
+		
 		<button class="btn btn-primary btn-lg waves-effect"
 			onclick="insertRowToAddNewPhrase('lexicalTable')">Add New</button>
 		<div class="row m-t-20">
@@ -66,10 +66,10 @@
 					<table class="table table-striped table-bordered table-hover" id="phraseTable">
 						<thead>
 							<tr>
-								<th>No.</th>
-								<th>Name</th>
-								<th>Action</th>
-								<th>Action</th>
+								<th data-column-id="id" data-type="numeric" data-identifier="true">No.</th>
+								<th data-column-id="name">Name</th>
+								<th data-column-id="update" data-formatter="commandsUpdate" data-sortable="false">Update</th>
+								<th data-column-id="delete" data-formatter="commandsDelete" data-sortable="false">Delete</th>
 							</tr>
 						</thead>
 						<tbody id="lexicalTable">
