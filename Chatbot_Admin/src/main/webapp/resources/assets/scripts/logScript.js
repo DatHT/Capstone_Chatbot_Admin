@@ -30,8 +30,13 @@ function createRowNoEntry(id, data) {
 	tr.setAttribute("data-toggle", "modal");
 	tr.setAttribute("data-target", "#myModal");
 	
+	var totalCount = data.totalCount;
+	var userSay = data.userSay;
+	if (totalCount) {
+		userSay += " ("+ totalCount +")";
+	}
 	var tdUserSay = document.createElement('td');
-	var textUserSay = document.createTextNode(data.userSay);
+	var textUserSay = document.createTextNode(userSay);
 	
 	var tdAction = document.createElement('td');
 	var textAction = document.createTextNode(data.action);
