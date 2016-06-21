@@ -169,7 +169,7 @@ function createPhraseElement(text) {
 	element.appendChild(hr);
 
 	var phrase = document.createElement('div');
-	phrase.className = 'col-md-4';
+	phrase.className = 'col-sm-4 m-b-25';
 	var phraseContent = document.createElement('p');
 	var pText = document.createTextNode(text);
 	listPhrase[text] = "";
@@ -180,7 +180,7 @@ function createPhraseElement(text) {
 	element.appendChild(phrase);
 
 	var lexicalCategory = document.createElement('div');
-	lexicalCategory.className = 'col-md-4';
+	lexicalCategory.className = 'col-sm-4 m-b-25';
 	var lexicalList = document.getElementsByClassName('listLexical')[0]
 			.cloneNode(true);
 	lexicalList.onchange = function(event) {
@@ -208,10 +208,14 @@ function createPhraseElement(text) {
 
 function checkSaveButtonState() {
 	var saveButton = document.getElementById('save-button');
+	var guide = document.getElementById('select_phrase_guide');
 	var phrases = Object.keys(listPhrase);
 	if (phrases.length == 0) {
 		saveButton.disabled = true;
+		guide.style.display = "block";
 		return;
+	} else {
+		guide.style.diplay = "none";
 	}
 	for(var i = 0; i < phrases.length; i++) {
 		if (listPhrase[phrases[i]] == "") {
