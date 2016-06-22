@@ -46,7 +46,10 @@
 	<div class="card-body card-padding">
 		<div class="row">
 			<div class="col-sm-3 m-b-15">
-				<button onclick="updateLog()">Update Log</button>
+				<button class="btn btn-default btn-icon-text waves-effect"
+					onclick="updateLog()">
+					<i class="zmdi zmdi-refresh"></i> Manual Update
+				</button>
 			</div>
 		</div>
 	</div>
@@ -153,7 +156,8 @@
 					</select>
 				</div> --%>
 				<div class="modal-footer">
-					<div id="select_phrase_guide" style="display: none;" class="col-sm-8 m-b-25">
+					<div id="select_phrase_guide" style="display: none;"
+						class="col-sm-8 m-b-25">
 						<img src="resources/assets/img/select_phrase_guide.gif"
 							class="img-responsive m-b-15 w-100" alt="">
 					</div>
