@@ -13,9 +13,10 @@
 
 	<!-- enable use-expressions -->
 	<http auto-config="true" use-expressions="true">
-		<intercept-url pattern="/" access="permitAll" />
+		<intercept-url pattern="/" access="isAuthenticated()" />
 		<intercept-url pattern="/login" access="permitAll" />
-		<intercept-url pattern="/dashBoard" access="isAuthenticated()"/>
+		<intercept-url pattern="/dataConfig" access="hasRole('ADMIN')"/>
+		<intercept-url pattern="/*" access="isAuthenticated()"/>
 		
 		<!-- access denied page -->
 		<access-denied-handler error-page="/WEB-INF/pages/error.jsp" />
