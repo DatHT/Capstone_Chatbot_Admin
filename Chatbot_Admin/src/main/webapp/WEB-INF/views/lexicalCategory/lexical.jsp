@@ -15,36 +15,36 @@
 	</ul>
 </div>
 
-
 <div class="card">
 	<div class="card-header">
 		<h2>Lexical Category</h2>
 	</div>
 
 	<div class="card-body card-padding">
-		
-		<div class="row">
-        <div class="col-sm-3 m-b-15">
-					
-			<select class="chosen" data-placeholder="Choose a Lexical Category..."
-				onchange="loadPharse(this)" id="selectCategory">
-				<option value=""></option>
-				
-				<c:if test="${not empty lexicals}">
-					<c:forEach var="lexical" items="${lexicals}">
-						<option value="${lexical.id}">${lexical.name}</option>
-					</c:forEach>
-				</c:if>
 
-			</select>
-		
-	
+		<div class="row">
+			<div class="col-sm-3 m-b-15">
+
+				<select class="chosen"
+					data-placeholder="Choose a Lexical Category..."
+					onchange="loadPharse(this)" id="selectCategory">
+					<option value=""></option>
+
+					<c:if test="${not empty lexicals}">
+						<c:forEach var="lexical" items="${lexicals}">
+							<option value="${lexical.id}">${lexical.name}</option>
+						</c:forEach>
+					</c:if>
+
+				</select>
+
+
+
+			</div>
 
 		</div>
-		
+
 	</div>
-	
-	</div>	
 </div>
 
 
@@ -54,34 +54,35 @@
 	</div>
 
 	<div class="card-body card-padding">
-	
-	
+
+
 		<button class="btn btn-primary btn-lg waves-effect"
 			onclick="insertRowToAddNewPhrase('lexicalTable')">Add New</button>
 		<div class="row m-t-20">
-		<!-- Advanced Tables -->
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<div class="table-responsive">
-					<table class="table table-striped table-bordered table-hover" id="phraseTable">
-						<thead>
-							<tr>
-								<th>No.</th>
-								<th>Name</th>
-								<th>Action</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody id="lexicalTable">
+			<!-- Advanced Tables -->
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="table-responsive">
+						<table class="table table-striped table-bordered table-hover"
+							id="phraseTable">
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>Name</th>
+									<th>Action</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody id="lexicalTable">
 
-						</tbody>
-					</table>
+							</tbody>
+						</table>
+					</div>
+
 				</div>
-
 			</div>
+			<!--End Advanced Tables -->
+
 		</div>
-		<!--End Advanced Tables -->
-		
 	</div>
-	</div>		
 </div>

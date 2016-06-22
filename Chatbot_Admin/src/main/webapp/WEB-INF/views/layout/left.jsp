@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+
 <c:set var="active" value="${ACTIVE}" />
         <!-- navbar side -->
         <nav class="navbar-default navbar-static-side" role="navigation">

@@ -30,7 +30,7 @@ public class RoleManager implements IRoleManager {
 	 */
 	@Override
 	@Transactional
-	public Role getRoleById(long id) {
+	public Role getRoleById(int id) {
 		// TODO Auto-generated method stub
 		return roleDao.getRoleById(id);
 	}
