@@ -34,19 +34,25 @@ public class HomeController {
 	@Autowired
 	private IFoodManager manager;
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = { "/", "/login" }, method = RequestMethod.GET)
+	public String login(Locale locale, Model model) {
+
+		return "login";
+	}
+
+	@RequestMapping(value = "/dashBoard", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 
 		return "blank";
 	}
-
+	
 	@RequestMapping(value = "/activateTimer", method = RequestMethod.GET)
 	public String activateTimer(Locale locale, Model model) {
 		// set on/off for timer
 		System.setProperty("timerActive", "true");
 		return "blank";
 	}
-	
+
 	@RequestMapping(value = "/deactivateTimer", method = RequestMethod.GET)
 	public String deactivateTimer(Locale locale, Model model) {
 		// set on/off for timer
