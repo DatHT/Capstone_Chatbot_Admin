@@ -15,7 +15,7 @@ function updateLog() {
 			if (xmlhttp.responseText == 'true') {
 				location.reload();
 			} else {
-				alert('Error occurs. Please try again later!');
+				swal('Error occurs. Please try again later!');
 			}
 		}
 	}
@@ -108,7 +108,7 @@ function requestAddPhrase() {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			if (xmlhttp.responseText) {
-				alert(xmlhttp.responseText);
+				swal(xmlhttp.responseText);
 				closeModalDialog();
 			}
 		}
@@ -186,6 +186,8 @@ function createPhraseElement(text) {
 
 	var lexicalCategory = document.createElement('div');
 	lexicalCategory.className = 'col-sm-4 m-b-25';
+	var divSelect = document.createElement('div');
+	divSelect.className = 'select';
 	var lexicalList = document.getElementsByClassName('listLexical')[0]
 			.cloneNode(true);
 	lexicalList.onchange = function(event) {
@@ -194,7 +196,8 @@ function createPhraseElement(text) {
 	}
 	lexicalList.style.display = 'block';
 
-	lexicalCategory.appendChild(lexicalList);
+	divSelect.appendChild(lexicalList);
+	lexicalCategory.appendChild(divSelect);
 	element.appendChild(lexicalCategory);
 
 	var span = document.createElement('span');
