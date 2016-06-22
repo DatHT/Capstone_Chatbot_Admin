@@ -73,13 +73,12 @@
 			<div class="panel-body">
 		<div class="table-responsive">
 				<table class="table table-striped table-bordered table-hover"
-					>
+					id="tableIntent">
 					<thead>
 						<tr>
 							<th  data-column-id="id" data-type="numeric" data-identifier="true">No.</th>
 							<th data-column-id="name">Name</th>
 							<th  data-column-id="update" data-formatter="commands" data-sortable="false">Action</th>
-
 						</tr>
 					</thead>
 					<tbody id="intentTable">
