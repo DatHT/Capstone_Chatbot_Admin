@@ -23,51 +23,63 @@ import com.psib.service.IFoodManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.JsonFileCreator;
 
-
 /**
  * Handles requests for the application home page.
  */
 @Controller
 public class HomeController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	
+
 	@Autowired
 	private IFoodManager manager;
-	
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-		
+
+		return "blank";
+	}
+
+	@RequestMapping(value = "/activateTimer", method = RequestMethod.GET)
+	public String activateTimer(Locale locale, Model model) {
+		// set on/off for timer
+		System.setProperty("timerActive", "true");
 		return "blank";
 	}
 	
-//	@RequestMapping(value = "/export", method = RequestMethod.GET)
-//	public String export(Model model) {
-//		model.addAttribute("ACTIVE", "yes");
-//		return "entityList";
-//	}
-	
-	
+	@RequestMapping(value = "/deactivateTimer", method = RequestMethod.GET)
+	public String deactivateTimer(Locale locale, Model model) {
+		// set on/off for timer
+		System.setProperty("timerActive", "false");
+		return "blank";
+	}
+
+	// @RequestMapping(value = "/export", method = RequestMethod.GET)
+	// public String export(Model model) {
+	// model.addAttribute("ACTIVE", "yes");
+	// return "entityList";
+	// }
+
 	@RequestMapping(value = "exportJson", method = RequestMethod.GET)
 	public String exportJson() {
 		List<Product> foods = manager.getAll();
 		Entity eFood = new Entity();
 		eFood.setName("Food");
-//		Entity eStreet = new Entity();
-//		eStreet.setName("Street");
+		// Entity eStreet = new Entity();
+		// eStreet.setName("Street");
 		List<Entry> listEntry = new ArrayList<>();
-//		for (Food food : foods) {
-//			System.out.println(food.getName());
-//			Entry entryFood = new Entry();
-//			entryFood.setValue(food.getName());
-//			entryFood.setSynonyms(Arrays.asList(CommonUtils.generateSynonym(food.getName())));
-//			
-//			listEntry.add(entryFood);
-//		}
-		
-		for(Product food : foods) {
+		// for (Food food : foods) {
+		// System.out.println(food.getName());
+		// Entry entryFood = new Entry();
+		// entryFood.setValue(food.getName());
+		// entryFood.setSynonyms(Arrays.asList(CommonUtils.generateSynonym(food.getName())));
+		//
+		// listEntry.add(entryFood);
+		// }
+
+		for (Product food : foods) {
 			List<String> listSynonym = Arrays.asList(CommonUtils.generateSynonym(food.getName()));
-			for(String synonym : listSynonym) {
+			for (String synonym : listSynonym) {
 				Entry entryFood = new Entry();
 				if (!CommonUtils.checkExistName(synonym, listEntry)) {
 					entryFood.setValue(synonym.trim());
@@ -82,8 +94,5 @@ public class HomeController {
 		JsonFileCreator.createFile(eFood, eFood.getName());
 		return "export";
 	}
-	
-	
-	
-	
+
 }
