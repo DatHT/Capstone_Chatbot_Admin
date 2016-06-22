@@ -1,139 +1,199 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page session="true"%>
 <!DOCTYPE html>
-<html lang="en">
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+
+<!-- Mirrored from byrushan.com/projects/mae/1-0/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Jun 2016 02:29:32 GMT -->
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
-<link rel="icon" href="img/favicon.png">
-<title>JobNet</title>
-<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="resources/assets/css/animate.min.css" rel="stylesheet">
-<link href="resources/font/css/font-awesome.min.css" rel="stylesheet">
-<link href="resources/font/css/font-awesome.css" rel="stylesheet">
-<link href="resources/assets/css/timeline.css" rel="stylesheet">
-<script src="resources/assets/js/jquery.1.11.1.min.js"></script>
-<script src="resources/bootstrap/js/bootstrap.min.js"></script>
-<script src="resources/assets/js/custom.js"></script>
-<!--[if lt IE 9]> <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script> <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script> <![endif]-->
+<title>Material Admin</title>
+
+<!-- Vendor CSS -->
+<link href="vendors/bower_components/animate.css/animate.min.css"
+	rel="stylesheet">
+<link
+	href="vendors/bower_components/google-material-color/dist/palette.css"
+	rel="stylesheet">
+<link
+	href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css"
+	rel="stylesheet">
+
+<!-- CSS -->
+<link href="css/app.min.1.css" rel="stylesheet">
+<link href="css/app.min.2.css" rel="stylesheet">
 </head>
-<body class="welcome-page animated fadeIn">
-	<div class="row row-welcome">
-		<div class="login-page">
-			<div class="row">
-				<div class="col-md-4 col-md-offset-4">
-					<img src="resources/img/prism.png" class="user-avatar">
-					<h1>JobNet</h1>
-					<form action="checkLogin" method="post" role="form" class="frm animated flipInX">
-						<div class="form-content">
-							<div class="form-group">
-								<input class="form-control input-underline input-lg"
-									placeholder="Username" type="text" name="email">
-							</div>
-							<div class="form-group">
-								<input class="form-control input-underline input-lg"
-									placeholder="Password" type="password" name="password">
-							</div>
-						</div>
-						<button class="btn btn-warning btn-lg">Log in</button>
-						<a href="#" class="btn btn-warning btn-lg btn-frm">Register</a>
-					</form>
-					<form role="form" class="frm hidden">
-						<div class="form-content">
-							<div class="form-group">
-								<input class="form-control input-underline input-lg"
-									placeholder="Email" type="text">
-							</div>
-							<div class="form-group">
-								<input class="form-control input-underline input-lg"
-									placeholder="Username" type="text">
-							</div>
-							<div class="form-group">
-								<input class="form-control input-underline input-lg"
-									placeholder="Password" type="password">
-							</div>
-						</div>
-						<a href="#" class="btn btn-warning btn-lg btn-frm">Log in</a>
-						<button type="submit" class="btn btn-warning btn-lg">Register</button>
-					</form>
-				</div>
+
+<body>
+	<div class="login" data-lbg="teal">
+		<!-- Login -->
+		<div class="l-block toggled" id="l-login">
+			<div class="lb-header palette-Teal bg">
+				<i class="zmdi zmdi-account-circle"></i> Hi there! Please Sign in
 			</div>
-			<div class="row welcome-full animated fadeInLeft users-row">
-				<div class="row-body hidden-xs hidden-sm">
-					<div class="welcome-users-inner">
-						<div class="welcome-user">
-							<a href="profile.html"> <img src="resources/img/avatar/me.jpg"
-								class="img-rounded">
-							</a>
-						</div>
-						<div class="welcome-user">
-							<a href="profile.html"> <img src="img/Friends/woman-1.jpg"
-								class="img-rounded">
-							</a>
-						</div>
-						<div class="welcome-user">
-							<a href="profile.html"> <img src="img/Friends/guy-2.jpg"
-								class="img-rounded">
-							</a>
-						</div>
-						<div class="welcome-user">
-							<a href="profile.html"> <img src="img/Friends/woman-2.jpg"
-								class="img-rounded">
-							</a>
-						</div>
-						<div class="welcome-user">
-							<a href="profile.html"> <img src="img/Friends/guy-5.jpg"
-								class="img-rounded">
-							</a>
-						</div>
-						<div class="welcome-user">
-							<a href="profile.html"> <img src="img/Friends/woman-3.jpg"
-								class="img-rounded">
-							</a>
-						</div>
-						<div class="welcome-user">
-							<a href="profile.html"> <img src="img/Friends/guy-8.jpg"
-								class="img-rounded">
-							</a>
-						</div>
-						<div class="welcome-user">
-							<a href="profile.html"> <img src="img/Friends/woman-4.jpg"
-								class="img-rounded">
-							</a>
-						</div>
-						<div class="welcome-user">
-							<a href="profile.html"> <img src="img/Friends/guy-9.jpg"
-								class="img-rounded">
-							</a>
-						</div>
-						<div class="welcome-user">
-							<a href="profile.html"> <img src="img/Friends/woman-7.jpg"
-								class="img-rounded">
-							</a>
-						</div>
-						<div class="welcome-user">
-							<a href="profile.html"> <img src="img/Friends/woman-7.jpg"
-								class="img-rounded">
-							</a>
+
+			<div class="lb-body">
+
+				<form action="j_spring_security_check" method="POST">
+					<div class="form-group fg-float">
+						<div class="fg-line">
+							<input name="username" type="text" class="input-sm form-control fg-input">
+							<label class="fg-label">Email Address</label>
 						</div>
 					</div>
+
+					<div class="form-group fg-float">
+						<div class="fg-line">
+							<input name="password" type="password" class="input-sm form-control fg-input">
+							<label class="fg-label">Password</label>
+						</div>
+					</div>
+
+					<button type="submit" class="btn palette-Teal bg">Sign in</button>
+					
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+				</form>
+
+
+				<div class="m-t-20">
+					<a data-block="#l-register" data-bg="blue"
+						class="palette-Teal text d-block m-b-5" href="#">Creat an
+						account</a> <a data-block="#l-forget-password" data-bg="purple"
+						href="#" class="palette-Teal text">Forgot password?</a>
 				</div>
 			</div>
-			<div class="row">
-				<div class="container">
-					<p></p>
-					<div class="footer-links">
-						<a href="#">Terms of Use</a> | <a href="#">Privacy Policy</a> | <a
-							href="#">Developers</a> | <a href="#">Contact</a> | <a href="#">About</a>
+		</div>
+
+		<!-- Register -->
+		<div class="l-block" id="l-register">
+			<div class="lb-header palette-Blue bg">
+				<i class="zmdi zmdi-account-circle"></i> Create an account
+			</div>
+
+			<div class="lb-body">
+				<div class="form-group fg-float">
+					<div class="fg-line">
+						<input type="text" class="input-sm form-control fg-input">
+						<label class="fg-label">Name</label>
 					</div>
-					Copyright © Company - All rights reserved
-					<p></p>
+				</div>
+
+				<div class="form-group fg-float">
+					<div class="fg-line">
+						<input type="text" class="input-sm form-control fg-input">
+						<label class="fg-label">Email Address</label>
+					</div>
+				</div>
+
+				<div class="form-group fg-float">
+					<div class="fg-line">
+						<input type="password" class="input-sm form-control fg-input">
+						<label class="fg-label">Password</label>
+					</div>
+				</div>
+
+				<div class="checkbox m-b-30">
+					<label> <input type="checkbox" value=""> <i
+						class="input-helper"></i> Accept the license agreement
+					</label>
+				</div>
+
+				<button class="btn palette-Blue bg">Create Account</button>
+
+				<div class="m-t-30">
+					<a data-block="#l-login" data-bg="teal"
+						class="palette-Blue text d-block m-b-5" href="#">Already have
+						an account?</a> <a data-block="#l-forget-password" data-bg="purple"
+						href="#" class="palette-Blue text">Forgot password?</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- Forgot Password -->
+		<div class="l-block" id="l-forget-password">
+			<div class="lb-header palette-Purple bg">
+				<i class="zmdi zmdi-account-circle"></i> Forgot Password?
+			</div>
+
+			<div class="lb-body">
+				<p class="m-b-30">Lorem ipsum dolor fringilla enim feugiat
+					commodo sed ac lacus.</p>
+
+				<div class="form-group fg-float">
+					<div class="fg-line">
+						<input type="text" class="input-sm form-control fg-input">
+						<label class="fg-label">Email Address</label>
+					</div>
+				</div>
+
+				<button class="btn palette-Purple bg">Create Account</button>
+
+				<div class="m-t-30">
+					<a data-block="#l-login" data-bg="teal"
+						class="palette-Purple text d-block m-b-5" href="#">Already
+						have an account?</a> <a data-block="#l-register" data-bg="blue"
+						href="#" class="palette-Purple text">Create an account</a>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<!-- Older IE warning message -->
+	<!--[if lt IE 9]>
+            <div class="ie-warning">
+                <h1 class="c-white">Warning!!</h1>
+                <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
+                <div class="iew-container">
+                    <ul class="iew-download">
+                        <li>
+                            <a href="http://www.google.com/chrome/">
+                                <img src="img/browsers/chrome.png" alt="">
+                                <div>Chrome</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.mozilla.org/en-US/firefox/new/">
+                                <img src="img/browsers/firefox.png" alt="">
+                                <div>Firefox</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://www.opera.com">
+                                <img src="img/browsers/opera.png" alt="">
+                                <div>Opera</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.apple.com/safari/">
+                                <img src="img/browsers/safari.png" alt="">
+                                <div>Safari</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+                                <img src="img/browsers/ie.png" alt="">
+                                <div>IE (New)</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <p>Sorry for the inconvenience!</p>
+            </div>
+        <![endif]-->
+
+	<!-- Javascript Libraries -->
+	<script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+	<script
+		src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+
+	<!-- Placeholder for IE9 -->
+	<!--[if IE 9 ]>
+            <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+        <![endif]-->
+
+	<script src="js/functions.js"></script>
+
 </body>
+
+<!-- Mirrored from byrushan.com/projects/mae/1-0/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Jun 2016 02:29:32 GMT -->
 </html>

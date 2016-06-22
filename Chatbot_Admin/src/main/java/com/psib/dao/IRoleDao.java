@@ -11,5 +11,5 @@ import com.psib.model.Role;
  * @Email: datht0601@gmail.com
  */
 public interface IRoleDao {
-	public Role getRoleById(long id);
+	public Role getRoleById(int id);
 }

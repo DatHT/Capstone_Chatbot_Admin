@@ -14,7 +14,7 @@ import com.psib.model.Role;
  * @Email: datht0601@gmail.com
  */
 @Repository
-public class RoleDao extends BaseDao<Role, Long> implements IRoleDao {
+public class RoleDao extends BaseDao<Role, Integer> implements IRoleDao {
 
 	public RoleDao(Class<Role> clazz) {
 		super(clazz);
@@ -29,7 +29,7 @@ public class RoleDao extends BaseDao<Role, Long> implements IRoleDao {
 	 * @see com.psib.dao.IRoleDao#getRoleById(long)
 	 */
 	@Override
-	public Role getRoleById(long id) {
+	public Role getRoleById(int id) {
 		// TODO Auto-generated method stub
 		return getById(id);
 	}
