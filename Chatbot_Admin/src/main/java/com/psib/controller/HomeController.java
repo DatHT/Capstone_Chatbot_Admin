@@ -1,9 +1,7 @@
 package com.psib.controller;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.psib.dto.jsonmapper.Entity;
 import com.psib.dto.jsonmapper.Entry;
@@ -34,7 +31,12 @@ public class HomeController {
 	@Autowired
 	private IFoodManager manager;
 
-	@RequestMapping(value = { "/", "/login" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String hompage() {
+		return "blank";
+	}
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(Locale locale, Model model) {
 
 		return "login";
@@ -45,7 +47,7 @@ public class HomeController {
 
 		return "blank";
 	}
-	
+
 	@RequestMapping(value = "/activateTimer", method = RequestMethod.GET)
 	public String activateTimer(Locale locale, Model model) {
 		// set on/off for timer
