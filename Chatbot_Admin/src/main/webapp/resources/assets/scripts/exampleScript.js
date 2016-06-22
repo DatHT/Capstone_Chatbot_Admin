@@ -33,6 +33,7 @@ function addIntentRows(tableId, data) {
 		cells[2] = "<button id='"
 				+ jsonData.templates[i]
 				+ "' onclick='deletePhrase(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+		
 		addRow(tableElem, cells);
 	}
 
@@ -93,7 +94,24 @@ function loadIntent(id) {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			resultIntents = xmlhttp.responseText;
+			$('#tableIntent').bootgrid("destroy");
 			addIntentRows("intentTable", resultIntents);
+			$('#tableIntent')
+					.bootgrid(
+							{
+								css : {
+									icon : 'zmdi icon',
+									iconColumns : 'zmdi-view-module',
+									iconDown : 'zmdi-expand-more',
+									iconRefresh : 'zmdi-refresh',
+									iconUp : 'zmdi-expand-less'
+								},
+								formatters : {
+									"commands" : function(column, row) {
+										return "<button id='"+ row.name +"' onclick='deletePhrase(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+									}
+								}
+							});
 
 		}
 
@@ -161,14 +179,12 @@ function insertPattern(tableId) {
 			// action here
 
 		} else {
-		
+
 			notify("Please drag an item to the box", "warning");
 		}
 
 	} else {
 		notify("Please select intent category first", "warning");
 	}
-	
-	
 
 }

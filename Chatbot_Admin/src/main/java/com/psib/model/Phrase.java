@@ -10,8 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Pharse")
-public class Pharse implements Serializable {
+@Table(name = "Phrase")
+public class Phrase implements Serializable {
 
 	@Id
 	@Column(name = "Id", nullable = false)
@@ -27,11 +27,11 @@ public class Pharse implements Serializable {
 	@Column(name = "lexicalId")
 	int lexicalId;
 
-	public Pharse() {
+	public Phrase() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Pharse(int id, String name, boolean isAsynchronized, int lexicalId) {
+	public Phrase(int id, String name, boolean isAsynchronized, int lexicalId) {
 		super();
 		Id = id;
 		this.name = name;
