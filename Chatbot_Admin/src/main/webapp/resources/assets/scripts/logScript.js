@@ -64,7 +64,6 @@ function createRowNoEntry(id, data) {
 		
 		var saveButton = document.getElementById('save-button');
 		checkSaveButtonState();
-		saveButton.addEventListener('click', requestAddPhrase);
 		
 		span.onclick = function() {
 			closeModalDialog();
@@ -99,7 +98,7 @@ function closeModalDialog() {
 	}
 }
 
-function requestAddPhrase() {
+function requestAddPhrase(param, token) {
 	var xmlhttp;
 	if (window.XMLHttpRequest) {
 		xmlhttp = new XMLHttpRequest();
@@ -117,7 +116,7 @@ function requestAddPhrase() {
 	xmlhttp.open("POST", "/chatbot_admin/addPhrase", true);
 	xmlhttp.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded;charset=utf-8");
-	xmlhttp.send("listPhrase=" + JSON.stringify(listPhrase));
+	xmlhttp.send("listPhrase=" + JSON.stringify(listPhrase) + "&" + param + "=" + token);
 }
 
 function createRowNotFound(id, data) {

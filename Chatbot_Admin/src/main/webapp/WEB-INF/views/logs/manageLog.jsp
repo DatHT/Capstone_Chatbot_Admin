@@ -4,6 +4,8 @@
 <c:set var="intents" value="${INTENTS}" />
 <c:set var="lexicals" value="${LEXICAL}" />
 <script src="resources/assets/scripts/logScript.js"></script>
+<c:set var="paramName" value="${_csrf.parameterName}"/>
+<c:set var="token" value="${_csrf.token}"/>
 <style>
 .remove {
 	color: #aaaaaa;
@@ -161,7 +163,7 @@
 						<img src="resources/assets/img/select_phrase_guide.gif"
 							class="img-responsive m-b-15 w-100" alt="">
 					</div>
-					<button id="save-button" type="button"
+					<button id="save-button" type="button" onclick="requestAddPhrase('${paramName}', '${token}')"
 						class="btn btn-primary btn-icon-text waves-effect">
 						<i class="zmdi zmdi-check-all"></i> Save changes
 					</button>
