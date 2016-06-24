@@ -74,6 +74,10 @@
 					<li class="${current == 'dataConfig' ? 'selected' : ''}"><a
 						href="dataConfig"><i class="zmdi zmdi-home"></i> Data Config</a></li>
 				</c:if>
+				<c:if test="${principal.authorities == '[ADMIN]'}">
+					<li class="${current == 'manageAccount' ? 'selected' : ''}"><a
+						href="manageAccount"><i class="zmdi zmdi-assignment-account"></i> Manage Account</a></li>
+				</c:if>
 
 				<li class="sub-menu"><a href="#"
 					data-ma-action="submenu-toggle"><i
