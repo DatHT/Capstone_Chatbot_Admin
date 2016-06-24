@@ -33,7 +33,7 @@ function addIntentRows(tableId, data) {
 		cells[2] = "<button id='"
 				+ jsonData.templates[i]
 				+ "' onclick='deletePhrase(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
-		
+
 		addRow(tableElem, cells);
 	}
 
@@ -46,9 +46,7 @@ function deletePhrase(id) {
 	delete jsonData.webhookUsed;
 	delete jsonData.lastUpdate;
 	delete jsonData.auto;
-
-	jsonData.templates.pop(id);
-
+	jsonData.templates.remove(id);
 	var cate = document.getElementById("selectIntent");
 	var intentId = cate.options[cate.selectedIndex].value;
 	// action here
@@ -108,7 +106,9 @@ function loadIntent(id) {
 								},
 								formatters : {
 									"commands" : function(column, row) {
-										return "<button id='"+ row.name +"' onclick='deletePhrase(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+										return "<button id='"
+												+ row.name
+												+ "' onclick='deletePhrase(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
 									}
 								}
 							});
@@ -120,11 +120,10 @@ function loadIntent(id) {
 	xmlhttp.send();
 }
 
-function insertPattern(tableId) {
+function insertPattern() {
 	if (resultIntents != "") {
-		var tableElem = document.getElementById(tableId);
-		var div = document.getElementById("droptarget");
-		var divs = div.getElementsByTagName("div");
+		var div = document.getElementById("containerDiv");
+		var divs = div.getElementsByClassName("draggable");
 		var newPattern = "";
 		var anyCount = 0;
 		for (var i = 0; i < divs.length; i++) {
@@ -165,8 +164,9 @@ function insertPattern(tableId) {
 
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					swal("Good job!", xmlhttp.responseText, "success");
-					loadIntent(cate);
+					// swal("Good job!", xmlhttp.responseText, "success");
+					// loadIntent(cate);
+					location.reload();
 					// moveDiv("droptarget", "box-dragable");
 				}
 
@@ -190,11 +190,11 @@ function insertPattern(tableId) {
 }
 
 function displayStep2() {
-	var step1 = document.getElementById("selectIntentS1");
+	var step1 = document.getElementById("selectIntent");
 	var selectId = step1.options[step1.selectedIndex].value;
-	if(selectId == "empty") {
+	if (selectId == "empty") {
 		notify("Please Choose intent first!", "info");
-	}else {
+	} else {
 		var step2 = document.getElementById("step2");
 		step2.style.display = "block";
 	}
@@ -202,16 +202,38 @@ function displayStep2() {
 function displayStep3() {
 	var step1 = document.getElementById("exampleList");
 	var selectId = step1.options[step1.selectedIndex].value;
-	if(selectId == "empty") {
+	if (selectId == "empty") {
 		notify("Please Choose Example first!", "info");
-	}else {
+	} else {
 		var step3 = document.getElementById("step3");
 		step3.style.display = "block";
-		//display example
+		// display example
 		var chosenExample = document.getElementById("chosenExample");
 		var para = document.createElement("p");
 		var node = document.createTextNode(selectId);
 		para.appendChild(node);
 		chosenExample.appendChild(para);
+
+		// create textbox for user chosen
+		var pContainer = document.getElementById('user-say-container');
+		pContainer.addEventListener('mouseup', function() {
+			var text = getTextSelection().trim();
+			if (text && listPhrase[text] === undefined) {
+
+				var divDrop = document.createElement('div');
+				divDrop.id = "droptarget";
+				var ondrop = document.createAttribute("ondrop");
+				ondrop.value = "drop(event)";
+				divDrop.setAttributeNode(ondrop);
+				var ondragover = document.createAttribute("ondragover");
+				ondragover.value = "allowDrop(event)";
+				divDrop.setAttributeNode(ondragover);
+				var textnode = document.createTextNode(text);
+				divDrop.appendChild(textnode);
+				var container = document.getElementById("containerDiv");
+				container.appendChild(divDrop);
+			}
+		});
+
 	}
 }

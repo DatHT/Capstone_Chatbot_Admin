@@ -30,6 +30,9 @@ public class FacebookUser implements Serializable {
 	@Column(name = "isBanned", columnDefinition = "Boolean default '0'")
 	private boolean isBanned;
 	
+	@Column(name = "favorateProduct")
+	private String favorateProduct;
+	
 	public FacebookUser() {
 		// TODO Auto-generated constructor stub
 	}
@@ -37,8 +40,13 @@ public class FacebookUser implements Serializable {
 	
 
 
+	
+
+
+
+
 	public FacebookUser(String userId, String firstName, String lastName, String locale, boolean gender,
-			boolean isBanned) {
+			boolean isBanned, String favorateProduct) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
@@ -46,7 +54,13 @@ public class FacebookUser implements Serializable {
 		this.locale = locale;
 		this.gender = gender;
 		this.isBanned = isBanned;
+		this.favorateProduct = favorateProduct;
 	}
+
+
+
+
+
 
 
 
@@ -120,13 +134,17 @@ public class FacebookUser implements Serializable {
 		return gender;
 	}
 
-
-
-
 	public void setGender(boolean gender) {
 		this.gender = gender;
 	}
 
+	public String getFavorateProduct() {
+		return favorateProduct;
+	}
+	
+	public void setFavorateProduct(String favorateProduct) {
+		this.favorateProduct = favorateProduct;
+	}
 	
 
 }

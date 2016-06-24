@@ -6,6 +6,8 @@ package com.psib.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import com.psib.dto.jsonmapper.intent.IntentDto;
 import com.psib.dto.jsonmapper.intent.IntentsDto;
 import com.psib.service.IIntentManager;
 import com.psib.service.ILexicalCategoryManager;
+import com.psib.service.ILogManager;
 import com.psib.service.impl.IntentManager;
 
 /**
@@ -50,6 +53,7 @@ public class ExampleController {
 	
 	public static final String INTENTS = "INTENTS";
 	public static final String ERROR = "ERROR";
+	public static final String LOGS = "LOGS";
 	
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET
 			, produces = "application/json; charset=utf-8")
@@ -76,6 +80,7 @@ public class ExampleController {
 			model.addAttribute(INTENTS, list);
 			List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
 			model.addAttribute(LexicalCategoryController.LEXICALS, lexicals);
+			
 			return "example";
 		} catch (IOException e) {
 			model.addAttribute(ERROR, e.getMessage());
@@ -84,7 +89,7 @@ public class ExampleController {
 		} catch (RestfulException e) {
 			model.addAttribute(ERROR, e.getMessage());
 			return "error";
-		}
+		} 
 		
 	}
 	
@@ -92,6 +97,8 @@ public class ExampleController {
 	public @ResponseBody String insertPattern(@RequestParam("pattern") String pattern,
 			@RequestParam("id") String id ,Model model) {
 		String responseText = "";
+		System.out.println("DAT: " + pattern);
+		System.out.println("ID: " + id);
 		try {
 			StatusCode status = manager.addPattern(pattern, id);
 			switch (status) {
