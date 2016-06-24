@@ -188,3 +188,30 @@ function insertPattern(tableId) {
 	}
 
 }
+
+function displayStep2() {
+	var step1 = document.getElementById("selectIntentS1");
+	var selectId = step1.options[step1.selectedIndex].value;
+	if(selectId == "empty") {
+		notify("Please Choose intent first!", "info");
+	}else {
+		var step2 = document.getElementById("step2");
+		step2.style.display = "block";
+	}
+}
+function displayStep3() {
+	var step1 = document.getElementById("exampleList");
+	var selectId = step1.options[step1.selectedIndex].value;
+	if(selectId == "empty") {
+		notify("Please Choose Example first!", "info");
+	}else {
+		var step3 = document.getElementById("step3");
+		step3.style.display = "block";
+		//display example
+		var chosenExample = document.getElementById("chosenExample");
+		var para = document.createElement("p");
+		var node = document.createTextNode(selectId);
+		para.appendChild(node);
+		chosenExample.appendChild(para);
+	}
+}
