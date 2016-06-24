@@ -61,41 +61,105 @@
 	</div>
 </div>
 
+
+
+<div class="row">
+	<script>
+		var xmlhttp;
+		if (window.XMLHttpRequest) {
+			xmlhttp = new XMLHttpRequest();
+		} else
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+				var data = JSON.parse(xmlhttp.responseText);
+				var listContent = data.contents;
+				var listExample = document.getElementById("exampleList");
+				for (var int = 0; int < listContent.length; int++) {
+					if (listContent[int].errCode == '300') {
+						//alert(listContent[int].userSay);
+						var option = document.createElement("option");
+						option.text = listContent[int].userSay;
+						option.value = listContent[int].userSay;
+						listExample.add(option);
+						
+					}
+				}
+			}
+		};
+		xmlhttp.open('GET', '/chatbot_admin/getLog', true);
+		xmlhttp.send(null);
+	</script>
+	<div class="col-lg-3">
+
+		<div class="card">
+			<div class="card-header ch-dark palette-Purple-300 bg">
+				<h2>Step 1: Select Intent</h2>
+				<button onclick="displayStep2()" class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-arrow-right zmdi-hc-fw"></i></button>
+			</div>
+			
+			<div class="card-body card-padding">
+
+				<div class="row">
+						<select class="chosen" data-placeholder="Choose a Intent..."
+							onchange="loadIntent(this)" class="form-control"
+							id="selectIntentS1">
+							<option value="empty"></option>
+
+							<c:if test="${not empty intents}">
+								<c:forEach var="intent" items="${intents}">
+									<option value="${intent.id}">${intent.name}</option>
+								</c:forEach>
+							</c:if>
+
+						</select>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<div class="col-lg-3" style="display:none" id="step2">
+		<div class="card">
+			<div class="card-header ch-dark palette-Purple-300 bg">
+				<h2>Step 2: Choose example</h2>
+				<button onclick="displayStep3()" class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-arrow-right zmdi-hc-fw"></i></button>
+			</div>
+			<div class="card-body card-padding">
+						<select class="chosen" data-placeholder="Some suggestion example..."
+							onchange="pitchExample(this)" class="form-control"
+							id="exampleList">
+							<option value="empty"></option>
+							
+
+						</select>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-6" style="display:none" id="step3">
+		<div class="card">
+		<div class="card-header ch-dark palette-Purple-300 bg">
+				<h2>Step 3: Start Training</h2>
+				<button class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-arrow-right zmdi-hc-fw"></i></button>
+			</div>
+			<div class="card-body card-padding">
+			<blockquote class="m-b-25" id="chosenExample">
+            
+			</blockquote>
+			</div>
+	</div>
+	</div>
+
+	
+</div>
+
+
 <div class="row">
 
-	<div class="col-lg-8">
-	<div class="card">
-		<div class="card-header">
-			<h2 id="tableHeader">Your templete</h2>
-		</div>
-			<div class="card-body card-padding">
-	<div class="panel panel-default">
-			<div class="panel-body">
-		<div class="table-responsive">
-				<table class="table table-striped table-bordered table-hover"
-					id="tableIntent">
-					<thead>
-						<tr>
-							<th  data-column-id="id" data-type="numeric" data-identifier="true">No.</th>
-							<th data-column-id="name">Name</th>
-							<th  data-column-id="update" data-formatter="commands" data-sortable="false">Action</th>
-						</tr>
-					</thead>
-					<tbody id="intentTable">
-
-					</tbody>
-				</table>
-			</div>
-			</div>
-			</div>
-		
-	</div>
-	</div>
+	
 	
 
-</div>
-</div>
-<div class="row">
 	<div class="card">
 			<div class="card-header">
 				<h2>Manage Example</h2>
@@ -175,6 +239,41 @@
 	</div>
 		
 	
+</div>
+
+<div class="row">
+
+	<div class="col-lg-8">
+	<div class="card">
+		<div class="card-header">
+			<h2 id="tableHeader">Your templete</h2>
+		</div>
+			<div class="card-body card-padding">
+	<div class="panel panel-default">
+			<div class="panel-body">
+		<div class="table-responsive">
+				<table class="table table-striped table-bordered table-hover"
+					id="tableIntent">
+					<thead>
+						<tr>
+							<th  data-column-id="id" data-type="numeric" data-identifier="true">No.</th>
+							<th data-column-id="name">Name</th>
+							<th  data-column-id="update" data-formatter="commands" data-sortable="false">Action</th>
+						</tr>
+					</thead>
+					<tbody id="intentTable">
+
+					</tbody>
+				</table>
+			</div>
+			</div>
+			</div>
+		
+	</div>
+	</div>
+	
+
+</div>
 </div>
 
 
