@@ -65,7 +65,7 @@
 		</a>
 
 			<ul class="dropdown-menu pull-right dm-icon">
-				<li><a href="profile-about.html"><i
+				<li><a href="profile"><i
 						class="zmdi zmdi-account"></i> View Profile</a></li>
 				<li><a href="#"><i class="zmdi zmdi-input-antenna"></i>
 						Privacy Settings</a></li>

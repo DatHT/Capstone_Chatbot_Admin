@@ -33,8 +33,7 @@
 
 	<definition name="login" extends="base.definition">
 		<put-attribute name="title" value="Entity Manager" />
-		<put-attribute name="body"
-			value="/WEB-INF/views/login.jsp" />
+		<put-attribute name="body" value="/WEB-INF/views/login.jsp" />
 		<put-attribute name="current" value="dataConfig" />
 	</definition>
 
@@ -46,7 +45,7 @@
 			value="/WEB-INF/views/entity/updateEntity.jsp" />
 		<put-attribute name="current" value="dataConfig" />
 	</definition>
-	
+
 	<!-- Begin Manage Account Page -->
 	<!-- *************************************************************************** -->
 	<definition name="manageAccount" extends="base.definition">
@@ -54,6 +53,15 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/accounts/manageAccount.jsp" />
 		<put-attribute name="current" value="manageAccount" />
+	</definition>
+
+	<!-- Begin User profile Page -->
+	<!-- *************************************************************************** -->
+	<definition name="profile" extends="base.definition">
+		<put-attribute name="title" value="User profile" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/accounts/profile.jsp" />
+		<put-attribute name="current" value="profile" />
 	</definition>
 
 	<!-- Begin Example Page -->

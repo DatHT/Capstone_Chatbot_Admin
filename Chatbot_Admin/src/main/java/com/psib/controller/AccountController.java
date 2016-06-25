@@ -40,4 +40,8 @@ public class AccountController {
 		}
 		return false;
 	}
+	@RequestMapping(value = "/profile")
+	public String viewUserProfile() {
+		return "profile";
+	}
 }
