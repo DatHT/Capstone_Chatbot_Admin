@@ -167,6 +167,8 @@
 	<script
 		src="resources/assets/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
 	<script
+		src="resources/assets/vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
+	<script
 		src="resources/assets/vendors/bower_components/moment/min/moment.min.js"></script>
 	<script
 		src="resources/assets/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>

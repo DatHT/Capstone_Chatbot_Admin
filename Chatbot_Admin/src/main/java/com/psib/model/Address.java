@@ -85,6 +85,8 @@ public class Address implements Serializable{
 	public void setRestaurantName(String restaurantName) {
 		this.restaurantName = restaurantName;
 	}
-	
-	
+
+	public void setDistrictId(long districtId) {
+		this.districtId = districtId;
+	}
 }
