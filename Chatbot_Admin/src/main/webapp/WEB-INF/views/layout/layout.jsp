@@ -171,6 +171,6 @@
                  <circle class="plc-path" cx="50" cy="50" r="20" />
              </svg>
 		</div>
-	</div>
+	</div>g
 </body>
 </html>

@@ -1,18 +1,5 @@
 package com.psib.service.impl;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
 import com.psib.dao.IProductAddressDao;
@@ -23,141 +10,160 @@ import com.psib.model.Product;
 import com.psib.model.ProductAddress;
 import com.psib.service.IProductManager;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
 
 @Service
 public class ProductManager implements IProductManager {
 
-	private static final Logger logger = LoggerFactory.getLogger(ProductManager.class);
+    private static final Logger LOG = Logger.getLogger(ProductManager.class);
 
-	@Autowired
-	private IProductAddressDao productAddressDao;
+    @Autowired
+    private IProductAddressDao productAddressDao;
 
-	@Autowired
-	private IDistrictDao districtDao;
+    @Autowired
+    private IDistrictDao districtDao;
 
-	@Autowired
-	private IAddressDao addressDao;
+    @Autowired
+    private IAddressDao addressDao;
 
-	@Autowired
-	private IProductDao productDao;
+    @Autowired
+    private IProductDao productDao;
 
-	@Override
-	public List<ProductAddress> getAll() {
-		logger.info("[getAll] Start");
-		logger.info("[getAll] End");
-		return productAddressDao.getAllItem();
-	}
+    @Override
+    public List<ProductAddress> getAll() {
+        LOG.info("[getAll] Start");
+        LOG.info("[getAll] End");
+        return productAddressDao.getAllItem();
+    }
 
-	@Override
-	public List<District> getAllDistrict() {
-		logger.info("[getAllDistrict] Start");
-		logger.info("[getAllDistrict] End");
-		return districtDao.getAllDistrict();
-	}
+    @Override
+    public List<District> getAllDistrict() {
+        LOG.info("[getAllDistrict] Start");
+        LOG.info("[getAllDistrict] End");
+        return districtDao.getAllDistrict();
+    }
 
-	@Override
-	public int insertProduct(String name, String address, String district, String rating, String restaurant,
-			String relatedUrl, MultipartFile file) {
-		logger.info(
-				String.valueOf(new StringBuilder("[insertProduct] Start: name = ").append(name).append("; address = ")
-						.append(address).append("; district = ").append(district).append("; rating = ").append(rating)
-						.append("; restaurant = ").append(restaurant).append("; relatedUrl = ").append(relatedUrl)));
+    @Override
+    public int insertProduct(String name, String address, String district, String rating, String restaurant,
+                             String relatedUrl, MultipartFile file) {
+        LOG.info(String.valueOf(new StringBuilder("[insertProduct] Start: name = ").append(name)
+                .append("; address = ").append(address)
+                .append("; district = ").append(district)
+                .append("; rating = ").append(rating)
+                .append("; restaurant = ").append(restaurant)
+                .append("; relatedUrl = ").append(relatedUrl)
+                .append("; thumbnail = ").append(file.getOriginalFilename())));
 
-		ProductAddress productAddress = new ProductAddress();
-		productAddress.setAddressName(address);
-		productAddress.setDistrictName(districtDao.getDistrictById(Long.parseLong(district)).getName());
+        ProductAddress productAddress = new ProductAddress();
+        productAddress.setAddressName(address);
+        productAddress.setDistrictName(districtDao.getDistrictById(Long.parseLong(district)).getName());
 
-		String latLongs[] = LatitudeAndLongitudeWithPincode.getLatLongPositions(address);
+        String latLongs[] = LatitudeAndLongitudeWithPincode.getLatLongPositions(address);
 
-		if (latLongs == null) {
-			productAddress.setLatitude(0);
-			productAddress.setLongitude(0);
-		} else {
-			productAddress.setLatitude(Double.parseDouble(latLongs[0]));
-			productAddress.setLongitude(Double.parseDouble(latLongs[1]));
-		}
+        if (latLongs == null) {
+            productAddress.setLatitude(0);
+            productAddress.setLongitude(0);
+        } else {
+            productAddress.setLatitude(Double.parseDouble(latLongs[0]));
+            productAddress.setLongitude(Double.parseDouble(latLongs[1]));
+        }
 
-		productAddress.setProductName(name);
-		productAddress.setRate(rating);
-		productAddress.setRestaurantName(restaurant);
-		productAddress.setThumbPath("");
+        productAddress.setProductName(name);
+        productAddress.setRate(rating);
+        productAddress.setRestaurantName(restaurant);
+        productAddress.setThumbPath("");
 
-		if (!productAddressDao.checkProductExist(productAddress)) {
-			Address addressObj = new Address();
-			addressObj.setName(address);
-			addressObj.setLatitude(0);
-			addressObj.setLongitude(0);
-			addressObj.setRestaurantName(restaurant);
-			addressObj.setDistrictId(Long.parseLong(district));
+        if (!productAddressDao.checkProductExist(productAddress)) {
+            Address addressObj = new Address();
+            addressObj.setName(address);
+            addressObj.setLatitude(0);
+            addressObj.setLongitude(0);
+            addressObj.setRestaurantName(restaurant);
+            addressObj.setDistrictId(Long.parseLong(district));
 
-			long addressId = addressDao.checkAddressExist(addressObj);
-			if (addressId == 0) {
-				addressId = addressDao.inserAddress(addressObj);
-			}
+            long addressId = addressDao.checkAddressExist(addressObj);
+            if (addressId == 0) {
+                addressId = addressDao.inserAddress(addressObj);
+            }
 
-			Product product = new Product();
-			product.setName(name);
-			product.setRate(rating);
-			product.setThumbPath("");
-			product.setUrlRelate(relatedUrl);
+            Product product = new Product();
+            product.setName(name);
+            product.setRate(rating);
+            product.setThumbPath("");
+            product.setUrlRelate(relatedUrl);
 
-			String thumbUrl = "";
+            String thumbUrl = "";
 
-			long productId = productDao.checkProductExist(product);
-			if (productId == 0) {
-				thumbUrl = uploadThumbnail(file);
-				product.setThumbPath(thumbUrl);
-				productId = productDao.insertProduct(product);
-			}
+            long productId = productDao.checkProductExist(product);
+            if (productId == 0) {
+                thumbUrl = uploadThumbnail(file);
+                product.setThumbPath(thumbUrl);
+                productId = productDao.insertProduct(product);
+            }
 
-			productAddress.setProductId(productId);
-			productAddress.setAddressId(addressId);
-			productAddress.setUrlRelate(relatedUrl);
+            productAddress.setProductId(productId);
+            productAddress.setAddressId(addressId);
+            productAddress.setUrlRelate(relatedUrl);
 
-			if (thumbUrl.equals("")) {
-				thumbUrl = uploadThumbnail(file);
-			}
-			productAddress.setThumbPath(thumbUrl);
-			productAddressDao.insertProductAddress(productAddress);
+            if (thumbUrl.equals("")) {
+                thumbUrl = uploadThumbnail(file);
+            }
+            productAddress.setThumbPath(thumbUrl);
+            productAddressDao.insertProductAddress(productAddress);
 
-			logger.info("[insertProduct] End");
-			return 1;
-		}
+            LOG.info("[insertProduct] End");
+            return 1;
+        }
 
-		logger.info("[insertProduct] End");
-		return 0;
-	}
+        LOG.info("[insertProduct] End");
+        return 0;
+    }
 
-	private String uploadThumbnail(MultipartFile file) {
-		try {
-			if (!file.isEmpty()) {
+    private String uploadThumbnail(MultipartFile file) {
+        LOG.info("[uploadThumbnail] Start: thumbnail = " + file.getOriginalFilename());
 
-				byte[] bytes;
+        try {
+            if (!file.isEmpty()) {
 
-				bytes = file.getBytes();
+                byte[] bytes;
 
-				File dir = new File("D:\\images\\thumbnail");
-				if (!dir.exists()) {
-					dir.mkdirs();
-				}
-				String fileType = StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
+                bytes = file.getBytes();
 
-				String url = String.valueOf(new StringBuilder(dir.getAbsolutePath()).append(File.separator)
-						.append(StringUtils.substringBeforeLast(file.getOriginalFilename(), ".")).append("_")
-						.append(System.currentTimeMillis()).append(".").append(fileType));
+                File dir = new File("D:\\images\\thumbnail");
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                String fileType = StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
 
-				File serverFile = new File(url);
+                String url = String.valueOf(new StringBuilder(dir.getAbsolutePath()).append(File.separator)
+                        .append(StringUtils.substringBeforeLast(file.getOriginalFilename(), ".")).append("_")
+                        .append(System.currentTimeMillis()).append(".").append(fileType));
 
-				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-				stream.write(bytes);
-				stream.close();
+                File serverFile = new File(url);
 
-				return url;
-			}
-		} catch (IOException e) {
-			logger.error("[uploadThumbnail] IOException: " + e.getMessage());
-			return null;
-		}
-		return null;
-	}
+                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+                stream.write(bytes);
+                stream.close();
+
+                LOG.info("[uploadThumbnail] End");
+                return url;
+            }
+        } catch (IOException e) {
+            LOG.error("[uploadThumbnail] IOException: " + e.getMessage());
+            return null;
+        }
+
+        LOG.info("[uploadThumbnail] End");
+        return null;
+    }
 }
