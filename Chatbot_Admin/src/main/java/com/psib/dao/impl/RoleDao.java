@@ -9,8 +9,7 @@ import com.psib.dao.IRoleDao;
 import com.psib.model.Role;
 
 /**
- * @author DatHT
- * Jun 22, 2016
+ * @author DatHT Jun 22, 2016
  * @Email: datht0601@gmail.com
  */
 @Repository
@@ -19,13 +18,14 @@ public class RoleDao extends BaseDao<Role, Integer> implements IRoleDao {
 	public RoleDao(Class<Role> clazz) {
 		super(clazz);
 	}
-	
-	
+
 	public RoleDao() {
 		setClazz(Role.class);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.psib.dao.IRoleDao#getRoleById(long)
 	 */
 	@Override

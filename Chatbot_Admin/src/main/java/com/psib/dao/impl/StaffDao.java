@@ -3,7 +3,6 @@
  */
 package com.psib.dao.impl;
 
-
 import javax.transaction.Transactional;
 
 import org.hibernate.Query;
@@ -13,8 +12,7 @@ import com.psib.dao.IStaffDao;
 import com.psib.model.Staff;
 
 /**
- * @author DatHT
- * Jun 22, 2016
+ * @author DatHT Jun 22, 2016
  * @Email: datht0601@gmail.com
  */
 @Repository
@@ -23,12 +21,14 @@ public class StaffDao extends BaseDao<Staff, String> implements IStaffDao {
 	public StaffDao(Class<Staff> clazz) {
 		super(clazz);
 	}
+
 	public StaffDao() {
 		setClazz(Staff.class);
 	}
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.psib.dao.IStaffDao#getByUsername(java.lang.String)
 	 */
 	@Override
