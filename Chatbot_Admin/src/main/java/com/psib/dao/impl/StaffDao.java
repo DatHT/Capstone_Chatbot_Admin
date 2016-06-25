@@ -3,6 +3,8 @@
  */
 package com.psib.dao.impl;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.hibernate.Query;
@@ -26,6 +28,12 @@ public class StaffDao extends BaseDao<Staff, String> implements IStaffDao {
 		setClazz(Staff.class);
 	}
 
+	@Override
+	@Transactional
+	public List<Staff> getAllStaff() {
+		return getAll();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -44,4 +52,9 @@ public class StaffDao extends BaseDao<Staff, String> implements IStaffDao {
 		return null;
 	}
 
+	@Override
+	@Transactional
+	public void insertNewStaff(Staff staff) {
+		getSession().save(staff);
+	}
 }
