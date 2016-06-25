@@ -60,7 +60,7 @@ public class MyUserDetailsService implements UserDetailsService {
         Set<GrantedAuthority> setAuths = new HashSet<>();
 
         // Build user's authorities
-        String role = roleManager.getRoleById(userRoles).getName();
+        String role = roleManager.getRoleById(userRoles).getName().toUpperCase();
         setAuths.add(new SimpleGrantedAuthority(role));
 
         List<GrantedAuthority> Result = new ArrayList<>(setAuths);
