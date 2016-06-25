@@ -1,699 +1,302 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script
+	src="resources/assets/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="resources/assets/scripts/product.js"></script>
+<script src="resources/assets/scripts/commonScript.js"></script>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<div class="row">
-	<!--  page header -->
-	<div class="col-lg-12">
-		<h1 class="page-header">Tables</h1>
-	</div>
-	<!-- end  page header -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<head>
+<title>Manage Products</title>
+</head>
+
+<style>
+	.help-block{
+		visibility: hidden;
+	}
+</style>
+
+<div class="c-header">
+	<h2 id="tableHeader">Manage Products</h2>
 </div>
-<div class="row">
-	<div class="col-lg-12">
-		<!-- Advanced Tables -->
-		<div class="panel panel-default">
-			<div class="panel-heading">Advanced Tables</div>
-			<div class="panel-body">
-				<div class="table-responsive">
-					<table class="table table-striped table-bordered table-hover"
-						id="dataTables-example">
-						<thead>
-							<tr>
-								<th>Rendering engine</th>
-								<th>Browser</th>
-								<th>Platform(s)</th>
-								<th>Engine version</th>
-								<th>CSS grade</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr class="odd gradeX">
-								<td>Trident</td>
-								<td>Internet Explorer 4.0</td>
-								<td>Win 95+</td>
-								<td class="center">4</td>
-								<td class="center">X</td>
-							</tr>
-							<tr class="even gradeC">
-								<td>Trident</td>
-								<td>Internet Explorer 5.0</td>
-								<td>Win 95+</td>
-								<td class="center">5</td>
-								<td class="center">C</td>
-							</tr>
-							<tr class="odd gradeA">
-								<td>Trident</td>
-								<td>Internet Explorer 5.5</td>
-								<td>Win 95+</td>
-								<td class="center">5.5</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="even gradeA">
-								<td>Trident</td>
-								<td>Internet Explorer 6</td>
-								<td>Win 98+</td>
-								<td class="center">6</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="odd gradeA">
-								<td>Trident</td>
-								<td>Internet Explorer 7</td>
-								<td>Win XP SP2+</td>
-								<td class="center">7</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="even gradeA">
-								<td>Trident</td>
-								<td>AOL browser (AOL desktop)</td>
-								<td>Win XP</td>
-								<td class="center">6</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Firefox 1.0</td>
-								<td>Win 98+ / OSX.2+</td>
-								<td class="center">1.7</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Firefox 1.5</td>
-								<td>Win 98+ / OSX.2+</td>
-								<td class="center">1.8</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Firefox 2.0</td>
-								<td>Win 98+ / OSX.2+</td>
-								<td class="center">1.8</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Firefox 3.0</td>
-								<td>Win 2k+ / OSX.3+</td>
-								<td class="center">1.9</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Camino 1.0</td>
-								<td>OSX.2+</td>
-								<td class="center">1.8</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Camino 1.5</td>
-								<td>OSX.3+</td>
-								<td class="center">1.8</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Netscape 7.2</td>
-								<td>Win 95+ / Mac OS 8.6-9.2</td>
-								<td class="center">1.7</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Netscape Browser 8</td>
-								<td>Win 98SE+</td>
-								<td class="center">1.7</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Netscape Navigator 9</td>
-								<td>Win 98+ / OSX.2+</td>
-								<td class="center">1.8</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Mozilla 1.0</td>
-								<td>Win 95+ / OSX.1+</td>
-								<td class="center">1</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Mozilla 1.1</td>
-								<td>Win 95+ / OSX.1+</td>
-								<td class="center">1.1</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Mozilla 1.2</td>
-								<td>Win 95+ / OSX.1+</td>
-								<td class="center">1.2</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Mozilla 1.3</td>
-								<td>Win 95+ / OSX.1+</td>
-								<td class="center">1.3</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Mozilla 1.4</td>
-								<td>Win 95+ / OSX.1+</td>
-								<td class="center">1.4</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Mozilla 1.5</td>
-								<td>Win 95+ / OSX.1+</td>
-								<td class="center">1.5</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Mozilla 1.6</td>
-								<td>Win 95+ / OSX.1+</td>
-								<td class="center">1.6</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Mozilla 1.7</td>
-								<td>Win 98+ / OSX.1+</td>
-								<td class="center">1.7</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Mozilla 1.8</td>
-								<td>Win 98+ / OSX.1+</td>
-								<td class="center">1.8</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Seamonkey 1.1</td>
-								<td>Win 98+ / OSX.2+</td>
-								<td class="center">1.8</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Gecko</td>
-								<td>Epiphany 2.20</td>
-								<td>Gnome</td>
-								<td class="center">1.8</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Webkit</td>
-								<td>Safari 1.2</td>
-								<td>OSX.3</td>
-								<td class="center">125.5</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Webkit</td>
-								<td>Safari 1.3</td>
-								<td>OSX.3</td>
-								<td class="center">312.8</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Webkit</td>
-								<td>Safari 2.0</td>
-								<td>OSX.4+</td>
-								<td class="center">419.3</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Webkit</td>
-								<td>Safari 3.0</td>
-								<td>OSX.4+</td>
-								<td class="center">522.1</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Webkit</td>
-								<td>OmniWeb 5.5</td>
-								<td>OSX.4+</td>
-								<td class="center">420</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Webkit</td>
-								<td>iPod Touch / iPhone</td>
-								<td>iPod</td>
-								<td class="center">420.1</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Webkit</td>
-								<td>S60</td>
-								<td>S60</td>
-								<td class="center">413</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Presto</td>
-								<td>Opera 7.0</td>
-								<td>Win 95+ / OSX.1+</td>
-								<td class="center">-</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Presto</td>
-								<td>Opera 7.5</td>
-								<td>Win 95+ / OSX.2+</td>
-								<td class="center">-</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Presto</td>
-								<td>Opera 8.0</td>
-								<td>Win 95+ / OSX.2+</td>
-								<td class="center">-</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Presto</td>
-								<td>Opera 8.5</td>
-								<td>Win 95+ / OSX.2+</td>
-								<td class="center">-</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Presto</td>
-								<td>Opera 9.0</td>
-								<td>Win 95+ / OSX.3+</td>
-								<td class="center">-</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Presto</td>
-								<td>Opera 9.2</td>
-								<td>Win 88+ / OSX.3+</td>
-								<td class="center">-</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Presto</td>
-								<td>Opera 9.5</td>
-								<td>Win 88+ / OSX.3+</td>
-								<td class="center">-</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Presto</td>
-								<td>Opera for Wii</td>
-								<td>Wii</td>
-								<td class="center">-</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Presto</td>
-								<td>Nokia N800</td>
-								<td>N800</td>
-								<td class="center">-</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Presto</td>
-								<td>Nintendo DS browser</td>
-								<td>Nintendo DS</td>
-								<td class="center">8.5</td>
-								<td class="center">C/A<sup>1</sup>
-								</td>
-							</tr>
-							<tr class="gradeC">
-								<td>KHTML</td>
-								<td>Konqureror 3.1</td>
-								<td>KDE 3.1</td>
-								<td class="center">3.1</td>
-								<td class="center">C</td>
-							</tr>
-							<tr class="gradeA">
-								<td>KHTML</td>
-								<td>Konqureror 3.3</td>
-								<td>KDE 3.3</td>
-								<td class="center">3.3</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeA">
-								<td>KHTML</td>
-								<td>Konqureror 3.5</td>
-								<td>KDE 3.5</td>
-								<td class="center">3.5</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeX">
-								<td>Tasman</td>
-								<td>Internet Explorer 4.5</td>
-								<td>Mac OS 8-9</td>
-								<td class="center">-</td>
-								<td class="center">X</td>
-							</tr>
-							<tr class="gradeC">
-								<td>Tasman</td>
-								<td>Internet Explorer 5.1</td>
-								<td>Mac OS 7.6-9</td>
-								<td class="center">1</td>
-								<td class="center">C</td>
-							</tr>
-							<tr class="gradeC">
-								<td>Tasman</td>
-								<td>Internet Explorer 5.2</td>
-								<td>Mac OS 8-X</td>
-								<td class="center">1</td>
-								<td class="center">C</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Misc</td>
-								<td>NetFront 3.1</td>
-								<td>Embedded devices</td>
-								<td class="center">-</td>
-								<td class="center">C</td>
-							</tr>
-							<tr class="gradeA">
-								<td>Misc</td>
-								<td>NetFront 3.4</td>
-								<td>Embedded devices</td>
-								<td class="center">-</td>
-								<td class="center">A</td>
-							</tr>
-							<tr class="gradeX">
-								<td>Misc</td>
-								<td>Dillo 0.8</td>
-								<td>Embedded devices</td>
-								<td class="center">-</td>
-								<td class="center">X</td>
-							</tr>
-							<tr class="gradeX">
-								<td>Misc</td>
-								<td>Links</td>
-								<td>Text only</td>
-								<td class="center">-</td>
-								<td class="center">X</td>
-							</tr>
-							<tr class="gradeX">
-								<td>Misc</td>
-								<td>Lynx</td>
-								<td>Text only</td>
-								<td class="center">-</td>
-								<td class="center">X</td>
-							</tr>
-							<tr class="gradeC">
-								<td>Misc</td>
-								<td>IE Mobile</td>
-								<td>Windows Mobile 6</td>
-								<td class="center">-</td>
-								<td class="center">C</td>
-							</tr>
-							<tr class="gradeC">
-								<td>Misc</td>
-								<td>PSP browser</td>
-								<td>PSP</td>
-								<td class="center">-</td>
-								<td class="center">C</td>
-							</tr>
-							<tr class="gradeU">
-								<td>Other browsers</td>
-								<td>All others</td>
-								<td>-</td>
-								<td class="center">-</td>
-								<td class="center">U</td>
-							</tr>
-						</tbody>
-					</table>
+
+<div class="card">
+	<div class="card-body card-padding">
+		<button class="btn btn-primary btn-lg waves-effect"
+			onclick="showAddModal()">Add New</button>
+		<div class="row m-t-20">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="table-responsive">
+						<table id="data-table-basic" class="table table-striped">
+							<thead>
+								<tr>
+									<th data-column-id="id" data-type="numeric"
+										data-identifier="true">No.</th>
+									<th data-column-id="name">Name</th>
+									<th data-column-id="address">Address</th>
+									<th data-column-id="district">District</th>
+									<th data-column-id="rate">Rating</th>
+									<th data-column-id="restaurant">Restaurant</th>
+									<th data-column-id="thumb">Thumb</th>
+									<th data-column-id="url">Related Url</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach items="${productList}" var="product"
+									varStatus="counter">
+									<tr>
+										<td>${counter.count}</td>
+										<td>${product.productName}</td>
+										<td>${product.addressName}</td>
+										<td>${product.districtName}</td>
+										<td>${product.rate}</td>
+										<td>${product.restaurantName}</td>
+										<td>${product.thumbPath}</td>
+										<td>${product.urlRelate}</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Data Table -->
+<script type="text/javascript">
+	
+	function showAddModal() {
+		$('#myModal').modal('show');
+	}
+
+	$(document).ready(function() {
+		var result = '${addResult}';
+		
+		if (result == 'true') {
+			notify("Add Product Successfully!", "info");
+		} else if (result == 'false') {
+			notify("Product Already Existed!", "error");
+			showAddModal();
+		}
+		
+		$('#myModal').on('hidden.bs.modal', function () {
+			$("#name").val("");
+			$("#address").val("");
+			$("#district").find('option:eq(0)').prop('selected', true);
+			$("#rating").val("");
+			$("#restaurant").val("");
+			$("#relatedUrl").val("");
+			
+			$("#div-name").removeClass("has-error");
+			$("#error-name").text("");
+			$("#error-name").css("visibility", "hidden");
+			
+			$("#div-address").removeClass("has-error");
+			$("#error-address").text("");
+			$("#error-address").css("visibility", "hidden");
+			
+			$("#div-rating").removeClass("has-error");
+			$("#error-rating").text("");
+			$("#error-rating").css("visibility", "hidden");
+			
+			$("#div-restaurant").removeClass("has-error");
+			$("#error-restaurant").text("");
+			$("#error-restaurant").css("visibility", "hidden");
+			
+			$("#div-relatedUrl").removeClass("has-error");
+			$("#error-relatedUrl").text("");
+			$("#error-relatedUrl").css("visibility", "hidden");
+		})
+		
+		//Basic Example
+		$("#data-table-basic").bootgrid({
+			ss : {
+				icon : 'zmdi icon',
+				iconColumns : 'zmdi-view-module',
+				iconDown : 'zmdi-expand-more',
+				iconRefresh : 'zmdi-refresh',
+				iconUp : 'zmdi-expand-less'
+			},
+		});
+	});
+</script>
+
+<!--  Modals-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div id="user-say-container" class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="user-say-in-modal">Add New Product</h4>
+			</div>
+			<form id="add-form" action="addProduct?${_csrf.parameterName}=${_csrf.token}" method="POST" enctype="multipart/form-data">
+				<div class="modal-body" style="border-bottom: 0px">
+					<div>
+						<c:if test="${addResult != false}">
+							<%--Name--%>
+							<div id="div-name">
+								<label>Name</label>
+								<input id="name" name="name"
+									autocomplete="off" class="form-control"
+									onblur="validName()"
+									onkeyup="validName()">
+								<small id="error-name" class="help-block"></small>	
+							</div>
+							
+							<%--Address--%>
+							<div id="div-address">
+								<label>Address</label>
+								<input id="address" name="address"
+									autocomplete="off" class="form-control"
+									onblur="validAddress()"
+									onkeyup="validAddress()">
+								<small id="error-address" class="help-block"></small>
+							</div>
+							
+							<%--District--%>
+							<div id="div-district">
+								<label>District</label><br> 
+								<select id="district"
+									name="district" class="form-control">
+									<c:forEach items="${districtList}" var="district">
+										<option value="${district.id}">${district.name}</option>
+									</c:forEach>
+								</select>
+							</div>
+							
+							<%--Rating--%>
+							<div id="div-rating">
+								<label>Rating</label> 
+								<input id="rating" name="rating"
+									autocomplete="off" class="form-control"
+									onblur="validRating()"
+									onkeyup="validRating()">
+								<small id="error-rating" class="help-block"></small>
+							</div>
+							
+							<%--Restaurant--%>
+							<div id="div-restaurant">
+								<label>Restaurant</label>
+								<input id="restaurant" name="restaurant"
+									autocomplete="off" class="form-control"
+									onblur="validRestaurant()"
+									onkeyup="validRestaurant()">
+								<small id="error-restaurant" class="help-block"></small>
+							</div>
+							
+							<%--Related Url--%>
+							<div id="div-relatedUrl">
+								<label>Related Url</label> 
+								<input id="relatedUrl"
+									name="relatedUrl" autocomplete="off" class="form-control"
+									onblur="validRelatedUrl()"
+									onkeyup="validRelatedUrl()">
+								<small id="error-relatedUrl" class="help-block"></small>
+							</div>
+							
+							<%--Thumbnail--%>
+							<label>Thumbnail</label><br>
+							<input type="file" name="file"> 	
+						</c:if>
+						<c:if test="${addResult == false}">
+							<c:remove var="result"/>
+							
+							<%--Name--%>
+							<div id="div-name">
+								<label>Name</label>
+								<input id="name" name="name" value="${name}"
+									autocomplete="off" class="form-control"
+									onblur="validName()"
+									onkeyup="validName()">
+								<small id="error-name" class="help-block"></small>		
+							</div>
+							
+							<%--Address--%>
+							<div id="div-address">
+								<label>Address</label>
+								<input id="address" name="address" value="${address}"
+									autocomplete="off" class="form-control"
+									onblur="validAddress()"
+									onkeyup="validAddress()">
+								<small id="error-address" class="help-block"></small>
+							</div>
+							
+							<%--District--%>
+							<div id="div-district">
+								<label>District</label><br>
+								<select id="district"
+									name="district" class="form-control">
+									<c:forEach items="${districtList}" var="district">
+										<c:if test="${districtId == district.id}">
+											<option value="${district.id}" selected>${district.name}</option>
+										</c:if>
+										<c:if test="${districtId != district.id}">
+											<option value="${district.id}">${district.name}</option>
+										</c:if>
+									</c:forEach>
+								</select>
+							</div>
+							
+							<%--Rating--%>
+							<div id="div-rating">
+								<label>Rating</label> 
+								<input id="rating" name="rating" value="${rating}"
+									autocomplete="off" class="form-control"
+									onblur="validRating()"
+									onkeyup="validRating()">
+								<small id="error-rating" class="help-block"></small>
+							</div>
+						
+							<%--Restaurant--%>
+							<div id="div-restaurant">
+								<label>Restaurant</label> 
+								<input id="restaurant" name="restaurant" value="${restaurant}"
+									autocomplete="off" class="form-control"
+									onblur="validRestaurant()"
+									onkeyup="validRestaurant()">
+								<small id="error-restaurant" class="help-block"></small>
+							</div>
+							
+							<%--Related Url--%>
+							<div id="div-relatedUrl">
+								<label>Related Url</label> 
+								<input id="relatedUrl" name="relatedUrl" value="${relatedUrl}" 
+									autocomplete="off" class="form-control"
+									onblur="validRelatedUrl()"
+									onkeyup="validRelatedUrl()">
+								<small id="error-relatedUrl" class="help-block"></small>		
+							</div>
+							
+							<%--Thumbnail--%>
+							<label>Thumbnail</label><br>
+							<input type="file" name="file">
+						</c:if>
+						
+							<br>
+					</div>
 				</div>
 
-			</div>
-		</div>
-		<!--End Advanced Tables -->
-	</div>
-</div>
-<div class="row">
-	<div class="col-lg-6">
-		<!--   Kitchen Sink -->
-		<div class="panel panel-default">
-			<div class="panel-heading">Kitchen Sink</div>
-			<div class="panel-body">
-				<div class="table-responsive">
-					<table class="table table-striped table-bordered table-hover">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>First Name</th>
-								<th>Last Name</th>
-								<th>Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>1</td>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
-							</tr>
-							<tr>
-								<td>2</td>
-								<td>Jacob</td>
-								<td>Thornton</td>
-								<td>@fat</td>
-							</tr>
-							<tr>
-								<td>3</td>
-								<td>Larry</td>
-								<td>the Bird</td>
-								<td>@twitter</td>
-							</tr>
-						</tbody>
-					</table>
+				<div class="modal-footer">
+					<button id="cancel-button" type="button" class="btn btn-danger"
+						data-dismiss="modal">Cancel</button>
+					<button id="add-button" type="button" class="btn btn-success"
+						onclick="validOnSubmit()">Add</button>
 				</div>
-			</div>
-		</div>
-		<!-- End  Kitchen Sink -->
-	</div>
-	<div class="col-lg-6">
-		<!--   Basic Table  -->
-		<div class="panel panel-default">
-			<div class="panel-heading">Basic Table</div>
-			<div class="panel-body">
-				<div class="table-responsive">
-					<table class="table">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>First Name</th>
-								<th>Last Name</th>
-								<th>Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>1</td>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
-							</tr>
-							<tr>
-								<td>2</td>
-								<td>Jacob</td>
-								<td>Thornton</td>
-								<td>@fat</td>
-							</tr>
-							<tr>
-								<td>3</td>
-								<td>Larry</td>
-								<td>the Bird</td>
-								<td>@twitter</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-		<!-- End  Basic Table  -->
-	</div>
-</div>
-<div class="row">
-	<div class="col-lg-6">
-		<!--    Striped Rows Table  -->
-		<div class="panel panel-default">
-			<div class="panel-heading">Striped Rows Table</div>
-			<div class="panel-body">
-				<div class="table-responsive">
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>First Name</th>
-								<th>Last Name</th>
-								<th>Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>1</td>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
-							</tr>
-							<tr>
-								<td>2</td>
-								<td>Jacob</td>
-								<td>Thornton</td>
-								<td>@fat</td>
-							</tr>
-							<tr>
-								<td>3</td>
-								<td>Larry</td>
-								<td>the Bird</td>
-								<td>@twitter</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-		<!--  End  Striped Rows Table  -->
-	</div>
-	<div class="col-lg-6">
-		<!--    Bordered Table  -->
-		<div class="panel panel-default">
-			<div class="panel-heading">Bordered Table</div>
-			<!-- /.panel-heading -->
-			<div class="panel-body">
-				<div class="table-responsive table-bordered">
-					<table class="table">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>First Name</th>
-								<th>Last Name</th>
-								<th>Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>1</td>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
-							</tr>
-							<tr>
-								<td>2</td>
-								<td>Jacob</td>
-								<td>Thornton</td>
-								<td>@fat</td>
-							</tr>
-							<tr>
-								<td>3</td>
-								<td>Larry</td>
-								<td>the Bird</td>
-								<td>@twitter</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-		<!--  End  Bordered Table  -->
-	</div>
-</div>
-<div class="row">
-	<div class="col-lg-6">
-		<!--    Hover Rows  -->
-		<div class="panel panel-default">
-			<div class="panel-heading">Hover Rows</div>
-			<div class="panel-body">
-				<div class="table-responsive">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>First Name</th>
-								<th>Last Name</th>
-								<th>Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>1</td>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
-							</tr>
-							<tr>
-								<td>2</td>
-								<td>Jacob</td>
-								<td>Thornton</td>
-								<td>@fat</td>
-							</tr>
-							<tr>
-								<td>3</td>
-								<td>Larry</td>
-								<td>the Bird</td>
-								<td>@twitter</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-		<!-- End  Hover Rows  -->
-	</div>
-	<div class="col-lg-6">
-		<!--    Context Classes  -->
-		<div class="panel panel-default">
 
-			<div class="panel-heading">Context Classes</div>
-
-			<div class="panel-body">
-				<div class="table-responsive">
-					<table class="table">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>First Name</th>
-								<th>Last Name</th>
-								<th>Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr class="success">
-								<td>1</td>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
-							</tr>
-							<tr class="info">
-								<td>2</td>
-								<td>Jacob</td>
-								<td>Thornton</td>
-								<td>@fat</td>
-							</tr>
-							<tr class="warning">
-								<td>3</td>
-								<td>Larry</td>
-								<td>the Bird</td>
-								<td>@twitter</td>
-							</tr>
-							<tr class="danger">
-								<td>4</td>
-								<td>John</td>
-								<td>Smith</td>
-								<td>@jsmith</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</form>
 		</div>
-		<!--  end  Context Classes  -->
 	</div>
 </div>
+<!-- End modal -->

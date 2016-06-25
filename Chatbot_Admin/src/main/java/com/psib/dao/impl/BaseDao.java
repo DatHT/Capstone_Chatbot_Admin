@@ -52,7 +52,6 @@ public class BaseDao<Model, Id> implements IBaseDao<Model, Id> {
 	public void insert(Model model) {
 		// TODO Auto-generated method stub
 		getSession().save(model);
-
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "District")
-public class District implements Serializable {
+public class District implements Serializable, Comparable<District> {
 
 	@Id
 	@Column(name = "ID", nullable = false)
@@ -20,8 +20,7 @@ public class District implements Serializable {
 
 	@Column(name = "name", nullable = false, length = 128)
 	private String name;
-	
-	
+
 	public District() {
 		// TODO Auto-generated constructor stub
 	}
@@ -48,6 +47,10 @@ public class District implements Serializable {
 		this.name = name;
 	}
 
+	@Override
+	public int compareTo(District o) {
+		// TODO Auto-generated method stub
+		return this.getName().compareTo(o.getName());
+	}
 
-	
 }
