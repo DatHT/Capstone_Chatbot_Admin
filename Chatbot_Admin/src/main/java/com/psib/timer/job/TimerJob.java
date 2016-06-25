@@ -1,31 +1,30 @@
 package com.psib.timer.job;
 
-import javax.annotation.Resource;
-
+import com.psib.timer.task.TimerTask;
+import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-
-import com.psib.timer.task.TimerTask;
 
 public class TimerJob extends QuartzJobBean {
 
-	// @Autowired
-	// private TimerTask timerTask;
+    private static final Logger LOG = Logger.getLogger(TimerJob.class);
 
-	@Override
-	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
-		System.out.println("[executeInternal] Start");
+    // @Autowired
+    // private TimerTask timerTask;
 
-		if (System.getProperty("timerActive") != null) {
-			boolean isTimerActive = Boolean.parseBoolean(System.getProperty("timerActive"));
-			if (isTimerActive) {
-				TimerTask timerTask = new TimerTask();
-				timerTask.doTimer();
-			}
-		}
-		System.out.println("[executeInternal] End");
-	}
+    @Override
+    protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
+        LOG.info("[executeInternal] Start");
+
+        if (System.getProperty("timerActive") != null) {
+            boolean isTimerActive = Boolean.parseBoolean(System.getProperty("timerActive"));
+            if (isTimerActive) {
+                TimerTask timerTask = new TimerTask();
+                timerTask.doTimer();
+            }
+        }
+        LOG.info("[executeInternal] End");
+    }
 
 }

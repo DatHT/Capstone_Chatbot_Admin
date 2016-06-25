@@ -14,3 +14,5 @@ web_crawler/Web_Crawler/src/main/resources/data-config.properties
 web_crawler/Web_Crawler/target/classes/data-config.properties
 web_crawler/Web_Crawler/target/classes/.gitignore
 draf/SeleniumCrawler/.idea/workspace.xml
+Chatbot_Admin/.idea/
+*.iml
