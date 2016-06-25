@@ -3,6 +3,9 @@
  */
 package com.psib.service.impl;
 
+import java.util.List;
+import java.util.UUID;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +16,23 @@ import com.psib.model.Staff;
 import com.psib.service.IStaffManager;
 
 /**
- * @author DatHT
- * Jun 22, 2016
+ * @author DatHT Jun 22, 2016
  * @Email: datht0601@gmail.com
  */
 @Service
 public class StaffManager implements IStaffManager {
-	
+
 	@Autowired
 	private IStaffDao staffDao;
 
-	/* (non-Javadoc)
+	@Override
+	public List<Staff> getAllStaff() {
+		return staffDao.getAllStaff();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.psib.service.IStaffManager#getStaffByUsername(java.lang.String)
 	 */
 	@Override
@@ -33,4 +42,21 @@ public class StaffManager implements IStaffManager {
 		return staffDao.getByUsername(username);
 	}
 
+	@Override
+	@Transactional
+	public Staff createNewStaffAccount(String username, String email, Boolean isAdmin) {
+		// generate password
+		String password = UUID.randomUUID().toString().substring(0, 8);
+		int roleId = isAdmin ? 1 : 2;
+
+		Staff staff = new Staff();
+		staff.setUsername(username);
+		staff.setPassword(password);
+		staff.setEmail(email);
+		staff.setRoleId(roleId);
+
+		staffDao.insertNewStaff(staff);
+
+		return staff;
+	}
 }
