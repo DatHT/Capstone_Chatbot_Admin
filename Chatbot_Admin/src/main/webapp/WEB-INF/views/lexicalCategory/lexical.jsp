@@ -5,6 +5,8 @@
 <script src="resources/assets/js/demo.js"></script>
 <c:set var="lexicals" value="${LEXICAL}" />
 <div class="c-header">
+	<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
+	<input type="hidden" value="${_csrf.token}" id="token" />
 	<h2>Manage Lexical And Pharse</h2>
 
 	<ul class="actions a-alt">
@@ -47,40 +49,40 @@
 	</div>
 </div>
 
-
 <div class="card">
 	<div class="card-header">
 		<h2 id="tableHeader">Data table</h2>
 	</div>
 
 	<div class="card-body card-padding">
-
+	
+		
 		<button class="btn btn-primary btn-lg waves-effect"
 			onclick="insertRowToAddNewPhrase('lexicalTable')">Add New</button>
 		<div class="row m-t-20">
-			<!-- Advanced Tables -->
-			<div class="panel panel-default">
-				<div class="panel-body">
-					<div class="table-responsive">
-						<table class="table table-striped table-bordered table-hover"
-							id="phraseTable">
-							<thead>
-								<tr>
-									<th>No.</th>
-									<th>Name</th>
-									<th>Action</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody id="lexicalTable">
+		<!-- Advanced Tables -->
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover" id="phraseTable">
+						<thead>
+							<tr>
+								<th data-column-id="id" data-type="numeric" data-identifier="true">No.</th>
+								<th data-column-id="name">Name</th>
+								<th data-column-id="update" data-formatter="commandsUpdate" data-sortable="false">Update</th>
+								<th data-column-id="delete" data-formatter="commandsDelete" data-sortable="false">Delete</th>
+							</tr>
+						</thead>
+						<tbody id="lexicalTable">
 
-							</tbody>
-						</table>
-					</div>
+						</tbody>
+					</table>
 				</div>
-			</div>
-			<!--End Advanced Tables -->
 
+			</div>
 		</div>
+		<!--End Advanced Tables -->
+		
 	</div>
+	</div>		
 </div>

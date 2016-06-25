@@ -237,3 +237,4 @@ function displayStep3() {
 
 	}
 }
+
