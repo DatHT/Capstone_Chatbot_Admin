@@ -112,10 +112,12 @@ function addNewPhrase() {
 				}
 
 			}
+			var param = document.getElementById("paramName").value;
+			var token = document.getElementById("token").value;
 			xmlhttp.open("POST", "/chatbot_admin/lexical/add", true);
 			xmlhttp.setRequestHeader("Content-type",
 					"application/x-www-form-urlencoded;charset=utf-8");
-			xmlhttp.send("name=" + name + "&id=" + categoryId);
+			xmlhttp.send("name=" + name + "&id=" + categoryId + "&" + param + "=" + token);
 			// action here
 
 		} else {

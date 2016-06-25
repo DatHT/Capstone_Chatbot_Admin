@@ -5,6 +5,8 @@
 <script src="resources/assets/js/demo.js"></script>
 <c:set var="lexicals" value="${LEXICAL}" />
 <div class="c-header">
+	<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
+	<input type="hidden" value="${_csrf.token}" id="token" />
 	<h2>Manage Lexical And Pharse</h2>
 
 	<ul class="actions a-alt">
@@ -47,7 +49,6 @@
 	</div>
 </div>
 
-
 <div class="card">
 	<div class="card-header">
 		<h2 id="tableHeader">Data table</h2>
@@ -77,10 +78,10 @@
 					</table>
 				</div>
 
-				</div>
 			</div>
-			<!--End Advanced Tables -->
-
 		</div>
+		<!--End Advanced Tables -->
+		
 	</div>
+	</div>		
 </div>

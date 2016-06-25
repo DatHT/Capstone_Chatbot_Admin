@@ -103,7 +103,6 @@
 							onchange="pitchExample(this)" class="form-control"
 							id="exampleList">
 							<option value="empty"></option>
-							
 
 						</select>
 			</div>
