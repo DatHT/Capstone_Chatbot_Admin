@@ -13,6 +13,14 @@ public class ProductDao extends BaseDao<Product, Long> implements IProductDao {
 
     private static final Logger LOG = Logger.getLogger(ProductDao.class);
 
+    public ProductDao(Class<Product> clazz) {
+        super(clazz);
+    }
+
+    public ProductDao() {
+        setClazz(Product.class);
+    }
+
     @Override
     @Transactional
     public long insertProduct(Product product) {

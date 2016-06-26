@@ -28,7 +28,7 @@ public class LatitudeAndLongitudeWithPincode {
         try {
             api = "http://maps.googleapis.com/maps/api/geocode/xml?address=" + URLEncoder.encode(address, "UTF-8")
                     + "&sensor=true";
-            System.out.println("URL : " + api);
+            LOG.info("URL : " + api);
             URL url = new URL(api);
             HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
             httpConnection.connect();
