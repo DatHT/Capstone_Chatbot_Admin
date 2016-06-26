@@ -2,6 +2,9 @@ package com.psib.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +25,7 @@ public class AccountController {
 	public String manageAccount(Model model) {
 		List<Staff> listStaff = staffManager.getAllStaff();
 		model.addAttribute("STAFFS", listStaff);
-		
+
 		return "manageAccount";
 	}
 
@@ -40,8 +43,23 @@ public class AccountController {
 		}
 		return false;
 	}
+
 	@RequestMapping(value = "/profile")
-	public String viewUserProfile() {
+	public String viewUserProfile(HttpServletRequest request, Model model) {
+		HttpSession session = request.getSession();
+		String username = session.getAttribute("username").toString();
+		Staff staff = staffManager.getStaffByUsername(username);
+
+		model.addAttribute("USER", staff);
+
 		return "profile";
+	}
+
+	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+	public String changePassword(@RequestParam("password") String password,
+			@RequestParam("new_password") String newPassword) {
+		
+
+		return "";
 	}
 }

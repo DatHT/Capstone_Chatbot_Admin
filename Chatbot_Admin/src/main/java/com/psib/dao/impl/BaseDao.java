@@ -14,10 +14,8 @@ import org.springframework.stereotype.Repository;
 
 import com.psib.dao.IBaseDao;
 
-
 /**
- * @author DatHT
- * Jun 4, 2016
+ * @author DatHT Jun 4, 2016
  */
 @Repository
 public class BaseDao<Model, Id> implements IBaseDao<Model, Id> {
@@ -31,7 +29,7 @@ public class BaseDao<Model, Id> implements IBaseDao<Model, Id> {
 	public BaseDao(Class<Model> clazz) {
 		this.clazz = clazz;
 	}
-	
+
 	public void setClazz(Class<Model> clazz) {
 		this.clazz = clazz;
 	}
@@ -58,7 +56,12 @@ public class BaseDao<Model, Id> implements IBaseDao<Model, Id> {
 	}
 
 	@Override
-	
+	public void update(Model model) {
+		getSession().update(model);
+	}
+
+	@Override
+
 	public List<Model> getAll() {
 		// TODO Auto-generated method stub
 		String sql = "select e from " + clazz.getSimpleName() + " e";
