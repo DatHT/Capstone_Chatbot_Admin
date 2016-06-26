@@ -1,15 +1,13 @@
 package com.psib.service.impl;
 
-import com.psib.dao.IAddressDao;
-import com.psib.dao.IDistrictDao;
-import com.psib.dao.IProductAddressDao;
-import com.psib.dao.IProductDao;
+import com.psib.dao.*;
 import com.psib.model.Address;
 import com.psib.model.District;
 import com.psib.model.Product;
 import com.psib.model.ProductAddress;
 import com.psib.service.IProductManager;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
+import com.psib.util.SpringPropertiesUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +36,9 @@ public class ProductManager implements IProductManager {
 
     @Autowired
     private IProductDao productDao;
+
+    @Autowired
+    private IFileServerDao fileServerDao;
 
     @Override
     public List<ProductAddress> getAll() {
@@ -139,7 +140,10 @@ public class ProductManager implements IProductManager {
 
                 bytes = file.getBytes();
 
-                File dir = new File("D:\\images\\thumbnail");
+                String folderUrl = fileServerDao.getByName(SpringPropertiesUtil.getProperty("file_server_thumb")).getUrl();
+
+                File dir = new File(folderUrl);
+
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
