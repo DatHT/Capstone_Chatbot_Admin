@@ -136,6 +136,7 @@ public class LogManager implements ILogManager {
 	 * 
 	 * @return logs List of JSON log file format {'statusCode' : code, 'log' :
 	 *         log}
+	 * @throws JSONException
 	 */
 	@Override
 	public List<JSONObject> getAllLogs() throws IOException, JSONException {
@@ -162,10 +163,14 @@ public class LogManager implements ILogManager {
 						int logCode = Integer.valueOf(line.substring(5, 8));
 
 						JSONObject jsonObject = new JSONObject();
-						jsonObject.put(status_code, logCode);
-						jsonObject.put(log_json, new JSONObject(log.toString()));
+						try {
+							jsonObject.put(status_code, logCode);
+							jsonObject.put(log_json, new JSONObject(log.toString()));
+							logs.add(jsonObject);
+						} catch (JSONException e) {
+							System.out.println("hello world!");
+						}
 
-						logs.add(jsonObject);
 						continue;
 					}
 					log.append(line);
@@ -203,7 +208,7 @@ public class LogManager implements ILogManager {
 		return jsonObject;
 	}
 
-	private List<String> getNewFileLog() throws JSONException, IOException {
+	private List<String> getNewFileLog() throws IOException, JSONException {
 		List<String> newFileLogPath = new ArrayList<String>();
 
 		String lastModifiedDate = getLogJson().get(LOG_JSON_FORMAT_MODIFIED_DATE).toString();
