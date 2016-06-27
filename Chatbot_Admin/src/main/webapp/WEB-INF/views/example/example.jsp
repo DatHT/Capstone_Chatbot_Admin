@@ -8,6 +8,8 @@
 <c:set var="logs" value="${LOGS}" />
 
 <div class="c-header">
+	<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
+	<input type="hidden" value="${_csrf.token}" id="token" />
 	<h2>Training Bot By Example</h2>
 
 	<ul class="actions a-alt">

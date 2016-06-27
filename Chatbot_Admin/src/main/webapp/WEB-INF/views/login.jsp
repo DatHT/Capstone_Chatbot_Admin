@@ -9,18 +9,18 @@
 <title>Material Admin</title>
 
 <!-- Vendor CSS -->
-<link href="vendors/bower_components/animate.css/animate.min.css"
+<link href="resources/assets/vendors/bower_components/animate.css/animate.min.css"
 	rel="stylesheet">
 <link
-	href="vendors/bower_components/google-material-color/dist/palette.css"
+	href="resources/assets/vendors/bower_components/google-material-color/dist/palette.css"
 	rel="stylesheet">
 <link
-	href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css"
+	href="resources/assets/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css"
 	rel="stylesheet">
 
 <!-- CSS -->
-<link href="css/app.min.1.css" rel="stylesheet">
-<link href="css/app.min.2.css" rel="stylesheet">
+<link href="resources/assets/css/app.min.1.css" rel="stylesheet">
+<link href="resources/assets/css/app.min.2.css" rel="stylesheet">
 </head>
 
 <body>
@@ -28,7 +28,7 @@
 		<!-- Login -->
 		<div class="l-block toggled" id="l-login">
 			<div class="lb-header palette-Teal bg">
-				<i class="zmdi zmdi-account-circle"></i> Hi there! Please Sign in
+				<i class="zmdi zmdi-account-circle"></i> Hi there! Welcome to PSIB
 			</div>
 
 			<div class="lb-body">
@@ -181,17 +181,17 @@
         <![endif]-->
 
 	<!-- Javascript Libraries -->
-	<script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="resources/assets/vendors/bower_components/jquery/dist/jquery.min.js"></script>
 	<script
-		src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-	<script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
+		src="resources/assets/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="resources/assets/vendors/bower_components/Waves/dist/waves.min.js"></script>
 
 	<!-- Placeholder for IE9 -->
 	<!--[if IE 9 ]>
             <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
         <![endif]-->
 
-	<script src="js/functions.js"></script>
+	<script src="resources/assets/js/functions.js"></script>
 
 </body>
 
