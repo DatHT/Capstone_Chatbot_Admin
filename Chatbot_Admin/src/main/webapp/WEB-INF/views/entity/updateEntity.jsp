@@ -1,12 +1,5 @@
 <!DOCTYPE html>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script
-	src="resources/assets/vendors/bower_components/jquery/dist/jquery.min.js"></script>
-<script src="resources/assets/scripts/product.js"></script>
-<script src="resources/assets/scripts/commonScript.js"></script>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -19,8 +12,10 @@
 		visibility: hidden;
 	}
 </style>
-
+<script src="resources/assets/scripts/product.js"></script>
+<script src="resources/assets/scripts/commonScript.js"></script>
 <div class="c-header">
+
 	<h2 id="tableHeader">Manage Products</h2>
 </div>
 
@@ -113,7 +108,7 @@
 			$("#div-relatedUrl").removeClass("has-error");
 			$("#error-relatedUrl").text("");
 			$("#error-relatedUrl").css("visibility", "hidden");
-		})
+		});
 		
 		//Basic Example
 		$("#data-table-basic").bootgrid({
