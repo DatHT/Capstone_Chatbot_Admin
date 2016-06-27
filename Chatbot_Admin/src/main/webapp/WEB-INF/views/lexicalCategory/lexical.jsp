@@ -2,7 +2,6 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <script src="resources/assets/scripts/lexicalScript.js"></script>
 <script src="resources/assets/scripts/commonScript.js"></script>
-<script src="resources/assets/js/demo.js"></script>
 <c:set var="lexicals" value="${LEXICAL}" />
 <div class="c-header">
 	<input type="hidden" value="${_csrf.parameterName}" id="paramName" />

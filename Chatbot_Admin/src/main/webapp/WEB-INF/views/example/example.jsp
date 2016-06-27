@@ -5,6 +5,7 @@
 <script src="resources/assets/scripts/logScript.js"></script>
 <c:set var="intents" value="${INTENTS}" />
 <c:set var="lexicals" value="${LEXICAL}" />
+<c:set var="logs" value="${LOGS}" />
 
 <div class="c-header">
 	<h2>Training Bot By Example</h2>
@@ -37,31 +38,6 @@
 
 
 <div class="row">
-	<script>
-		var xmlhttp;
-		if (window.XMLHttpRequest) {
-			xmlhttp = new XMLHttpRequest();
-		} else
-			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-				var data = JSON.parse(xmlhttp.responseText);
-				var listContent = data.contents;
-				var listExample = document.getElementById("exampleList");
-				for (var int = 0; int < listContent.length; int++) {
-					if (listContent[int].errCode == '300') {
-						alert(listContent[int].userSay);
-						var option = document.createElement("option");
-						option.text = listContent[int].userSay;
-						option.value = listContent[int].userSay;
-						listExample.add(option);
-					}
-				}
-			}
-		};
-		xmlhttp.open('GET', '/chatbot_admin/getLog', true);
-		xmlhttp.send(null);
-	</script>
 	<div class="col-lg-3">
 
 		<div class="card">
@@ -103,7 +79,11 @@
 							onchange="pitchExample(this)" class="form-control"
 							id="exampleList">
 							<option value="empty"></option>
-
+							<c:if test="${not empty logs}">
+								<c:forEach var="log" items="${logs}">
+									<option value="${log}">${log}</option>
+								</c:forEach>
+							</c:if>
 						</select>
 			</div>
 		</div>
