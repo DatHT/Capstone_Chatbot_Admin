@@ -38,15 +38,20 @@ function createRowNoEntry(id, data) {
 	var tdUserSay = document.createElement('td');
 	var textUserSay = document.createTextNode(userSay);
 	
-	var tdAction = document.createElement('td');
-	var textAction = document.createTextNode(data.action);
+	var deleteButton = document.createElement('button');
+	deleteButton.className = "btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float";
+	deleteButton.style.margin = '5px';
+	var iButton = document.createElement('i');
+	iButton.className = "zmdi zmdi-delete zmdi-hc-fw";
+	deleteButton.appendChild(iButton);
 	
-	var tdIntent = document.createElement('td');
-	var textIntent = document.createTextNode(data.intentName);
+	deleteButton.onclick = function(event) {
+		//alert(event.target);
+	}
 
 	var listPhraseContent = document.getElementById('list-phrase');
 
-	tr.addEventListener('click', function() {
+	tr.addEventListener('click', function(event) {
 		// Get the modal
 		var modal = document.getElementById('myModal');
 		var pContainer = document.getElementById('user-say-container');
@@ -80,11 +85,7 @@ function createRowNoEntry(id, data) {
 	tdUserSay.appendChild(textUserSay);
 	tr.appendChild(tdUserSay);
 	
-	tdAction.appendChild(textAction);
-	tr.appendChild(tdAction);
-	
-	tdIntent.appendChild(textIntent);
-	tr.appendChild(tdIntent);
+	tr.appendChild(deleteButton);
 	
 	tableBody.appendChild(tr);
 }

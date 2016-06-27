@@ -96,8 +96,7 @@
 						<thead>
 							<tr>
 								<th>User say</th>
-								<th>Action</th>
-								<th>Intent</th>
+								<th>Delete</th>
 							</tr>
 						</thead>
 						<tbody id="no-entry-table-body">

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -168,7 +169,7 @@ public class LogManager implements ILogManager {
 							jsonObject.put(log_json, new JSONObject(log.toString()));
 							logs.add(jsonObject);
 						} catch (JSONException e) {
-							System.out.println("hello world!");
+							System.out.println("Parsing JSON error!");
 						}
 
 						continue;
