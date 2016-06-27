@@ -56,6 +56,9 @@
                         </ul>
                         <!-- second-level-items -->
                     </li>
+                     <li class="${current == 'crawler' ? 'selected' : ''}">
+                        <a href="crawler"><i class="fa fa-cloud-download"></i>Crawler</a>
+                    </li>
                 </ul>
                 <!-- end side-menu -->
             </div>
