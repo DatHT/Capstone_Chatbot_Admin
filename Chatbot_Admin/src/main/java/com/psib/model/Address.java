@@ -40,10 +40,9 @@ public class Address implements Serializable{
 	public long getDistrictId() {
 		return districtId;
 	}
-	
-	private void set() {
-		// TODO Auto-generated method stub
 
+	public void setDistrictId(long districtId) {
+		this.districtId = districtId;
 	}
 
 	public long getId() {
