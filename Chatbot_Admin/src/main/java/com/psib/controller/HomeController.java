@@ -33,7 +33,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String hompage() {
-		return "blank";
+		return "manageAccount";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -45,7 +45,7 @@ public class HomeController {
 	@RequestMapping(value = "/dashBoard", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 
-		return "blank";
+		return "manageAccount";
 	}
 
 	@RequestMapping(value = "/activateTimer", method = RequestMethod.GET)

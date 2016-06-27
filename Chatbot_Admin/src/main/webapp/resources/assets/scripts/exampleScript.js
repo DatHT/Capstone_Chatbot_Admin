@@ -63,10 +63,12 @@ function deletePhrase(id) {
 		}
 
 	}
+	var param = document.getElementById("paramName").value;
+	var token = document.getElementById("token").value;
 	xmlhttp.open("POST", "/chatbot_admin/example/add", true);
 	xmlhttp.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded;charset=utf-8");
-	xmlhttp.send("pattern=" + JSON.stringify(jsonData) + "&id=" + intentId);
+	xmlhttp.send("pattern=" + JSON.stringify(jsonData) + "&id=" + intentId + "&" + param + "=" + token);
 	// action here
 
 }
@@ -171,11 +173,13 @@ function insertPattern() {
 				}
 
 			}
+			var param = document.getElementById("paramName").value;
+			var token = document.getElementById("token").value;
 			xmlhttp.open("POST", "/chatbot_admin/example/add", true);
 			xmlhttp.setRequestHeader("Content-type",
 					"application/x-www-form-urlencoded;charset=utf-8");
 			xmlhttp.send("pattern=" + JSON.stringify(jsonData) + "&id="
-					+ intentId);
+					+ intentId  + "&" + param + "=" + token);
 			// action here
 
 		} else {
