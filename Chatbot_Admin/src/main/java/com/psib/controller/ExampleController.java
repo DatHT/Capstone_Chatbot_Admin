@@ -4,8 +4,10 @@
 package com.psib.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -51,6 +53,10 @@ public class ExampleController {
 	@Autowired
 	private ILexicalCategoryManager lexicalManager;
 	
+
+	@Autowired
+	private ILogManager logManager;
+	
 	public static final String INTENTS = "INTENTS";
 	public static final String ERROR = "ERROR";
 	public static final String LOGS = "LOGS";
@@ -81,12 +87,27 @@ public class ExampleController {
 			List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
 			model.addAttribute(LexicalCategoryController.LEXICALS, lexicals);
 			
+			 JSONObject listLog = logManager.getLogJson();
+			 JSONArray jsonArray = listLog.getJSONArray("contents");
+			 List<String> usersays = new ArrayList<>();
+			 for(int i = 0; i < jsonArray.length(); i++) {
+				 JSONObject obj = (JSONObject) jsonArray.get(i);
+				 if(obj.getString("errCode").equals("300")) {
+					 usersays.add(obj.getString("userSay"));
+				 }
+			 }
+			 
+			 model.addAttribute(ExampleController.LOGS, usersays);
+			
 			return "example";
 		} catch (IOException e) {
 			model.addAttribute(ERROR, e.getMessage());
 			return "error";
 			
 		} catch (RestfulException e) {
+			model.addAttribute(ERROR, e.getMessage());
+			return "error";
+		} catch (JSONException e) {
 			model.addAttribute(ERROR, e.getMessage());
 			return "error";
 		} 
