@@ -108,7 +108,7 @@ function requestAddPhrase(param, token) {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			if (xmlhttp.responseText) {
-				swal(xmlhttp.responseText);
+				swal("Good job!", xmlhttp.responseText, "success");
 				closeModalDialog();
 			}
 		}

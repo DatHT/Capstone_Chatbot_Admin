@@ -57,9 +57,14 @@ public class AccountController {
 
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
 	public String changePassword(@RequestParam("password") String password,
-			@RequestParam("new_password") String newPassword) {
+			@RequestParam("new_password") String newPassword, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		String username = session.getAttribute("username").toString();
+		Staff staff = staffManager.getStaffByUsername(username);
 		
-
-		return "";
+		staff.setPassword(newPassword);
+		
+		staffManager.updateStaff(staff);
+		return "redirect:profile";
 	}
 }

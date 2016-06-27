@@ -38,7 +38,7 @@ public class LogManager implements ILogManager {
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
 
-	private static String chatLogsFolder = "D:/log/Logs";
+	private static String chatLogsFolder = "/Users/HuyTCM/Desktop/Logs";
 	private static String logPath = chatLogsFolder + "/log";
 
 	private static String LOG_JSON_FORMAT_MODIFIED_DATE = "modifiedDate";
@@ -263,10 +263,15 @@ public class LogManager implements ILogManager {
 						return true;
 					}
 				} else if (statusCode == NOT_FOUND_CODE) {
-					isExist = jsonObject.getJSONObject(contexts).get("Food")
-							.equals(log.getJSONObject(contexts).get("Food"))
-							&& jsonObject.getJSONObject(contexts).get("Location")
-									.equals(log.getJSONObject(contexts).get("Location"));
+					try {
+						isExist = jsonObject.getJSONObject(contexts).get("Food")
+								.equals(log.getJSONObject(contexts).get("Food"))
+								&& jsonObject.getJSONObject(contexts).get("Location")
+										.equals(log.getJSONObject(contexts).get("Location"));
+					} catch (Exception e) {
+						isExist = true;
+					}
+
 				}
 			}
 			i++;

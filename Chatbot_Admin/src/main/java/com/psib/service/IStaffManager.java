@@ -17,4 +17,6 @@ public interface IStaffManager {
 	public Staff getStaffByUsername(String username);
 
 	public Staff createNewStaffAccount(String username, String email, Boolean isAdmin);
+	
+	public void updateStaff(Staff staff);
 }

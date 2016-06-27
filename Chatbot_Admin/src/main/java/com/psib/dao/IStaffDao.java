@@ -17,5 +17,7 @@ public interface IStaffDao {
 	public Staff getByUsername(String username);
 
 	public void insertNewStaff(Staff staff);
+	
+	public void updateStaff(Staff staff);
 
 }

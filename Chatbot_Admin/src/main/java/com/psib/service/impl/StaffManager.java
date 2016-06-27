@@ -59,4 +59,10 @@ public class StaffManager implements IStaffManager {
 
 		return staff;
 	}
+
+	@Override
+	public void updateStaff(Staff staff) {
+		staffDao.updateStaff(staff);
+		
+	}
 }

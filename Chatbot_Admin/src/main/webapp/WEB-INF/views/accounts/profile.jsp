@@ -4,7 +4,7 @@
 
 <c:set var="user" value="${USER}" />
 <script>
-	var user = '${user}';
+	var userpassword = '${user.password}';
 </script>
 <script src="resources/assets/scripts/accountScript.js"></script>
 
@@ -91,7 +91,7 @@
 					</div>
 					<div class="pmbb-body p-l-30">
 						<form action="changePassword" method="post"
-							onsubmit="return checkConfirmPassword()">
+							onsubmit="return checkConfirmPassword();">
 							<div class="pmbb-view">
 								<dl class="dl-horizontal">
 									<dt class="p-t-10">Old password</dt>
@@ -115,6 +115,8 @@
 									</dd>
 								</dl>
 								<div class="m-t-30">
+									<input type="hidden" name="${_csrf.parameterName}"
+										value="${_csrf.token}" />
 									<button class="btn btn-primary" style="float: right;">Save</button>
 								</div>
 							</div>

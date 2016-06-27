@@ -14,11 +14,10 @@ $(document).ready(function(){
 });
 
 function checkConfirmPassword() {
-	console.log(user);
 	if($("#confirm_password").val() != $("#new_password").val()) {
 		swal("Passwords do not match");
 		return false;
-	} else if ($("#password").val() != user.password) {
+	} else if ($("#password").val() != userpassword) {
 		swal("Your password was incorrect.");
 		return false;
 	}

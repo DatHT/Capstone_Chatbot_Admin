@@ -57,4 +57,9 @@ public class StaffDao extends BaseDao<Staff, String> implements IStaffDao {
 	public void insertNewStaff(Staff staff) {
 		getSession().save(staff);
 	}
+	@Override
+	@Transactional
+	public void updateStaff(Staff staff) {
+		update(staff);
+	}
 }
