@@ -28,12 +28,6 @@
 		<put-attribute name="current" value="lexicalCategory" />
 	</definition>
 
-	<definition name="login" extends="base.definition">
-		<put-attribute name="title" value="Entity Manager" />
-		<put-attribute name="body" value="/WEB-INF/views/login.jsp" />
-		<put-attribute name="current" value="dataConfig" />
-	</definition>
-
 	<!-- Begin Dataconfig Page -->
 	<!-- *************************************************************************** -->
 	<definition name="dataConfig" extends="base.definition">
