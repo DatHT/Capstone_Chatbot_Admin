@@ -35,7 +35,9 @@ public class ProductDao extends BaseDao<Product, Long> implements IProductDao {
     public long checkProductExist(Product product) {
         LOG.info("[checkProductExist] Start: name = " + product.getName());
 
-        String sql = "FROM " + Product.class.getSimpleName() + " P WHERE P.name = :name AND P.urlRelate = :urlrelate";
+        String sql = String.valueOf(new StringBuilder("FROM ").append(Product.class.getSimpleName())
+                .append(" P WHERE P.name = :name AND P.urlRelate = :urlrelate"));
+
         Query query = getSession().createQuery(sql);
         query.setParameter("name", product.getName());
         query.setParameter("urlrelate", product.getUrlRelate());

@@ -8,7 +8,11 @@ public interface IProductAddressDao {
 
     List<ProductAddress> getAllItem();
 
-    List<ProductAddress> getBySearchPhrase(String searchPhrase);
+    long countBySearchPhrase(String searchPhrase);
+
+    List<ProductAddress> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
+            , String sortDistrictName, String sortRate, String sortRestaurantName
+            , int maxResult, int skipResult);
 
     void insertProductAddress(ProductAddress productAddress);
 

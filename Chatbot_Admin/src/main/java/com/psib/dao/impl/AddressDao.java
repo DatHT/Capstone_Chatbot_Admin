@@ -35,7 +35,9 @@ public class AddressDao extends BaseDao<Address, Long> implements IAddressDao {
     public long checkAddressExist(Address address) {
         LOG.info("[checkAddressExist] Start: name = " + address.getName());
 
-        String sql = "FROM " + Address.class.getSimpleName() + " A WHERE A.name = :name";
+        String sql = String.valueOf(new StringBuilder("FROM ").append(Address.class.getSimpleName())
+                .append(" A WHERE A.name = :name"));
+
         Query query = getSession().createQuery(sql);
         query.setParameter("name", address.getName());
         Address result = (Address) query.uniqueResult();

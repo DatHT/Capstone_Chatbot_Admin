@@ -30,12 +30,6 @@ public class ProductManager implements IProductManager {
 
     private static final Logger LOG = Logger.getLogger(ProductManager.class);
 
-    private static final int SORT_PRODUCT_NAME_CODE = 0;
-    private static final int SORT_ADDRESS_NAME_CODE = 1;
-    private static final int SORT_DISTRICT_NAME_CODE = 2;
-    private static final int SORT_RATE = 3;
-    private static final int SORT_RESTAURANT_NAME_CODE = 4;
-
     @Autowired
     private IProductAddressDao productAddressDao;
 
@@ -65,42 +59,23 @@ public class ProductManager implements IProductManager {
                 .append(" ,sortRestaurantName = ").append(sortRestaurantName));
 
         List<ProductAddress> list;
+        int start = current * rowCount - rowCount;
 
-        if (searchPhrase.equals("")) {
-            list = productAddressDao.getAllItem();
-        } else {
-            list = productAddressDao.getBySearchPhrase(searchPhrase);
-        }
-
-        if (sortProductName != null) {
-            list = sortResult(list, sortProductName, SORT_PRODUCT_NAME_CODE);
-        } else if (sortAddressName != null) {
-            list = sortResult(list, sortAddressName, SORT_ADDRESS_NAME_CODE);
-        } else if (sortDistrictName != null) {
-            list = sortResult(list, sortDistrictName, SORT_DISTRICT_NAME_CODE);
-        } else if (sortRate != null) {
-            list = sortResult(list, sortRate, SORT_RATE);
-        } else if (sortRestaurantName != null) {
-            list = sortResult(list, sortRestaurantName, SORT_RESTAURANT_NAME_CODE);
-        }
+        list = productAddressDao.getBySearchPhraseAndSort(searchPhrase
+                , sortProductName, sortAddressName, sortDistrictName, sortRate, sortRestaurantName, rowCount, start);
 
         List<ProductAddressDto> productAddressDtoList = new ArrayList<>();
         long size = list.size();
-        int start = current * rowCount - rowCount;
-        int end = current * rowCount;
-        if (end > size) {
-            end = Math.toIntExact(size);
-        }
 
-        for (int i = start; i < end; i++) {
-            productAddressDtoList.add(new ProductAddressDto((i + 1), list.get(i)));
+        for (int i = 0; i < size; i++) {
+            productAddressDtoList.add(new ProductAddressDto((start + i + 1), list.get(i)));
         }
 
         ProductDto dto = new ProductDto();
         dto.setCurrent(current);
         dto.setRowCount(rowCount);
         dto.setRows(productAddressDtoList);
-        dto.setTotal(size);
+        dto.setTotal(productAddressDao.countBySearchPhrase(searchPhrase));
 
         LOG.info("[getAllForPaging] End");
         return dto;
@@ -229,46 +204,4 @@ public class ProductManager implements IProductManager {
         LOG.info("[uploadThumbnail] End");
         return null;
     }
-
-    private List<ProductAddress> sortResult(List<ProductAddress> list, String sortField, int sortCode) {
-        LOG.info(new StringBuilder("[sortResult] Start: list size = ").append(list.size())
-                .append(" ,sortField = ").append(sortField));
-
-
-        Collections.sort(list, new Comparator<ProductAddress>() {
-            public int compare(ProductAddress o1, ProductAddress o2) {
-                if (sortCode == SORT_PRODUCT_NAME_CODE) {
-                    if (sortField.equals("asc")) {
-                        return o1.getProductName().compareTo(o2.getProductName());
-                    }
-                    return o2.getProductName().compareTo(o1.getProductName());
-                } else if (sortCode == SORT_ADDRESS_NAME_CODE) {
-                    if (sortField.equals("asc")) {
-                        return o1.getAddressName().compareTo(o2.getAddressName());
-                    }
-                    return o2.getAddressName().compareTo(o1.getAddressName());
-                } else if (sortCode == SORT_DISTRICT_NAME_CODE) {
-                    if (sortField.equals("asc")) {
-                        return o1.getDistrictName().compareTo(o2.getDistrictName());
-                    }
-                    return o2.getDistrictName().compareTo(o1.getDistrictName());
-                } else if (sortCode == SORT_RATE) {
-                    if (sortField.equals("asc")) {
-                        return o1.getRate().compareTo(o2.getRate());
-                    }
-                    return o2.getRate().compareTo(o1.getRate());
-                } else if (sortCode == SORT_RESTAURANT_NAME_CODE) {
-                    if (sortField.equals("asc")) {
-                        return o1.getRestaurantName().compareTo(o2.getRestaurantName());
-                    }
-                    return o2.getRestaurantName().compareTo(o1.getRestaurantName());
-                }
-                return 0;
-            }
-        });
-
-        LOG.info("[sortResult] End");
-        return list;
-    }
-
 }

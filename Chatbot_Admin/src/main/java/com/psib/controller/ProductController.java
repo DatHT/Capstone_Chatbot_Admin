@@ -48,11 +48,10 @@ public class ProductController {
         LOG.info("[loadProduct] Start");
 
         ModelAndView model = new ModelAndView("product");
-//        List<ProductAddress> productList = productManager.getAll();
+
         List<District> districtList = productManager.getAllDistrict();
         Collections.sort(districtList);
 
-//        model.addObject("productList", productList);
         model.addObject("districtList", districtList);
         if (addResult.equals("")) {
             model.addObject("addResult", "1st load");
@@ -110,6 +109,6 @@ public class ProductController {
                               @RequestParam(name = "sort[rate]", required = false) String sortRate,
                               @RequestParam(name = "sort[restaurantName]", required = false) String sortRestaurantName) {
         return JsonParser.toJson(productManager.getAllForPaging(current, rowCount, searchPhrase,
-                sortProductName,sortAddressName,sortDistrictName,sortRate,sortRestaurantName));
+                sortProductName, sortAddressName, sortDistrictName, sortRate, sortRestaurantName));
     }
 }
