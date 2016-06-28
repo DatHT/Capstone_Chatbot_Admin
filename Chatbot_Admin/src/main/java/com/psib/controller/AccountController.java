@@ -110,9 +110,9 @@ public class AccountController {
 		}
 		try {
 			staffManager.updateStaff(staff);
-			responseText = "Change password successfully!";
+			responseText = "Update successfully!";
 		} catch (Exception e) {
-			responseText = "Your password is not correct!";
+			responseText = "Error occurs! Please try again!";
 		}
 		return responseText;
 	}
