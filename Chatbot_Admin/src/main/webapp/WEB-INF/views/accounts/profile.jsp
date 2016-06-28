@@ -90,37 +90,34 @@
 						</h2>
 					</div>
 					<div class="pmbb-body p-l-30">
-						<form action="changePassword" method="post"
-							onsubmit="return checkConfirmPassword();">
-							<div class="pmbb-view">
-								<dl class="dl-horizontal">
-									<dt class="p-t-10">Old password</dt>
-									<dd>
-										<input id="password" name="password" type="password"
-											class="form-control" />
-									</dd>
-								</dl>
-								<dl class="dl-horizontal">
-									<dt class="p-t-10">New password</dt>
-									<dd>
-										<input id="new_password" name="new_password" type="password"
-											class="form-control" />
-									</dd>
-								</dl>
-								<dl class="dl-horizontal">
-									<dt class="p-t-10">Confirm password</dt>
-									<dd>
-										<input id="confirm_password" name="confirm_password"
-											type="password" class="form-control" />
-									</dd>
-								</dl>
-								<div class="m-t-30">
-									<input type="hidden" name="${_csrf.parameterName}"
-										value="${_csrf.token}" />
-									<button class="btn btn-primary" style="float: right;">Save</button>
-								</div>
+						<div class="pmbb-view">
+							<dl class="dl-horizontal">
+								<dt class="p-t-10">Old password</dt>
+								<dd>
+									<input id="password" name="password" type="password"
+										class="form-control" />
+								</dd>
+							</dl>
+							<dl class="dl-horizontal">
+								<dt class="p-t-10">New password</dt>
+								<dd>
+									<input id="new_password" name="new_password" type="password"
+										class="form-control" />
+								</dd>
+							</dl>
+							<dl class="dl-horizontal">
+								<dt class="p-t-10">Confirm password</dt>
+								<dd>
+									<input id="confirm_password" name="confirm_password"
+										type="password" class="form-control" />
+								</dd>
+							</dl>
+							<div class="m-t-30">
+								<input id="token" type="hidden" name="${_csrf.parameterName}"
+									value="${_csrf.token}" />
+								<button class="btn btn-primary" style="float: right;" onclick="checkConfirmPassword()">Save</button>
 							</div>
-						</form>
+						</div>
 					</div>
 				</div>
 				<div class="pmb-block">
