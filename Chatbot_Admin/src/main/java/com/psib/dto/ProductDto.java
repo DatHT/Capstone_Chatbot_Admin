@@ -1,92 +1,56 @@
 /**
- * 
+ *
  */
 package com.psib.dto;
 
+import com.psib.model.ProductAddress;
+
+import java.util.List;
+
 /**
  * @author DatHT
- * Jun 5, 2016
+ *         Jun 5, 2016
  * @Email: datht0601@gmail.com
  */
 public class ProductDto {
-	
-	private String name;
-	
-	private String address;
-	
-	private int districtId;
-	
-	private String districtName;
-	
-	private String rating;
-	
-	private String restaurantName;
-	
-	private String thumb;
-	
-	private String relatedUrl;
 
-	public String getName() {
-		return name;
-	}
+    private int current;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private int rowCount;
 
-	public String getAddress() {
-		return address;
-	}
+    private List<ProductAddressDto> rows;
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    private long total;
 
-	public int getDistrictId() {
-		return districtId;
-	}
+    public int getCurrent() {
+        return current;
+    }
 
-	public void setDistrictId(int districtId) {
-		this.districtId = districtId;
-	}
+    public void setCurrent(int current) {
+        this.current = current;
+    }
 
-	public String getDistrictName() {
-		return districtName;
-	}
+    public int getRowCount() {
+        return rowCount;
+    }
 
-	public void setDistrictName(String districtName) {
-		this.districtName = districtName;
-	}
+    public void setRowCount(int rowCount) {
+        this.rowCount = rowCount;
+    }
 
-	public String getRating() {
-		return rating;
-	}
+    public List<ProductAddressDto> getRows() {
+        return rows;
+    }
 
-	public void setRating(String rating) {
-		this.rating = rating;
-	}
+    public void setRows(List<ProductAddressDto> rows) {
+        this.rows = rows;
+    }
 
-	public String getRestaurantName() {
-		return restaurantName;
-	}
+    public long getTotal() {
+        return total;
+    }
 
-	public void setRestaurantName(String restaurantName) {
-		this.restaurantName = restaurantName;
-	}
-
-	public String getThumb() {
-		return thumb;
-	}
-
-	public void setThumb(String thumb) {
-		this.thumb = thumb;
-	}
-
-	public String getRelatedUrl() {
-		return relatedUrl;
-	}
-
-	public void setRelatedUrl(String relatedUrl) {
-		this.relatedUrl = relatedUrl;
-	}
+    public void setTotal(long total) {
+        this.total = total;
+    }
 }
