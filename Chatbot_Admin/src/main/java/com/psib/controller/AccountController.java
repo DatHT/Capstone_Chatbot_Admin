@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.psib.common.DatabaseException;
 import com.psib.model.Staff;
 import com.psib.service.IStaffManager;
 
 @Controller
 public class AccountController {
 
+	public static final String ERROR = "ERROR";
 	@Autowired
 	IStaffManager staffManager;
 
@@ -33,7 +35,12 @@ public class AccountController {
 	@RequestMapping(value = "/addAccount", method = RequestMethod.POST)
 	public String addNewAccount(@RequestParam("username") String username, @RequestParam("email") String email,
 			@RequestParam(value = "isAdminChk", required = false) String isAdmin, Model model) {
-		staffManager.createNewStaffAccount(username, email, (isAdmin != null));
+		try {
+			staffManager.createNewStaffAccount(username, email, (isAdmin != null));
+		} catch (DatabaseException e) {
+			model.addAttribute(ERROR, e.getMessage());
+			return "error";
+		}
 		return "redirect:manageAccount";
 	}
 
@@ -58,21 +65,27 @@ public class AccountController {
 
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
 	public @ResponseBody String changePassword(@RequestParam("password") String password,
-			@RequestParam("new_password") String newPassword, HttpServletRequest request) {
+			@RequestParam("new_password") String newPassword, HttpServletRequest request, Model model) {
 		String responseText = "";
 
 		HttpSession session = request.getSession();
 		String username = session.getAttribute("username").toString();
 		Staff staff = staffManager.getStaffByUsername(username);
-		if (password.equals(staff.getPassword())) {
-			staff.setPassword(newPassword);
-			staffManager.updateStaff(staff);
+		try {
+			if (password.equals(staff.getPassword())) {
+				staff.setPassword(newPassword);
+				staffManager.updateStaff(staff);
 
-			responseText = "Change password successfully!";
-		} else {
-			responseText = "Your password is not correct!";
+				responseText = "Change password successfully!";
+			} else {
+				responseText = "Your password is not correct!";
+			}
+
+			return responseText;
+		} catch (DatabaseException e) {
+			model.addAttribute(ERROR, e.getMessage());
+			return "error";
 		}
 
-		return responseText;
 	}
 }

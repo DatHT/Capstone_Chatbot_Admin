@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.psib.common.DatabaseException;
 import com.psib.dao.IStaffDao;
 import com.psib.model.Staff;
 import com.psib.service.IStaffManager;
@@ -43,26 +44,35 @@ public class StaffManager implements IStaffManager {
 	}
 
 	@Override
-	@Transactional
-	public Staff createNewStaffAccount(String username, String email, Boolean isAdmin) {
-		// generate password
-		String password = UUID.randomUUID().toString().substring(0, 8);
-		int roleId = isAdmin ? 1 : 2;
+	public Staff createNewStaffAccount(String username, String email, Boolean isAdmin){
+		try {
+			// generate password
+			String password = UUID.randomUUID().toString().substring(0, 8);
+			int roleId = isAdmin ? 1 : 2;
 
-		Staff staff = new Staff();
-		staff.setUsername(username);
-		staff.setPassword(password);
-		staff.setEmail(email);
-		staff.setRoleId(roleId);
+			Staff staff = new Staff();
+			staff.setUsername(username);
+			staff.setPassword(password);
+			staff.setEmail(email);
+			staff.setRoleId(roleId);
 
-		staffDao.insertNewStaff(staff);
+			staffDao.insertNewStaff(staff);
 
-		return staff;
+			return staff;
+		} catch (Exception e) {
+			throw new DatabaseException("Can not insert to database", e);
+		}
+
 	}
 
 	@Override
 	public void updateStaff(Staff staff) {
-		staffDao.updateStaff(staff);
+		try {
+			staffDao.updateStaff(staff);
+		} catch (Exception e) {
+			throw new DatabaseException("Can not insert to database", e);
+		}
+		
 		
 	}
 }

@@ -1,5 +1,6 @@
 package com.psib.service.impl;
 
+import com.psib.common.DatabaseException;
 import com.psib.dao.*;
 import com.psib.model.Address;
 import com.psib.model.District;
@@ -56,7 +57,7 @@ public class ProductManager implements IProductManager {
 
     @Override
     public int insertProduct(String name, String address, String district, String rating, String restaurant,
-                             String relatedUrl, MultipartFile file) {
+                             String relatedUrl, MultipartFile file){
         LOG.info(String.valueOf(new StringBuilder("[insertProduct] Start: name = ").append(name)
                 .append("; address = ").append(address)
                 .append("; district = ").append(district)
@@ -65,6 +66,7 @@ public class ProductManager implements IProductManager {
                 .append("; relatedUrl = ").append(relatedUrl)
                 .append("; thumbnail = ").append(file.getOriginalFilename())));
 
+        try{
         ProductAddress productAddress = new ProductAddress();
         productAddress.setAddressName(address);
         productAddress.setDistrictName(districtDao.getDistrictById(Long.parseLong(district)).getName());
@@ -128,6 +130,9 @@ public class ProductManager implements IProductManager {
 
         LOG.info("[insertProduct] End");
         return 0;
+        }catch(Exception e) {
+        	throw new DatabaseException("Can not insert to Database", e);
+        }
     }
 
     private String uploadThumbnail(MultipartFile file) {

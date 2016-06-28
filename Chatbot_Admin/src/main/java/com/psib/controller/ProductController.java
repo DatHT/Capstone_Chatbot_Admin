@@ -26,6 +26,8 @@ public class ProductController {
 
     private static final Logger LOG = Logger.getLogger(ProductController.class);
 
+	private static final String ERROR = null;
+
     @Autowired
     private IProductManager productManager;
 
@@ -68,24 +70,29 @@ public class ProductController {
                                    @RequestParam(name = "relatedUrl") String relatedUrl,
                                    @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         LOG.info("[addProduct] Start");
-
         ModelAndView model = new ModelAndView("redirect:product");
+        try {
+            
 
-        int result = productManager.insertProduct(name, address, district, rating, restaurant, relatedUrl, file);
+            int result = productManager.insertProduct(name, address, district, rating, restaurant, relatedUrl, file);
 
-        if (result == 0) {
-            redirectAttributes.addFlashAttribute("addResult", false);
-            redirectAttributes.addFlashAttribute("name", name);
-            redirectAttributes.addFlashAttribute("address", address);
-            redirectAttributes.addFlashAttribute("district", district);
-            redirectAttributes.addFlashAttribute("rating", rating);
-            redirectAttributes.addFlashAttribute("restaurant", restaurant);
-            redirectAttributes.addFlashAttribute("relatedUrl", relatedUrl);
-        } else {
-            redirectAttributes.addFlashAttribute("addResult", true);
-        }
+            if (result == 0) {
+                redirectAttributes.addFlashAttribute("addResult", false);
+                redirectAttributes.addFlashAttribute("name", name);
+                redirectAttributes.addFlashAttribute("address", address);
+                redirectAttributes.addFlashAttribute("district", district);
+                redirectAttributes.addFlashAttribute("rating", rating);
+                redirectAttributes.addFlashAttribute("restaurant", restaurant);
+                redirectAttributes.addFlashAttribute("relatedUrl", relatedUrl);
+            } else {
+                redirectAttributes.addFlashAttribute("addResult", true);
+            }
 
-        LOG.info("[addProduct] End");
-        return model;
+            LOG.info("[addProduct] End");
+		} catch (Exception e) {
+			//model.addAttribute(ERROR, e.getMessage());
+		}
+		return model;
+
     }
 }
