@@ -17,9 +17,6 @@ function checkConfirmPassword() {
 	if($("#confirm_password").val() != $("#new_password").val()) {
 		swal("Passwords do not match");
 		return false;
-	} else if ($("#password").val() != userpassword) {
-		swal("Your password was incorrect.");
-		return false;
 	}
 	return true;
 }

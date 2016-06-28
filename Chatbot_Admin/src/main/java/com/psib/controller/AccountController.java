@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.psib.model.Staff;
 import com.psib.service.IStaffManager;
@@ -56,15 +57,22 @@ public class AccountController {
 	}
 
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST)
-	public String changePassword(@RequestParam("password") String password,
+	public @ResponseBody String changePassword(@RequestParam("password") String password,
 			@RequestParam("new_password") String newPassword, HttpServletRequest request) {
+		String responseText = "";
+
 		HttpSession session = request.getSession();
 		String username = session.getAttribute("username").toString();
 		Staff staff = staffManager.getStaffByUsername(username);
-		
-		staff.setPassword(newPassword);
-		
-		staffManager.updateStaff(staff);
-		return "redirect:profile";
+		if (password.equals(staff.getPassword())) {
+			staff.setPassword(newPassword);
+			staffManager.updateStaff(staff);
+
+			responseText = "Change password successfully!";
+		} else {
+			responseText = "Your password is not correct!";
+		}
+
+		return responseText;
 	}
 }
