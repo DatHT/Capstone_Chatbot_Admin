@@ -6,9 +6,11 @@ import com.psib.model.ProductAddress;
 
 public interface IProductAddressDao {
 
-	List<ProductAddress> getAllItem();
+    List<ProductAddress> getAllItem();
 
-	void insertProductAddress(ProductAddress productAddress);
-	
-	boolean checkProductExist(ProductAddress productAddress);
+    List<ProductAddress> getBySearchPhrase(String searchPhrase);
+
+    void insertProductAddress(ProductAddress productAddress);
+
+    boolean checkProductExist(ProductAddress productAddress);
 }

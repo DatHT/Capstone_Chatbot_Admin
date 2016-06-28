@@ -32,6 +32,27 @@ public class ProductAddressDao extends BaseDao<ProductAddress, Long> implements 
 
     @Override
     @Transactional
+    public List<ProductAddress> getBySearchPhrase(String searchPhrase) {
+        LOG.info("[getBySearchPhrase] Start: searchPhrase = " + searchPhrase);
+
+        String sql = "FROM " + ProductAddress.class.getSimpleName()
+                + " P WHERE P.productName LIKE :searchPhrase"
+                + " OR P.addressName LIKE :searchPhrase"
+                + " OR P.districtName LIKE :searchPhrase"
+                + " OR str(P.rate) LIKE :searchPhrase"
+                + " OR P.restaurantName LIKE :searchPhrase";
+
+        Query query = getSession().createQuery(sql);
+        query.setParameter("searchPhrase", "%" + searchPhrase + "%");
+
+        List<ProductAddress> result = query.list();
+
+        LOG.info("[getBySearchPhrase] End");
+        return result;
+    }
+
+    @Override
+    @Transactional
     public void insertProductAddress(ProductAddress productAddress) {
         LOG.info("[insertProductAddress] Start: productName = " + productAddress.getProductName());
         insert(productAddress);
