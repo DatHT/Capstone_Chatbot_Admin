@@ -88,4 +88,32 @@ public class AccountController {
 		}
 
 	}
+
+	@RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
+	public @ResponseBody String updateUserInfo(@RequestParam("txtPhone") String phone,
+			@RequestParam("txtEmail") String email, @RequestParam("txtAddress") String address,
+			HttpServletRequest request) {
+		String responseText = "";
+
+		HttpSession session = request.getSession();
+		String username = session.getAttribute("username").toString();
+		Staff staff = staffManager.getStaffByUsername(username);
+
+		if (phone != "") {
+			staff.setPhone(phone);
+		}
+		if (email != "") {
+			staff.setEmail(email);
+		}
+		if (address != "") {
+			staff.setAddress(address);
+		}
+		try {
+			staffManager.updateStaff(staff);
+			responseText = "Change password successfully!";
+		} catch (Exception e) {
+			responseText = "Your password is not correct!";
+		}
+		return responseText;
+	}
 }

@@ -159,11 +159,11 @@
 									<dd>
 										<div class="fg-line">
 											<c:if test="${not empty user.phone }">
-												<input type="text" class="form-control"
+												<input id="user-phone" name="txtPhone" type="text" class="form-control"
 													placeholder="eg. ${user.phone}">
 											</c:if>
 											<c:if test="${empty user.phone }">
-												<input type="text" class="form-control"
+												<input id="user-phone" name="txtPhone" type="text" class="form-control"
 													placeholder="eg. 01234567890">
 											</c:if>
 										</div>
@@ -174,11 +174,11 @@
 									<dd>
 										<div class="fg-line">
 											<c:if test="${not empty user.email }">
-												<input type="text" class="form-control"
+												<input id="user-email" name="txtEmail" type="text" class="form-control"
 													placeholder="eg. ${user.email}">
 											</c:if>
 											<c:if test="${empty user.email }">
-												<input type="text" class="form-control"
+												<input id="user-email" name="txtEmail" type="text" class="form-control"
 													placeholder="eg. abc@abc.com">
 											</c:if>
 										</div>
@@ -189,19 +189,19 @@
 									<dd>
 										<div class="fg-line">
 											<c:if test="${not empty user.address }">
-												<input type="text" class="form-control"
+												<input id="user-address" name="txtAddress" type="text" class="form-control"
 													placeholder="eg. ${user.address}">
 											</c:if>
 											<c:if test="${empty user.address }">
-												<input type="text" class="form-control"
+												<input id="user-address" name="txtAddress" type="text" class="form-control"
 													placeholder="eg. 123 abc, bdf efg">
 											</c:if>
 										</div>
 									</dd>
 								</dl>
 								<div class="m-t-30">
-									<button class="btn btn-primary btn-sm">Save</button>
-									<button data-pmb-action="reset" class="btn btn-link btn-sm">Cancel</button>
+									<button class="btn btn-primary btn-sm" onclick="updateUserInfo()">Save</button>
+									<button data-pmb-action="reset" class="btn btn-sm">Cancel</button>
 								</div>
 							</div>
 						</div>
