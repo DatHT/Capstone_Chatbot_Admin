@@ -3,9 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <c:set var="user" value="${USER}" />
-<script>
-	var userpassword = '${user.password}';
-</script>
 <script src="resources/assets/scripts/accountScript.js"></script>
 
 <section id="content">

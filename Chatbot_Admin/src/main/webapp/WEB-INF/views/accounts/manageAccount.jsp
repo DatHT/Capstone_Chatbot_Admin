@@ -40,7 +40,7 @@
 				<div class="col-sm-10">
 					<div class="fg-line">
 						<input type="text" name="username" class="form-control input-sm"
-							id="inputAccount" placeholder="Account" onchange="checkIsExist()")>
+							id="inputAccount" placeholder="Account" onchange="checkIsExist()">
 					</div>
 				</div>
 			</div>
