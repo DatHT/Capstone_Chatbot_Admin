@@ -2,6 +2,7 @@ package com.psib.dao.impl;
 
 import com.psib.dao.IProductAddressDao;
 import com.psib.model.ProductAddress;
+import com.psib.util.SpringPropertiesUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -32,22 +33,87 @@ public class ProductAddressDao extends BaseDao<ProductAddress, Long> implements 
 
     @Override
     @Transactional
-    public List<ProductAddress> getBySearchPhrase(String searchPhrase) {
-        LOG.info("[getBySearchPhrase] Start: searchPhrase = " + searchPhrase);
+    public long countBySearchPhrase(String searchPhrase) {
+        LOG.info("[countBySearchPhrase] Start: searchPhrase = " + searchPhrase);
 
-        String sql = "FROM " + ProductAddress.class.getSimpleName()
-                + " P WHERE P.productName LIKE :searchPhrase"
-                + " OR P.addressName LIKE :searchPhrase"
-                + " OR P.districtName LIKE :searchPhrase"
-                + " OR str(P.rate) LIKE :searchPhrase"
-                + " OR P.restaurantName LIKE :searchPhrase";
+        String sql = String.valueOf(new StringBuilder("SELECT COUNT(P.productId) FROM ")
+                .append(ProductAddress.class.getSimpleName())
+                .append(" P WHERE P.productName LIKE :searchPhrase")
+                .append(" OR P.addressName LIKE :searchPhrase")
+                .append(" OR P.districtName LIKE :searchPhrase")
+                .append(" OR str(P.rate) LIKE :searchPhrase")
+                .append(" OR P.restaurantName LIKE :searchPhrase"));
 
         Query query = getSession().createQuery(sql);
         query.setParameter("searchPhrase", "%" + searchPhrase + "%");
 
+        Long count = (Long) query.uniqueResult();
+
+        LOG.info("[countBySearchPhrase] End");
+        return count;
+    }
+
+    @Override
+    @Transactional
+    public List<ProductAddress> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
+            , String sortDistrictName, String sortRate, String sortRestaurantName
+            , int maxResult, int skipResult) {
+        LOG.info(new StringBuilder("[getBySearchPhraseAndSort] Start: searchPhrase = ").append(searchPhrase)
+                .append(", sortProductName = ").append(sortProductName)
+                .append(", sortAddressName = ").append(sortAddressName)
+                .append(", sortDistrictName = ").append(sortDistrictName)
+                .append(", sortRate = ").append(sortRate)
+                .append(", sortRestaurantName = ").append(sortRestaurantName)
+                .append(", maxResult = ").append(maxResult)
+                .append(", skipResult = ").append(skipResult));
+
+        StringBuilder sql = new StringBuilder("FROM ").append(ProductAddress.class.getSimpleName())
+                .append(" P WHERE P.productName LIKE :searchPhrase")
+                .append(" OR P.addressName LIKE :searchPhrase")
+                .append(" OR P.districtName LIKE :searchPhrase")
+                .append(" OR str(P.rate) LIKE :searchPhrase")
+                .append(" OR P.restaurantName LIKE :searchPhrase");
+
+        if (sortProductName != null) {
+            if (sortProductName.equals("asc")) {
+                sql.append(" ORDER BY P.productName ASC");
+            } else {
+                sql.append(" ORDER BY P.productName DESC");
+            }
+        } else if (sortAddressName != null) {
+            if (sortAddressName.equals("asc")) {
+                sql.append(" ORDER BY P.addressName ASC");
+            } else {
+                sql.append(" ORDER BY P.addressName DESC");
+            }
+        } else if (sortDistrictName != null) {
+            if (sortDistrictName.equals("asc")) {
+                sql.append(" ORDER BY P.districtName ASC");
+            } else {
+                sql.append(" ORDER BY P.districtName DESC");
+            }
+        } else if (sortRate != null) {
+            if (sortRate.equals("asc")) {
+                sql.append(" ORDER BY P.rate ASC");
+            } else {
+                sql.append(" ORDER BY P.rate DESC");
+            }
+        } else if (sortRestaurantName != null) {
+            if (sortRestaurantName.equals("asc")) {
+                sql.append(" ORDER BY P.restaurantName ASC");
+            } else {
+                sql.append(" ORDER BY P.restaurantName DESC");
+            }
+        }
+
+        Query query = getSession().createQuery(String.valueOf(sql));
+        query.setParameter("searchPhrase", "%" + searchPhrase + "%");
+        query.setFirstResult(skipResult);
+        query.setMaxResults(maxResult);
+
         List<ProductAddress> result = query.list();
 
-        LOG.info("[getBySearchPhrase] End");
+        LOG.info("[getBySearchPhraseAndSort] End");
         return result;
     }
 
@@ -64,8 +130,9 @@ public class ProductAddressDao extends BaseDao<ProductAddress, Long> implements 
     public boolean checkProductExist(ProductAddress productAddress) {
         LOG.info("[checkProductExist] Start: productName = " + productAddress.getProductName());
 
-        String sql = "FROM " + ProductAddress.class.getSimpleName()
-                + " P WHERE P.productName = :productName AND P.addressName = :addressName AND P.restaurantName = :restaurantName";
+        String sql = String.valueOf(new StringBuilder("FROM ").append(ProductAddress.class.getSimpleName())
+                .append(" P WHERE P.productName = :productName AND P.addressName = :addressName AND P.restaurantName = :restaurantName"));
+
         Query query = getSession().createQuery(sql);
         query.setParameter("productName", productAddress.getProductName());
         query.setParameter("addressName", productAddress.getAddressName());

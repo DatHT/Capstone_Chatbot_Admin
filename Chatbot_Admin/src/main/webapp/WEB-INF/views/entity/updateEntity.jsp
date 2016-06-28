@@ -67,7 +67,7 @@
         if (result == 'true') {
             notify("Add Product Successfully!", "info");
         } else if (result == 'false') {
-            notify("Product Already Existed!", "error");
+            notify("Product Already Existed!", "warning");
             showAddModal();
         }
 
