@@ -22,7 +22,11 @@ function createNewAccount() {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			if (xmlhttp.responseText.indexOf('success') > 0) {
-				swal("Good job!", xmlhttp.responseText, "success");
+				swal({title: "Good job!", text: xmlhttp.responseText, type: "success"}, 
+						function() {
+							location.reload();
+						}
+					);
 			} else {
 				swal("Sorry!", xmlhttp.responseText, "error");
 			}

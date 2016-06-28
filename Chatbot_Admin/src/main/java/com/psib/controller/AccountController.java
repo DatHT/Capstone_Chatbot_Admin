@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.psib.common.DatabaseException;
 import com.psib.model.Staff;
 import com.psib.service.IStaffManager;
+import com.psib.util.SpringPropertiesUtil;
 
 @Controller
 public class AccountController {
@@ -40,7 +41,8 @@ public class AccountController {
 			if (staffManager.getStaffByUsername(username) != null) {
 				responseText = "Username is already exist!";
 			} else {
-				staffManager.createNewStaffAccount(username, null, isAdmin);
+				staffManager.createNewStaffAccount(username,
+						username + SpringPropertiesUtil.getProperty("email_domain"), isAdmin);
 				responseText = "New account was created successfully!";
 			}
 		} catch (DatabaseException e) {
