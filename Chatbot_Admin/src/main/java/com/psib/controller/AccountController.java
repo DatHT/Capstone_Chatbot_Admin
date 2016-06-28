@@ -33,23 +33,21 @@ public class AccountController {
 	}
 
 	@RequestMapping(value = "/addAccount", method = RequestMethod.POST)
-	public String addNewAccount(@RequestParam("username") String username, @RequestParam("email") String email,
-			@RequestParam(value = "isAdminChk", required = false) String isAdmin, Model model) {
+	public @ResponseBody String addNewAccount(@RequestParam("username") String username,
+			@RequestParam(value = "isAdminChk") Boolean isAdmin, Model model) {
+		String responseText = "";
 		try {
-			staffManager.createNewStaffAccount(username, email, (isAdmin != null));
+			if (staffManager.getStaffByUsername(username) != null) {
+				responseText = "Username is already exist!";
+			} else {
+				staffManager.createNewStaffAccount(username, null, isAdmin);
+				responseText = "New account was created successfully!";
+			}
 		} catch (DatabaseException e) {
 			model.addAttribute(ERROR, e.getMessage());
 			return "error";
 		}
-		return "redirect:manageAccount";
-	}
-
-	@RequestMapping(value = "/checkIsExist")
-	public boolean checkIsExist(@RequestParam("username") String username) {
-		if (staffManager.getStaffByUsername(username) != null) {
-			return true;
-		}
-		return false;
+		return responseText;
 	}
 
 	@RequestMapping(value = "/profile")
