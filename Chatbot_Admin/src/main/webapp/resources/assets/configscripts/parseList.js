@@ -1,8 +1,3 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 var urlXPath = null;
 var col = 0, count = 0, flagBack = 0, flagDeleteName = 0, flagClick = 0, flagEditXPath = 0, flagWrap = 0, flagClickNew = 0;
 var currentPosition = 0;
@@ -188,86 +183,42 @@ function standardContent(content) {
 function next() {
     var haveData = 0;
     if ((count <= 4)) {
-        if ((flagClick != 0) || (indexComplete[currentPosition] != "") || (count == 3)) {
-            if (flagClick == 4) {
+        if ((flagClick != 0) || (indexComplete[currentPosition] != "")||(count==3)) {
+        	if (flagClick == 1) {
                 indexComplete[count] = value;
             }
-            if (flagClick == 0 && count == 3) {
-                indexComplete[count] = "";
-            }
+        	if(flagClick==0&&count==3){
+        		indexComplete[count]="";
+        	}
+            currentPosition++;
             $("#myframe").contents().find(oldWrap).removeAttr("style", "background-color: #69c2fe;");
             deleteRow('tbItems', 1);
-            currentPosition++;
-
-            document.getElementById("showXPath").innerHTML = "";
-
-            //show current content
-            if (indexComplete[currentPosition] != "" && currentPosition < 4 && flagClickNew != 1 && flagEditXPath != 1) {
-                var newX = indexComplete[currentPosition];
-                value = indexComplete[currentPosition];
-                var a = window.frames[0].document.evaluate(newX
-                        , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-                var b = a.iterateNext();
-                //???
-                flagClick = 1;
-                //Apply highlight div
-//        alert(getEleCss(newX));       
-                var alertText = ""
-                while (b) {
-                    alertText += b.textContent + "    "
-                    b = a.iterateNext();
-                }
-                //alert(alertText);
-                if (newX.indexOf('img') > -1) {
-                    showCart("image" + "'\'", 'tbItems', 1);
-                } else {
-                    showCart(alertText + "'\'", 'tbItems', 1);
-                }
-                try {
-                    $("#myframe").contents().find(oldWrap).removeAttr("style", "background-color: #69c2fe;");
-
-                    $("#myframe").contents().find(getEleCss(newX)).attr("style", "background-color: #69c2fe;");
-                    oldWrap = getEleCss(newX);
-                } catch (e) {
-                }
-                haveData = 1;
-            }
-
-            //end show
-
+            flagClick = 0;
             if (flagEditXPath == 1) {
-                flagClick = 1;
+                value = document.getElementsByName('txtXPath')[0].value;
                 flagEditXPath = 0;
             }
+            document.getElementById("showXPath").innerHTML = "";
 
-            if (flagClick == 1) {
-                flagClick = 0;
-                if (haveData == 1) {
-                    indexComplete[count] = indexComplete[currentPosition - 1];//*****
-                    flagClick = 1;
-                } else {
-                    indexComplete[count] = value;//*****
-                }
-            }
-            flagClickNew = 0;
             count++;
             //        if ((count == 1)||(count == 2)||(count == 3)) {
-//            if ((count == 2) && (flagDeleteName == 1)) {
-//                //            deleteRow('tbItems', 1);
-//                deleteRow('tbItems', 1);
-//                flagDeleteName = 0;
-//            }
+            if ((count == 4) && (flagDeleteName == 1)) {
+                //            deleteRow('tbItems', 1);
+                deleteRow('tbItems', 1);
+                flagDeleteName = 0;
+            }
             progressBar();
+            showCart(indexComplete[currentPosition - 1] + "'\'", 'tbMain', 2);
+            addToCart(indexComplete[currentPosition - 1]);
             if (count > 1) {
                 if (flagBack != 1) {
                     //                deleteRow('tbItems', 1);
-                    //deleteRow('tbItems', 1);
-                } else {
+                    deleteRow('tbItems', 1);
+                }
+                else {
                     flagBack = 0;
                 }
             }
-            showCart(indexComplete[currentPosition - 1] + "'\'", 'tbMain', 2);
-            addToCart(indexComplete[currentPosition - 1]);
             if (count == 4) {
                 //            alert("FINISHED");
                 //            document.myForm.submit();
@@ -602,7 +553,7 @@ function addRow(tableId, cells, type) {
                     newCell.innerHTML =
                             '<input type="hidden" name="IMAGE" value="' + cells[i] + '" size="78"/>';
                     break;
-                case 3:
+                case 4:
                     newCell.innerHTML =
                             '<input type="hidden" name="NEXTPAGE" value="' + cells[i] + '" size="78"/>';
                     break;
@@ -648,7 +599,7 @@ function addNew() {
     while (currentPosition < 4) {
         count++;
         progressBar();
-        showCart(indexComplete[currentPosition] + "'\'", 'tbMain', 2);
+        showCart(indexComplete[currentPosition] + "'\'", 'tbMain', 4);
         addToCart(indexComplete[currentPosition]);
         currentPosition++;
     }
@@ -710,7 +661,7 @@ function appendcontents(item) {
     var content = '<h3>Information</h3><br/><table border="1" style="width: 485px" class="table"><thead></thead><tr><th style="width: 10%">Type</th><th style="width: 90%">Content</th></tr><tbody>'
             + '<tr><td><strong>Earch Product</strong></td><td>';
     //get Name
-    var a = window.frames[0].document.evaluate(item[0]
+    var a = window.frames[0].document.evaluate(item[0]+'/@href'
             , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
     var b = a.iterateNext();
     var alertText = ""
@@ -738,18 +689,6 @@ function appendcontents(item) {
 
     //getImage
     a = window.frames[0].document.evaluate(item[2] + '/@src'
-            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-    b = a.iterateNext();
-    alertText = ""
-    while (b) {
-        alertText += b.textContent;
-        b = a.iterateNext();
-    }
-    content = content + alertText + '</td></tr><tr><td><strong>Next Page</strong></td><td style="width: '
-            + '200px;  vertical-align: top">';
-
-    //getImage
-    a = window.frames[0].document.evaluate(item[3] + '/@src'
             , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
     b = a.iterateNext();
     alertText = ""

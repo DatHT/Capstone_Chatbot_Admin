@@ -1,8 +1,3 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 var urlXPath = null;
 var col = 0, count = 0, flagBack = 0, flagDeleteName = 0, flagClick = 0, flagEditXPath = 0, flagWrap = 0, flagClickNew = 0;
 var currentPosition = 0;
@@ -29,10 +24,10 @@ $(document).ready(function () {
             }
             flagClick = 1;
             value = urlXPath;
-            if (count >= 3) {
+            if (count >= 4) {
                 value = commonXpath(urlXPath);
             } else {
-                if (count == 2) {
+                if (count == 4) {
                     value = imgXPath(event.target);
                 }
             }
@@ -414,9 +409,15 @@ function createXPathFromElement(elm) {
             } else {
                 segs.unshift(elm.localName.toLowerCase() + "[@id='" + elm.getAttribute('id') + "']");
             }
-        } else if (elm.hasAttribute('class')) {
+        }
+        else if(elm.hasAttribute('itemprop')){
+        	segs.unshift(elm.localName.toLowerCase() + "[@itemprop='"+ elm.getAttribute('itemprop') + "']");
+        }
+        else if (elm.hasAttribute('class')) {
             segs.unshift(elm.localName.toLowerCase() + "[@class='" + elm.getAttribute('class') + "']");
-        } else {
+        } 
+        
+        else {
             for (i = 1, sib = elm.previousSibling; sib; sib = sib.previousSibling) {
                 if (sib.localName == elm.localName)
                     i++;
@@ -721,11 +722,7 @@ function appendcontents(item) {
     b = a.iterateNext();
     alertText = ""
     while (b) {
-        if (b.textContent.length < 150) {
-            alertText += b.textContent + "<br/>";
-        } else {
-            alertText += b.textContent.substring(0, 220) + "...<br/>";
-        }
+        alertText += b.textContent + "<br/>";
         b = a.iterateNext();
     }
     content = content + alertText + '</td></tr><tr><td><strong>User Rate</strong></td><td>';
@@ -740,7 +737,7 @@ function appendcontents(item) {
     }
     content = content + alertText + '</td></tr><tr><td><strong>Map</strong></td><td style="width: '
             + '200px;  vertical-align: top">';
-    //getIngredient
+    //getMap
     a = window.frames[0].document.evaluate(item[3] + '/@src'
             , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
     b = a.iterateNext();
