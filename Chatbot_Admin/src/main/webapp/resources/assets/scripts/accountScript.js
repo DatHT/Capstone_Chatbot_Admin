@@ -24,7 +24,10 @@ function createNewAccount() {
 			if (xmlhttp.responseText.indexOf('success') > 0) {
 				swal({title: "Good job!", text: xmlhttp.responseText, type: "success"}, 
 						function() {
-							location.reload();
+							setTimeout(function() {
+								location.reload();
+							}, 500);
+							
 						}
 					);
 			} else {
@@ -80,8 +83,10 @@ function updateUserInfo() {
 			if (xmlhttp.responseText.indexOf('success') > 0) {
 				swal({title: "Good job!", text: xmlhttp.responseText, type: "success"}, 
 						function() {
-							location.reload();
-						}
+					setTimeout(function() {
+						location.reload();
+					}, 500);
+				}
 					);
 			} else {
 				swal("Sorry!", xmlhttp.responseText, "error");
