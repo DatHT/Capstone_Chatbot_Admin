@@ -6,6 +6,8 @@
             http://www.springframework.org/schema/security
             http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
+    <beans:bean class="com.psib.auth.DefaultRolesPrefixPostProcessor"/>
+
     <beans:bean id="myUserDetailsService" class="com.psib.service.MyUserDetailsService"></beans:bean>
 
     <!-- enable use-expressions -->
