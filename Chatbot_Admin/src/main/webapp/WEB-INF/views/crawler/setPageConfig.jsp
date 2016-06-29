@@ -66,10 +66,11 @@
 	<section>
 		<div class="col-lg-12">
 			<section class="panel">
-				<div class="panel-body">
+				<div class="panel-body ">
 					<form name="myForm" id="myForm" action="processServlet"
 						method="GET">
-						<div class="form-group">
+						<div class="scroller_anchor"></div>
+						<div class="form-group card card-header scroller" style="">
 							<div class="progressRecipe">
 								<div class="circle done">
 									<span class="labelRecipe">0</span> <span class="title">Welcome</span>
@@ -103,9 +104,8 @@
 								name="btnAction" value="AddNewConfiguration" onclick="addNew()"
 								disabled>AddNewConfiguration</button>
 							<button type="button" class="btn btn-primary" value="HOME"
-								onclick="window.location = 'configData'">HOME</button>
+								onclick="window.location = 'crawler'">HOME</button>
 							<div class="table-responsive" style="min-height: 70px">
-
 								<table class="table" id="tbItems" border="1" width="619"
 									class="table">
 									<th width="97%">Content</th>
@@ -117,8 +117,8 @@
 						</div>
 						<div id="popup" class="popup"></div>
 						<div id="bg" class="popup_bg"></div>
-						<div class="col-sm-12">
-							<iframe id="iframe" name="iframe" width ="100%" sandbox="allow-same-origin"
+						<div class="col-sm-12 scollchange">
+							<iframe width ="100%" sandbox="allow-same-origin"
 								width="700" height="500" id="myframe" src="resources/tmp.html"
 								onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
 							</iframe>
@@ -132,22 +132,43 @@
 		</div>
 	</section>
 	<!-- Placed js at the end of the document so the pages load faster -->
-	<script type="text/javascript">
-		var frameListener;
-		$(window).load(function() {
-			frameListener = setInterval("frameLoaded()", 50);
-		});
-		function frameLoaded() {
-			var frame = $('iframe').get(0);
-			if (frame != null) {
-				var frmHead = $(frame).contents().find('head');
-				if (frmHead != null) {
-					clearInterval(frameListener); // stop the listener
-					//frmHead.append($('style, link[rel=stylesheet]').clone()); // clone existing css link
-					frmHead.append($("<link/>", { rel: "stylesheet", href: "/resources/tmp", type: "text" })); // or create css link yourself
-				}
-			}
-		}
-	</script>
 </body>
+<script>
+$(window).scroll(function(e) {
+    // Get the position of the location where the scroller starts.
+    var scroller_anchor = $(".scroller_anchor").offset().top;
+     
+    // Check if the user has scrolled and the current position is after the scroller start location and if its not already fixed at the top 
+    if ($(this).scrollTop() >= scroller_anchor && $('.scroller').css('position') != 'fixed') 
+    {    // Change the CSS of the scroller to hilight it and fix it at the top of the screen.
+        $('.scroller').css({
+        	'width':'75.2%',
+            'position': 'fixed',
+            'z-index':'100',
+            'top': '0px'
+        });
+        // Changing the height of the scroller anchor to that of scroller so that there is no change in the overall height of the page.
+        $('.scroller_anchor').css('height', '50px');
+        $('.scollchange').css({
+            'margin-top': '250px',
+            'positon':'absolute'
+        });
+    } 
+    else if ($(this).scrollTop() < scroller_anchor && $('.scroller').css('position') != 'relative') 
+    {    // If the user has scrolled back to the location above the scroller anchor place it back into the content.
+         
+        // Change the height of the scroller anchor to 0 and now we will be adding the scroller back to the content.
+        $('.scroller_anchor').css('height', '0px');
+         
+        // Change the CSS and put it back to its original position.
+        $('.scroller').css({
+            'position': 'relative',
+            'width':'100%',
+        });
+        $('.scollchange').css({
+            'margin-top': '0px'
+        });
+    }
+});
+</script>
 </html>

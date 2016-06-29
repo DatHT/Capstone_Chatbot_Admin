@@ -91,7 +91,7 @@ and open the template in the editor.
                                     <div class="form-group">
                                         <%= message %> 
                                     </div>                                
-                                    <button type="button" class="btn btn-success m-b-10" value="Return To HomePage" name ="btnAction" onclick="window.location = 'configData'">Return To Config Home</button>
+                                    <button type="button" class="btn btn-success m-b-10" value="Return To HomePage" name ="btnAction" onclick="window.location = 'crawler'">Return To Config Home</button>
                                 </div>
                             </section>
                         </div>

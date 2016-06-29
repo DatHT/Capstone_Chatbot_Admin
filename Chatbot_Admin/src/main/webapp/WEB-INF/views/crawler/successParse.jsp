@@ -99,7 +99,7 @@
 									inserted to storage!</div>
 								<button type="button" class="btn btn-info m-b-10"
 									value="Return To HomePage" name="btnAction"
-									onclick="window.location = 'configData'" >Return To Config Home</button>
+									onclick="window.location = 'crawler'" >Return To Config Home</button>
 							</div>
 						</section>
 					</div>
