@@ -209,4 +209,9 @@ public class ProductManager implements IProductManager {
         LOG.info("[uploadThumbnail] End");
         return null;
     }
+
+	@Override
+	public District getDistrict(String districtName) {
+		return districtDao.getDistrictByName(districtName);
+	}
 }

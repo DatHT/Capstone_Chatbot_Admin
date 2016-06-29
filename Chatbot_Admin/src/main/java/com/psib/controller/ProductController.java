@@ -3,30 +3,24 @@
  */
 package com.psib.controller;
 
-import com.psib.common.JsonParser;
-import com.psib.dto.ProductAddressDto;
-import com.psib.dto.ProductDto;
-import com.psib.model.District;
-import com.psib.model.Product;
-import com.psib.model.ProductAddress;
-import com.psib.service.IProductManager;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.util.ajax.JSON;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import com.psib.common.JsonParser;
+import com.psib.model.District;
+import com.psib.service.IProductManager;
 
 /**
  * @author DatHT Jun 4, 2016
@@ -46,7 +40,9 @@ public class ProductController {
                                     @ModelAttribute(value = "name") String name, @ModelAttribute(value = "address") String address,
                                     @ModelAttribute(value = "district") String district, @ModelAttribute(value = "rating") String rating,
                                     @ModelAttribute(value = "restaurant") String restaurant,
-                                    @ModelAttribute(value = "relatedUrl") String relatedUrl) {
+                                    @ModelAttribute(value = "relatedUrl") String relatedUrl,
+                                    @RequestParam(value = "txtDistrict", required = false) String txtDistrict,
+                                    @RequestParam(value = "txtFood", required = false) String txtFood) {
         LOG.info("[loadProduct] Start");
 
         ModelAndView model = new ModelAndView("product");
@@ -60,9 +56,18 @@ public class ProductController {
         } else {
             model.addObject(addResult);
         }
-        model.addObject(name);
+        District dis = null;
+        if (txtDistrict != null && txtFood != null) {
+        	dis = productManager.getDistrict(txtDistrict);
+		}
+        if (dis != null) {
+        	model.addObject("name", txtFood);
+        	model.addObject("districtId", dis.getId());
+		} else {
+			model.addObject("districtId", district);
+			model.addObject(name);
+		}
         model.addObject(address);
-        model.addObject("districtId", district);
         model.addObject(rating);
         model.addObject(restaurant);
         model.addObject(relatedUrl);

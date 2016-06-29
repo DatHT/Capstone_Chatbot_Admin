@@ -16,6 +16,8 @@ public interface IProductManager {
                                String sortRate, String sortRestaurantName);
 
     List<District> getAllDistrict();
+    
+    District getDistrict(String districtName);
 
     int insertProduct(String name, String address, String district, String rating, String restaurant,
                       String relatedUrl, MultipartFile file);
