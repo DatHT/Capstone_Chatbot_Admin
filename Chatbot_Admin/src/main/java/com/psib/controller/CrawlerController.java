@@ -1,17 +1,16 @@
 package com.psib.controller;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -31,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.jaunt.ResponseException;
+import com.jaunt.UserAgent;
 import com.psib.dto.configuration.ConfigDTO;
 import com.psib.dto.configuration.ConfigDTOList;
 import com.psib.dto.configuration.PageDTO;
@@ -47,10 +48,14 @@ import com.psib.util.CommonUtils;
 import com.psib.util.XMLUtils;
 
 @Controller
-public class CrawlerController {
+public class CrawlerController extends HttpServlet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final String pageConfigXML = "D:/Capstone/pageconfig.xml";
 	private static final String parserConfigXML = "D:/Capstone/parserconfig.xml";
-	private static final Logger logger = LoggerFactory.getLogger(DataConfigController.class);
+	private static final Logger logger = LoggerFactory.getLogger(CrawlerController.class);
 
 	@Autowired
 	private IAddressManager addressManager;
@@ -60,12 +65,6 @@ public class CrawlerController {
 	private IProductManager productManager;
 	@Autowired
 	private IDistrictManager districtManager;
-
-	@RequestMapping(value = "/crawler", method = RequestMethod.GET)
-	public String loadProduct(Model model) {
-		model.addAttribute("ACTIVE", "crawler");
-		return "crawler";
-	}
 
 	@RequestMapping(value = "/manualAddFood", method = RequestMethod.GET)
 	public String addManual(Model model) {
@@ -90,7 +89,457 @@ public class CrawlerController {
 
 			return "errorPage";
 		}
-		if (btnAction.equals("ForceParse")) {
+		if (btnAction.equals("StaticParse")) {
+			try {
+				long startTime = System.nanoTime();
+				HttpSession session = request.getSession();
+				String numPage = request.getParameter("txtPage");
+				String url = request.getParameter("txtLinkPage");
+				System.out.println("url =" + url);
+				String noPage = request.getParameter("txtNoPage");
+				int numOfPage = 0;
+				int noOfPage = 0;
+				int countAdded = 0;
+				int countExits = 0;
+				if (numPage != null && !numPage.isEmpty()) {
+					numOfPage = Integer.parseInt(numPage);
+				} else {
+					noOfPage = Integer.parseInt(noPage);
+				}
+				System.out.println(numOfPage);
+				System.out.println(noOfPage);
+
+				// lay url page
+				String xmlFilePath = pageConfigXML;
+				PageDTOList tmpPage = XMLUtils.unmarshallPage(xmlFilePath);
+
+				List<PageDTO> pageConfigs = tmpPage.getConfig();
+
+				PageDTO pageConfig = new PageDTO();
+				for (PageDTO pageCfg : pageConfigs) {
+					if (pageCfg.getSite().equals(url)) {
+						pageConfig = pageCfg;
+						break;
+					}
+				}
+				// lay xpath foodName
+				List<String> pagexpaths = new ArrayList<String>();
+				pagexpaths.add(pageConfig.getXpath());
+				pagexpaths.add(pageConfig.getFoodName());
+				pagexpaths.add(pageConfig.getImage());
+
+				System.out.println("Page Config Link: " + pageConfig.getSite());
+				System.out.println("Page Config Xpath: " + pageConfig.getXpath());
+
+				// chuan bi parse
+				int no = 1;
+				// goi trinh duyet moi bang selenium
+				if (numOfPage > 0) {
+					while (no <= numOfPage) {
+						if (no == 1) {
+							System.out.println("no = 1");
+							driver.get(pageConfig.getLinkPage());
+						} else {
+							System.out.println("no = " + no);
+							if (pageConfig.getNextPage().equals("N/A")) {
+								System.out.println("STOP BY N/A");
+								break;
+							}
+							try {
+								if (pageConfig.getNextPage().indexOf('=') == -1) {
+									driver.get(pageConfig.getLinkPage() + pageConfig.getNextPage() + "/" + no);
+								} else {
+									driver.get(pageConfig.getLinkPage() + pageConfig.getNextPage() + no);
+									System.out.println("Da Chay Den Day");
+								}
+							} catch (FailingHttpStatusCodeException e) {
+								System.out.println("Error Occurred");
+								session.setAttribute("MESSAGE", "The process has stopped at page " + (no - 1));
+								return "errorPage";
+							}
+						}
+						no++;
+						System.out.println("XPath Link: " + pageConfig.getXpath());
+
+						String restaurantName = "", address = "", foodName = "", userRate = "", map = "";
+						String thumbpath = "";
+						// list
+						List<String> pageUrl = new ArrayList<String>();
+						List<String> foodResult = new ArrayList<String>();
+						List<String> image = new ArrayList<String>();
+						int counter = 0;
+						List<WebElement> foodnamepage = null;
+
+						for (String foodname : pagexpaths) {
+							counter++;
+							foodnamepage = driver.findElements(By.xpath(foodname));
+							for (WebElement food : foodnamepage) {
+								switch (counter) {
+								case 1:
+									pageUrl.add(food.getAttribute("href"));
+									break;
+								case 2:
+									foodResult.add(food.getText());
+									break;
+								case 3:
+									image.add(food.getAttribute("src"));
+								}
+							}
+
+						}
+						System.out.println("--Number of record: " + foodnamepage.size());
+
+						// for (WebElement data : pages) {
+						//
+						// }
+
+						// Load file XPath cÃƒÂ³ sÃ¡ÂºÂµn
+						for (int i = 0; i < pageUrl.size(); i++) {
+							String str = pageUrl.get(i);
+							foodName = foodResult.get(i);
+							thumbpath = image.get(i);
+							System.out.println("==Parsing Page URL: " + str);
+							System.out.println("-----Parsing Page Content-----");
+							CommonUtils common = new CommonUtils();
+							String newProductName = common.splitName(foodName);
+							counter++;
+
+							if (str.indexOf(url) == -1) {
+								str = url + str;
+							}
+
+							// Parse từng page
+							try {
+								driver.get(str);
+							} catch (FailingHttpStatusCodeException e) {
+								e.printStackTrace();
+							}
+							int count = 0;
+							int countTam = 0;
+							// lay config page
+							xmlFilePath = parserConfigXML;
+							ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
+							List<ConfigDTO> configs = tmp.getConfig();
+							System.out.println("Config Size: " + configs.size());
+
+							// tao list xpath
+							List<String> xpaths = new ArrayList<String>();
+							ConfigDTO config = new ConfigDTO();
+							for (ConfigDTO cfg : configs) {
+								if (cfg.getSite().equals(url)) {
+									config = cfg;
+									break;
+								}
+							}
+							// add xpath
+							xpaths.add(config.getName());
+							xpaths.add(config.getAddress());
+							xpaths.add(config.getUserRate());
+							xpaths.add(config.getMap());
+							for (String xpath : xpaths) {
+								System.out.println("Xpath: " + xpath + " : " + count);
+								count++;
+								if (xpath != null) {
+									List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
+									for (WebElement content : contents) {
+										countTam++;
+										switch (count) {
+										case 1:
+											restaurantName = content.getText();
+											break;
+										case 2:
+											address = content.getText();
+											break;
+										case 3:
+											userRate = content.getText();
+											break;
+										case 4:
+											map = content.getAttribute("src");
+											break;
+										}
+										// contents.add(tmpString);
+									}
+								}
+							}
+
+							double latitude = CommonUtils.splitLat(map);
+							double longitude = CommonUtils.splitLong(map);
+
+							String district = CommonUtils.splitDistrict(address);
+							String newAddress = CommonUtils.splitAddress(address);
+							
+							double rate = Double.parseDouble(userRate);
+							if(rate<=5){
+								rate = rate*2;
+								userRate = ""+rate;
+							}
+							Product productDAO = new Product();
+							District districtDAO = new District();
+							Address addressDAO = new Address();
+							ProductAddress productAddressDAO = new ProductAddress();
+
+							boolean checkExitFood = productManager.checkExitsProduct(str, newProductName);
+
+							if (!checkExitFood) {
+								productDAO.setName(newProductName);
+								productDAO.setRate(userRate);
+								productDAO.setSource(url);
+								productDAO.setThumbPath(thumbpath);
+								productDAO.setUrlRelate(str);
+								productManager.insert(productDAO);
+
+								boolean checkDistrict = districtManager.checkExitDistrict(district);
+								if (!checkDistrict) {
+									districtDAO.setName(district);
+									districtManager.insert(districtDAO);
+								}
+								boolean checkAddress = addressManager.checkExitsAddress(newAddress);
+								if (!checkAddress) {
+									long districtID = districtManager.getDistrictIDByDistrictName(district);
+									if (districtID != 0) {
+										addressDAO.setDistrictId(districtID);
+										addressDAO.setLatitude(latitude);
+										addressDAO.setLongitude(longitude);
+										addressDAO.setName(newAddress);
+										addressDAO.setRestaurantName(restaurantName);
+										addressManager.insert(addressDAO);
+									}
+								}
+								long productID = productManager.getProductIDByName(newProductName);
+								long addressID = addressManager.getAddressIDByAddressName(newAddress);
+								if (productID != 0 && addressID != 0) {
+									boolean checkFoodAdress = productAddressManager.checkExitFoodAddress(productID,
+											addressID);
+									if (!checkFoodAdress) {
+										productAddressDAO.setProductId(productID);
+										productAddressDAO.setAddressId(addressID);
+										productAddressDAO.setAddressName(address);
+										productAddressDAO.setDistrictName(district);
+										productAddressDAO.setLatitude(latitude);
+										productAddressDAO.setLongitude(longitude);
+										productAddressDAO.setProductName(newProductName);
+										productAddressDAO.setRate(userRate);
+										productAddressDAO.setRestaurantName(restaurantName);
+										productAddressDAO.setThumbPath(thumbpath);
+										productAddressDAO.setUrlRelate(str);
+										productAddressManager.insert(productAddressDAO);
+									}
+								}
+								System.out.println("======Add To Database Success=====");
+								countAdded++;
+							} else {
+								System.out.println("Product Exist");
+								countExits++;
+							}
+						}
+					}
+				} else {
+					System.out.println("no = " + noOfPage);
+					driver.get(pageConfig.getLinkPage());
+					try {
+						if (pageConfig.getNextPage().indexOf('=') == -1) {
+							driver.get(pageConfig.getLinkPage() + pageConfig.getNextPage() + "/" + noOfPage);
+						} else {
+							driver.get(pageConfig.getLinkPage() + pageConfig.getNextPage() + noOfPage);
+						}
+					} catch (FailingHttpStatusCodeException e) {
+						System.out.println("Error Occurred");
+						session.setAttribute("MESSAGE", "The process has stopped at page " + (noOfPage - 1));
+						return "errorPage";
+					}
+					System.out.println("XPath Link: " + pageConfig.getXpath());
+
+					String restaurantName = "", address = "", foodName = "", userRate = "", map = "";
+					String thumbpath = "";
+					// list
+					List<String> pageUrl = new ArrayList<String>();
+					List<String> foodResult = new ArrayList<String>();
+					List<String> image = new ArrayList<String>();
+					int counter = 0;
+					List<WebElement> foodnamepage = null;
+
+					for (String foodname : pagexpaths) {
+						counter++;
+						foodnamepage = driver.findElements(By.xpath(foodname));
+						for (WebElement food : foodnamepage) {
+							switch (counter) {
+							case 1:
+								pageUrl.add(food.getAttribute("href"));
+								break;
+							case 2:
+								foodResult.add(food.getText());
+								break;
+							case 3:
+								image.add(food.getAttribute("src"));
+							}
+						}
+
+					}
+					System.out.println("--Number of record: " + foodnamepage.size());
+
+					// for (WebElement data : pages) {
+					//
+					// }
+
+					// Load file XPath cÃƒÂ³ sÃ¡ÂºÂµn
+					for (int i = 0; i < pageUrl.size(); i++) {
+						String str = pageUrl.get(i);
+						foodName = foodResult.get(i);
+						thumbpath = image.get(i);
+						System.out.println("==Parsing Page URL: " + str);
+						System.out.println("-----Parsing Page Content-----");
+						CommonUtils common = new CommonUtils();
+						String newProductName = common.splitName(foodName);
+						counter++;
+
+						if (str.indexOf(url) == -1) {
+							str = url + str;
+						}
+
+						// Parse tÃ¡Â»Â«ng page
+						try {
+							driver.get(str);
+						} catch (FailingHttpStatusCodeException e) {
+							e.printStackTrace();
+						}
+						int count = 0;
+						int countTam = 0;
+						// lay config page
+						xmlFilePath = parserConfigXML;
+						ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
+						List<ConfigDTO> configs = tmp.getConfig();
+						System.out.println("Config Size: " + configs.size());
+
+						// tao list xpath
+						List<String> xpaths = new ArrayList<String>();
+						ConfigDTO config = new ConfigDTO();
+						for (ConfigDTO cfg : configs) {
+							if (cfg.getSite().equals(url)) {
+								config = cfg;
+								break;
+							}
+						}
+						// add xpath
+						xpaths.add(config.getName());
+						xpaths.add(config.getAddress());
+						xpaths.add(config.getUserRate());
+						xpaths.add(config.getMap());
+						for (String xpath : xpaths) {
+							System.out.println("Xpath: " + xpath + " : " + count);
+							count++;
+							if (xpath != null) {
+								List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
+								for (WebElement content : contents) {
+									countTam++;
+									switch (count) {
+									case 1:
+										restaurantName = content.getText();
+										break;
+									case 2:
+										address = content.getText();
+										break;
+									case 3:
+										userRate = content.getText();
+										break;
+									case 4:
+										map = content.getAttribute("src");
+										break;
+									}
+									// contents.add(tmpString);
+								}
+							}
+						}
+
+						double latitude = CommonUtils.splitLat(map);
+						double longitude = CommonUtils.splitLong(map);
+
+						String district = CommonUtils.splitDistrict(address);
+						String newAddress = CommonUtils.splitAddress(address);
+						double rate = Double.parseDouble(userRate);
+						if(rate<=5){
+							rate = rate*2;
+							userRate = ""+rate;
+						}
+						Product productDAO = new Product();
+						District districtDAO = new District();
+						Address addressDAO = new Address();
+						ProductAddress productAddressDAO = new ProductAddress();
+
+						boolean checkExitFood = productManager.checkExitsProduct(str, newProductName);
+
+						if (!checkExitFood) {
+							productDAO.setName(newProductName);
+							productDAO.setRate(userRate);
+							productDAO.setSource(url);
+							productDAO.setThumbPath(thumbpath);
+							productDAO.setUrlRelate(str);
+							productManager.insert(productDAO);
+
+							boolean checkDistrict = districtManager.checkExitDistrict(district);
+							if (!checkDistrict) {
+								districtDAO.setName(district);
+								districtManager.insert(districtDAO);
+							}
+							boolean checkAddress = addressManager.checkExitsAddress(newAddress);
+							if (!checkAddress) {
+								long districtID = districtManager.getDistrictIDByDistrictName(district);
+								if (districtID != 0) {
+									addressDAO.setDistrictId(districtID);
+									addressDAO.setLatitude(latitude);
+									addressDAO.setLongitude(longitude);
+									addressDAO.setName(newAddress);
+									addressDAO.setRestaurantName(restaurantName);
+									addressManager.insert(addressDAO);
+								}
+							}
+							long productID = productManager.getProductIDByName(newProductName);
+							long addressID = addressManager.getAddressIDByAddressName(newAddress);
+							if (productID != 0 && addressID != 0) {
+								boolean checkFoodAdress = productAddressManager.checkExitFoodAddress(productID,
+										addressID);
+								if (!checkFoodAdress) {
+									productAddressDAO.setProductId(productID);
+									productAddressDAO.setAddressId(addressID);
+									productAddressDAO.setAddressName(address);
+									productAddressDAO.setDistrictName(district);
+									productAddressDAO.setLatitude(latitude);
+									productAddressDAO.setLongitude(longitude);
+									productAddressDAO.setProductName(newProductName);
+									productAddressDAO.setRate(userRate);
+									productAddressDAO.setRestaurantName(restaurantName);
+									productAddressDAO.setThumbPath(thumbpath);
+									productAddressDAO.setUrlRelate(str);
+									productAddressManager.insert(productAddressDAO);
+								}
+							}
+							System.out.println("======Add To Database Success=====");
+							countAdded++;
+						} else {
+							System.out.println("Product Exist");
+							countExits++;
+						}
+					}
+					pageUrl.clear();
+					foodResult.clear();
+					image.clear();
+				}
+				driver.close();
+				System.out.println("Sucessfull Added Record: " + countAdded);
+				System.out.println("Exit Record: " + countExits);
+				long estimatedTime = System.nanoTime() - startTime;
+				double seconds = (double) estimatedTime / 1000000000.0;
+				System.out.println("Elapsed time: " + seconds);
+				session = request.getSession();
+				session.setAttribute("MESSAGE", "Force parse success! New data has been inserted to storage!");
+				return "success";
+			} catch (Exception e) {
+				System.out.println("STOP PARSING");
+				HttpSession session = request.getSession();
+				session.setAttribute("MESSAGE", "STOP! Force Parse Has Been STOP!");
+				return "errorPage";
+			}
+		}
+		if (btnAction.equals("DynamicParse")) {
 			try {
 				long startTime = System.nanoTime();
 				HttpSession session = request.getSession();
@@ -98,31 +547,9 @@ public class CrawlerController {
 				int numOfPage = Integer.parseInt(numPage);
 				String url = request.getParameter("txtLinkPage");
 				System.out.println("url =" + url);
-				// lay config page
-				String xmlFilePath = parserConfigXML;
-				ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
-				List<ConfigDTO> configs = tmp.getConfig();
-				System.out.println("Config Size: " + configs.size());
 
-				// tao list xpath
-				List<String> xpaths = new ArrayList<String>();
-				ConfigDTO config = new ConfigDTO();
-				for (ConfigDTO cfg : configs) {
-					if (cfg.getSite().equals(url)) {
-						config = cfg;
-						break;
-					}
-				}
-				// add xpath
-				xpaths.add(config.getName());
-				xpaths.add(config.getAddress());
-				xpaths.add(config.getUserRate());
-				xpaths.add(config.getMap());
-				for (String xpath : xpaths) {
-					System.out.println("Xpath: " + xpath);
-				}
 				// lay url page
-				xmlFilePath = pageConfigXML;
+				String xmlFilePath = pageConfigXML;
 				PageDTOList tmpPage = XMLUtils.unmarshallPage(xmlFilePath);
 
 				List<PageDTO> pageConfigs = tmpPage.getConfig();
@@ -171,18 +598,17 @@ public class CrawlerController {
 				// no++;
 				// HtmlPage page = webClient.getPage(pageConfig.getLinkPage());
 				// bat dau lay link de vao trang
-				String orginalLink = pageConfig.getXpath();
 				System.out.println("XPath Link: " + pageConfig.getXpath());
-				List<WebElement> pages = driver.findElements(By.xpath(orginalLink));
 
-				String restaurantName = null, address = null, foodName = null, userRate = null, map = null;
-				String thumbpath = null;
+				String restaurantName = "", address = "", foodName = "", userRate = "", map = "";
+				String thumbpath = "";
 				// list
 				List<String> pageUrl = new ArrayList<String>();
 				List<String> foodResult = new ArrayList<String>();
 				List<String> image = new ArrayList<String>();
 				int counter = 0;
 				List<WebElement> foodnamepage = null;
+
 				for (String foodname : pagexpaths) {
 					counter++;
 					foodnamepage = driver.findElements(By.xpath(foodname));
@@ -231,24 +657,42 @@ public class CrawlerController {
 					}
 					int count = 0;
 					int countTam = 0;
+					// lay config page
+					xmlFilePath = parserConfigXML;
+					ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
+					List<ConfigDTO> configs = tmp.getConfig();
+					System.out.println("Config Size: " + configs.size());
+
+					// tao list xpath
+					List<String> xpaths = new ArrayList<String>();
+					ConfigDTO config = new ConfigDTO();
+					for (ConfigDTO cfg : configs) {
+						if (cfg.getSite().equals(url)) {
+							config = cfg;
+							break;
+						}
+					}
+					// add xpath
+					xpaths.add(config.getName());
+					xpaths.add(config.getAddress());
+					xpaths.add(config.getUserRate());
+					xpaths.add(config.getMap());
 					for (String xpath : xpaths) {
-						System.out.println(xpath + count);
+						System.out.println("Xpath: " + xpath + " : " + count);
 						count++;
 						if (xpath != null) {
 							List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
 							for (WebElement content : contents) {
-								String tmpString;
 								countTam++;
-								tmpString = content.getText();
 								switch (count) {
 								case 1:
-									restaurantName = tmpString;
+									restaurantName = content.getText();
 									break;
 								case 2:
-									address = tmpString;
+									address = content.getText();
 									break;
 								case 3:
-									userRate = tmpString;
+									userRate = content.getText();
 									break;
 								case 4:
 									map = content.getAttribute("src");
@@ -259,11 +703,11 @@ public class CrawlerController {
 						}
 					}
 
-					double latitude = common.splitLat(map);
-					double longitude = common.splitLong(map);
+					double latitude = CommonUtils.splitLat(map);
+					double longitude = CommonUtils.splitLong(map);
 
-					String district = common.splitDistrict(address);
-					String newAddress = common.splitAddress(address);
+					String district = CommonUtils.splitDistrict(address);
+					String newAddress = CommonUtils.splitAddress(address);
 
 					Product productDAO = new Product();
 					District districtDAO = new District();
@@ -280,8 +724,6 @@ public class CrawlerController {
 						productDAO.setUrlRelate(str);
 						productManager.insert(productDAO);
 
-						boolean addDistrict = false;
-						boolean addFoodAddress = false;
 						boolean checkDistrict = districtManager.checkExitDistrict(district);
 						if (!checkDistrict) {
 							districtDAO.setName(district);
@@ -345,9 +787,8 @@ public class CrawlerController {
 		return "";
 	}
 
-	@RequestMapping(value = "/configData", method = RequestMethod.GET)
-	public String configData(Model model, HttpServletRequest request, HttpServletResponse respone)
-			throws IOException {
+	@RequestMapping(value = "/crawler", method = RequestMethod.GET)
+	public String configData(Model model, HttpServletRequest request, HttpServletResponse respone) throws IOException {
 		// String realPath = CommonUtils.getPath();
 		// get Config
 		String xmlFilePath = parserConfigXML;
@@ -356,7 +797,6 @@ public class CrawlerController {
 			file.createNewFile();
 			xmlFilePath = file.getPath();
 		}
-		System.out.println("XML FILE config 2: " + xmlFilePath);
 		ConfigDTOList configs = XMLUtils.unmarshall(xmlFilePath);
 		if (configs == null) {
 			configs = new ConfigDTOList();
@@ -383,7 +823,6 @@ public class CrawlerController {
 			pages = new PageDTOList();
 			PageDTO page = new PageDTO();
 			page.getPages();
-
 		}
 		str = XMLUtils.marshallPageToString(pages);
 		str = str.replace('"', c);
@@ -395,7 +834,7 @@ public class CrawlerController {
 
 	@RequestMapping(value = "/processServlet", method = RequestMethod.GET)
 	public String configGuration(@RequestParam String btnAction, Model model, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+			HttpServletResponse response) throws IOException, ResponseException {
 		if (btnAction.equals("Set List Page")) {
 			String str = request.getParameter("txtURL");
 			System.out.println(str);
@@ -426,33 +865,21 @@ public class CrawlerController {
 				return "errorPage";
 			}
 			// Save file
-			String path = new Object() {
-			}.getClass().getClassLoader().getResource("").getPath();
-			String fullPath = URLDecoder.decode(path, "UTF-8");
-			String pathArr[] = fullPath.split("WEB-INF/classes/");
-			System.out.println("full path: " + fullPath);
-			System.out.println("path: " + pathArr[0]);
-			fullPath = pathArr[0] + "resources/";
-			String htmlFilePath = fullPath + "tmp.html";
-			System.out.println("start save");
-			System.out.println(htmlFilePath);
+			ServletContext servletContext = request.getSession().getServletContext();
+			String filePath = servletContext.getRealPath("/resources");
+			System.out.println(filePath);
+			String htmlFilePath = filePath;
 			File file = new File(htmlFilePath);
-
-			BufferedWriter bwr = new BufferedWriter(new FileWriter(file));
-
-			// write contents of StringBuffer to a file
-			bwr.write(res.toString());
-
-			// flush the stream
-			bwr.flush();
-
-			// close the stream
-			bwr.close();
+			UserAgent ua = new UserAgent();
+			ua.visit(str);
+			ua.doc.saveCompleteWebPage(new File(htmlFilePath, "tmp.html"));
+			file.getParentFile().mkdirs();
 			String result = "";
 			String[] str_array = str.split("/");
 			for (int i = 0; i < 3; i++) {
-				result = result + str_array[i] + "/";
+				result = result + str_array[i]+"/";
 			}
+			result = result.substring(0,result.length()-1);
 			System.out.println(result);
 			session.setAttribute("URL", result);
 			session.setAttribute("LINKPAGE", str);
@@ -488,33 +915,21 @@ public class CrawlerController {
 				return "errorPage";
 			}
 			// Save file
-			String path = new Object() {
-			}.getClass().getClassLoader().getResource("").getPath();
-			String fullPath = URLDecoder.decode(path, "UTF-8");
-			String pathArr[] = fullPath.split("WEB-INF/classes/");
-			System.out.println("full path: " + fullPath);
-			System.out.println("path: " + pathArr[0]);
-			fullPath = pathArr[0] + "resources/";
-			String htmlFilePath = fullPath + "tmp.html";
-			System.out.println("start save");
-			System.out.println(htmlFilePath);
+			ServletContext servletContext = request.getSession().getServletContext();
+			String filePath = servletContext.getRealPath("/resources");
+			System.out.println(filePath);
+			String htmlFilePath = filePath;
 			File file = new File(htmlFilePath);
-
-			BufferedWriter bwr = new BufferedWriter(new FileWriter(file));
-
-			// write contents of StringBuffer to a file
-			bwr.write(res.toString());
-
-			// flush the stream
-			bwr.flush();
-
-			// close the stream
-			bwr.close();
+			UserAgent ua = new UserAgent();
+			ua.visit(str);
+			ua.doc.saveCompleteWebPage(new File(htmlFilePath, "tmp.html"));
+			file.getParentFile().mkdirs();
 			String result = "";
 			String[] str_array = str.split("/");
 			for (int i = 0; i < 3; i++) {
-				result = result + str_array[i] + "/";
+				result = result + str_array[i]+"/";
 			}
+			result = result.substring(0,result.length()-1);
 			System.out.println(result);
 			session.setAttribute("URL", result);
 			session.setAttribute("LINKPAGE", str);
@@ -527,14 +942,66 @@ public class CrawlerController {
 			HttpSession session = request.getSession();
 			String url = (String) session.getAttribute("URL");
 			String linkPage = (String) session.getAttribute("LINKPAGE");
-			String foodname = request.getParameter("FOODNAME");
-			String image = request.getParameter("IMAGE");
 			String nextPage = request.getParameter("NEXTPAGE");
+			System.out.println("Link Page: " + linkPage);
+			System.out.println("Next Page: " + nextPage);
+			
+			String next = "N/A";
+			if (nextPage != null && !nextPage.isEmpty()) {
+				WebDriver driver = new FirefoxDriver();
 
-			String next = "";
-			if (nextPage == "") {
+				driver.get(linkPage);
 
-				next = "N/A";
+				// Parse to List combine links
+				
+				List<String> pageUrl = new ArrayList<String>();
+				List<WebElement> content = driver.findElements(By.xpath(xpath));
+				for (WebElement data : content) {
+					pageUrl.add(data.getAttribute("href"));
+				}
+
+				for (String str : pageUrl) {
+					System.out.println(str);
+				}
+				List<WebElement> nextPages = driver.findElements(By.xpath(nextPage));
+				for (WebElement data : nextPages) {
+					System.out.println(data.getAttribute("href"));
+				}
+				String numNextPage = "";
+				if (nextPages.size() > 1) {
+					numNextPage = nextPages.get(1).getAttribute("href");
+				} else {
+					numNextPage = nextPages.get(0).getAttribute("href");
+				}
+				if (numNextPage.indexOf("http") == -1) {
+					numNextPage = url + numNextPage;
+				}
+				
+				// Add New
+				CommonUtils utils = new CommonUtils();
+						
+				numNextPage = utils.nextPage(numNextPage);
+				driver.close();
+				System.out.println("NEXTPAGE:" + numNextPage);
+
+//				if (numNextPage.charAt(0) == '/') {
+//					StringBuilder sb = new StringBuilder(numNextPage);
+//					sb.deleteCharAt(0);
+//					numNextPage = sb.toString();
+//				}
+				
+				
+//				int end = numNextPage.indexOf("/");
+//				if (end <= 0) {
+//					String lastChar = numNextPage.substring(nextPage.length() - 1);
+//					end = numNextPage.lastIndexOf(lastChar);
+//					next = numNextPage.substring(0, end + 1);
+//				} else {
+//					next = numNextPage.substring(0, end);
+//				}
+				next="&"+numNextPage;
+
+				System.out.println(next);
 			}
 			System.out.println("Next Page: " + next);
 			// get numNextPage
@@ -559,8 +1026,6 @@ public class CrawlerController {
 				PageDTO page = new PageDTO();
 				page.getPages();
 
-			} else {
-				System.out.println("Khac NULL");
 			}
 			boolean exist = false;
 			List<PageDTO> checkExist = pages.getConfig();
@@ -587,6 +1052,7 @@ public class CrawlerController {
 				session.setAttribute("MESSAGE", "Page configuration fails!");
 				return "errorPage";
 			}
+			
 		}
 		if (btnAction.equals("AddNewConfiguration")) {
 			HttpSession session = request.getSession();
@@ -615,8 +1081,6 @@ public class CrawlerController {
 				ConfigDTO config = new ConfigDTO();
 				config.getConfigs();
 
-			} else {
-				System.out.println("Khac NULL");
 			}
 			boolean exist = false;
 			List<ConfigDTO> checkExist = configs.getConfig();
