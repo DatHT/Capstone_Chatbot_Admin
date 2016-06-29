@@ -1,3 +1,19 @@
+function showAddModal() {
+    $('#myModal').modal('show');
+}
+
+function showUpdateModal(productId, addressId, productName, addressName, urlRelate, rate, restaurantName, districtName) {
+    $('#updateProductId').val(productId);
+    $('#updateAddressId').val(addressId);
+    $('#updateName').val(productName);
+    $('#updateAddress').val(addressName);
+    $('#updateRelatedUrl').val(urlRelate);
+    $('#updateRating').val(rate);
+    $('#updateRestaurant').val(restaurantName);
+    $('#updateDistrict').val(districtName);
+    $('#updateModal').modal('show');
+}
+
 function validName() {
     var value = $("#name").val();
     if (value.length < 1) {
@@ -68,7 +84,7 @@ function validRelatedUrl() {
     return 1;
 }
 
-function validOnSubmit() {
+function validOnSubmit(formId) {
     var counter = 0;
 
     if (validName() == 0) {
@@ -92,6 +108,6 @@ function validOnSubmit() {
     }
 
     if (counter == 0) {
-        $("#add-form").submit();
+        $(formId).submit();
     }
 }

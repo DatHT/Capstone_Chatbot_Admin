@@ -6,6 +6,14 @@ package com.psib.controller;
 import java.util.Collections;
 import java.util.List;
 
+import com.psib.common.DatabaseException;
+import com.psib.common.JsonParser;
+import com.psib.dto.ProductAddressDto;
+import com.psib.dto.ProductDto;
+import com.psib.model.District;
+import com.psib.model.Product;
+import com.psib.model.ProductAddress;
+import com.psib.service.IProductManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +38,7 @@ public class ProductController {
 
     private static final Logger LOG = Logger.getLogger(ProductController.class);
 
-	private static final String ERROR = null;
+    private static final String ERROR = "ERROR";
 
     @Autowired
     private IProductManager productManager;
@@ -86,7 +94,7 @@ public class ProductController {
         LOG.info("[addProduct] Start");
         ModelAndView model = new ModelAndView("redirect:product");
         try {
-            
+
 
             int result = productManager.insertProduct(name, address, district, rating, restaurant, relatedUrl, file);
 
@@ -103,10 +111,50 @@ public class ProductController {
             }
 
             LOG.info("[addProduct] End");
-		} catch (Exception e) {
-			//model.addAttribute(ERROR, e.getMessage());
-		}
-		return model;
+        } catch (DatabaseException e) {
+            LOG.error("[addProduct] DatabaseException: " + e.getMessage());
+            model = new ModelAndView("redirect:error");
+            model.addObject(ERROR, e.getMessage());
+            return model;
+        }
+        return model;
+
+    }
+
+    @RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelAndView updateProduct(@RequestParam(name = "name") String name,
+                                      @RequestParam(name = "address") String address, @RequestParam(name = "district") String district,
+                                      @RequestParam(name = "rating") String rating, @RequestParam(name = "restaurant") String restaurant,
+                                      @RequestParam(name = "relatedUrl") String relatedUrl,
+                                      @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        LOG.info("[updateProduct] Start");
+        ModelAndView model = new ModelAndView("redirect:product");
+        try {
+
+
+            int result = productManager.insertProduct(name, address, district, rating, restaurant, relatedUrl, file);
+
+            if (result == 0) {
+                redirectAttributes.addFlashAttribute("addResult", false);
+                redirectAttributes.addFlashAttribute("name", name);
+                redirectAttributes.addFlashAttribute("address", address);
+                redirectAttributes.addFlashAttribute("district", district);
+                redirectAttributes.addFlashAttribute("rating", rating);
+                redirectAttributes.addFlashAttribute("restaurant", restaurant);
+                redirectAttributes.addFlashAttribute("relatedUrl", relatedUrl);
+            } else {
+                redirectAttributes.addFlashAttribute("addResult", true);
+            }
+
+            LOG.info("[updateProduct] End");
+        } catch (DatabaseException e) {
+            LOG.error("[addProduct] DatabaseException: " + e.getMessage());
+            model = new ModelAndView("redirect:error");
+            model.addObject(ERROR, e.getMessage());
+            return model;
+        }
+        return model;
 
     }
 
