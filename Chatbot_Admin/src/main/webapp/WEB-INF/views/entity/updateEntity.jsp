@@ -142,62 +142,74 @@
                         <c:if test="${addResult != false}">
                             <%--Name--%>
                             <div id="div-name">
-                                <label>Name</label>
-                                <input id="name" name="name"
-                                       autocomplete="off" class="form-control"
-                                       onblur="validName()"
-                                       onkeyup="validName()">
+                                <div class="fg-line">
+                                    <label>Name</label>
+                                    <input id="name" name="name"
+                                           autocomplete="off" class="form-control input"
+                                           onblur="validName()"
+                                           onkeyup="validName()">
+                                </div>
                                 <small id="error-name" class="help-block"></small>
                             </div>
 
                             <%--Address--%>
                             <div id="div-address">
                                 <label>Address</label>
-                                <input id="address" name="address"
-                                       autocomplete="off" class="form-control"
-                                       onblur="validAddress()"
-                                       onkeyup="validAddress()">
+                                <div class="fg-line">
+                                    <input id="address" name="address"
+                                           autocomplete="off" class="form-control"
+                                           onblur="validAddress()"
+                                           onkeyup="validAddress()">
+                                </div>
                                 <small id="error-address" class="help-block"></small>
                             </div>
 
                             <%--District--%>
                             <div id="div-district">
                                 <label>District</label><br>
-                                <select id="district"
-                                        name="district" class="form-control">
-                                    <c:forEach items="${districtList}" var="district">
-                                        <option value="${district.id}">${district.name}</option>
-                                    </c:forEach>
-                                </select>
+                                <div class="fg-line">
+                                    <select id="district"
+                                            name="district" class="form-control">
+                                        <c:forEach items="${districtList}" var="district">
+                                            <option value="${district.id}">${district.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
                             </div>
 
                             <%--Rating--%>
                             <div id="div-rating">
                                 <label>Rating</label>
-                                <input id="rating" name="rating"
-                                       autocomplete="off" class="form-control"
-                                       onblur="validRating()"
-                                       onkeyup="validRating()">
+                                <div class="fg-line">
+                                    <input id="rating" name="rating"
+                                           autocomplete="off" class="form-control"
+                                           onblur="validRating()"
+                                           onkeyup="validRating()">
+                                </div>
                                 <small id="error-rating" class="help-block"></small>
                             </div>
 
                             <%--Restaurant--%>
                             <div id="div-restaurant">
                                 <label>Restaurant</label>
-                                <input id="restaurant" name="restaurant"
-                                       autocomplete="off" class="form-control"
-                                       onblur="validRestaurant()"
-                                       onkeyup="validRestaurant()">
+                                <div class="fg-line">
+                                    <input id="restaurant" name="restaurant"
+                                           autocomplete="off" class="form-control"
+                                           onblur="validRestaurant()"
+                                           onkeyup="validRestaurant()">
+                                </div>
                                 <small id="error-restaurant" class="help-block"></small>
                             </div>
 
                             <%--Related Url--%>
                             <div id="div-relatedUrl">
                                 <label>Related Url</label>
-                                <input id="relatedUrl"
-                                       name="relatedUrl" autocomplete="off" class="form-control"
-                                       onblur="validRelatedUrl()"
-                                       onkeyup="validRelatedUrl()">
+                                <div class="fg-line">
+                                    <input id="relatedUrl"
+                                           name="relatedUrl" autocomplete="off" class="form-control"
+                                           onblur="validRelatedUrl()"
+                                           onkeyup="validRelatedUrl()">
+                                </div>
                                 <small id="error-relatedUrl" class="help-block"></small>
                             </div>
 
@@ -210,67 +222,79 @@
 
                             <%--Name--%>
                             <div id="div-name">
-                                <label>Name</label>
-                                <input id="name" name="name" value="${name}"
-                                       autocomplete="off" class="form-control"
-                                       onblur="validName()"
-                                       onkeyup="validName()">
+                                <div class="fg-line">
+                                    <label>Name</label>
+                                    <input id="name" name="name" value="${name}"
+                                           autocomplete="off" class="form-control"
+                                           onblur="validName()"
+                                           onkeyup="validName()">
+                                </div>
                                 <small id="error-name" class="help-block"></small>
                             </div>
 
                             <%--Address--%>
                             <div id="div-address">
                                 <label>Address</label>
-                                <input id="address" name="address" value="${address}"
-                                       autocomplete="off" class="form-control"
-                                       onblur="validAddress()"
-                                       onkeyup="validAddress()">
+                                <div class="fg-line">
+                                    <input id="address" name="address" value="${address}"
+                                           autocomplete="off" class="form-control"
+                                           onblur="validAddress()"
+                                           onkeyup="validAddress()">
+                                </div>
                                 <small id="error-address" class="help-block"></small>
                             </div>
 
                             <%--District--%>
                             <div id="div-district">
                                 <label>District</label><br>
-                                <select id="district"
-                                        name="district" class="form-control">
-                                    <c:forEach items="${districtList}" var="district">
-                                        <c:if test="${districtId == district.id}">
-                                            <option value="${district.id}" selected>${district.name}</option>
-                                        </c:if>
-                                        <c:if test="${districtId != district.id}">
-                                            <option value="${district.id}">${district.name}</option>
-                                        </c:if>
-                                    </c:forEach>
-                                </select>
+                                <div class="fg-line">
+                                    <select id="district"
+                                            name="district" class="form-control">
+                                        <c:forEach items="${districtList}" var="district">
+                                            <c:if test="${districtId == district.id}">
+                                                <option value="${district.id}" selected>${district.name}</option>
+                                            </c:if>
+                                            <c:if test="${districtId != district.id}">
+                                                <option value="${district.id}">${district.name}</option>
+                                            </c:if>
+                                        </c:forEach>
+                                    </select>
+                                </div>
                             </div>
 
                             <%--Rating--%>
                             <div id="div-rating">
                                 <label>Rating</label>
-                                <input id="rating" name="rating" value="${rating}"
-                                       autocomplete="off" class="form-control"
-                                       onblur="validRating()"
-                                       onkeyup="validRating()">
+                                <div class="fg-line">
+                                    <input id="rating" name="rating" value="${rating}"
+                                           autocomplete="off" class="form-control"
+                                           onblur="validRating()"
+                                           onkeyup="validRating()">
+                                </div>
                                 <small id="error-rating" class="help-block"></small>
                             </div>
 
                             <%--Restaurant--%>
                             <div id="div-restaurant">
                                 <label>Restaurant</label>
-                                <input id="restaurant" name="restaurant" value="${restaurant}"
-                                       autocomplete="off" class="form-control"
-                                       onblur="validRestaurant()"
-                                       onkeyup="validRestaurant()">
+                                <div class="fg-line">
+                                    <input id="restaurant" name="restaurant" value="${restaurant}"
+                                           autocomplete="off" class="form-control"
+                                           onblur="validRestaurant()"
+                                           onkeyup="validRestaurant()">
+                                </div>
                                 <small id="error-restaurant" class="help-block"></small>
                             </div>
 
                             <%--Related Url--%>
                             <div id="div-relatedUrl">
                                 <label>Related Url</label>
-                                <input id="relatedUrl" name="relatedUrl" value="${relatedUrl}"
-                                       autocomplete="off" class="form-control"
-                                       onblur="validRelatedUrl()"
-                                       onkeyup="validRelatedUrl()">
+                                <div class="fg-line">
+                                    <input id="relatedUrl" name="relatedUrl" value="${relatedUrl}"
+                                           autocomplete="off" class="form-control"
+                                           onblur="validRelatedUrl()"
+                                           onkeyup="validRelatedUrl()">
+                                </div>
                                 <small id="error-relatedUrl" class="help-block"></small>
                             </div>
 
