@@ -2,7 +2,7 @@
  * 
  */
 $(document).ready(function(){
-	$("#data-table-basic").bootgrid({
+	$("#user-data-table").bootgrid({
 		css: {
 				icon: 'zmdi icon',
 				iconColumns: 'zmdi-view-module',

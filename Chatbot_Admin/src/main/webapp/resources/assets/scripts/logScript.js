@@ -4,6 +4,104 @@
 
 var listPhrase = {};
 
+var xmlhttp;
+if (window.XMLHttpRequest) {
+	xmlhttp = new XMLHttpRequest();
+} else
+	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+xmlhttp.onreadystatechange = function() {
+	if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+		var data = JSON.parse(xmlhttp.responseText);
+		var listContent = data.contents;
+
+		for (var int = 0; int < listContent.length; int++) {
+			if (listContent[int].errCode == '300') {
+				createRowNoEntry("no-entry-table-body",
+						listContent[int]);
+			} else if (listContent[int].errCode == '404') {
+				createRowNotFound("not-found-table-body",
+						listContent[int]);
+			}
+		}
+		$('#no-entry-data-table').bootgrid({
+			rowCount: 5,
+            css: {
+                icon: 'zmdi icon',
+                iconColumns: 'zmdi-view-module',
+                iconDown: 'zmdi-expand-more',
+                iconRefresh: 'zmdi-refresh',
+                iconUp: 'zmdi-expand-less'
+            },
+            formatters: {
+                "commands": function (column, row) {
+                    return "<button data-row-id='" + row.usersay + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
+                    "   <button class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+                }
+            }
+        }).on("loaded.rs.jquery.bootgrid", function() {
+            /* Executes after data is loaded and rendered */
+            $('#no-entry-data-table').find(".action-add").on("click", function(e) {
+            	$("#myModal").modal();
+            	var listPhraseContent = document.getElementById('list-phrase');
+            	// Get the modal
+        		var modal = document.getElementById('myModal');
+        		var pContainer = document.getElementById('user-say-container');
+        		var p = document.getElementById('user-say-in-modal').innerHTML = $(this).data("row-id");
+        		modal.style.display = "block";
+        		// Get the <span> element that closes the modal
+        		var span = document.getElementsByClassName("close")[0];
+
+        		pContainer.addEventListener('mouseup', function() {
+        			var text = getTextSelection().trim();
+        			if (text && listPhrase[text] === undefined) {
+        				listPhraseContent.appendChild(createPhraseElement(text));
+        			}
+        		});
+        		
+        		var saveButton = document.getElementById('save-button');
+        		checkSaveButtonState();
+        		
+        		span.onclick = function() {
+        			closeModalDialog();
+        		}
+        		// When the user clicks anywhere outside of the modal,
+        		// close it
+        		window.onclick = function(event) {
+        			if (event.target == modal) {
+        				closeModalDialog();
+        			}
+        		}
+            }).end().find(".action-delete").on("click", function(e)
+            {
+                alert("You pressed delete on row: ");
+            });
+        });
+		
+		$('#not-found-data-table').bootgrid({
+			rowCount: 5,
+            css: {
+                icon: 'zmdi icon',
+                iconColumns: 'zmdi-view-module',
+                iconDown: 'zmdi-expand-more',
+                iconRefresh: 'zmdi-refresh',
+                iconUp: 'zmdi-expand-less'
+            },
+            formatters: {
+                "addProduct": function (column, row) {
+                    return "<button data-row-food='" + row.food + "' data-row-location='" + row.location + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add-product'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>";
+                }
+            }
+        }).on("loaded.rs.jquery.bootgrid", function() {
+        	/* Executes after data is loaded and rendered */
+            $('#not-found-data-table').find(".action-add-product").on("click", function(e) {
+            	window.location.href= 'product?txtDistrict=' + $(this).data("row-location") + "&txtFood=" + $(this).data("row-food");
+            });
+        });
+	}
+};
+xmlhttp.open('GET', '/chatbot_admin/getLog', true);
+xmlhttp.send(null);
+
 function updateLog() {
 	var xmlhttp;
 	if (window.XMLHttpRequest) {
@@ -27,66 +125,20 @@ function updateLog() {
 function createRowNoEntry(id, data) {
 	var tableBody = document.getElementById(id);
 	var tr = document.createElement('tr');
-	tr.setAttribute("data-toggle", "modal");
-	tr.setAttribute("data-target", "#myModal");
 	
 	var totalCount = data.totalCount;
 	var userSay = data.userSay;
-	if (totalCount) {
-		userSay += " ("+ totalCount +")";
-	}
+
 	var tdUserSay = document.createElement('td');
 	var textUserSay = document.createTextNode(userSay);
-	
-	var deleteButton = document.createElement('button');
-	deleteButton.className = "btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float";
-	deleteButton.style.margin = '5px';
-	var iButton = document.createElement('i');
-	iButton.className = "zmdi zmdi-delete zmdi-hc-fw";
-	deleteButton.appendChild(iButton);
-	
-	deleteButton.onclick = function(event) {
-		//alert(event.target);
-	}
-
-	var listPhraseContent = document.getElementById('list-phrase');
-
-	tr.addEventListener('click', function(event) {
-		// Get the modal
-		var modal = document.getElementById('myModal');
-		var pContainer = document.getElementById('user-say-container');
-		var p = document.getElementById('user-say-in-modal').innerHTML = data.userSay;
-		modal.style.display = "block";
-		// Get the <span> element that closes the modal
-		var span = document.getElementsByClassName("close")[0];
-
-		pContainer.addEventListener('mouseup', function() {
-			var text = getTextSelection().trim();
-			if (text && listPhrase[text] === undefined) {
-				listPhraseContent.appendChild(createPhraseElement(text));
-			}
-		});
-		
-		var saveButton = document.getElementById('save-button');
-		checkSaveButtonState();
-		
-		span.onclick = function() {
-			closeModalDialog();
-		}
-		// When the user clicks anywhere outside of the modal,
-		// close it
-		window.onclick = function(event) {
-			if (event.target == modal) {
-				closeModalDialog();
-			}
-		}
-	});
-
 	tdUserSay.appendChild(textUserSay);
 	tr.appendChild(tdUserSay);
 	
-	tr.appendChild(deleteButton);
-	
+	var tdCount = document.createElement('td');
+	var numcount = document.createTextNode(totalCount);
+	tdCount.appendChild(numcount);
+	tr.appendChild(tdCount);
+
 	tableBody.appendChild(tr);
 }
 
@@ -139,12 +191,6 @@ function createRowNotFound(id, data) {
 
 	tr.appendChild(tdFood);
 	tr.appendChild(tdLocation);
-	
-	tdAction.appendChild(textAction);
-	tr.appendChild(tdAction);
-	
-	tdIntent.appendChild(textIntent);
-	tr.appendChild(tdIntent);
 
 	tableBody.appendChild(tr);
 }

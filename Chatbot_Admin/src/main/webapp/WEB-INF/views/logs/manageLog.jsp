@@ -58,32 +58,6 @@
 </div>
 
 <div class="card">
-	<script>
-		var xmlhttp;
-		if (window.XMLHttpRequest) {
-			xmlhttp = new XMLHttpRequest();
-		} else
-			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-				var data = JSON.parse(xmlhttp.responseText);
-				var listContent = data.contents;
-
-				for (var int = 0; int < listContent.length; int++) {
-					if (listContent[int].errCode == '300') {
-						createRowNoEntry("no-entry-table-body",
-								listContent[int]);
-					} else if (listContent[int].errCode == '404') {
-						createRowNotFound("not-found-table-body",
-								listContent[int]);
-					}
-				}
-			}
-		};
-		xmlhttp.open('GET', '/chatbot_admin/getLog', true);
-		xmlhttp.send(null);
-	</script>
-
 	<div class="col-lg-6">
 		<!--    Hover Rows  -->
 		<div class="card">
@@ -92,11 +66,12 @@
 			</div>
 			<div class="panel-body">
 				<div class="table-responsive">
-					<table class="table table-striped table-bordered table-hover">
+					<table id="no-entry-data-table" class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
-								<th>User say</th>
-								<th>Delete</th>
+								<th data-column-id="usersay" data-identifier="true">User say</th>
+								<th data-column-id="count">Count</th>
+								<th data-column-id="commands" data-formatter="commands" data-sortable="false">Commands</th>
 							</tr>
 						</thead>
 						<tbody id="no-entry-table-body">
@@ -115,13 +90,12 @@
 			</div>
 			<div class="panel-body">
 				<div class="table-responsive">
-					<table class="table table-hover">
+					<table id="not-found-data-table" class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
-								<th>Food</th>
-								<th>Location</th>
-								<th>Action</th>
-								<th>Intent</th>
+								<th data-column-id="food">Food</th>
+								<th data-column-id="location">Location</th>
+								<th data-column-id="addProduct" data-formatter="addProduct" data-sortable="false">Add product</th>
 							</tr>
 						</thead>
 						<tbody id="not-found-table-body">
@@ -136,8 +110,7 @@
 
 <div>
 	<!--  Modals-->
-	<div class="modal" id="myModal" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div id="user-say-container" class="modal-header">
@@ -148,14 +121,6 @@
 				<div class="modal-body">
 					<div id="list-phrase"></div>
 				</div>
-				<%-- <div class="modal-footer">
-					<select class="selectpicker" id="selectIntent">
-						<option value="">--------Please select--------</option>
-						<c:forEach var="intent" items="${intents}">
-							<option value="${intent.id}">${intent.name}</option>
-						</c:forEach>
-					</select>
-				</div> --%>
 				<div class="modal-footer">
 					<div id="select_phrase_guide" style="display: none;"
 						class="col-sm-8 m-b-25">
