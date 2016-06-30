@@ -49,7 +49,7 @@
 		<div class="row">
 			<div class="col-sm-3 m-b-15">
 				<button class="btn btn-default btn-icon-text waves-effect"
-					onclick="updateLog()">
+					onclick="updateLog('${paramName}', '${token}')">
 					<i class="zmdi zmdi-refresh"></i> Manual Update
 				</button>
 			</div>

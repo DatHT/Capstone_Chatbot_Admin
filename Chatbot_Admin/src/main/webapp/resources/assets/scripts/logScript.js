@@ -102,7 +102,7 @@ xmlhttp.onreadystatechange = function() {
 xmlhttp.open('GET', '/chatbot_admin/getLog', true);
 xmlhttp.send(null);
 
-function updateLog() {
+function updateLog(param, token) {
 	var xmlhttp;
 	if (window.XMLHttpRequest) {
 		xmlhttp = new XMLHttpRequest();
@@ -119,7 +119,7 @@ function updateLog() {
 	}
 
 	xmlhttp.open('GET', '/chatbot_admin/updateLog', false);
-	xmlhttp.send(null);
+	xmlhttp.send(param + "=" + token);
 }
 
 function createRowNoEntry(id, data) {

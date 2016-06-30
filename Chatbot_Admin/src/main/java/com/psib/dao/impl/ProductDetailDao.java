@@ -1,13 +1,15 @@
 package com.psib.dao.impl;
 
-import com.psib.dao.IProductDetailDao;
-import com.psib.model.ProductDetail;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
-import java.util.List;
+import com.psib.dao.IProductDetailDao;
+import com.psib.model.ProductDetail;
 
 @Repository
 public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IProductDetailDao {
@@ -22,6 +24,12 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
         setClazz(ProductDetail.class);
     }
 
+    @Override
+    @Transactional
+    public ProductDetail getProductDetailById(long productId) {
+    	return getById(productId);
+    }
+    
     @Override
     @Transactional
     public List<ProductDetail> getAllItem() {

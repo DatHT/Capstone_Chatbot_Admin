@@ -9,16 +9,18 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.psib.common.JsonParser;
 import com.psib.common.restclient.RestfulException;
 import com.psib.constant.StatusCode;
+import com.psib.dao.IProductDetailDao;
 import com.psib.dto.jsonmapper.Entry;
+import com.psib.model.ProductDetail;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
 import com.psib.util.CommonUtils;
@@ -26,6 +28,9 @@ import com.psib.util.FileUtils;
 
 @Service
 public class LogManager implements ILogManager {
+	@Autowired
+	private IProductDetailDao productDetailDao;
+
 	@Autowired
 	private ILexicalCategoryManager lexicalCategoryManager;
 
@@ -37,6 +42,9 @@ public class LogManager implements ILogManager {
 
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
+	private static int REPORT_CODE = 400;
+	private static int TRAINING_CODE = 202;
+	private static int FEEDBACK_CODE = 609;
 
 	private static String chatLogsFolder = "G:/OneDrive/Documents/FPT/NewFPTOnedrive/Semester9/Capstone/Chatbot/repository/engine/Capstone_Chatbot_Engine/bin";
 	private static String logPath = chatLogsFolder + "/log";
@@ -48,8 +56,6 @@ public class LogManager implements ILogManager {
 	private static String errCode = "errCode";
 	private static String userSay = "userSay";
 	private static String contexts = "contexts";
-	private static String action = "action";
-	private static String intentName = "intentName";
 
 	private static String count = "count";
 
@@ -107,20 +113,24 @@ public class LogManager implements ILogManager {
 
 			if (statusCode == NOT_FOUND_CODE) {
 				log = this.getNotFoundLog(tempJson);
+				log.put(id, tempJson.get(id));
 			} else if (statusCode == NO_ENTRY_CODE) {
 				log = this.getNoEntryLog(tempJson);
+				log.put(id, tempJson.get(id));
+			} else if (statusCode == REPORT_CODE) {
+				log = this.getReportLog(tempJson);
+			} else if (statusCode == TRAINING_CODE) {
+				log = this.getTrainingLog(tempJson);
+			} else if (statusCode == FEEDBACK_CODE) {
+				log = this.getFeedbackLog(tempJson);
 			}
 			if (log == null) {
 				continue;
 			}
 
-			log.put(id, tempJson.get(id));
 			log.put(errCode, statusCode);
 
 			if (!checkExistLog(jsonArray, log)) {
-				log.put(action, tempJson.getJSONObject("result").get(action));
-				log.put(intentName, tempJson.getJSONObject("result").getJSONObject("metadata").get(intentName));
-
 				jsonArray.put(log);
 			}
 		}
@@ -209,6 +219,40 @@ public class LogManager implements ILogManager {
 		return jsonObject;
 	}
 
+	private JSONObject getReportLog(JSONObject log) throws JSONException {
+
+		long productId = log.getLong("itemId");
+		long addressId = log.getLong("addressId");
+
+		ProductDetail productDetail = productDetailDao.getProductDetailById(productId);
+
+		JSONObject jsonObject = null;
+		if (productDetail != null) {
+			String stringJsonProductAddress = JsonParser.toJson(productDetail);
+			jsonObject = new JSONObject(stringJsonProductAddress);
+		}
+
+		return jsonObject;
+	}
+
+	private JSONObject getTrainingLog(JSONObject log) throws JSONException {
+		String userSay = log.getJSONObject("result").getString("resolvedQuery");
+		String patternStr = "train:";
+		
+		String train = userSay.substring(patternStr.length());
+		
+		return new JSONObject().put("train", train);
+	}
+	
+	private JSONObject getFeedbackLog(JSONObject log) throws JSONException {
+		String userSay = log.getJSONObject("result").getString("resolvedQuery");
+		String patternStr = "feedback:";
+		
+		String feedback = userSay.substring(patternStr.length());
+		
+		return new JSONObject().put("feedback", feedback);
+	}
+
 	private List<String> getNewFileLog() throws IOException, JSONException {
 		List<String> newFileLogPath = new ArrayList<String>();
 
@@ -272,6 +316,13 @@ public class LogManager implements ILogManager {
 						isExist = true;
 					}
 
+				} else if (statusCode == REPORT_CODE) {
+					isExist = jsonObject.get("productId").equals(log.get("productId"))
+							&& jsonObject.get("addressId").equals(log.get("addressId"));
+				} else if (statusCode == TRAINING_CODE) {
+					isExist = jsonObject.get("train").equals(log.get("train"));
+				} else if (statusCode == FEEDBACK_CODE) {
+					isExist = jsonObject.get("feedback").equals(log.get("feedback"));
 				}
 			}
 			i++;

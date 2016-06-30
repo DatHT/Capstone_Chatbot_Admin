@@ -9,49 +9,63 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "ProductDetail")
 public class ProductDetail implements Serializable {
 
 	@Id
 	@Column(name = "productId", nullable = false)
+	@JsonProperty("districtName")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long productId;
 
 	@Column(name = "productName", nullable = false, length = 4000)
+	@JsonProperty("productName")
 	private String productName;
 
 	@Column(name = "addressName", nullable = false, length = 4000)
+	@JsonProperty("addressName")
 	private String addressName;
 
 	@Column(name = "districtName", nullable = false, length = 128)
+	@JsonProperty("districtName")
 	private String districtName;
 
 	@Column(name = "latitude", nullable = false)
+	@JsonProperty("districtName")
 	private double latitude;
 
 	@Column(name = "longitude", nullable = false)
+	@JsonProperty("districtName")
 	private double longitude;
 
 	@Column(name = "numOfSearch", columnDefinition = "Integer default '0'")
+	@JsonProperty("numOfSearch")
 	private int numOfSearch;
 
 	@Column(name = "rate")
 	private double rate;
 
 	@Column(name = "restaurantName")
+	@JsonProperty("restaurantName")
 	private String restaurantName;
 
 	@Column(name = "thumbpath")
+	@JsonProperty("districtName")
 	private String thumbPath;
 
 	@Column(name = "urlrelate", nullable = false, length = 500)
+	@JsonProperty("districtName")
 	private String urlRelate;
 
 	@Column(name = "addressId", nullable = false)
+	@JsonProperty("districtName")
 	private long addressId;
 
 	@Column(name = "source")
+	@JsonProperty("districtName")
 	private String source;
 
 	public ProductDetail() {
