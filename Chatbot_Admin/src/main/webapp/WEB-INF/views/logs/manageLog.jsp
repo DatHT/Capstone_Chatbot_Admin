@@ -107,7 +107,30 @@
 		<!-- End  Hover Rows  -->
 	</div>
 </div>
-
+<div class="col-lg-12">
+<div class="card">
+			<div class="card-header">
+				<h2 id="tableReport">Reported product</h2>
+			</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table id="reported-data-table" class="table table-striped table-bordered table-hover">
+						<thead>
+							<tr>
+								<th data-column-id="productId" data-identifier="true">Product ID</th>
+								<th data-column-id="addressId" data-identifier="true">Address ID</th>
+								<th data-column-id="productName">Product</th>
+								<th data-column-id="districtName">District</th>
+								<th data-column-id="restaurantName">Restaurant</th>
+							</tr>
+						</thead>
+						<tbody id="reported-product-table-body">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+</div>
 <div>
 	<!--  Modals-->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">

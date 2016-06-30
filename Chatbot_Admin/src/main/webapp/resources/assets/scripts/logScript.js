@@ -21,6 +21,8 @@ xmlhttp.onreadystatechange = function() {
 			} else if (listContent[int].errCode == '404') {
 				createRowNotFound("not-found-table-body",
 						listContent[int]);
+			} else if (listContent[int].errCode == '400') {
+				createReportedProduct("reported-product-table-body", listContent[int]);
 			}
 		}
 		$('#no-entry-data-table').bootgrid({
@@ -97,6 +99,17 @@ xmlhttp.onreadystatechange = function() {
             	window.location.href= 'product?txtDistrict=' + $(this).data("row-location") + "&txtFood=" + $(this).data("row-food");
             });
         });
+		
+		$('#reported-data-table').bootgrid({
+			rowCount: 5,
+            css: {
+                icon: 'zmdi icon',
+                iconColumns: 'zmdi-view-module',
+                iconDown: 'zmdi-expand-more',
+                iconRefresh: 'zmdi-refresh',
+                iconUp: 'zmdi-expand-less'
+            }
+        })
 	}
 };
 xmlhttp.open('GET', '/chatbot_admin/getLog', true);
@@ -192,6 +205,38 @@ function createRowNotFound(id, data) {
 	tr.appendChild(tdFood);
 	tr.appendChild(tdLocation);
 
+	tableBody.appendChild(tr);
+}
+
+function createReportedProduct(id, data) {
+	var tableBody = document.getElementById(id);
+	var tr = document.createElement('tr');
+	
+	var tdProductId = document.createElement('td');
+	var txtProductId = document.createTextNode(data.productId);
+	tdProductId.appendChild(txtProductId);
+	tr.appendChild(tdProductId);
+	
+	var tdAddressId = document.createElement('td');
+	var txtAddressId = document.createTextNode(data.addressId);
+	tdAddressId.appendChild(txtAddressId);
+	tr.appendChild(tdAddressId);
+	
+	var tdProductName = document.createElement('td');
+	var txtProductName = document.createTextNode(data.productName);
+	tdProductName.appendChild(txtProductName);
+	tr.appendChild(tdProductName);
+	
+	var tdDistrictName = document.createElement('td');
+	var txtDistrictName = document.createTextNode(data.districtName);
+	tdDistrictName.appendChild(txtDistrictName);
+	tr.appendChild(tdDistrictName);
+	
+	var tdRestaurantName = document.createElement('td');
+	var txtRestaurantName = document.createTextNode(data.restaurantName);
+	tdRestaurantName.appendChild(txtRestaurantName);
+	tr.appendChild(tdRestaurantName);
+	
 	tableBody.appendChild(tr);
 }
 

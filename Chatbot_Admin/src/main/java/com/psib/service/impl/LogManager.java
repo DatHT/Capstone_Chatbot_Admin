@@ -205,6 +205,7 @@ public class LogManager implements ILogManager {
 		arrId.put(idObj);
 
 		jsonObject.put(count, arrId);
+		jsonObject.put("totalCount", arrId.length());
 
 		return jsonObject;
 	}
