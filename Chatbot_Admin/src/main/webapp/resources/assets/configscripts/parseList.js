@@ -234,7 +234,7 @@ function next() {
 }
 
 function back() {
-    if (count >= 1) {
+	if (count >= 1) {
         if (flagClick == 1) {
             deleteRow('tbItems', 1);
             flagClick = 0;
@@ -327,9 +327,9 @@ function commonXpath(xpath1) {
 function backProgressBar() {
     step--;
     $('.progressRecipe .circle:nth-of-type(' + step + ')').removeClass('active');
-    $('.progressRecipe .circle:nth-of-type(' + (step - 1) + ') .labelRecipe').html(step - 4);
+    $('.progressRecipe .circle:nth-of-type(' + (step - 1) + ') .labelRecipe').html(step - 2);
     $('.progressRecipe .circle:nth-of-type(' + (step - 1) + ')').addClass('active').removeClass('done');
-    if (indexComplete[step - 4] != "") {
+    if (indexComplete[step - 2] != "") {
         $('.progressRecipe .circle:nth-of-type(' + step + ')').addClass('done');
     }
 //    if(indexComplete[step-3]==1)

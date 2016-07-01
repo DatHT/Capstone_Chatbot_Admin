@@ -89,7 +89,7 @@
 						<div id="bg" class="popup_bg"></div>
 						<div class="col-sm-12 scollchange" style="">
 							<iframe style="width: 100%;"
-								sandbox="allow-same-origin allow-form" width="700" height="900"
+								sandbox="allow-same-origin" width="700" height="900"
 								id="myframe" src="resources/tmp.html"> </iframe>
 						</div>
 						<table id="tbMain">
@@ -122,6 +122,13 @@ $(window).scroll(function(e) {
             'margin-top': '250px',
             'positon':'absolute'
         });
+        $('.popup').css({
+        	'z-index':'100',
+        	'position': 'fixed',
+            'margin-top': '250px',
+            'margin-left': '300px',
+            'positon':'absolute'
+        });
     } 
     else if ($(this).scrollTop() < scroller_anchor && $('.scroller').css('position') != 'relative') 
     {    // If the user has scrolled back to the location above the scroller anchor place it back into the content.
@@ -132,6 +139,7 @@ $(window).scroll(function(e) {
         // Change the CSS and put it back to its original position.
         $('.scroller').css({
             'position': 'relative',
+            'z-index':'100',
             'width':'100%',
         });
         $('.scollchange').css({

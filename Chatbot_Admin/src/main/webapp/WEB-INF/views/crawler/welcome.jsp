@@ -54,7 +54,7 @@
 			<!--    Hover Rows  -->
 			<div class="card">
 				<div class="card-header">
-					<h2 id="tableHeader">Set Parser Config</h2>
+					<h2 id="tableHeader">Set Page Details</h2>
 				</div>
 				<div class="panel-body">
 					<form action="processServlet"
@@ -66,7 +66,7 @@
 						</div>
 						<button type="submit" id="confirmation" class="btn btn-primary"
 							value="Set Parser Config" name="btnAction"
-							onclick="getVal(this.value)">Set Parser Config</button>
+							onclick="getVal(this.value)">Set Page Details</button>
 						<!-- 							<input type="submit" id="confirmation" -->
 						<!-- 								class="btn btn-primary m-b-10" value="Set List Page" -->
 						<!-- 								name="btnAction" onclick="getVal(this.value)" /> -->
@@ -89,7 +89,7 @@
 					<h2 id="tableHeader">Static Parse</h2>
 				</div>
 				<div class="panel-body">
-					<form class="form-horizontal tasi-form" action="forceParse"
+					<form class="form-horizontal tasi-form" action="staticParse"
 						id="parseForm">
 						<div class="form-group">
 							<label class="col-sm-3 control-label" for="selectSite"
@@ -132,11 +132,13 @@
 									name="txtNoPage" id="input-no" onchange="changeNum()" />
 							</div>
 						</div>
-						<button type="submit" data-toggle="modal" href="#parsing"
-							class="btn btn-primary" value="StaticParse" name="btnAction">StaticParse</button>
+						<div>
+							<button type="submit" data-toggle="modal" href="#parsing" class="btn btn-primary"
+								value="StaticParse" name="btnAction">StaticParse</button>
+						</div>
 					</form>
 					<!-- Modal -->
-					<form action="forceParse">
+					<form action="staticParse">
 						<div aria-hidden="true" aria-labelledby="myModalLabel"
 							role="dialog" tabindex="-1" id="parsing" class="modal fade">
 							<div class="modal-dialog">
@@ -158,7 +160,7 @@
 									</div>
 									<div class="modal-footer">
 
-										<button class="btn btn-info" type="submit" value="STOP"
+										<button class="btn btn-primary" type="submit" value="STOP"
 											name="btnAction">STOP</button>
 									</div>
 								</div>
@@ -177,7 +179,7 @@
 					<h2 id="tableHeader">Dynamic Parse</h2>
 				</div>
 				<div class="panel-body">
-					<form class="form-horizontal tasi-form" action="forceParse"
+					<form class="form-horizontal tasi-form" action="dynamicParse"
 						id="parseForm">
 						<div class="form-group">
 							<label class="col-sm-3 control-label" for="selectPage"
@@ -219,7 +221,7 @@
 							value="DynamicParse" name="btnAction">DynamicParse</button>
 					</form>
 					<!-- Modal -->
-					<form action="forceParse">
+					<form action="dynamicParse">
 						<div aria-hidden="true" aria-labelledby="myModalLabel"
 							role="dialog" tabindex="-1" id="parsing" class="modal fade">
 							<div class="modal-dialog">
@@ -241,7 +243,7 @@
 									</div>
 									<div class="modal-footer">
 
-										<button class="btn btn-info" type="submit" value="STOP"
+										<button class="btn btn-primary" type="submit" value="STOP"
 											name="btnAction">STOP</button>
 									</div>
 								</div>
@@ -255,30 +257,6 @@
 		<!-- End  Hover Rows  -->
 	</div>
 	<!-- Placed js at the end of the document so the pages load faster -->
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-
-			//countTo
-
-			$('.timer').countTo();
-
-			//owl carousel
-
-			$("#news-feed").owlCarousel({
-				navigation : true,
-				slideSpeed : 300,
-				paginationSpeed : 400,
-				singleItem : true,
-				autoPlay : true
-			});
-		});
-
-		$(window).on("resize", function() {
-			var owl = $("#news-feed").data("owlCarousel");
-			owl.reinit();
-		});
-	</script>
 	<script>
 		$("form").find("select").change(function() {
 			$(this).siblings("select").val("");

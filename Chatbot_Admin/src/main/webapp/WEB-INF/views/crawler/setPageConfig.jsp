@@ -118,7 +118,7 @@
 						<div id="popup" class="popup"></div>
 						<div id="bg" class="popup_bg"></div>
 						<div class="col-sm-12 scollchange">
-							<iframe width ="100%" sandbox="allow-same-origin"
+							<iframe width ="100%" sandbox="allow-same-origin allow-form"
 								width="700" height="500" id="myframe" src="resources/tmp.html"
 								onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
 							</iframe>
@@ -151,6 +151,13 @@ $(window).scroll(function(e) {
         $('.scroller_anchor').css('height', '50px');
         $('.scollchange').css({
             'margin-top': '250px',
+            'positon':'absolute'
+        });
+        $('.popup').css({
+        	'z-index':'100',
+        	'position': 'fixed',
+            'margin-top': '250px',
+            'margin-left': '300px',
             'positon':'absolute'
         });
     } 
