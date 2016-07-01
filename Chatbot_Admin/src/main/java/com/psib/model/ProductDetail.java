@@ -10,16 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Product_Address")
-public class ProductAddress implements Serializable {
+@Table(name = "ProductDetail")
+public class ProductDetail implements Serializable {
 
 	@Id
 	@Column(name = "productId", nullable = false)
 	private long productId;
-
-	@Id
-	@Column(name = "addressId", nullable = false)
-	private long addressId;
 
 	@Column(name = "productName", nullable = false, length = 4000)
 	private String productName;
@@ -27,37 +23,44 @@ public class ProductAddress implements Serializable {
 	@Column(name = "addressName", nullable = false, length = 4000)
 	private String addressName;
 
-	@Column(name = "urlrelate", nullable = false, length = 500)
-	private String urlRelate;
-
-	@Column(name = "thumbpath")
-	private String thumbPath;
-
-	@Column(name = "rate")
-	private String rate;
-
-	@Column(name = "numOfSearch", columnDefinition = "Integer default '0'")
-	private int numOfSearch;
-
-	@Column(name = "longitude", nullable = false)
-	private double longitude;
+	@Column(name = "districtName", nullable = false, length = 128)
+	private String districtName;
 
 	@Column(name = "latitude", nullable = false)
 	private double latitude;
 
+	@Column(name = "longitude", nullable = false)
+	private double longitude;
+
+	@Column(name = "numOfSearch", columnDefinition = "Integer default '0'")
+	private int numOfSearch;
+
+	@Column(name = "rate")
+	private double rate;
+
 	@Column(name = "restaurantName")
 	private String restaurantName;
 
-	@Column(name = "districtName", nullable = false, length = 128)
-	private String districtName;
+	@Column(name = "thumbpath")
+	private String thumbPath;
 
-	public ProductAddress() {
+	@Column(name = "urlrelate", nullable = false, length = 500)
+	private String urlRelate;
+
+	@Id
+	@Column(name = "addressId", nullable = false)
+	private long addressId;
+
+	@Column(name = "source")
+	private String source;
+
+	public ProductDetail() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ProductAddress(long productId, long addressId, String productName, String addressName, String urlRelate,
-			String thumbPath, String rate, int numOfSearch, double longitude, double latitude, String restaurantName,
-			String districtName) {
+	public ProductDetail(long productId, long addressId, String productName, String addressName, String urlRelate,
+			String thumbPath, double rate, int numOfSearch, double longitude, double latitude, String restaurantName,
+			String districtName, String source) {
 		super();
 		this.productId = productId;
 		this.addressId = addressId;
@@ -71,6 +74,7 @@ public class ProductAddress implements Serializable {
 		this.latitude = latitude;
 		this.restaurantName = restaurantName;
 		this.districtName = districtName;
+		this.source = source;
 	}
 
 	public long getProductId() {
@@ -121,11 +125,11 @@ public class ProductAddress implements Serializable {
 		this.thumbPath = thumbPath;
 	}
 
-	public String getRate() {
+	public double getRate() {
 		return rate;
 	}
 
-	public void setRate(String rate) {
+	public void setRate(double rate) {
 		this.rate = rate;
 	}
 
@@ -167,6 +171,14 @@ public class ProductAddress implements Serializable {
 
 	public void setDistrictName(String districtName) {
 		this.districtName = districtName;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 }

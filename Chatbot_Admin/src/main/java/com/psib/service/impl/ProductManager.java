@@ -7,7 +7,7 @@ import com.psib.dto.ProductDto;
 import com.psib.model.Address;
 import com.psib.model.District;
 import com.psib.model.Product;
-import com.psib.model.ProductAddress;
+import com.psib.model.ProductDetail;
 import com.psib.service.IProductManager;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
 import com.psib.util.SpringPropertiesUtil;
@@ -59,7 +59,7 @@ public class ProductManager implements IProductManager {
                 .append(" ,sortRate = ").append(sortRate)
                 .append(" ,sortRestaurantName = ").append(sortRestaurantName));
 
-        List<ProductAddress> list;
+        List<ProductDetail> list;
         int start = current * rowCount - rowCount;
 
         list = productAddressDao.getBySearchPhraseAndSort(searchPhrase
@@ -90,7 +90,7 @@ public class ProductManager implements IProductManager {
     }
 
     @Override
-    public int insertProduct(String name, String address, String district, String rating, String restaurant,
+    public int insertProduct(String name, String address, String district, double rating, String restaurant,
                              String relatedUrl, MultipartFile file){
         LOG.info(String.valueOf(new StringBuilder("[insertProduct] Start: name = ").append(name)
                 .append("; address = ").append(address)
@@ -101,7 +101,7 @@ public class ProductManager implements IProductManager {
                 .append("; thumbnail = ").append(file.getOriginalFilename())));
 
         try{
-        ProductAddress productAddress = new ProductAddress();
+        ProductDetail productAddress = new ProductDetail();
         productAddress.setAddressName(address);
         productAddress.setDistrictName(districtDao.getDistrictById(Long.parseLong(district)).getName());
 

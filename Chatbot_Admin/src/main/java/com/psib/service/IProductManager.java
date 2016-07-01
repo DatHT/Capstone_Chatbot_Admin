@@ -7,7 +7,7 @@ import com.psib.dto.ProductDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.psib.model.District;
-import com.psib.model.ProductAddress;
+import com.psib.model.ProductDetail;
 
 public interface IProductManager {
 
@@ -17,6 +17,6 @@ public interface IProductManager {
 
     List<District> getAllDistrict();
 
-    int insertProduct(String name, String address, String district, String rating, String restaurant,
+    int insertProduct(String name, String address, String district, double rating, String restaurant,
                       String relatedUrl, MultipartFile file);
 }

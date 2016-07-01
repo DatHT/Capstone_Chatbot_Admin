@@ -2,19 +2,19 @@ package com.psib.dao;
 
 import java.util.List;
 
-import com.psib.model.ProductAddress;
+import com.psib.model.ProductDetail;
 
 public interface IProductAddressDao {
 
-    List<ProductAddress> getAllItem();
+    List<ProductDetail> getAllItem();
 
     long countBySearchPhrase(String searchPhrase);
 
-    List<ProductAddress> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
+    List<ProductDetail> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
             , String sortDistrictName, String sortRate, String sortRestaurantName
             , int maxResult, int skipResult);
 
-    void insertProductAddress(ProductAddress productAddress);
+    void insertProductAddress(ProductDetail productAddress);
 
-    boolean checkProductExist(ProductAddress productAddress);
+    boolean checkProductExist(ProductDetail productAddress);
 }

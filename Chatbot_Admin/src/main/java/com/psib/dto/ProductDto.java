@@ -3,7 +3,7 @@
  */
 package com.psib.dto;
 
-import com.psib.model.ProductAddress;
+import com.psib.model.ProductDetail;
 
 import java.util.List;
 

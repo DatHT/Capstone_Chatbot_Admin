@@ -8,7 +8,7 @@ import com.psib.dto.ProductAddressDto;
 import com.psib.dto.ProductDto;
 import com.psib.model.District;
 import com.psib.model.Product;
-import com.psib.model.ProductAddress;
+import com.psib.model.ProductDetail;
 import com.psib.service.IProductManager;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.util.ajax.JSON;
@@ -83,7 +83,7 @@ public class ProductController {
         try {
             
 
-            int result = productManager.insertProduct(name, address, district, rating, restaurant, relatedUrl, file);
+            int result = productManager.insertProduct(name, address, district, Double.parseDouble(rating), restaurant, relatedUrl, file);
 
             if (result == 0) {
                 redirectAttributes.addFlashAttribute("addResult", false);

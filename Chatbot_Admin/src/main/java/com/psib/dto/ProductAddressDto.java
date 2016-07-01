@@ -1,13 +1,13 @@
 package com.psib.dto;
 
-import com.psib.model.ProductAddress;
+import com.psib.model.ProductDetail;
 
 /**
  * Created by manlm1 on 6/28/2016.
  */
 public class ProductAddressDto {
 
-    public ProductAddressDto(int number, ProductAddress productAddress) {
+    public ProductAddressDto(int number, ProductDetail productAddress) {
         this.number = number;
         this.productId = productAddress.getProductId();
         this.addressId = productAddress.getAddressId();
@@ -34,7 +34,7 @@ public class ProductAddressDto {
 
     private String thumbPath;
 
-    private String rate;
+    private double rate;
 
     private String restaurantName;
 
@@ -96,11 +96,11 @@ public class ProductAddressDto {
         this.thumbPath = thumbPath;
     }
 
-    public String getRate() {
+    public double getRate() {
         return rate;
     }
 
-    public void setRate(String rate) {
+    public void setRate(double rate) {
         this.rate = rate;
     }
 
