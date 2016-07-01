@@ -250,7 +250,13 @@ public class CommonUtils {
             src = src.replaceAll(url, "");
         }
         if (src.contains("src=\"media")) {
-            src = src.replaceAll("src=\"media", "src=\"//media");
+            src = src.replaceAll("src=\"media", "src=\"//connect");
+        }
+        if (src.contains("src=\"connect")) {
+            src = src.replaceAll("src=\"connect", "src=\"//connect");
+        }
+        if (src.contains("src=\"www")) {
+            src = src.replaceAll("src=\"www.", "src=\"//www.");
         }
         return src;
     }
@@ -272,6 +278,12 @@ public class CommonUtils {
         }
         if (src.contains("href=\"static")) {
             src = src.replaceAll("href=\"static", "href=\"//static");
+        }
+        if (src.contains("href=\"connect")) {
+            src = src.replaceAll("src=\"connect", "src=\"//connect");
+        }
+        if (src.contains("href=\"www")) {
+            src = src.replaceAll("href=\"www", "href=\"//www");
         }
         return src;
     }

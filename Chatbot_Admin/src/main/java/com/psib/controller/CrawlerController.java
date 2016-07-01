@@ -975,7 +975,7 @@ public class CrawlerController extends HttpServlet {
 
 				driver.get(linkPage);
 
-				// Lay nextPage
+				// go to get nextPage
 
 				List<String> pageUrl = new ArrayList<String>();
 				List<WebElement> content = driver.findElements(By.xpath(xpath));
@@ -996,13 +996,27 @@ public class CrawlerController extends HttpServlet {
 				} else {
 					numNextPage = nextPages.get(0).getAttribute("href");
 				}
+				if (numNextPage.indexOf("http") == -1) {
+					numNextPage = url + numNextPage;
+				}
+
+				// get Next Page
+				numNextPage = numNextPage.substring(linkPage.length());
+
+				if (numNextPage.charAt(0) == '/') {
+					StringBuilder sb = new StringBuilder(numNextPage);
+					sb.deleteCharAt(0);
+					numNextPage = sb.toString();
+				}
+				int end = numNextPage.indexOf("/");
+				if (end <= 0) {
+					end = numNextPage.lastIndexOf("=");
+					next = numNextPage.substring(0, end + 1);
+				} else {
+					next = numNextPage.substring(0, end);
+				}
 				driver.close();
-				
-				// Xu li Next Page ===================================
-				
-				next = CommonUtils.nextPage(numNextPage, linkPage, url);
-				
-				
+				System.out.println("NEXTPAGE:" + numNextPage);
 				System.out.println(next);
 			}
 			System.out.println("Next Page: " + next);
