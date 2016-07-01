@@ -1,20 +1,28 @@
 package com.psib.controller;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional.TxType;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -30,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.google.common.io.Files;
 import com.jaunt.ResponseException;
 import com.jaunt.UserAgent;
 import com.psib.dto.configuration.ConfigDTO;
@@ -71,25 +80,18 @@ public class CrawlerController extends HttpServlet {
 		return "manualAddFood";
 	}
 
-	@RequestMapping(value = "/forceParse", method = RequestMethod.GET)
-	public String forceParse(@RequestParam String btnAction, Model model, HttpServletRequest request,
-			HttpServletRequest response) throws InterruptedException {
-		WebDriver driver = new FirefoxDriver();
+	@RequestMapping(value = "/staticParse", method = RequestMethod.GET)
+	public String staticParse(@RequestParam String btnAction, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws InterruptedException {
 		if (btnAction.equals("STOP")) {
-			String parentWindow = driver.getWindowHandle();
-			Set<String> allWindows = driver.getWindowHandles();
-			for (String curWindow : allWindows) {
-				driver.switchTo().window(curWindow);
-			}
-			driver.close();
-			driver.switchTo().window(parentWindow);
 			HttpSession session = request.getSession();
 			System.out.println("STOP PARSING");
-			session.setAttribute("MESSAGE", "The force parse process has been stopped!");
-
+			session.setAttribute("MESSAGE",
+					"Automatic Crawler is still running. If you want Force STOP this process, please close Openned FireFox LoadData Windows");
 			return "errorPage";
 		}
 		if (btnAction.equals("StaticParse")) {
+			WebDriver driver = new FirefoxDriver();
 			try {
 				long startTime = System.nanoTime();
 				HttpSession session = request.getSession();
@@ -150,7 +152,6 @@ public class CrawlerController extends HttpServlet {
 									driver.get(pageConfig.getLinkPage() + pageConfig.getNextPage() + "/" + no);
 								} else {
 									driver.get(pageConfig.getLinkPage() + pageConfig.getNextPage() + no);
-									System.out.println("Da Chay Den Day");
 								}
 							} catch (FailingHttpStatusCodeException e) {
 								System.out.println("Error Occurred");
@@ -267,11 +268,11 @@ public class CrawlerController extends HttpServlet {
 
 							String district = CommonUtils.splitDistrict(address);
 							String newAddress = CommonUtils.splitAddress(address);
-							
+
 							double rate = Double.parseDouble(userRate);
-							if(rate<=5){
-								rate = rate*2;
-								userRate = ""+rate;
+							if (rate <= 5) {
+								rate = rate * 2;
+								userRate = "" + rate;
 							}
 							Product productDAO = new Product();
 							District districtDAO = new District();
@@ -456,9 +457,9 @@ public class CrawlerController extends HttpServlet {
 						String district = CommonUtils.splitDistrict(address);
 						String newAddress = CommonUtils.splitAddress(address);
 						double rate = Double.parseDouble(userRate);
-						if(rate<=5){
-							rate = rate*2;
-							userRate = ""+rate;
+						if (rate <= 5) {
+							rate = rate * 2;
+							userRate = "" + rate;
 						}
 						Product productDAO = new Product();
 						District districtDAO = new District();
@@ -519,17 +520,13 @@ public class CrawlerController extends HttpServlet {
 							countExits++;
 						}
 					}
-					pageUrl.clear();
-					foodResult.clear();
-					image.clear();
 				}
 				driver.close();
-				System.out.println("Sucessfull Added Record: " + countAdded);
-				System.out.println("Exit Record: " + countExits);
+				System.out.println("Sucessfull Added Record: 111111111111111111111111" + countAdded);
+				System.out.println("Exist Record: " + countExits);
 				long estimatedTime = System.nanoTime() - startTime;
 				double seconds = (double) estimatedTime / 1000000000.0;
 				System.out.println("Elapsed time: " + seconds);
-				session = request.getSession();
 				session.setAttribute("MESSAGE", "Force parse success! New data has been inserted to storage!");
 				return "success";
 			} catch (Exception e) {
@@ -539,7 +536,21 @@ public class CrawlerController extends HttpServlet {
 				return "errorPage";
 			}
 		}
+		return "";
+	}
+
+	@RequestMapping(value = "/dynamicParse", method = RequestMethod.GET)
+	public String dynamicParse(@RequestParam String btnAction, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws InterruptedException {
+		if (btnAction.equals("STOP")) {
+			HttpSession session = request.getSession();
+			System.out.println("STOP PARSING");
+			session.setAttribute("MESSAGE",
+					"Automatic Crawler is still running. If you want Force STOP this process, please close Openned FireFox LoadData Windows");
+			return "errorPage";
+		}
 		if (btnAction.equals("DynamicParse")) {
+			WebDriver driver = new FirefoxDriver();
 			try {
 				long startTime = System.nanoTime();
 				HttpSession session = request.getSession();
@@ -769,21 +780,19 @@ public class CrawlerController extends HttpServlet {
 				}
 				driver.close();
 				System.out.println("Sucessfull Added Record: " + countAdded);
-				System.out.println("Exit Record: " + countExits);
+				System.out.println("Exist Record: " + countExits);
 				long estimatedTime = System.nanoTime() - startTime;
 				double seconds = (double) estimatedTime / 1000000000.0;
 				System.out.println("Elapsed time: " + seconds);
-				session = request.getSession();
 				session.setAttribute("MESSAGE", "Force parse success! New data has been inserted to storage!");
 				return "success";
 			} catch (Exception e) {
-				System.out.println("STOP PARSING");
+				System.out.println("STOP PARSE");
 				HttpSession session = request.getSession();
 				session.setAttribute("MESSAGE", "STOP! Force Parse Has Been STOP!");
 				return "errorPage";
 			}
 		}
-
 		return "";
 	}
 
@@ -838,20 +847,36 @@ public class CrawlerController extends HttpServlet {
 		if (btnAction.equals("Set List Page")) {
 			String str = request.getParameter("txtURL");
 			System.out.println(str);
-			URL url = new URL(str);
-			// BufferedReader in;
-			// InputStreamReader inputStreamReader = new
-			// InputStreamReader(url.openStream(), "UTF8");
-			// in = new BufferedReader(inputStreamReader);
+			HttpSession session = request.getSession();
+			String result = "";
+			String[] str_array = str.split("/");
+			for (int i = 0; i < 3; i++) {
+				result = result + str_array[i] + "/";
+			}
+			result = result.substring(0, result.length() - 1);
+			System.out.println(result);
+			session.setAttribute("URL", result);
+			session.setAttribute("LINKPAGE", str);
 
+			ServletContext servletContext = request.getSession().getServletContext();
+			String filePath = servletContext.getRealPath("/resources/");
+			System.out.println(filePath);
+			String htmlFilePath = filePath + "tmp.html";
+
+			WebDriver driver = new FirefoxDriver();
+			driver.get(str);
+
+			String pageSource = driver.getPageSource();
+
+			driver.close();
+			String source = CommonUtils.makeContentPage(pageSource, result);
 			String inputLine;
 			StringBuffer res;
 			res = new StringBuffer();
-			HttpSession session = request.getSession();
-
 			try {
-				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-				// van de la o in.readLine()
+				InputStream stream = new ByteArrayInputStream(source.getBytes(Charset.forName("UTF-8")));
+				BufferedReader in;
+				in = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
 				while ((inputLine = in.readLine()) != null) {
 					// System.out.println(in.readLine());
 					res.append(CommonUtils.htmlEncode(inputLine) + "\n");
@@ -860,48 +885,54 @@ public class CrawlerController extends HttpServlet {
 				// System.out.println(res);
 				in.close();
 			} catch (Exception e) {
-				e.printStackTrace();
-				session.setAttribute("MESSAGE", "There are errors, please check your connection or input URL!");
-				return "errorPage";
+				System.out.println("Cannot encoding");
 			}
-			// Save file
-			ServletContext servletContext = request.getSession().getServletContext();
-			String filePath = servletContext.getRealPath("/resources");
-			System.out.println(filePath);
-			String htmlFilePath = filePath;
-			File file = new File(htmlFilePath);
-			UserAgent ua = new UserAgent();
-			ua.visit(str);
-			ua.doc.saveCompleteWebPage(new File(htmlFilePath, "tmp.html"));
-			file.getParentFile().mkdirs();
-			String result = "";
-			String[] str_array = str.split("/");
-			for (int i = 0; i < 3; i++) {
-				result = result + str_array[i]+"/";
-			}
-			result = result.substring(0,result.length()-1);
-			System.out.println(result);
-			session.setAttribute("URL", result);
-			session.setAttribute("LINKPAGE", str);
+
+			BufferedWriter bwr = new BufferedWriter(new FileWriter(htmlFilePath));
+
+			// write contents of StringBuffer to a file
+			bwr.write(res.toString());
+
+			// flush the stream
+			bwr.flush();
+
+			// close the stream
+			bwr.close();
+			// FileUtils.writeStringToFile(new File(htmlFilePath), source);
 			return "setListPage";
 		}
 		if (btnAction.equals("Set Parser Config")) {
 			String str = request.getParameter("txtURL");
 			System.out.println(str);
-			URL url = new URL(str);
-			// BufferedReader in;
-			// InputStreamReader inputStreamReader = new
-			// InputStreamReader(url.openStream(), "UTF8");
-			// in = new BufferedReader(inputStreamReader);
+			HttpSession session = request.getSession();
+			String result = "";
+			String[] str_array = str.split("/");
+			for (int i = 0; i < 3; i++) {
+				result = result + str_array[i] + "/";
+			}
+			result = result.substring(0, result.length() - 1);
+			System.out.println(result);
+			session.setAttribute("URL", result);
+			session.setAttribute("LINKPAGE", str);
 
+			ServletContext servletContext = request.getSession().getServletContext();
+			String filePath = servletContext.getRealPath("/resources/");
+			System.out.println(filePath);
+			String htmlFilePath = filePath + "tmp.html";
+
+			WebDriver driver = new FirefoxDriver();
+			driver.get(str);
+
+			String pageSource = driver.getPageSource();
+			driver.close();
+			String source = CommonUtils.makeContentPage(pageSource, result);
 			String inputLine;
 			StringBuffer res;
 			res = new StringBuffer();
-			HttpSession session = request.getSession();
-
 			try {
-				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-				// van de la o in.readLine()
+				InputStream stream = new ByteArrayInputStream(source.getBytes(Charset.forName("UTF-8")));
+				BufferedReader in;
+				in = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
 				while ((inputLine = in.readLine()) != null) {
 					// System.out.println(in.readLine());
 					res.append(CommonUtils.htmlEncode(inputLine) + "\n");
@@ -910,29 +941,21 @@ public class CrawlerController extends HttpServlet {
 				// System.out.println(res);
 				in.close();
 			} catch (Exception e) {
-				e.printStackTrace();
-				session.setAttribute("MESSAGE", "There are errors, please check your connection or input URL!");
-				return "errorPage";
+				System.out.println("Cannot encoding");
 			}
-			// Save file
-			ServletContext servletContext = request.getSession().getServletContext();
-			String filePath = servletContext.getRealPath("/resources");
-			System.out.println(filePath);
-			String htmlFilePath = filePath;
-			File file = new File(htmlFilePath);
-			UserAgent ua = new UserAgent();
-			ua.visit(str);
-			ua.doc.saveCompleteWebPage(new File(htmlFilePath, "tmp.html"));
-			file.getParentFile().mkdirs();
-			String result = "";
-			String[] str_array = str.split("/");
-			for (int i = 0; i < 3; i++) {
-				result = result + str_array[i]+"/";
-			}
-			result = result.substring(0,result.length()-1);
-			System.out.println(result);
-			session.setAttribute("URL", result);
-			session.setAttribute("LINKPAGE", str);
+
+			BufferedWriter bwr = new BufferedWriter(new FileWriter(htmlFilePath));
+
+			// write contents of StringBuffer to a file
+			bwr.write(res.toString());
+
+			// flush the stream
+			bwr.flush();
+
+			// close the stream
+			bwr.close();
+			// FileUtils.writeStringToFile(new File(htmlFilePath), source,
+			// "UTF-8");
 			return "setParserConfig";
 		}
 		if (btnAction.equals("AddNewPageList"))
@@ -945,15 +968,15 @@ public class CrawlerController extends HttpServlet {
 			String nextPage = request.getParameter("NEXTPAGE");
 			System.out.println("Link Page: " + linkPage);
 			System.out.println("Next Page: " + nextPage);
-			
+
 			String next = "N/A";
 			if (nextPage != null && !nextPage.isEmpty()) {
 				WebDriver driver = new FirefoxDriver();
 
 				driver.get(linkPage);
 
-				// Parse to List combine links
-				
+				// Lay nextPage
+
 				List<String> pageUrl = new ArrayList<String>();
 				List<WebElement> content = driver.findElements(By.xpath(xpath));
 				for (WebElement data : content) {
@@ -973,34 +996,13 @@ public class CrawlerController extends HttpServlet {
 				} else {
 					numNextPage = nextPages.get(0).getAttribute("href");
 				}
-				if (numNextPage.indexOf("http") == -1) {
-					numNextPage = url + numNextPage;
-				}
-				
-				// Add New
-				CommonUtils utils = new CommonUtils();
-						
-				numNextPage = utils.nextPage(numNextPage);
 				driver.close();
-				System.out.println("NEXTPAGE:" + numNextPage);
-
-//				if (numNextPage.charAt(0) == '/') {
-//					StringBuilder sb = new StringBuilder(numNextPage);
-//					sb.deleteCharAt(0);
-//					numNextPage = sb.toString();
-//				}
+				
+				// Xu li Next Page ===================================
+				
+				next = CommonUtils.nextPage(numNextPage, linkPage, url);
 				
 				
-//				int end = numNextPage.indexOf("/");
-//				if (end <= 0) {
-//					String lastChar = numNextPage.substring(nextPage.length() - 1);
-//					end = numNextPage.lastIndexOf(lastChar);
-//					next = numNextPage.substring(0, end + 1);
-//				} else {
-//					next = numNextPage.substring(0, end);
-//				}
-				next="&"+numNextPage;
-
 				System.out.println(next);
 			}
 			System.out.println("Next Page: " + next);
@@ -1045,6 +1047,15 @@ public class CrawlerController extends HttpServlet {
 			checkExist.add(newPage);
 			add = XMLUtils.marshallToFilePage(pages, xmlFilePath);
 			System.out.println(add);
+			ServletContext servletContext = request.getSession().getServletContext();
+			String filePath = servletContext.getRealPath("/resources/");
+			System.out.println(filePath);
+			String htmlFilePath = filePath + "tmp.html";
+			File file = new File(htmlFilePath);
+			if (file.exists()) {
+				file.delete();
+				System.out.println("File deleted");
+			}
 			if (add) {
 				session.setAttribute("MESSAGE", "New page configuration has been inserted to storage!");
 				return "success";
@@ -1052,7 +1063,7 @@ public class CrawlerController extends HttpServlet {
 				session.setAttribute("MESSAGE", "Page configuration fails!");
 				return "errorPage";
 			}
-			
+
 		}
 		if (btnAction.equals("AddNewConfiguration")) {
 			HttpSession session = request.getSession();
@@ -1101,9 +1112,18 @@ public class CrawlerController extends HttpServlet {
 			add = XMLUtils.marshallToFile(configs, xmlFilePath);
 			session.setAttribute("CONFIG", newConfig.getSite());
 			System.out.println(add);
+			ServletContext servletContext = request.getSession().getServletContext();
+			String filePath = servletContext.getRealPath("/resources/");
+			System.out.println(filePath);
+			String htmlFilePath = filePath + "tmp.html";
+			File file = new File(htmlFilePath);
+			if (file.exists()) {
+				file.delete();
+				System.out.println("File deleted");
+			}
 			if (add) {
 				session.setAttribute("MESSAGE", "New page configuration has been inserted to storage!");
-				return "successParse";
+				return "success";
 			} else {
 				session.setAttribute("MESSAGE", "Page configuration fails!");
 				return "errorPage";
