@@ -3,6 +3,7 @@ package com.psib.dao.impl;
 import com.psib.dao.IDistrictDao;
 import com.psib.model.District;
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -37,4 +38,17 @@ public class DistrictDao extends BaseDao<District, Long> implements IDistrictDao
         return getById(id);
     }
 
+    @Override
+    @Transactional
+    public District getDistrictByName(String name) {
+        String sql = "from " + District.class.getSimpleName() + " where name LIKE :name";
+        Query query = getSession().createQuery(sql);
+        query.setParameter("name", "%" + name + "%");
+        query.setMaxResults(1);
+        District district = (District) query.uniqueResult();
+        if (district != null) {
+            return district;
+        }
+        return null;
+    }
 }

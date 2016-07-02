@@ -118,24 +118,23 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
 
     @Override
     @Transactional
-    public void insertProductAddress(ProductDetail productAddress) {
-        LOG.info("[insertProductAddress] Start: productName = " + productAddress.getProductName());
-        insert(productAddress);
+    public void insertProductDetail(ProductDetail productDetail) {
+        LOG.info("[insertProductAddress] Start: productName = " + productDetail.getProductName());
+        insert(productDetail);
         LOG.info("[insertProductAddress] End");
     }
 
     @Override
     @Transactional
-    public boolean checkProductExist(ProductDetail productAddress) {
-        LOG.info("[checkProductExist] Start: productName = " + productAddress.getProductName());
-
+    public boolean checkProductExist(ProductDetail productDetail) {
+        LOG.info(new StringBuilder("[checkProductExist] Start: productName = ").append(productDetail.getProductName())
+                .append(" , addressName = ").append(productDetail.getAddressName()));
         String sql = String.valueOf(new StringBuilder("FROM ").append(ProductDetail.class.getSimpleName())
-                .append(" P WHERE P.productName = :productName AND P.addressName = :addressName AND P.restaurantName = :restaurantName"));
+                .append(" P WHERE P.productName = :productName AND P.addressName = :addressName"));
 
         Query query = getSession().createQuery(sql);
-        query.setParameter("productName", productAddress.getProductName());
-        query.setParameter("addressName", productAddress.getAddressName());
-        query.setParameter("restaurantName", productAddress.getRestaurantName());
+        query.setParameter("productName", productDetail.getProductName());
+        query.setParameter("addressName", productDetail.getAddressName());
         ProductDetail result = (ProductDetail) query.uniqueResult();
         if (result != null) {
             LOG.info("[checkProductExist] End");

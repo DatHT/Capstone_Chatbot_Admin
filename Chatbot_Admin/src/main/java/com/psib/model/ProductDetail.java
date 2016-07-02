@@ -15,6 +15,7 @@ public class ProductDetail implements Serializable {
 
 	@Id
 	@Column(name = "productId", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long productId;
 
 	@Column(name = "productName", nullable = false, length = 4000)
@@ -47,7 +48,6 @@ public class ProductDetail implements Serializable {
 	@Column(name = "urlrelate", nullable = false, length = 500)
 	private String urlRelate;
 
-	@Id
 	@Column(name = "addressId", nullable = false)
 	private long addressId;
 

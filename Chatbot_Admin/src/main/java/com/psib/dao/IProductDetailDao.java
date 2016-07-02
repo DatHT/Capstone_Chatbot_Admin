@@ -14,7 +14,7 @@ public interface IProductDetailDao {
             , String sortDistrictName, String sortRate, String sortRestaurantName
             , int maxResult, int skipResult);
 
-    void insertProductAddress(ProductDetail productAddress);
+    void insertProductDetail(ProductDetail productDetail);
 
-    boolean checkProductExist(ProductDetail productAddress);
+    boolean checkProductExist(ProductDetail productDetail);
 }
