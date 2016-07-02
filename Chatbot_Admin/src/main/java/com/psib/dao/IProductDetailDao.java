@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.psib.model.ProductDetail;
 
-public interface IProductAddressDao {
+public interface IProductDetailDao {
 
     List<ProductDetail> getAllItem();
 

@@ -5,9 +5,9 @@ import com.psib.model.ProductDetail;
 /**
  * Created by manlm1 on 6/28/2016.
  */
-public class ProductAddressDto {
+public class ProductDetailDto {
 
-    public ProductAddressDto(int number, ProductDetail productAddress) {
+    public ProductDetailDto(int number, ProductDetail productAddress) {
         this.number = number;
         this.productId = productAddress.getProductId();
         this.addressId = productAddress.getAddressId();

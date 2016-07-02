@@ -42,6 +42,12 @@
                                 <th data-column-id="restaurantName">Restaurant</th>
                                 <th data-column-id="thumbPath" data-sortable="false">Thumb</th>
                                 <th data-column-id="urlRelate" data-sortable="false">Related Url</th>
+                                <th data-column-id="update" data-formatter="commandsUpdate" data-sortable="false">
+                                    Update
+                                </th>
+                                <th data-column-id="delete" data-formatter="commandsDelete" data-sortable="false">
+                                    Delete
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -57,18 +63,19 @@
 
 <!-- Data Table -->
 <script type="text/javascript">
-    function showAddModal() {
-        $('#myModal').modal('show');
-    }
-
     $(document).ready(function () {
-        var result = '${addResult}';
+        var addResult = '${addResult}';
+        var updateResult = '${updateResult}';
 
-        if (result == 'true') {
+        if (addResult == 'true' || updateResult == 'true') {
             notify("Add Product Successfully!", "info");
-        } else if (result == 'false') {
+        } else if (addResult == 'false' || updateResult == 'false') {
             notify("Product Already Existed!", "warning");
             showAddModal();
+        }
+
+        if ('${name}' != "") {
+            $('#myModal').modal('show');
         }
 
         $('#myModal').on('hidden.bs.modal', function () {
@@ -81,24 +88,20 @@
 
             $("#div-name").removeClass("has-error");
             $("#error-name").text("");
-            $("#error-name").css("visibility", "hidden");
+
 
             $("#div-address").removeClass("has-error");
             $("#error-address").text("");
-            $("#error-address").css("visibility", "hidden");
 
             $("#div-rating").removeClass("has-error");
             $("#error-rating").text("");
-            $("#error-rating").css("visibility", "hidden");
 
             $("#div-restaurant").removeClass("has-error");
             $("#error-restaurant").text("");
-            $("#error-restaurant").css("visibility", "hidden");
 
             $("#div-relatedUrl").removeClass("has-error");
             $("#error-relatedUrl").text("");
-            $("#error-relatedUrl").css("visibility", "hidden");
-        })
+        });
 
         //Basic Example
         $("#data-table-basic").bootgrid({
@@ -109,10 +112,31 @@
                 /* To accumulate custom parameter with the request object */
                 return {
                     id: "b0df282a-0d67-40e5-8558-c9e93b7befed",
-                	'${_csrf.parameterName}': "${_csrf.token}"
-            	};
+                    '${_csrf.parameterName}': "${_csrf.token}"
+                };
             },
-            url: "/chatbot_admin/loadProduct",
+            url: "loadProduct",
+            formatters: {
+                "commandsUpdate": function (column, row) {
+
+                    return "<button class='btn btn-warning btn-icon waves-effect waves-circle waves-float' onclick='showUpdateModal("
+                            + "`" + row.productId + "`"
+                            + "," + "`" + row.addressId + "`"
+                            + "," + "`" + row.productName.trim() + "`"
+                            + "," + "`" + row.addressName.trim() + "`"
+                            + "," + "`" + row.urlRelate + "`"
+                            + "," + "`" + row.rate + "`"
+                            + "," + "`" + row.restaurantName.trim() + "`"
+                            + "," + "`" + row.districtName.trim() + "`"
+                            + ")'>" +
+                            "<i class='zmdi zmdi-edit zmdi-hc-fw'>" +
+                            "</i>" +
+                            "</button>";
+                },
+                "commandsDelete": function (column, row) {
+                    return "<button class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+                }
+            },
             ss: {
                 icon: 'zmdi icon',
                 iconColumns: 'zmdi-view-module',
@@ -135,19 +159,25 @@
                         aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="user-say-in-modal">Add New Product</h4>
             </div>
-            <form id="add-form" action="addProduct?${_csrf.parameterName}=${_csrf.token}" method="POST"
+            <form id="add-form" action="addProduct" method="POST"
                   enctype="multipart/form-data">
+
+                <input id="updateProductId" name="updateProductId" type="hidden">
+                <input id="updateAddressId" name="updateAddressId" type="hidden">
+                <input id="nameChanged" name="nameChanged" type="hidden">
+                <input id="addressChanged" name="addressChanged" type="hidden">
+
                 <div class="modal-body" style="border-bottom: 0px">
                     <div>
-                        <c:if test="${addResult != false}">
+                        <c:if test="${addResult != false && updateResult != false}">
                             <%--Name--%>
                             <div id="div-name">
+                                <label>Name</label>
                                 <div class="fg-line">
-                                    <label>Name</label>
                                     <input id="name" name="name"
-                                           autocomplete="off" class="form-control input"
-                                           onblur="validName()"
-                                           onkeyup="validName()">
+                                           value="${name}" autocomplete="off" class="form-control"
+                                           onblur="validName('#name','#div-name','#error-name')"
+                                           onkeyup="validName('#name','#div-name','#error-name')">
                                 </div>
                                 <small id="error-name" class="help-block"></small>
                             </div>
@@ -158,8 +188,8 @@
                                 <div class="fg-line">
                                     <input id="address" name="address"
                                            autocomplete="off" class="form-control"
-                                           onblur="validAddress()"
-                                           onkeyup="validAddress()">
+                                           onblur="validAddress('#address','#div-address','#error-address')"
+                                           onkeyup="validAddress('#address','#div-address','#error-address')">
                                 </div>
                                 <small id="error-address" class="help-block"></small>
                             </div>
@@ -168,10 +198,20 @@
                             <div id="div-district">
                                 <label>District</label><br>
                                 <div class="fg-line">
-                                    <select id="district"
-                                            name="district" class="form-control">
+                                    <select id="district" name="district" class="form-control">
                                         <c:forEach items="${districtList}" var="district">
-                                            <option value="${district.id}">${district.name}</option>
+                                            <c:if test="${not empty districtName}">
+                                                <c:if test="${districtName == district.name}">
+                                                    <option value="${district.name}" selected>${district.name}</option>
+                                                </c:if>
+                                                <c:if test="${districtName != district.name}">
+                                                    <option value="${district.name}">${district.name}</option>
+                                                </c:if>
+                                            </c:if>
+                                            <c:if test="${empty districtName}">
+                                                <option value="${district.name}">${district.name}</option>
+                                            </c:if>
+
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -183,8 +223,8 @@
                                 <div class="fg-line">
                                     <input id="rating" name="rating"
                                            autocomplete="off" class="form-control"
-                                           onblur="validRating()"
-                                           onkeyup="validRating()">
+                                           onblur="validRating('#rating','#div-rating','#error-rating')"
+                                           onkeyup="validRating('#rating','#div-rating','#error-rating')">
                                 </div>
                                 <small id="error-rating" class="help-block"></small>
                             </div>
@@ -195,8 +235,8 @@
                                 <div class="fg-line">
                                     <input id="restaurant" name="restaurant"
                                            autocomplete="off" class="form-control"
-                                           onblur="validRestaurant()"
-                                           onkeyup="validRestaurant()">
+                                           onblur="validRestaurant('#restaurant','#div-restaurant','#error-restaurant')"
+                                           onkeyup="validRestaurant('#restaurant','#div-restaurant','#error-restaurant')">
                                 </div>
                                 <small id="error-restaurant" class="help-block"></small>
                             </div>
@@ -207,17 +247,18 @@
                                 <div class="fg-line">
                                     <input id="relatedUrl"
                                            name="relatedUrl" autocomplete="off" class="form-control"
-                                           onblur="validRelatedUrl()"
-                                           onkeyup="validRelatedUrl()">
+                                           onblur="validRelatedUrl('#relatedUrl','#div-relatedUrl','#error-relatedUrl')"
+                                           onkeyup="validRelatedUrl('#relatedUrl','#div-relatedUrl','#error-relatedUrl')">
                                 </div>
                                 <small id="error-relatedUrl" class="help-block"></small>
                             </div>
 
                             <%--Thumbnail--%>
                             <label>Thumbnail</label><br>
-                            <input type="file" name="file">
+                            <input id="file" type="file" name="file">
                         </c:if>
-                        <c:if test="${addResult == false}">
+
+                        <c:if test="${addResult == false || updateResult == false}">
                             <c:remove var="result"/>
 
                             <%--Name--%>
@@ -226,8 +267,8 @@
                                     <label>Name</label>
                                     <input id="name" name="name" value="${name}"
                                            autocomplete="off" class="form-control"
-                                           onblur="validName()"
-                                           onkeyup="validName()">
+                                           onblur="validName('#name','#div-name','#error-name')"
+                                           onkeyup="validName('#name','#div-name','#error-name')">
                                 </div>
                                 <small id="error-name" class="help-block"></small>
                             </div>
@@ -238,8 +279,8 @@
                                 <div class="fg-line">
                                     <input id="address" name="address" value="${address}"
                                            autocomplete="off" class="form-control"
-                                           onblur="validAddress()"
-                                           onkeyup="validAddress()">
+                                           onblur="validAddress('#address','#div-address','#error-address')"
+                                           onkeyup="validAddress('#address','#div-address','#error-address')">
                                 </div>
                                 <small id="error-address" class="help-block"></small>
                             </div>
@@ -251,11 +292,11 @@
                                     <select id="district"
                                             name="district" class="form-control">
                                         <c:forEach items="${districtList}" var="district">
-                                            <c:if test="${districtId == district.id}">
-                                                <option value="${district.id}" selected>${district.name}</option>
+                                            <c:if test="${districtName == district.name}">
+                                                <option value="${district.name}" selected>${district.name}</option>
                                             </c:if>
-                                            <c:if test="${districtId != district.id}">
-                                                <option value="${district.id}">${district.name}</option>
+                                            <c:if test="${districtName != district.name}">
+                                                <option value="${district.name}">${district.name}</option>
                                             </c:if>
                                         </c:forEach>
                                     </select>
@@ -268,8 +309,8 @@
                                 <div class="fg-line">
                                     <input id="rating" name="rating" value="${rating}"
                                            autocomplete="off" class="form-control"
-                                           onblur="validRating()"
-                                           onkeyup="validRating()">
+                                           onblur="validRating('#rating','#div-rating','#error-rating')"
+                                           onkeyup="validRating('#rating','#div-rating','#error-rating')">
                                 </div>
                                 <small id="error-rating" class="help-block"></small>
                             </div>
@@ -280,8 +321,8 @@
                                 <div class="fg-line">
                                     <input id="restaurant" name="restaurant" value="${restaurant}"
                                            autocomplete="off" class="form-control"
-                                           onblur="validRestaurant()"
-                                           onkeyup="validRestaurant()">
+                                           onblur="validRestaurant('#restaurant','#div-restaurant','#error-restaurant')"
+                                           onkeyup="validRestaurant('#restaurant','#div-restaurant','#error-restaurant')">
                                 </div>
                                 <small id="error-restaurant" class="help-block"></small>
                             </div>
@@ -292,15 +333,15 @@
                                 <div class="fg-line">
                                     <input id="relatedUrl" name="relatedUrl" value="${relatedUrl}"
                                            autocomplete="off" class="form-control"
-                                           onblur="validRelatedUrl()"
-                                           onkeyup="validRelatedUrl()">
+                                           onblur="validRelatedUrl('#relatedUrl','#div-relatedUrl','#error-relatedUrl')"
+                                           onkeyup="validRelatedUrl('#relatedUrl','#div-relatedUrl','#error-relatedUrl')">
                                 </div>
                                 <small id="error-relatedUrl" class="help-block"></small>
                             </div>
 
                             <%--Thumbnail--%>
                             <label>Thumbnail</label><br>
-                            <input type="file" name="file">
+                            <input id="file" type="file" name="file">
                         </c:if>
 
                         <br>
@@ -312,7 +353,12 @@
                             data-dismiss="modal">Cancel
                     </button>
                     <button id="add-button" type="button" class="btn btn-success"
-                            onclick="validOnSubmit()">Add
+                            onclick="validOnSubmit('#add-form','#name','#div-name','#error-name'
+                            ,'#address','#div-address','#error-address'
+                            ,'#rating','#div-rating','#error-rating'
+                            ,'#restaurant','#div-restaurant','#error-restaurant'
+                            ,'#relatedUrl','#div-relatedUrl','#error-relatedUrl')">
+                        Submit
                     </button>
                 </div>
 
@@ -323,3 +369,10 @@
     </div>
 </div>
 <!-- End modal -->
+
+<input id="tmpName" type="hidden">
+<input id="tmpAddress" type="hidden">
+<input id="tmpRelatedUrl" type="hidden">
+<input id="tmpRating" type="hidden">
+<input id="tmpRestaurant" type="hidden">
+<input id="tmpDistrict" type="hidden">

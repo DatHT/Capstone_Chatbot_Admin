@@ -2,7 +2,7 @@ package com.psib.service.impl;
 
 import com.psib.common.DatabaseException;
 import com.psib.dao.*;
-import com.psib.dto.ProductAddressDto;
+import com.psib.dto.ProductDetailDto;
 import com.psib.dto.ProductDto;
 import com.psib.model.Address;
 import com.psib.model.District;
@@ -22,8 +22,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -32,7 +30,7 @@ public class ProductManager implements IProductManager {
     private static final Logger LOG = Logger.getLogger(ProductManager.class);
 
     @Autowired
-    private IProductAddressDao productAddressDao;
+    private IProductDetailDao productAddressDao;
 
     @Autowired
     private IDistrictDao districtDao;
@@ -65,17 +63,17 @@ public class ProductManager implements IProductManager {
         list = productAddressDao.getBySearchPhraseAndSort(searchPhrase
                 , sortProductName, sortAddressName, sortDistrictName, sortRate, sortRestaurantName, rowCount, start);
 
-        List<ProductAddressDto> productAddressDtoList = new ArrayList<>();
+        List<ProductDetailDto> productDetailDtoList = new ArrayList<>();
         long size = list.size();
 
         for (int i = 0; i < size; i++) {
-            productAddressDtoList.add(new ProductAddressDto((start + i + 1), list.get(i)));
+            productDetailDtoList.add(new ProductDetailDto((start + i + 1), list.get(i)));
         }
 
         ProductDto dto = new ProductDto();
         dto.setCurrent(current);
         dto.setRowCount(rowCount);
-        dto.setRows(productAddressDtoList);
+        dto.setRows(productDetailDtoList);
         dto.setTotal(productAddressDao.countBySearchPhrase(searchPhrase));
 
         LOG.info("[getAllForPaging] End");

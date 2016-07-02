@@ -1,8 +1,7 @@
 package com.psib.dao.impl;
 
-import com.psib.dao.IProductAddressDao;
+import com.psib.dao.IProductDetailDao;
 import com.psib.model.ProductDetail;
-import com.psib.util.SpringPropertiesUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -11,15 +10,15 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public class ProductAddressDao extends BaseDao<ProductDetail, Long> implements IProductAddressDao {
+public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IProductDetailDao {
 
-    private static final Logger LOG = Logger.getLogger(ProductAddressDao.class);
+    private static final Logger LOG = Logger.getLogger(ProductDetailDao.class);
 
-    public ProductAddressDao(Class<ProductDetail> clazz) {
+    public ProductDetailDao(Class<ProductDetail> clazz) {
         super(clazz);
     }
 
-    public ProductAddressDao() {
+    public ProductDetailDao() {
         setClazz(ProductDetail.class);
     }
 

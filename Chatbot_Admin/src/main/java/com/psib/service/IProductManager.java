@@ -2,12 +2,10 @@ package com.psib.service;
 
 import java.util.List;
 
-import com.psib.dto.ProductAddressDto;
 import com.psib.dto.ProductDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.psib.model.District;
-import com.psib.model.ProductDetail;
 
 public interface IProductManager {
 

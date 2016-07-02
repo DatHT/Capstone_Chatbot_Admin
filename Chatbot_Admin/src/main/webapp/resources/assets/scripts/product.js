@@ -1,97 +1,160 @@
-function validName() {
-    var value = $("#name").val();
+function showAddModal() {
+    $('#add-form').attr('action', 'addProduct');
+    $('#user-say-in-modal').text('Add New Product');
+    $('#myModal').modal('show');
+}
+
+function showUpdateModal(productId, addressId, productName, addressName, urlRelate, rate, restaurantName, districtName) {
+    $('#updateProductId').val(productId);
+    $('#updateAddressId').val(addressId);
+
+    $('#name').val(productName);
+    $('#address').val(addressName);
+    $('#relatedUrl').val(urlRelate);
+    $('#rating').val(rate);
+    $('#restaurant').val(restaurantName);
+    $("#district").val(districtName);
+
+    $('#tmpName').val(productName);
+    $('#tmpAddress').val(addressName);
+    $('#tmpRelatedUrl').val(urlRelate);
+    $('#tmpRating').val(rate);
+    $('#tmpRestaurant').val(restaurantName);
+    $("#tmpDistrict").val(districtName);
+
+    console.info($('#tmpName').val());
+
+    $('#add-form').attr('action', 'updateProduct');
+    $('#user-say-in-modal').text('Update Product');
+    $('#myModal').modal('show');
+}
+
+function validName(fieldId, divId, errorId) {
+    var value = $(fieldId).val();
     if (value.length < 1) {
-        $("#div-name").addClass("has-error");
-        $("#error-name").text("Please enter name");
-        $("#error-name").css("visibility", "visible");
+        $(divId).addClass("has-error");
+        $(errorId).text("Please enter name");
+        $(errorId).css("visibility", "visible");
         return 0;
     }
-    $("#div-name").removeClass("has-error");
-    $("#error-name").text("");
-    $("#error-name").css("visibility", "hidden");
+    $(divId).removeClass("has-error");
+    $(errorId).text("");
     return 1;
 }
 
-function validAddress() {
-    var value = $("#address").val();
+function validAddress(fieldId, divId, errorId) {
+    var value = $(fieldId).val();
     if (value.length < 1) {
-        $("#div-address").addClass("has-error");
-        $("#error-address").text("Please enter address");
-        $("#error-address").css("visibility", "visible");
+        $(divId).addClass("has-error");
+        $(errorId).text("Please enter address");
+        $(errorId).css("visibility", "visible");
         return 0;
     }
-    $("#div-address").removeClass("has-error");
-    $("#error-address").text("");
-    $("#error-address").css("visibility", "hidden");
+    $(divId).removeClass("has-error");
+    $(errorId).text("");
     return 1;
 }
 
-function validRating() {
-    var value = $("#rating").val();
+function validRating(fieldId, divId, errorId) {
+    var value = $(fieldId).val();
     if (value.length < 1) {
-        $("#div-rating").addClass("has-error");
-        $("#error-rating").text("Please enter rating");
-        $("#error-rating").css("visibility", "visible");
+        $(divId).addClass("has-error");
+        $(errorId).text("Please enter rating");
+        $(errorId).css("visibility", "visible");
         return 0;
     }
-    $("#div-rating").removeClass("has-error");
-    $("#error-rating").text("");
-    $("#error-rating").css("visibility", "hidden");
+    $(divId).removeClass("has-error");
+    $(errorId).text("");
     return 1;
 }
 
-function validRestaurant() {
-    var value = $("#restaurant").val();
+function validRestaurant(fieldId, divId, errorId) {
+    var value = $(fieldId).val();
     if (value.length < 1) {
-        $("#div-restaurant").addClass("has-error");
-        $("#error-restaurant").text("Please enter restaurant");
-        $("#error-restaurant").css("visibility", "visible");
+        $(divId).addClass("has-error");
+        $(errorId).text("Please enter restaurant");
+        $(errorId).css("visibility", "visible");
         return 0;
     }
-    $("#div-restaurant").removeClass("has-error");
-    $("#error-restaurant").text("");
-    $("#error-restaurant").css("visibility", "hidden");
+    $(divId).removeClass("has-error");
+    $(errorId).text("");
     return 1;
 }
 
-function validRelatedUrl() {
-    var value = $("#relatedUrl").val();
+function validRelatedUrl(fieldId, divId, errorId) {
+    var value = $(fieldId).val();
     if (value.length < 1) {
-        $("#div-relatedUrl").addClass("has-error");
-        $("#error-relatedUrl").text("Please enter related url");
-        $("#error-relatedUrl").css("visibility", "visible");
+        $(divId).addClass("has-error");
+        $(errorId).text("Please enter related url");
+        $(errorId).css("visibility", "visible");
         return 0;
     }
-    $("#div-relatedUrl").removeClass("has-error");
-    $("#error-relatedUrl").text("");
-    $("#error-relatedUrl").css("visibility", "hidden");
+    $(divId).removeClass("has-error");
+    $(errorId).text("");
     return 1;
 }
 
-function validOnSubmit() {
+function validOnSubmit(formId, nameId, divNameId, errorNameId, addressId, divAddressIdId, errorAddressIdId,
+                       rateId, divRateId, errorRateId, resId, divResId, errorResId,
+                       urlId, divUrlId, errorUrlId) {
     var counter = 0;
+    var changedCount = 0;
 
-    if (validName() == 0) {
+    if ($('#name').val().toLowerCase() != $('#tmpName').val().toLowerCase()) {
+        changedCount++;
+        $('#nameChanged').val(1);
+    } else {
+        $('#nameChanged').val(0);
+    }
+
+    if ($('#address').val().toLowerCase() != $('#tmpAddress').val().toLowerCase()) {
+        changedCount++;
+        $('#addressChanged').val(1);
+    } else {
+        $('#addressChanged').val(0);
+    }
+
+    if ($('#relatedUrl').val().toLowerCase() != $('#tmpRelatedUrl').val().toLowerCase()) {
+        changedCount++;
+    }
+
+    if ($('#rating').val().toLowerCase() != $('#tmpRating').val().toLowerCase()) {
+        changedCount++;
+    }
+
+    if ($('#restaurant').val().toLowerCase() != $('#tmpRestaurant').val().toLowerCase()) {
+        changedCount++;
+    }
+
+    if ($('#district').val().toLowerCase() != $('#tmpDistrict').val().toLowerCase()) {
+        changedCount++;
+    }
+
+    if (validName(nameId, divNameId, errorNameId) == 0) {
         counter++;
     }
 
-    if (validAddress() == 0) {
+    if (validAddress(addressId, divAddressIdId, errorAddressIdId) == 0) {
         counter++;
     }
 
-    if (validRating() == 0) {
+    if (validRating(rateId, divRateId, errorRateId) == 0) {
         counter++;
     }
 
-    if (validRestaurant() == 0) {
+    if (validRestaurant(resId, divResId, errorResId) == 0) {
         counter++;
     }
 
-    if (validRelatedUrl() == 0) {
+    if (validRelatedUrl(urlId, divUrlId, errorUrlId) == 0) {
         counter++;
     }
 
-    if (counter == 0) {
-        $("#add-form").submit();
+    if (changedCount > 0) {
+        if (counter == 0) {
+            $(formId).submit();
+        }
+    } else {
+        swal("", "Nothing has changed!", "warning");
     }
 }

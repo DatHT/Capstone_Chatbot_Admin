@@ -4,28 +4,17 @@
 package com.psib.controller;
 
 import com.psib.common.JsonParser;
-import com.psib.dto.ProductAddressDto;
-import com.psib.dto.ProductDto;
 import com.psib.model.District;
-import com.psib.model.Product;
-import com.psib.model.ProductDetail;
 import com.psib.service.IProductManager;
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.util.ajax.JSON;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 /**
