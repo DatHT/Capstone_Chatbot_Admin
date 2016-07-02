@@ -113,10 +113,9 @@
 							href="example">Example</a></li>
 					</ul>
 				</li>
-				<li class="${current == 'log' ? 'selected' : ''}"><a
-					href="manageLog"> <i class="zmdi zmdi-format-underlined"></i>
-						Manage Log
-				</a></li>
+				<li class="${current == 'log' ? 'selected' : ''}">
+					<a href="manageLog"> <i class="zmdi zmdi-format-underlined"></i> Manage Log</a>
+				</li>
 				<li class="sub-menu"><a href="#"
 					data-ma-action="submenu-toggle"><i
 						class="zmdi zmdi-collection-text"></i> Manage Information</a>
@@ -127,7 +126,9 @@
 							href="synonym">Synonym</a></li>
 					</ul>
 				</li>
-
+				<li class="${current == 'conversations' ? 'selected' : ''}">
+					<a href="conversations"> <i class="zmdi zmdi-comments"></i> Conversations</a>
+				</li>
 			</ul>
 		</aside>
 		<!-- end navbar side -->

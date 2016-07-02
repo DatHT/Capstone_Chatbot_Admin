@@ -70,6 +70,14 @@
 		<put-attribute name="body" value="/WEB-INF/views/logs/manageLog.jsp" />
 		<put-attribute name="current" value="log" />
 	</definition>
+	
+	<!-- Begin Manage Full Conversations Page -->
+	<!-- *************************************************************************** -->
+	<definition name="conversations" extends="base.definition">
+		<put-attribute name="title" value="Conversations" />
+		<put-attribute name="body" value="/WEB-INF/views/conversations/fullConversations.jsp" />
+		<put-attribute name="current" value="conversations" />
+	</definition>
 
 	<!-- Begin Manage Product Page -->
 	<!-- *************************************************************************** -->
