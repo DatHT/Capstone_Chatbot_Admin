@@ -66,6 +66,7 @@
     $(document).ready(function () {
         var addResult = '${addResult}';
         var updateResult = '${updateResult}';
+        var deleteResult = '${deleteResult}';
 
         if (addResult == 'true') {
             notify("Add Product Successfully!", "info");
@@ -77,6 +78,8 @@
         } else if (updateResult == 'false') {
             notify("Product Already Existed!", "warning");
             showUpdateModalOnStart();
+        } else if (deleteResult == 'true') {
+            notify("Delete Product Successfully!", "info");
         }
 
         if ('${name}' != "") {
@@ -115,7 +118,6 @@
             $("#error-relatedUrl").text("");
         });
 
-        //Basic Example
         $("#data-table-basic").bootgrid({
             ajax: true,
             post: function () {
@@ -145,7 +147,12 @@
                             "</button>";
                 },
                 "commandsDelete": function (column, row) {
-                    return "<button class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+                    return "<button class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float' onclick='showDeleteModal("
+                            + "`" + row.productId + "`"
+                            + ")'>" +
+                            "<i class='zmdi zmdi-edit zmdi-hc-fw'>" +
+                            "</i>" +
+                            "</button>";
                 }
             },
             ss: {
@@ -156,7 +163,8 @@
                 iconUp: 'zmdi-expand-less'
             },
         });
-    });
+    })
+    ;
 </script>
 
 <!-- Modals-->
@@ -293,3 +301,39 @@
 <input id="tmpRating" type="hidden">
 <input id="tmpRestaurant" type="hidden">
 <input id="tmpDistrict" type="hidden">
+
+
+<!-- Modals-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete Product</h4>
+            </div>
+            <div class="modal-body" style="border-bottom: 0px">
+                <div>
+                    <h4>Are you sure?</h4>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form action="deleteProduct" method="POST">
+                    <button type="button" class="btn btn-danger"
+                            data-dismiss="modal">Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-success"
+                            onclick="">
+                        Delete
+                    </button>
+                    <input id="deleteProductId" name="deleteProductId" type="hidden"/>
+                    <input type="hidden" name="${_csrf.parameterName}"
+                           value="${_csrf.token}"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->

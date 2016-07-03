@@ -22,4 +22,6 @@ public interface IProductManager {
 
     int updateProduct(String name, String address, String district, String rating, String restaurant, String relatedUrl,
                       String productId, MultipartFile file);
+
+    void deleteProduct(String productId);
 }

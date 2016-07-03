@@ -134,6 +134,25 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
 
     @Override
     @Transactional
+    public void deleteProductDetail(ProductDetail productDetail) {
+        LOG.info("[deleteProductDetail] Start: id = " + productDetail.getProductId());
+        delete(productDetail);
+        LOG.info("[deleteProductDetail] End");
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(ProductDetail productDetail) {
+        LOG.info("[deleteById] Start: id = " + productDetail.getProductId());
+        String sql = "DELETE FROM " + ProductDetail.class.getSimpleName() + " P WHERE P.productId = :productId";
+        Query query = getSession().createQuery(sql);
+        query.setParameter("productId", productDetail.getProductId());
+        query.executeUpdate();
+        LOG.info("[deleteById] End");
+    }
+
+    @Override
+    @Transactional
     public long checkProductExist(ProductDetail productDetail) {
         LOG.info(new StringBuilder("[checkProductExist] Start: productName = ").append(productDetail.getProductName())
                 .append(" , addressName = ").append(productDetail.getAddressName()));

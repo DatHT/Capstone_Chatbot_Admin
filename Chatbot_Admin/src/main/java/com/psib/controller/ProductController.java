@@ -34,6 +34,7 @@ public class ProductController {
     @RequestMapping(value = "/product", method = RequestMethod.GET)
     public ModelAndView loadProduct(@ModelAttribute(value = "addResult") String addResult,
                                     @ModelAttribute(value = "updateResult") String updateResult,
+                                    @ModelAttribute(value = "deleteResult") String deleteResult,
                                     @ModelAttribute(value = "name") String name,
                                     @ModelAttribute(value = "address") String address,
                                     @ModelAttribute(value = "district") String district,
@@ -63,6 +64,13 @@ public class ProductController {
         } else {
             model.addObject(updateResult);
         }
+
+        if (deleteResult.equals("")) {
+            model.addObject("deleteResult", "1st load");
+        } else {
+            model.addObject(deleteResult);
+        }
+
 
         District dis = null;
         if (txtDistrict != null && txtFood != null) {
@@ -161,6 +169,24 @@ public class ProductController {
             return model;
         }
         LOG.info("[updateProduct] End");
+        return model;
+    }
+
+    @RequestMapping(value = "/deleteProduct", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    public ModelAndView deleteProduct(@RequestParam(name = "deleteProductId") String productId,
+                                      RedirectAttributes redirectAttributes) {
+        LOG.info("[deleteProduct] Start");
+        ModelAndView model = new ModelAndView("redirect:product");
+        try {
+            productManager.deleteProduct(productId);
+            redirectAttributes.addFlashAttribute("deleteResult", true);
+        } catch (DatabaseException e) {
+            LOG.error("[deleteProduct] DatabaseException: " + e.getMessage());
+            model = new ModelAndView("error");
+            model.addObject(ERROR, e.getMessage());
+            return model;
+        }
+        LOG.info("[deleteProduct] End");
         return model;
     }
 

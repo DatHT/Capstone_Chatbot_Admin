@@ -204,6 +204,13 @@ public class ProductManager implements IProductManager {
         }
     }
 
+    @Override
+    public void deleteProduct(String productId) {
+        ProductDetail productDetail = new ProductDetail();
+        productDetail.setProductId(Long.parseLong(productId));
+        productDetailDao.deleteById(productDetail);
+    }
+
     private long insertAddress(Address address, double latitude, double longitude, String restaurant, String district) {
         long addressId = addressDao.checkAddressExist(address);
         if (addressId == 0) {

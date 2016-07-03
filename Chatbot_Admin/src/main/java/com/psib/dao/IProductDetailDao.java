@@ -18,5 +18,9 @@ public interface IProductDetailDao {
 
     void updateProductDetail(ProductDetail productDetail);
 
+    void deleteProductDetail(ProductDetail productDetail);
+
+    void deleteById(ProductDetail productDetail);
+
     long checkProductExist(ProductDetail productDetail);
 }

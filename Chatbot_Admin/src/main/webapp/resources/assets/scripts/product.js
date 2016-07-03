@@ -4,7 +4,6 @@ function showAddModal() {
     $('#myModal').modal('show');
 }
 
-
 function showUpdateModal(productId, productName, addressName, urlRelate, rate, restaurantName, districtName) {
     $('#updateProductId').val(productId);
 
@@ -27,6 +26,12 @@ function showUpdateModal(productId, productName, addressName, urlRelate, rate, r
     $('#add-form').attr('action', 'updateProduct');
     $('#user-say-in-modal').text('Update Product');
     $('#myModal').modal('show');
+}
+
+function showDeleteModal(productId, addressName) {
+    $('#deleteProductId').val(productId);
+    $('#deleteAddressName').val(addressName);
+    $('#deleteModal').modal('show');
 }
 
 function validName(fieldId, divId, errorId) {
