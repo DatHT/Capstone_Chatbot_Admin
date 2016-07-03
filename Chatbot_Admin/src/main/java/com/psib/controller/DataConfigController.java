@@ -4,6 +4,7 @@
 package com.psib.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.psib.common.restclient.RestfulException;
+import com.psib.constant.CodeManager;
+import com.psib.constant.StatusCode;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
@@ -50,21 +53,16 @@ public class DataConfigController {
 
 		return "dataConfig";
 	}
-	
-
 
 	@RequestMapping(value = "/sync", method = RequestMethod.POST)
 	public @ResponseBody String synchronize(Model model, @RequestParam("api") String api,
 			@RequestParam("db") String db) {
 		String responseText = "";
-		System.out.println("DATdadasddas");
 		try {
 			if (api.equals("yes")) {
 				List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
 				for (LexicalCategoryDto dto : lexicals) {
-					logger.info("[Before Exist]");
 					if (lexicalManager.checkExistLexical(dto.getName()) == null) {
-						logger.info("[After Exist]");
 						// sync from lexical to db
 						LexicalCategory lexical = new LexicalCategory();
 						lexical.setName(dto.getName());
@@ -72,7 +70,7 @@ public class DataConfigController {
 						long id = lexicalManager.insertLexicalToDatabase(lexical);
 						LexicalDto entry = lexicalManager.getApiLexicalById(String.valueOf(dto.getId()));
 						for (Entry item : entry.getEntries()) {
-							Phrase phrase =phraseManager.checkExist(item.getValue());
+							Phrase phrase = phraseManager.checkExist(item.getValue());
 							if (phrase == null) {
 								phrase = new Phrase();
 								phrase.setAsynchronized(true);
@@ -87,10 +85,54 @@ public class DataConfigController {
 				}
 				responseText = "done";
 			}
+			// sync to api
+			if (db.equals("yes")) {
+				//delete phrase in api
+//				LexicalDto food = lexicalManager.getApiLexicalById("bf8bb68e-dde4-4a7a-ac7c-9d4101e9aaf7");
+//				List<String> values = new ArrayList<>();
+//				for(Entry e : food.getEntries()) {
+//					values.add(e.getValue());
+//				}
+//				StatusCode code1 = lexicalManager.deletePhrase(values, food.getName());
+//				switch (code1) {
+//				case SUCCESS:
+//					logger.info("[Delete to api] success ");
+//					break;
+//				case ERROR:
+//					logger.info("[Delete to api] error ");
+//					break;
+//				case CONFLICT:
+//					logger.info("[Delete to api] conflit ");;
+//					break;
+//				}
+				List<Phrase> phrases = phraseManager.getAll();
+				for (int i = 0; i < phrases.size(); i++) {
+					Phrase p = phrases.get(i);
+					Entry entry = new Entry();
+					entry.setValue(p.getName());
+					List<String> synonym = new ArrayList<>();
+					synonym.add(p.getName());
+					entry.setSynonyms(synonym);
+					StatusCode code = lexicalManager.addPhrase(entry, "bf8bb68e-dde4-4a7a-ac7c-9d4101e9aaf7");
+					switch (code) {
+					case SUCCESS:
+						responseText = CodeManager.SUCCESS;
+						break;
+					case ERROR:
+						responseText = CodeManager.ERROR;
+						break;
+					case CONFLICT:
+						responseText = CodeManager.EXISTED;
+						break;
+					}
+					logger.info("[Sync to api] done " + i);
+				}
+				
+			}
 		} catch (IOException e) {
-			model.addAttribute(ERROR, e.getMessage());
+			responseText = e.getMessage();
 		} catch (RestfulException e) {
-			model.addAttribute(ERROR, e.getMessage());
+			responseText = e.getMessage();
 		}
 		return responseText;
 	}

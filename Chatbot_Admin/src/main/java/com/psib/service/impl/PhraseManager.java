@@ -3,6 +3,8 @@
  */
 package com.psib.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,13 +39,19 @@ public class PhraseManager implements IPhraseManager {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.psib.service.IPhraseManager#checkExist(java.lang.String)
 	 */
 	@Override
 	public Phrase checkExist(String name) {
-		// TODO Auto-generated method stub
 		return dao.checkExistName(name);
+	}
+
+	@Override
+	public List<Phrase> getAll() {
+		return dao.getAllPhrases();
 	}
 
 }

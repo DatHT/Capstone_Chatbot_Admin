@@ -25,6 +25,10 @@ public interface ILexicalCategoryManager {
 
 	StatusCode addPhrase(Entry entry, String id) throws IOException, RestfulException;
 	
+	StatusCode addPhrases(List<Entry> entries, String id) throws IOException, RestfulException;
+	
+	StatusCode deletePhrase(List<String> values, String name) throws IOException, RestfulException;
+	
 	long insertLexicalToDatabase(LexicalCategory lexicalCategory);
 	
 	String checkExistLexical(String name);

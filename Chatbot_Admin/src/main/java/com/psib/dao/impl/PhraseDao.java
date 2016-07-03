@@ -3,6 +3,8 @@
  */
 package com.psib.dao.impl;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
@@ -47,6 +49,7 @@ public class PhraseDao extends BaseDao<Phrase, Integer> implements IPhraseDao {
 	 * @see com.psib.dao.IPhraseDao#checkExistName(java.lang.String)
 	 */
 	@Override
+	@Transactional
 	public Phrase checkExistName(String name) {
 		LOG.info("[checkExistPhrase] Start: name = " + name);
 		String sql = "From " + Phrase.class.getSimpleName() + " where name = :name";
@@ -57,6 +60,12 @@ public class PhraseDao extends BaseDao<Phrase, Integer> implements IPhraseDao {
 			return phrase;
 		}
 		return null;
+	}
+	
+	@Override
+	@Transactional
+	public List<Phrase> getAllPhrases() {
+		return getAll();
 	}
 
 }

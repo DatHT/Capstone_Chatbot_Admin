@@ -20,7 +20,7 @@ import java.util.List;
 public class RestClient {
 	public static final List<RequestMethod> ignoreMethods = Arrays
 			.asList(new RequestMethod[] { RequestMethod.GET,
-					RequestMethod.DELETE, RequestMethod.HEAD,
+					 RequestMethod.HEAD,
 					RequestMethod.OPTIONS });
 
 	public static final int READ_TIMEOUT = 2 * 60 * 1000; // 2minute

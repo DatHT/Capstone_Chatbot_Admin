@@ -3,6 +3,8 @@
  */
 package com.psib.service;
 
+import java.util.List;
+
 import com.psib.model.Phrase;
 
 /**
@@ -15,4 +17,6 @@ public interface IPhraseManager {
 	int insertPhraseToDatabase(Phrase phrase);
 	
 	Phrase checkExist(String name);
+	
+	List<Phrase> getAll();
 }

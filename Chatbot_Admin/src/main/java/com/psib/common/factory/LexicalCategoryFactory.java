@@ -52,4 +52,23 @@ public class LexicalCategoryFactory extends AbstractFactory {
 		
 	}
 	
+	public StatusDto insertPhrases(List<Entry> entries, String id) throws IOException, RestfulException {
+		RestResult result = client.createInvoker(RequestMethod.POST)
+				.addHeader(AUTH_KEY, AUTH_VALUE)
+				.addRoute(id).addRoute("entries")
+				.invoke(entries);
+		
+		return response(result, StatusDto.class);
+		
+	}
+	
+	public StatusDto deletePhrase(String name, List<String> value) throws IOException, RestfulException {
+		RestResult result = client.createInvoker(RequestMethod.DELETE)
+				.addHeader(AUTH_KEY, AUTH_VALUE)
+				.addRoute(name).addRoute("entries")
+				.invoke(value);
+		
+		return response(result, StatusDto.class);
+	}
+	
 }

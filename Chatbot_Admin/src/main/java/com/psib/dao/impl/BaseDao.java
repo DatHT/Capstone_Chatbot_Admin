@@ -60,7 +60,6 @@ public class BaseDao<Model, Id> implements IBaseDao<Model, Id> {
 	}
 
 	@Override
-
 	public List<Model> getAll() {
 		// TODO Auto-generated method stub
 		String sql = "select e from " + clazz.getSimpleName() + " e";

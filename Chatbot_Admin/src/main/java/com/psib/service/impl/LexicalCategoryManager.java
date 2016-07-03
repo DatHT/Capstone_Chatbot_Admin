@@ -97,4 +97,34 @@ public class LexicalCategoryManager implements ILexicalCategoryManager {
 		return dao.checkExistName(name);
 	}
 
+	@Override
+	public StatusCode addPhrases(List<Entry> entries, String id) throws IOException, RestfulException {
+		StatusDto status = factory.insertPhrases(entries, id);
+		switch (status.getCode()) {
+		case 200:
+			return StatusCode.SUCCESS;
+		case 0:
+			return StatusCode.SUCCESS;
+		case 409:
+			return StatusCode.CONFLICT;
+		default:
+			return StatusCode.ERROR;
+		}
+	}
+
+	@Override
+	public StatusCode deletePhrase(List<String> values, String name) throws IOException, RestfulException {
+		StatusDto status = factory.deletePhrase(name, values);
+		switch (status.getCode()) {
+		case 200:
+			return StatusCode.SUCCESS;
+		case 0:
+			return StatusCode.SUCCESS;
+		case 409:
+			return StatusCode.CONFLICT;
+		default:
+			return StatusCode.ERROR;
+		}
+	}
+
 }
