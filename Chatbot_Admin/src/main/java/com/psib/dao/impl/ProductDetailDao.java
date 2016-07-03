@@ -126,7 +126,15 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
 
     @Override
     @Transactional
-    public boolean checkProductExist(ProductDetail productDetail) {
+    public void updateProductDetail(ProductDetail productDetail) {
+        LOG.info("[updateProductDetail] Start: name = " + productDetail.getProductName());
+        update(productDetail);
+        LOG.info("[updateProductDetail] End");
+    }
+
+    @Override
+    @Transactional
+    public long checkProductExist(ProductDetail productDetail) {
         LOG.info(new StringBuilder("[checkProductExist] Start: productName = ").append(productDetail.getProductName())
                 .append(" , addressName = ").append(productDetail.getAddressName()));
         String sql = String.valueOf(new StringBuilder("FROM ").append(ProductDetail.class.getSimpleName())
@@ -138,9 +146,9 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
         ProductDetail result = (ProductDetail) query.uniqueResult();
         if (result != null) {
             LOG.info("[checkProductExist] End");
-            return true;
+            return result.getProductId();
         }
         LOG.info("[checkProductExist] End");
-        return false;
+        return 0;
     }
 }

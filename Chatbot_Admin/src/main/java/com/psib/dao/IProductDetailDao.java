@@ -16,5 +16,7 @@ public interface IProductDetailDao {
 
     void insertProductDetail(ProductDetail productDetail);
 
-    boolean checkProductExist(ProductDetail productDetail);
+    void updateProductDetail(ProductDetail productDetail);
+
+    long checkProductExist(ProductDetail productDetail);
 }

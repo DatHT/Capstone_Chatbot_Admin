@@ -4,9 +4,9 @@ function showAddModal() {
     $('#myModal').modal('show');
 }
 
-function showUpdateModal(productId, addressId, productName, addressName, urlRelate, rate, restaurantName, districtName) {
+
+function showUpdateModal(productId, productName, addressName, urlRelate, rate, restaurantName, districtName) {
     $('#updateProductId').val(productId);
-    $('#updateAddressId').val(addressId);
 
     $('#name').val(productName);
     $('#address').val(addressName);
@@ -102,16 +102,10 @@ function validOnSubmit(formId, nameId, divNameId, errorNameId, addressId, divAdd
 
     if ($('#name').val().toLowerCase() != $('#tmpName').val().toLowerCase()) {
         changedCount++;
-        $('#nameChanged').val(1);
-    } else {
-        $('#nameChanged').val(0);
     }
 
     if ($('#address').val().toLowerCase() != $('#tmpAddress').val().toLowerCase()) {
         changedCount++;
-        $('#addressChanged').val(1);
-    } else {
-        $('#addressChanged').val(0);
     }
 
     if ($('#relatedUrl').val().toLowerCase() != $('#tmpRelatedUrl').val().toLowerCase()) {

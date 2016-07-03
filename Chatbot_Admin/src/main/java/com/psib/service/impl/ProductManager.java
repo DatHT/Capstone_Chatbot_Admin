@@ -87,20 +87,85 @@ public class ProductManager implements IProductManager {
     }
 
     @Override
-    public int insertProduct(String name, String address, String district, double rating, String restaurant,
+    public int insertProduct(String name, String address, String district, String rating, String restaurant,
                              String relatedUrl, MultipartFile file) {
-        LOG.info(String.valueOf(new StringBuilder("[insertProduct] Start: name = ").append(name)
+        LOG.info(new StringBuilder("[insertProduct] Start: name = ").append(name)
                 .append("; address = ").append(address)
                 .append("; district = ").append(district)
                 .append("; rating = ").append(rating)
                 .append("; restaurant = ").append(restaurant)
                 .append("; relatedUrl = ").append(relatedUrl)
-                .append("; thumbnail = ").append(file.getOriginalFilename())));
+                .append("; thumbnail = ").append(file.getOriginalFilename()));
 
         try {
             ProductDetail productDetail = new ProductDetail();
+            productDetail.setProductName(name);
             productDetail.setAddressName(address);
-            productDetail.setDistrictName(district);
+
+            if (productDetailDao.checkProductExist(productDetail) == 0) {
+                String latLongs[] = LatitudeAndLongitudeWithPincode.getLatLongPositions(address);
+                double latitude;
+                double longitude;
+                if (latLongs == null) {
+                    latitude = 0;
+                    longitude = 0;
+                } else {
+                    latitude = Double.parseDouble(latLongs[0]);
+                    longitude = Double.parseDouble(latLongs[1]);
+                }
+
+                Address addressObj = new Address();
+                addressObj.setName(address);
+
+                long addressId = insertAddress(addressObj, latitude, longitude, restaurant, district);
+
+                String thumbUrl = uploadThumbnail(file);
+
+                productDetail.setDistrictName(district);
+                productDetail.setLatitude(latitude);
+                productDetail.setLongitude(longitude);
+                productDetail.setRate(Double.parseDouble(rating));
+                productDetail.setRestaurantName(restaurant);
+                productDetail.setAddressId(addressId);
+                productDetail.setUrlRelate(relatedUrl);
+                productDetail.setSource(getSourceFromUrl(relatedUrl));
+                productDetail.setThumbPath(thumbUrl);
+                productDetailDao.insertProductDetail(productDetail);
+
+                LOG.info("[insertProduct] End");
+                return 1;
+            }
+
+            LOG.info("[insertProduct] End");
+            return 0;
+        } catch (Exception e) {
+            LOG.error("[insertProduct] Exception: " + e.getMessage());
+            throw new DatabaseException("Can not insert to Database", e);
+        }
+    }
+
+    @Override
+    public int updateProduct(String name, String address, String district, String rating, String restaurant,
+                             String relatedUrl, String productId, MultipartFile file) {
+        LOG.info(new StringBuilder("[updateProduct] Start: name = ").append(name)
+                .append("; address = ").append(address)
+                .append("; district = ").append(district)
+                .append("; rating = ").append(rating)
+                .append("; restaurant = ").append(restaurant)
+                .append("; relatedUrl = ").append(relatedUrl)
+                .append("; thumbnail = ").append(file.getOriginalFilename()));
+
+        try {
+            ProductDetail productDetail = new ProductDetail();
+            productDetail.setProductName(name);
+            productDetail.setAddressName(address);
+
+            long tmpProductId = productDetailDao.checkProductExist(productDetail);
+
+            if (tmpProductId != Long.parseLong(productId) && tmpProductId != 0) {
+                LOG.info("[insertProduct] End");
+                return 0;
+            }
 
             String latLongs[] = LatitudeAndLongitudeWithPincode.getLatLongPositions(address);
             double latitude;
@@ -113,46 +178,42 @@ public class ProductManager implements IProductManager {
                 longitude = Double.parseDouble(latLongs[1]);
             }
 
+            Address addressObj = new Address();
+            addressObj.setName(address);
+
+            long tmpAddressId = insertAddress(addressObj, latitude, longitude, restaurant, district);
+
+            String thumbUrl = uploadThumbnail(file);
+            productDetail.setProductId(Long.parseLong(productId));
+            productDetail.setDistrictName(district);
             productDetail.setLatitude(latitude);
             productDetail.setLongitude(longitude);
-            productDetail.setProductName(name);
-            productDetail.setRate(rating);
+            productDetail.setRate(Double.parseDouble(rating));
             productDetail.setRestaurantName(restaurant);
-            productDetail.setThumbPath("");
-
-            if (!productDetailDao.checkProductExist(productDetail)) {
-                Address addressObj = new Address();
-                addressObj.setName(address);
-                addressObj.setLatitude(latitude);
-                addressObj.setLongitude(longitude);
-                addressObj.setRestaurantName(restaurant);
-                addressObj.setDistrictId(districtDao.getDistrictByName(district).getId());
-
-                long addressId = addressDao.checkAddressExist(addressObj);
-                if (addressId == 0) {
-                    addressId = addressDao.inserAddress(addressObj);
-                }
-
-                String thumbUrl = uploadThumbnail(file);
-
-                productDetail.setAddressId(addressId);
-                productDetail.setUrlRelate(relatedUrl);
-                productDetail.setSource(getSourceFromUrl(relatedUrl));
-                if (thumbUrl.equals("")) {
-                    thumbUrl = uploadThumbnail(file);
-                }
-                productDetail.setThumbPath(thumbUrl);
-                productDetailDao.insertProductDetail(productDetail);
-
-                LOG.info("[insertProduct] End");
-                return 1;
-            }
+            productDetail.setAddressId(tmpAddressId);
+            productDetail.setUrlRelate(relatedUrl);
+            productDetail.setSource(getSourceFromUrl(relatedUrl));
+            productDetail.setThumbPath(thumbUrl);
+            productDetailDao.updateProductDetail(productDetail);
 
             LOG.info("[insertProduct] End");
-            return 0;
+            return 1;
         } catch (Exception e) {
+            LOG.error("[updateProduct] Exception: " + e.getMessage());
             throw new DatabaseException("Can not insert to Database", e);
         }
+    }
+
+    private long insertAddress(Address address, double latitude, double longitude, String restaurant, String district) {
+        long addressId = addressDao.checkAddressExist(address);
+        if (addressId == 0) {
+            address.setLatitude(latitude);
+            address.setLongitude(longitude);
+            address.setRestaurantName(restaurant);
+            address.setDistrictId(districtDao.getDistrictByName(district).getId());
+            addressId = addressDao.inserAddress(address);
+        }
+        return addressId;
     }
 
     private String uploadThumbnail(MultipartFile file) {
@@ -194,6 +255,11 @@ public class ProductManager implements IProductManager {
 
         LOG.info("[uploadThumbnail] End");
         return null;
+    }
+
+    @Override
+    public District getDistrict(String districtName) {
+        return districtDao.getDistrictByName(districtName);
     }
 
     private String getSourceFromUrl(String url) {
