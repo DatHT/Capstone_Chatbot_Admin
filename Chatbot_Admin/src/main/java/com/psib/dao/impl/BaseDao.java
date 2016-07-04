@@ -9,7 +9,11 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 
 import com.psib.dao.IBaseDao;
@@ -39,6 +43,9 @@ public class BaseDao<Model, Id> implements IBaseDao<Model, Id> {
 	}
 
 	protected Session getSession() {
+		if (factory == null) {
+			factory = (SessionFactory) new LocalSessionFactoryBean();
+		}
 		return factory.getCurrentSession();
 	}
 
@@ -67,5 +74,23 @@ public class BaseDao<Model, Id> implements IBaseDao<Model, Id> {
 		List<Model> list = query.list();
 		return list;
 	}
+	
+	private static SessionFactory buildSessionFactory() {
+        // Create Configuration
+        Configuration configuration = new Configuration();
+ 
+        // By default, Hibernate will read hibernate.cfg.xml configuration file
+        // You can specify the file if you want:
+        // configuration.configure("myhiberante.cfg.xml");
+        configuration.configure();
+ 
+        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                .applySettings(configuration.getProperties()).build();
+ 
+        // Create SessionFactory
+        SessionFactory sessionFactory = configuration
+                .buildSessionFactory(serviceRegistry);
+        return sessionFactory;
+    }
 
 }
