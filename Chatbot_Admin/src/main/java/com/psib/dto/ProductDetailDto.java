@@ -1,23 +1,23 @@
 package com.psib.dto;
 
-import com.psib.model.ProductAddress;
+import com.psib.model.ProductDetail;
 
 /**
  * Created by manlm1 on 6/28/2016.
  */
-public class ProductAddressDto {
+public class ProductDetailDto {
 
-    public ProductAddressDto(int number, ProductAddress productAddress) {
+    public ProductDetailDto(int number, ProductDetail productDetail) {
         this.number = number;
-        this.productId = productAddress.getProductId();
-        this.addressId = productAddress.getAddressId();
-        this.productName = productAddress.getProductName();
-        this.addressName = productAddress.getAddressName();
-        this.urlRelate = productAddress.getUrlRelate();
-        this.thumbPath = productAddress.getThumbPath();
-        this.rate = productAddress.getRate();
-        this.restaurantName = productAddress.getRestaurantName();
-        this.districtName = productAddress.getDistrictName();
+        this.productId = productDetail.getProductId();
+        this.addressId = productDetail.getAddressId();
+        this.productName = productDetail.getProductName();
+        this.addressName = productDetail.getAddressName();
+        this.urlRelate = productDetail.getUrlRelate();
+        this.thumbPath = productDetail.getThumbPath();
+        this.rate = productDetail.getRate();
+        this.restaurantName = productDetail.getRestaurantName();
+        this.districtName = productDetail.getDistrictName();
     }
 
     private long number;
@@ -34,7 +34,7 @@ public class ProductAddressDto {
 
     private String thumbPath;
 
-    private String rate;
+    private double rate;
 
     private String restaurantName;
 
@@ -96,11 +96,11 @@ public class ProductAddressDto {
         this.thumbPath = thumbPath;
     }
 
-    public String getRate() {
+    public double getRate() {
         return rate;
     }
 
-    public void setRate(String rate) {
+    public void setRate(double rate) {
         this.rate = rate;
     }
 

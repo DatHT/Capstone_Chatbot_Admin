@@ -9,6 +9,6 @@ public interface IDistrictDao {
 	List<District> getAllDistrict();
 	
 	District getDistrictById(long id);
-	
+
 	District getDistrictByName(String name);
 }

@@ -96,7 +96,7 @@
 			<ul class="main-menu">
 				<c:if test="${principal.authorities == '[ADMIN]'}">
 					<li class="${current == 'dataConfig' ? 'selected' : ''}"><a
-						href="dataConfig"><i class="zmdi zmdi-home"></i> Data Config</a></li>
+						href="config"><i class="zmdi zmdi-home"></i> Data Config</a></li>
 				</c:if>
 				<c:if test="${principal.authorities == '[ADMIN]'}">
 					<li class="${current == 'manageAccount' ? 'selected' : ''}"><a

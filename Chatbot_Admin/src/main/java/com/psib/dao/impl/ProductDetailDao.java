@@ -1,8 +1,7 @@
 package com.psib.dao.impl;
 
-import com.psib.dao.IProductAddressDao;
-import com.psib.model.ProductAddress;
-import com.psib.util.SpringPropertiesUtil;
+import com.psib.dao.IProductDetailDao;
+import com.psib.model.ProductDetail;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -11,21 +10,21 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public class ProductAddressDao extends BaseDao<ProductAddress, Long> implements IProductAddressDao {
+public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IProductDetailDao {
 
-    private static final Logger LOG = Logger.getLogger(ProductAddressDao.class);
+    private static final Logger LOG = Logger.getLogger(ProductDetailDao.class);
 
-    public ProductAddressDao(Class<ProductAddress> clazz) {
+    public ProductDetailDao(Class<ProductDetail> clazz) {
         super(clazz);
     }
 
-    public ProductAddressDao() {
-        setClazz(ProductAddress.class);
+    public ProductDetailDao() {
+        setClazz(ProductDetail.class);
     }
 
     @Override
     @Transactional
-    public List<ProductAddress> getAllItem() {
+    public List<ProductDetail> getAllItem() {
         LOG.info("[getAllItem] Start");
         LOG.info("[getAllItem] End");
         return getAll();
@@ -37,7 +36,7 @@ public class ProductAddressDao extends BaseDao<ProductAddress, Long> implements 
         LOG.info("[countBySearchPhrase] Start: searchPhrase = " + searchPhrase);
 
         String sql = String.valueOf(new StringBuilder("SELECT COUNT(P.productId) FROM ")
-                .append(ProductAddress.class.getSimpleName())
+                .append(ProductDetail.class.getSimpleName())
                 .append(" P WHERE P.productName LIKE :searchPhrase")
                 .append(" OR P.addressName LIKE :searchPhrase")
                 .append(" OR P.districtName LIKE :searchPhrase")
@@ -55,7 +54,7 @@ public class ProductAddressDao extends BaseDao<ProductAddress, Long> implements 
 
     @Override
     @Transactional
-    public List<ProductAddress> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
+    public List<ProductDetail> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
             , String sortDistrictName, String sortRate, String sortRestaurantName
             , int maxResult, int skipResult) {
         LOG.info(new StringBuilder("[getBySearchPhraseAndSort] Start: searchPhrase = ").append(searchPhrase)
@@ -67,7 +66,7 @@ public class ProductAddressDao extends BaseDao<ProductAddress, Long> implements 
                 .append(", maxResult = ").append(maxResult)
                 .append(", skipResult = ").append(skipResult));
 
-        StringBuilder sql = new StringBuilder("FROM ").append(ProductAddress.class.getSimpleName())
+        StringBuilder sql = new StringBuilder("FROM ").append(ProductDetail.class.getSimpleName())
                 .append(" P WHERE P.productName LIKE :searchPhrase")
                 .append(" OR P.addressName LIKE :searchPhrase")
                 .append(" OR P.districtName LIKE :searchPhrase")
@@ -111,7 +110,7 @@ public class ProductAddressDao extends BaseDao<ProductAddress, Long> implements 
         query.setFirstResult(skipResult);
         query.setMaxResults(maxResult);
 
-        List<ProductAddress> result = query.list();
+        List<ProductDetail> result = query.list();
 
         LOG.info("[getBySearchPhraseAndSort] End");
         return result;
@@ -119,30 +118,56 @@ public class ProductAddressDao extends BaseDao<ProductAddress, Long> implements 
 
     @Override
     @Transactional
-    public void insertProductAddress(ProductAddress productAddress) {
-        LOG.info("[insertProductAddress] Start: productName = " + productAddress.getProductName());
-        insert(productAddress);
-        LOG.info("[insertProductAddress] End");
+    public void insertProductDetail(ProductDetail productDetail) {
+        LOG.info("[insertProductDetail] Start: productName = " + productDetail.getProductName());
+        insert(productDetail);
+        LOG.info("[insertProductDetail] End");
     }
 
     @Override
     @Transactional
-    public boolean checkProductExist(ProductAddress productAddress) {
-        LOG.info("[checkProductExist] Start: productName = " + productAddress.getProductName());
+    public void updateProductDetail(ProductDetail productDetail) {
+        LOG.info("[updateProductDetail] Start: name = " + productDetail.getProductName());
+        update(productDetail);
+        LOG.info("[updateProductDetail] End");
+    }
 
-        String sql = String.valueOf(new StringBuilder("FROM ").append(ProductAddress.class.getSimpleName())
-                .append(" P WHERE P.productName = :productName AND P.addressName = :addressName AND P.restaurantName = :restaurantName"));
+    @Override
+    @Transactional
+    public void deleteProductDetail(ProductDetail productDetail) {
+        LOG.info("[deleteProductDetail] Start: id = " + productDetail.getProductId());
+        delete(productDetail);
+        LOG.info("[deleteProductDetail] End");
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(ProductDetail productDetail) {
+        LOG.info("[deleteById] Start: id = " + productDetail.getProductId());
+        String sql = "DELETE FROM " + ProductDetail.class.getSimpleName() + " P WHERE P.productId = :productId";
+        Query query = getSession().createQuery(sql);
+        query.setParameter("productId", productDetail.getProductId());
+        query.executeUpdate();
+        LOG.info("[deleteById] End");
+    }
+
+    @Override
+    @Transactional
+    public long checkProductExist(ProductDetail productDetail) {
+        LOG.info(new StringBuilder("[checkProductExist] Start: productName = ").append(productDetail.getProductName())
+                .append(" , addressName = ").append(productDetail.getAddressName()));
+        String sql = String.valueOf(new StringBuilder("FROM ").append(ProductDetail.class.getSimpleName())
+                .append(" P WHERE P.productName = :productName AND P.addressName = :addressName"));
 
         Query query = getSession().createQuery(sql);
-        query.setParameter("productName", productAddress.getProductName());
-        query.setParameter("addressName", productAddress.getAddressName());
-        query.setParameter("restaurantName", productAddress.getRestaurantName());
-        ProductAddress result = (ProductAddress) query.uniqueResult();
+        query.setParameter("productName", productDetail.getProductName());
+        query.setParameter("addressName", productDetail.getAddressName());
+        ProductDetail result = (ProductDetail) query.uniqueResult();
         if (result != null) {
             LOG.info("[checkProductExist] End");
-            return true;
+            return result.getProductId();
         }
         LOG.info("[checkProductExist] End");
-        return false;
+        return 0;
     }
 }

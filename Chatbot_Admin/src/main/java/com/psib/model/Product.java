@@ -29,7 +29,7 @@ public class Product implements Serializable {
 	private String thumbPath;
 
 	@Column(name = "rate")
-	private String rate;
+	private double rate;
 	
 	@Column(name = "source")
 	private String source;
@@ -41,7 +41,7 @@ public class Product implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Product(long id, String name, String urlRelate, String thumbPath, String rate, String source, int numOfSearch) {
+	public Product(long id, String name, String urlRelate, String thumbPath, double rate, String source, int numOfSearch) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -84,11 +84,11 @@ public class Product implements Serializable {
 		this.thumbPath = thumbPath;
 	}
 
-	public String getRate() {
+	public double getRate() {
 		return rate;
 	}
 
-	public void setRate(String rate) {
+	public void setRate(double rate) {
 		this.rate = rate;
 	}
 

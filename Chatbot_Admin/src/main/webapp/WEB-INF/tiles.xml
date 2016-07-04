@@ -31,9 +31,9 @@
 	<!-- Begin Dataconfig Page -->
 	<!-- *************************************************************************** -->
 	<definition name="dataConfig" extends="base.definition">
-		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="title" value="Data Config" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/entity/updateEntity.jsp" />
+			value="/WEB-INF/views/dataConfig/dataConfig.jsp" />
 		<put-attribute name="current" value="dataConfig" />
 	</definition>
 

@@ -11,6 +11,8 @@ import com.psib.constant.StatusCode;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
+import com.psib.model.LexicalCategory;
+import com.psib.model.Phrase;
 
 /**
  * @author DatHT Jun 5, 2016
@@ -22,4 +24,8 @@ public interface ILexicalCategoryManager {
 	LexicalDto getApiLexicalById(String id) throws IOException, RestfulException;
 
 	StatusCode addPhrase(Entry entry, String id) throws IOException, RestfulException;
+	
+	long insertLexicalToDatabase(LexicalCategory lexicalCategory);
+	
+	String checkExistLexical(String name);
 }

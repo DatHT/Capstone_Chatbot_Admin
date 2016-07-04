@@ -3,8 +3,6 @@
  */
 package com.psib.dto;
 
-import com.psib.model.ProductAddress;
-
 import java.util.List;
 
 /**
@@ -18,7 +16,7 @@ public class ProductDto {
 
     private int rowCount;
 
-    private List<ProductAddressDto> rows;
+    private List<ProductDetailDto> rows;
 
     private long total;
 
@@ -38,11 +36,11 @@ public class ProductDto {
         this.rowCount = rowCount;
     }
 
-    public List<ProductAddressDto> getRows() {
+    public List<ProductDetailDto> getRows() {
         return rows;
     }
 
-    public void setRows(List<ProductAddressDto> rows) {
+    public void setRows(List<ProductDetailDto> rows) {
         this.rows = rows;
     }
 

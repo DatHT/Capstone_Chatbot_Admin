@@ -45,14 +45,14 @@ public class DistrictDao extends BaseDao<District, Long> implements IDistrictDao
     @Override
     @Transactional
     public District getDistrictByName(String name) {
-    	String sql = "from " + District.class.getSimpleName() + " where name LIKE :name";
-		Query query = getSession().createQuery(sql);
-		query.setParameter("name", "%"+name+"%");
-		query.setMaxResults(1);
-		District district = (District) query.uniqueResult();
-		if (district != null) {
-			return district;
-		}
-		return null;
+        String sql = "from " + District.class.getSimpleName() + " where name LIKE :name";
+        Query query = getSession().createQuery(sql);
+        query.setParameter("name", "%" + name + "%");
+        query.setMaxResults(1);
+        District district = (District) query.uniqueResult();
+        if (district != null) {
+            return district;
+        }
+        return null;
     }
 }
