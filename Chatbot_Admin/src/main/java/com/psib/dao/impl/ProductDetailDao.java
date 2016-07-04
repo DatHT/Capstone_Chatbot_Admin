@@ -119,9 +119,9 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
     @Override
     @Transactional
     public void insertProductDetail(ProductDetail productDetail) {
-        LOG.info("[insertProductAddress] Start: productName = " + productDetail.getProductName());
+        LOG.info("[insertProductDetail] Start: productName = " + productDetail.getProductName());
         insert(productDetail);
-        LOG.info("[insertProductAddress] End");
+        LOG.info("[insertProductDetail] End");
     }
 
     @Override

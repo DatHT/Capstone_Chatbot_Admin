@@ -7,17 +7,17 @@ import com.psib.model.ProductDetail;
  */
 public class ProductDetailDto {
 
-    public ProductDetailDto(int number, ProductDetail productAddress) {
+    public ProductDetailDto(int number, ProductDetail productDetail) {
         this.number = number;
-        this.productId = productAddress.getProductId();
-        this.addressId = productAddress.getAddressId();
-        this.productName = productAddress.getProductName();
-        this.addressName = productAddress.getAddressName();
-        this.urlRelate = productAddress.getUrlRelate();
-        this.thumbPath = productAddress.getThumbPath();
-        this.rate = productAddress.getRate();
-        this.restaurantName = productAddress.getRestaurantName();
-        this.districtName = productAddress.getDistrictName();
+        this.productId = productDetail.getProductId();
+        this.addressId = productDetail.getAddressId();
+        this.productName = productDetail.getProductName();
+        this.addressName = productDetail.getAddressName();
+        this.urlRelate = productDetail.getUrlRelate();
+        this.thumbPath = productDetail.getThumbPath();
+        this.rate = productDetail.getRate();
+        this.restaurantName = productDetail.getRestaurantName();
+        this.districtName = productDetail.getDistrictName();
     }
 
     private long number;
