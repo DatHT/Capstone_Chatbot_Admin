@@ -18,6 +18,7 @@ import com.psib.dao.IPhraseDao;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
+import com.psib.dto.jsonmapper.ResultDto;
 import com.psib.dto.jsonmapper.StatusDto;
 import com.psib.model.LexicalCategory;
 import com.psib.model.Phrase;
@@ -61,8 +62,8 @@ public class LexicalCategoryManager implements ILexicalCategoryManager {
 	 */
 	@Override
 	public StatusCode addPhrase(Entry entry, String id) throws IOException, RestfulException {
-		StatusDto status = factory.insertPhrase(entry, id);
-		switch (status.getCode()) {
+		ResultDto status = factory.insertPhrase(entry, id);
+		switch (status.getStatus().getCode()) {
 		case 200:
 			return StatusCode.SUCCESS;
 		case 0:
@@ -93,8 +94,38 @@ public class LexicalCategoryManager implements ILexicalCategoryManager {
 	 * @see com.psib.service.ILexicalCategoryManager#checkExistLexical(java.lang.String)
 	 */
 	@Override
-	public String checkExistLexical(String name) {
+	public int checkExistLexical(String name) {
 		return dao.checkExistName(name);
+	}
+
+	@Override
+	public StatusCode addPhrases(List<Entry> entries, String id) throws IOException, RestfulException {
+		StatusDto status = factory.insertPhrases(entries, id);
+		switch (status.getCode()) {
+		case 200:
+			return StatusCode.SUCCESS;
+		case 0:
+			return StatusCode.SUCCESS;
+		case 409:
+			return StatusCode.CONFLICT;
+		default:
+			return StatusCode.ERROR;
+		}
+	}
+
+	@Override
+	public StatusCode deletePhrase(List<String> values, String name) throws IOException, RestfulException {
+		StatusDto status = factory.deletePhrase(name, values);
+		switch (status.getCode()) {
+		case 200:
+			return StatusCode.SUCCESS;
+		case 0:
+			return StatusCode.SUCCESS;
+		case 409:
+			return StatusCode.CONFLICT;
+		default:
+			return StatusCode.ERROR;
+		}
 	}
 
 }

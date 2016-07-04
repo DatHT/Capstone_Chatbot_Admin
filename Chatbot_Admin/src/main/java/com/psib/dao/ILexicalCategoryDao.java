@@ -13,5 +13,5 @@ import com.psib.model.LexicalCategory;
 public interface ILexicalCategoryDao {
 
 	public long insertLexical(LexicalCategory lexical);
-	public String checkExistName(String name);
+	public int checkExistName(String name);
 }

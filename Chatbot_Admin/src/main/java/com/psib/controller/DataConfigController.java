@@ -4,6 +4,7 @@
 package com.psib.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.psib.common.restclient.RestfulException;
+import com.psib.constant.CodeManager;
+import com.psib.constant.StatusCode;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
@@ -50,48 +53,24 @@ public class DataConfigController {
 
 		return "dataConfig";
 	}
-	
-
 
 	@RequestMapping(value = "/sync", method = RequestMethod.POST)
 	public @ResponseBody String synchronize(Model model, @RequestParam("api") String api,
 			@RequestParam("db") String db) {
 		String responseText = "";
-		System.out.println("DATdadasddas");
-		try {
 			if (api.equals("yes")) {
-				List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
-				for (LexicalCategoryDto dto : lexicals) {
-					logger.info("[Before Exist]");
-					if (lexicalManager.checkExistLexical(dto.getName()) == null) {
-						logger.info("[After Exist]");
-						// sync from lexical to db
-						LexicalCategory lexical = new LexicalCategory();
-						lexical.setName(dto.getName());
-						lexical.setLastModify(new Date());
-						long id = lexicalManager.insertLexicalToDatabase(lexical);
-						LexicalDto entry = lexicalManager.getApiLexicalById(String.valueOf(dto.getId()));
-						for (Entry item : entry.getEntries()) {
-							Phrase phrase =phraseManager.checkExist(item.getValue());
-							if (phrase == null) {
-								phrase = new Phrase();
-								phrase.setAsynchronized(true);
-								phrase.setLexicalId((int) id);
-								phrase.setName(item.getValue());
-								phraseManager.insertPhraseToDatabase(phrase);
-								logger.info("[Sync done]");
-							}
-						}
-
-					}
-				}
+				System.setProperty("timerActive", "true");
 				responseText = "done";
+			}else {
+				System.setProperty("timerActive", "false");
 			}
-		} catch (IOException e) {
-			model.addAttribute(ERROR, e.getMessage());
-		} catch (RestfulException e) {
-			model.addAttribute(ERROR, e.getMessage());
-		}
+			// sync to api
+			if (db.equals("yes")) {
+				
+				
+				
+			}
+		
 		return responseText;
 	}
 }

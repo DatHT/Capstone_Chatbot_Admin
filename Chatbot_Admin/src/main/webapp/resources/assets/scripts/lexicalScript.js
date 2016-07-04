@@ -106,7 +106,16 @@ function addNewPhrase() {
 
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					swal("Good job!", xmlhttp.responseText, "success");
+					var result = xmlhttp.responseText;
+					if (result.indexOf("success") > -1) {
+						swal("Good job!", xmlhttp.responseText, "success");
+					}
+					if (result.indexOf("wrong") > -1) {
+						swal("Error!", xmlhttp.responseText, "error");
+					}
+					if (result.indexOf("Sorry") > -1) {
+						swal("Dupplicate!", xmlhttp.responseText, "info");
+					}
 					
 					loadPharse(cate);
 				}

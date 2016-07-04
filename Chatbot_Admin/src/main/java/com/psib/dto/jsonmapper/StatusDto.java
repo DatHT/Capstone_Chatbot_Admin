@@ -22,6 +22,9 @@ public class StatusDto implements Serializable {
 	
 	@JsonProperty("errorType")
 	private String errorType;
+	
+	@JsonProperty("errorDetails")
+	private String errorDetails;
 
 	public StatusDto(int code, String errorType) {
 		super();
@@ -52,5 +55,12 @@ public class StatusDto implements Serializable {
 		this.errorType = errorType;
 	}
 	
+
+	public String getErrorDetails() {
+		return errorDetails;
+	}
 	
+	public void setErrorDetails(String errorDetails) {
+		this.errorDetails = errorDetails;
+	}
 }
