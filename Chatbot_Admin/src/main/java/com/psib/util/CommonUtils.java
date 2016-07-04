@@ -91,6 +91,11 @@ public class CommonUtils {
 			splitLong = list[list.length - 1];
 			longitude = Double.parseDouble(splitLong);
 		}
+		if(list.length==1){
+			int index = list[0].indexOf(",");
+	        splitLong = list[0].substring(index+1, list[0].length());
+	        longitude = Double.parseDouble(splitLong);
+		}
 
 		return longitude;
 	}
@@ -111,7 +116,11 @@ public class CommonUtils {
 			splitLat = splitLat.replace("7C", "");
 			latitude = Double.parseDouble(splitLat);
 		}
-
+		if(list.length==1){
+			int index = list[0].indexOf(",");
+	        splitLat = list[0].substring(0,index);
+	        latitude = Double.parseDouble(splitLat);
+		}
 		return latitude;
 	}
 
@@ -119,23 +128,37 @@ public class CommonUtils {
 		String[] listAddress = addressname.split(",");
 		String address = "";
 		if (listAddress.length == 5) {
-			address = listAddress[listAddress.length - 5] + "," + listAddress[listAddress.length - 4];
+			address = listAddress[listAddress.length - 5] + " " + listAddress[listAddress.length - 4];
 			if (listAddress[listAddress.length - 3].length() > 15) {
-				address = listAddress[listAddress.length - 3] + "," + listAddress[listAddress.length - 2];
+				address = listAddress[listAddress.length - 3] + " " + listAddress[listAddress.length - 2];
 			}
+		}
+		if (listAddress.length == 2) {
+			address = listAddress[listAddress.length - 2];
 		}
 		if (listAddress.length == 3) {
-			if (listAddress[listAddress.length - 2].toLowerCase().contains("phường")
-					|| listAddress[listAddress.length - 2].toLowerCase().contains("p.")) {
-				address = listAddress[listAddress.length - 3] + "," + listAddress[listAddress.length - 2];
-			}
-			if (listAddress[listAddress.length - 2].toLowerCase().contains("quận")
-					|| listAddress[listAddress.length - 2].toLowerCase().contains("q.")) {
-				address = listAddress[listAddress.length - 3];
-			}
-		} else {
-			address = listAddress[listAddress.length - 4] + "," + listAddress[listAddress.length - 3];
+			address = listAddress[listAddress.length - 3];
+//			if (listAddress[listAddress.length - 2].toLowerCase().contains("phường")
+//					|| listAddress[listAddress.length - 2].toLowerCase().contains("p.")) {
+//				address = listAddress[listAddress.length - 3] + "," + listAddress[listAddress.length - 2];
+//			}
+//			if (listAddress[listAddress.length - 2].toLowerCase().contains("quận")
+//					|| listAddress[listAddress.length - 2].toLowerCase().contains("q.")) {
+//				address = listAddress[listAddress.length - 3];
+//			}
 		}
+		if (listAddress.length == 4) {
+			address = listAddress[listAddress.length - 4];
+			if(listAddress[listAddress.length - 3].contains("P.")){
+				address = listAddress[listAddress.length - 4]+" "+listAddress[listAddress.length - 3];
+			}
+		}
+		if (listAddress.length == 6) {
+			address = listAddress[listAddress.length - 6]+ " " +listAddress[listAddress.length - 5]+ " " +listAddress[listAddress.length - 4];
+		}
+//		else {
+//			address = listAddress[listAddress.length - 4] + "," + listAddress[listAddress.length - 3];
+//		}
 
 		return address;
 	}
@@ -157,22 +180,53 @@ public class CommonUtils {
 			} else {
 				district = "Quận" + district;
 			}
-		} else {
+		}
+		if (listAddress.length == 2) {
+			district = listAddress[listAddress.length - 1];
+			if (district.contains("Q.")) {
+				district = district.replace("Q.", "Quận ");
+			}
+		}
+		if (listAddress.length == 3) {
 			district = listAddress[listAddress.length - 2];
-			if (district.contains("P.") || district.contains("F.") || district.contains("p.") || district.contains("f.")
-					|| (district.contains("phường"))) {
+			if(district.contains("P.")){
 				district = listAddress[listAddress.length - 1];
 			}
 			if (district.contains("Q.")) {
 				district = district.replace("Q.", "Quận ");
 			}
-			if (district.contains("Q.") || district.contains("Qu") || district.contains("q.")
-					|| district.contains("qu")) {
-				return district;
-			} else {
-				district = "Quận" + district;
+		}
+		if (listAddress.length == 4) {
+			district = listAddress[listAddress.length - 3];
+			if(district.contains("P.")){
+				district = listAddress[listAddress.length - 2];
+			}
+			if (district.contains("Q.")) {
+				district = district.replace("Q.", "Quận ");
 			}
 		}
+		if (listAddress.length == 6) {
+			district = listAddress[listAddress.length - 3];
+			if (district.contains("Q.")) {
+				district = district.replace("Q.", "Quận ");
+			}
+		}
+//		else {
+//			district = listAddress[listAddress.length - 2];
+//			if (district.contains("P.") || district.contains("F.") || district.contains("p.") || district.contains("f.")
+//					|| (district.contains("phường"))) {
+//				district = listAddress[listAddress.length - 1];
+//			}
+//			if (district.contains("Q.")) {
+//				district = district.replace("Q.", "Quận ");
+//			}
+//			if (district.contains("Q.") || district.contains("Qu") || district.contains("q.")
+//					|| district.contains("qu")) {
+//				return district;
+//			} else {
+//				district = "Quận" + district;
+//			}
+//		}
 
 		return district;
 	}
@@ -227,64 +281,72 @@ public class CommonUtils {
 		return next;
 	}
 
-	public static String makeContentPage(String sourcePage, String url) {	
+	public static String makeContentPage(String sourcePage, String url) {
+
 		String tmpsource_1 = checkHrefTag(sourcePage, url);
 		String tmpsource_2 = checkSrcTag(tmpsource_1, url);
 		return tmpsource_2;
 	}
 
-	public static String checkSrcTag(String src, String url){
-		if (src.contains("src=\"http://") || src.contains("src=\"www") || src.contains("src=\"//") || src.contains("src=\"https://")) {
-            src = src;
-        }
-        if (src.contains("src=\"css")) {
-            src = url + "/" + src;
-        }
-        if (src.contains("src=\"/")) {
-            src = src.replaceAll("src=\""+"/", "src=\"" + url+"/");
-        }
-        if (src.contains("src=\"" + url + "//")) {
-            src = src.replaceAll(url+"//", "");
-        }
-        if (src.contains("src=\"" + url + "http")) {
-            src = src.replaceAll(url, "");
-        }
-        if (src.contains("src=\"media")) {
-            src = src.replaceAll("src=\"media", "src=\"//connect");
-        }
-        if (src.contains("src=\"connect")) {
-            src = src.replaceAll("src=\"connect", "src=\"//connect");
-        }
-        if (src.contains("src=\"www")) {
-            src = src.replaceAll("src=\"www.", "src=\"//www.");
-        }
-        return src;
-    }
-    public static String checkHrefTag(String src, String url){
-    	if (src.contains("href=\"http://") || src.contains("href=\"www") || src.contains("href=\"//") || src.contains("href=\"https://")) {
-            src = src;
-        }
-        if (src.contains("href=\"css")) {
-            src = url + "/" + src;
-        }
-        if (src.contains("href=\"/")) {
-            src = src.replaceAll("href=\""+"/", "href=\"" + url+"/");
-        }
-        if (src.contains("href=\"" + url + "//")) {
-            src = src.replaceAll(url+"//", "");
-        }
-        if (src.contains("href=\"" + url + "http")) {
-            src = src.replaceAll(url, "");
-        }
-        if (src.contains("href=\"static")) {
-            src = src.replaceAll("href=\"static", "href=\"//static");
-        }
-        if (src.contains("href=\"connect")) {
-            src = src.replaceAll("src=\"connect", "src=\"//connect");
-        }
-        if (src.contains("href=\"www")) {
-            src = src.replaceAll("href=\"www", "href=\"//www");
-        }
-        return src;
-    }
+	public static String checkSrcTag(String src, String url) {
+
+		if (src.contains("src=\"http://") || src.contains("src=\"www") || src.contains("src=\"//")
+				|| src.contains("src=\"https://")) {
+			src = src;
+		}
+		if (src.contains("src=\"css")) {
+			src = url + "/" + src;
+		}
+		if (src.contains("src=\"/")) {
+			src = src.replaceAll("src=\"" + "/", "src=\"" + url + "/");
+		}
+		if (src.contains("src=\"" + url + "//")) {
+			src = src.replaceAll(url + "//", "");
+		}
+		if (src.contains("src=\"" + url + "http")) {
+			src = src.replaceAll(url, "");
+		}
+		if (src.contains("src=\"media")) {
+			src = src.replaceAll("src=\"media", "src=\"//media");
+		}
+		if (src.contains("src=\"connect")) {
+			src = src.replaceAll("src=\"connect", "src=\"//connect");
+		}
+		if (src.contains("src=\"www")) {
+			src = src.replaceAll("src=\"www.", "src=\"//www.");
+		}
+		if (src.contains("src=\"static")) {
+			src = src.replaceAll("src=\"static", "src=\"//static");
+		}
+		return src;
+	}
+
+	public static String checkHrefTag(String src, String url) {
+		if (src.contains("href=\"http://") || src.contains("href=\"www") || src.contains("href=\"//")
+				|| src.contains("href=\"https://")) {
+			src = src;
+		}
+		if (src.contains("href=\"css")) {
+			src = url + "/" + src;
+		}
+		if (src.contains("href=\"/")) {
+			src = src.replaceAll("href=\"" + "/", "href=\"" + url + "/");
+		}
+		if (src.contains("href=\"" + url + "//")) {
+			src = src.replaceAll(url + "//", "");
+		}
+		if (src.contains("href=\"" + url + "http")) {
+			src = src.replaceAll(url, "");
+		}
+		if (src.contains("href=\"static")) {
+			src = src.replaceAll("href=\"static", "href=\"//static");
+		}
+		if (src.contains("href=\"connect")) {
+			src = src.replaceAll("src=\"connect", "src=\"//connect");
+		}
+		if (src.contains("href=\"www")) {
+			src = src.replaceAll("href=\"www", "href=\"//www");
+		}
+		return src;
+	}
 }

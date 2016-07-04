@@ -24,10 +24,13 @@ import javax.transaction.Transactional.TxType;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.By.ByLinkText;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.google.common.io.Files;
 import com.jaunt.ResponseException;
@@ -83,6 +87,9 @@ public class CrawlerController extends HttpServlet {
 	@RequestMapping(value = "/staticParse", method = RequestMethod.GET)
 	public String staticParse(@RequestParam String btnAction, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws InterruptedException {
+		java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(java.util.logging.Level.OFF);
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+
 		if (btnAction.equals("STOP")) {
 			HttpSession session = request.getSession();
 			System.out.println("STOP PARSING");
@@ -91,7 +98,9 @@ public class CrawlerController extends HttpServlet {
 			return "errorPage";
 		}
 		if (btnAction.equals("StaticParse")) {
-			WebDriver driver = new FirefoxDriver();
+
+			WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
+
 			try {
 				long startTime = System.nanoTime();
 				HttpSession session = request.getSession();
@@ -194,7 +203,7 @@ public class CrawlerController extends HttpServlet {
 						//
 						// }
 
-						// Load file XPath cÃƒÂ³ sÃ¡ÂºÂµn
+						// Load file XPath
 						for (int i = 0; i < pageUrl.size(); i++) {
 							String str = pageUrl.get(i);
 							foodName = foodResult.get(i);
@@ -217,6 +226,7 @@ public class CrawlerController extends HttpServlet {
 							}
 							int count = 0;
 							int countTam = 0;
+							int countT = 0;
 							// lay config page
 							xmlFilePath = parserConfigXML;
 							ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
@@ -235,45 +245,102 @@ public class CrawlerController extends HttpServlet {
 							// add xpath
 							xpaths.add(config.getName());
 							xpaths.add(config.getAddress());
-							xpaths.add(config.getUserRate());
-							xpaths.add(config.getMap());
-							for (String xpath : xpaths) {
-								System.out.println("Xpath: " + xpath + " : " + count);
-								count++;
-								if (xpath != null) {
-									List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
-									for (WebElement content : contents) {
-										countTam++;
-										switch (count) {
-										case 1:
-											restaurantName = content.getText();
-											break;
-										case 2:
-											address = content.getText();
-											break;
-										case 3:
-											userRate = content.getText();
-											break;
-										case 4:
-											map = content.getAttribute("src");
-											break;
+							String rat = config.getUserRate();
+							if (rat.equals("N/A")) {
+								for (String xpath : xpaths) {
+									System.out.println("Xpath: " + xpath + " : " + count);
+									count++;
+									if (xpath != null) {
+										List<WebElement> contents = (List<WebElement>) driver
+												.findElements(By.xpath(xpath));
+										for (WebElement content : contents) {
+											countTam++;
+											switch (count) {
+											case 1:
+												restaurantName = content.getText();
+												break;
+											case 2:
+												address = content.getText();
+												break;
+											// case 3:
+											// userRate = content.getText();
+											// break;
+											// case 4:
+											// map =
+											// content.getAttribute("src");
+											// break;
+											}
+											// contents.add(tmpString);
 										}
-										// contents.add(tmpString);
 									}
 								}
 							}
+							if (!rat.equals("N/A")) {
+								xpaths.add(config.getUserRate());
+								for (String xpath : xpaths) {
+									System.out.println("Xpath: " + xpath + " : " + countT);
+									countT++;
+									if (xpath != null) {
+										List<WebElement> contents = (List<WebElement>) driver
+												.findElements(By.xpath(xpath));
+										for (WebElement content : contents) {
+											countTam++;
+											switch (count) {
+											case 1:
+												restaurantName = content.getText();
+												break;
+											case 2:
+												address = content.getText();
+												break;
+											case 3:
+												userRate = content.getText();
+												break;
+											// case 4:
+											// map =
+											// content.getAttribute("src");
+											// break;
+											}
+											// contents.add(tmpString);
+										}
+									}
+								}
+							}
+							List<WebElement> listimg = driver.findElements(By.tagName("img"));
+							String imgVal = "";
+							for (WebElement elem : listimg) {
+								if (elem.getAttribute("src").contains("106-")
+										|| elem.getAttribute("src").contains("106.")) {
+									imgVal = elem.getAttribute("src");
+								} else {
+									listimg = driver.findElements(By.tagName("a"));
+									for (WebElement element : listimg) {
 
+										if (element.getAttribute("data-lat") != null
+												&& element.getAttribute("data-lng") != null) {
+											imgVal = element.getAttribute("data-lat") + ","
+													+ element.getAttribute("data-lng");
+										}
+									}
+								}
+							}
+							map = imgVal;
 							double latitude = CommonUtils.splitLat(map);
 							double longitude = CommonUtils.splitLong(map);
-
+							System.out.println("Address: "+address);
 							String district = CommonUtils.splitDistrict(address);
 							String newAddress = CommonUtils.splitAddress(address);
 
-							double rate = Double.parseDouble(userRate);
-							if (rate <= 5) {
-								rate = rate * 2;
-								userRate = "" + rate;
+							if (!userRate.equals("")) {
+								double rate = Double.parseDouble(userRate);
+								if (rate <= 5) {
+									rate = rate * 2;
+									userRate = "" + rate;
+								}
 							}
+							if(userRate.equals("")){
+								userRate="0.0";
+							}
+
 							Product productDAO = new Product();
 							District districtDAO = new District();
 							Address addressDAO = new Address();
@@ -423,43 +490,101 @@ public class CrawlerController extends HttpServlet {
 						// add xpath
 						xpaths.add(config.getName());
 						xpaths.add(config.getAddress());
-						xpaths.add(config.getUserRate());
-						xpaths.add(config.getMap());
-						for (String xpath : xpaths) {
-							System.out.println("Xpath: " + xpath + " : " + count);
-							count++;
-							if (xpath != null) {
-								List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
-								for (WebElement content : contents) {
-									countTam++;
-									switch (count) {
-									case 1:
-										restaurantName = content.getText();
-										break;
-									case 2:
-										address = content.getText();
-										break;
-									case 3:
-										userRate = content.getText();
-										break;
-									case 4:
-										map = content.getAttribute("src");
-										break;
+						
+						String rat = config.getUserRate();
+						if (rat.equals("N/A")) {
+							for (String xpath : xpaths) {
+								System.out.println("Xpath: " + xpath + " : " + count);
+								count++;
+								if (xpath != null) {
+									List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
+									for (WebElement content : contents) {
+										countTam++;
+										switch (count) {
+										case 1:
+											restaurantName = content.getText();
+											break;
+										case 2:
+											address = content.getText();
+											break;
+										// case 3:
+										// userRate = content.getText();
+										// break;
+										// case 4:
+										// map =
+										// content.getAttribute("src");
+										// break;
+										}
+										// contents.add(tmpString);
 									}
-									// contents.add(tmpString);
 								}
 							}
 						}
+						int countT = 0;
+						if (!rat.equals("N/A")) {
+							xpaths.add(config.getUserRate());
+							for (String xpath : xpaths) {
 
+								System.out.println("Xpath: " + xpath + " : " + countT);
+								countT++;
+								if (xpath != null) {
+									List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
+									for (WebElement content : contents) {
+										countTam++;
+										switch (count) {
+										case 1:
+											restaurantName = content.getText();
+											break;
+										case 2:
+											address = content.getText();
+											break;
+										case 3:
+											userRate = content.getText();
+											break;
+										// case 4:
+										// map =
+										// content.getAttribute("src");
+										// break;
+										}
+										// contents.add(tmpString);
+									}
+								}
+							}
+						}
+						List<WebElement> listimg = driver.findElements(By.tagName("img"));
+						String imgVal = "";
+						for (WebElement elem : listimg) {
+							if (elem.getAttribute("src").contains("106-")
+									|| elem.getAttribute("src").contains("106.")) {
+								imgVal = elem.getAttribute("src");
+							} else {
+								listimg = driver.findElements(By.tagName("a"));
+								for (WebElement element : listimg) {
+
+									if (element.getAttribute("data-lat") != null
+											&& element.getAttribute("data-lng") != null) {
+										imgVal = element.getAttribute("data-lat") + ","
+												+ element.getAttribute("data-lng");
+									}
+								}
+							}
+						}
+						map = imgVal;
 						double latitude = CommonUtils.splitLat(map);
 						double longitude = CommonUtils.splitLong(map);
 
 						String district = CommonUtils.splitDistrict(address);
 						String newAddress = CommonUtils.splitAddress(address);
-						double rate = Double.parseDouble(userRate);
-						if (rate <= 5) {
-							rate = rate * 2;
-							userRate = "" + rate;
+
+						if (!userRate.equals("")) {
+							double rate = Double.parseDouble(userRate);
+							if (rate <= 5) {
+								rate = rate * 2;
+								userRate = "" + rate;
+							}
+						}
+						if(userRate.equals("")){
+							userRate="0.0";
 						}
 						Product productDAO = new Product();
 						District districtDAO = new District();
@@ -522,7 +647,7 @@ public class CrawlerController extends HttpServlet {
 					}
 				}
 				driver.close();
-				System.out.println("Sucessfull Added Record: 111111111111111111111111" + countAdded);
+				System.out.println("Sucessfull Added Record: " + countAdded);
 				System.out.println("Exist Record: " + countExits);
 				long estimatedTime = System.nanoTime() - startTime;
 				double seconds = (double) estimatedTime / 1000000000.0;
@@ -594,7 +719,6 @@ public class CrawlerController extends HttpServlet {
 				By selBy = By.tagName("body");
 				int initialHeight = driver.findElement(selBy).getSize().getHeight();
 				int currentHeight = 0;
-
 				for (int temp = 1; temp < numOfPage; temp++) {
 					initialHeight = driver.findElement(selBy).getSize().getHeight();
 
@@ -687,7 +811,6 @@ public class CrawlerController extends HttpServlet {
 					xpaths.add(config.getName());
 					xpaths.add(config.getAddress());
 					xpaths.add(config.getUserRate());
-					xpaths.add(config.getMap());
 					for (String xpath : xpaths) {
 						System.out.println("Xpath: " + xpath + " : " + count);
 						count++;
@@ -705,15 +828,22 @@ public class CrawlerController extends HttpServlet {
 								case 3:
 									userRate = content.getText();
 									break;
-								case 4:
-									map = content.getAttribute("src");
-									break;
+								// case 4:
+								// map = content.getAttribute("src");
+								// break;
 								}
 								// contents.add(tmpString);
 							}
 						}
 					}
-
+					List<WebElement> listimg = driver.findElements(By.tagName("img"));
+					String imgVal;
+					for (WebElement elem : listimg) {
+						imgVal = elem.getAttribute("src");
+						if (imgVal.contains("106-") || imgVal.contains("106.")) {
+							map = imgVal;
+						}
+					}
 					double latitude = CommonUtils.splitLat(map);
 					double longitude = CommonUtils.splitLong(map);
 
@@ -835,6 +965,7 @@ public class CrawlerController extends HttpServlet {
 		}
 		str = XMLUtils.marshallPageToString(pages);
 		str = str.replace('"', c);
+
 		System.out.println(str);
 		session.setAttribute("INFOPAGE", str);
 
@@ -862,14 +993,13 @@ public class CrawlerController extends HttpServlet {
 			String filePath = servletContext.getRealPath("/resources/");
 			System.out.println(filePath);
 			String htmlFilePath = filePath + "tmp.html";
-
-			WebDriver driver = new FirefoxDriver();
+			WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
 			driver.get(str);
 
 			String pageSource = driver.getPageSource();
 
-			driver.close();
 			String source = CommonUtils.makeContentPage(pageSource, result);
+			// String source = pageSource;
 			String inputLine;
 			StringBuffer res;
 			res = new StringBuffer();
@@ -920,7 +1050,7 @@ public class CrawlerController extends HttpServlet {
 			System.out.println(filePath);
 			String htmlFilePath = filePath + "tmp.html";
 
-			WebDriver driver = new FirefoxDriver();
+			WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
 			driver.get(str);
 
 			String pageSource = driver.getPageSource();
@@ -961,17 +1091,23 @@ public class CrawlerController extends HttpServlet {
 		if (btnAction.equals("AddNewPageList"))
 
 		{
+			java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(java.util.logging.Level.OFF);
+			java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.OFF);
+
 			String xpath = request.getParameter("PAGE");
 			HttpSession session = request.getSession();
 			String url = (String) session.getAttribute("URL");
 			String linkPage = (String) session.getAttribute("LINKPAGE");
 			String nextPage = request.getParameter("NEXTPAGE");
+			String contentPage = request.getParameter("txtPageContent");
+
+			System.out.println("Content: " + contentPage);
 			System.out.println("Link Page: " + linkPage);
 			System.out.println("Next Page: " + nextPage);
 
 			String next = "N/A";
 			if (nextPage != null && !nextPage.isEmpty()) {
-				WebDriver driver = new FirefoxDriver();
+				WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
 
 				driver.get(linkPage);
 
@@ -986,14 +1122,20 @@ public class CrawlerController extends HttpServlet {
 				for (String str : pageUrl) {
 					System.out.println(str);
 				}
+				if(nextPage.contains("id='btnMorePlace'"));{
+					nextPage="//*[@id='btnMorePlace']";
+				}
 				List<WebElement> nextPages = driver.findElements(By.xpath(nextPage));
+				System.out.println("Co gi do sai sai000: "+nextPages.toString());
 				for (WebElement data : nextPages) {
-					System.out.println(data.getAttribute("href"));
+					System.out.println("Co gi do sai sai111: "+data.getAttribute("href"));
 				}
 				String numNextPage = "";
+				System.out.println("Co gi do sai sai: "+nextPages.get(0).getAttribute("href"));
 				if (nextPages.size() > 1) {
 					numNextPage = nextPages.get(1).getAttribute("href");
-				} else {
+				} 
+				else {
 					numNextPage = nextPages.get(0).getAttribute("href");
 				}
 				if (numNextPage.indexOf("http") == -1) {
@@ -1001,19 +1143,27 @@ public class CrawlerController extends HttpServlet {
 				}
 
 				// get Next Page
-				numNextPage = numNextPage.substring(linkPage.length());
-
-				if (numNextPage.charAt(0) == '/') {
-					StringBuilder sb = new StringBuilder(numNextPage);
-					sb.deleteCharAt(0);
-					numNextPage = sb.toString();
-				}
-				int end = numNextPage.indexOf("/");
-				if (end <= 0) {
-					end = numNextPage.lastIndexOf("=");
-					next = numNextPage.substring(0, end + 1);
+				if (numNextPage.contains("?")) {
+					int index = numNextPage.indexOf("?");
+					next = numNextPage.substring(index + 1, numNextPage.length());
+					index = next.indexOf("=");
+					next = "&" + next.substring(0, index + 1);
 				} else {
-					next = numNextPage.substring(0, end);
+					numNextPage = numNextPage.substring(linkPage.length());
+
+					if (numNextPage.charAt(0) == '/') {
+						StringBuilder sb = new StringBuilder(numNextPage);
+						sb.deleteCharAt(0);
+						numNextPage = sb.toString();
+
+					}
+					int end = numNextPage.indexOf("/");
+					if (end <= 0) {
+						end = numNextPage.lastIndexOf("=");
+						next = numNextPage.substring(0, end + 1);
+					} else {
+						next = numNextPage.substring(0, end);
+					}
 				}
 				driver.close();
 				System.out.println("NEXTPAGE:" + numNextPage);
@@ -1071,8 +1221,53 @@ public class CrawlerController extends HttpServlet {
 				System.out.println("File deleted");
 			}
 			if (add) {
-				session.setAttribute("MESSAGE", "New page configuration has been inserted to storage!");
-				return "success";
+				String result = "";
+				String[] str_array = contentPage.split("/");
+				for (int i = 0; i < 3; i++) {
+					result = result + str_array[i] + "/";
+				}
+				result = result.substring(0, result.length() - 1);
+				System.out.println(result);
+				session.setAttribute("URL", result);
+				session.setAttribute("LINKPAGE", contentPage);
+
+				WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
+				driver.get(contentPage);
+
+				String pageSource = driver.getPageSource();
+				driver.close();
+				String source = CommonUtils.makeContentPage(pageSource, result);
+				String inputLine;
+				StringBuffer res;
+				res = new StringBuffer();
+				try {
+					InputStream stream = new ByteArrayInputStream(source.getBytes(Charset.forName("UTF-8")));
+					BufferedReader in;
+					in = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+					while ((inputLine = in.readLine()) != null) {
+						// System.out.println(in.readLine());
+						res.append(CommonUtils.htmlEncode(inputLine) + "\n");
+						// res.append(inputLine + "\n");
+					}
+					// System.out.println(res);
+					in.close();
+				} catch (Exception e) {
+					System.out.println("Cannot encoding");
+				}
+
+				BufferedWriter bwr = new BufferedWriter(new FileWriter(htmlFilePath));
+
+				// write contents of StringBuffer to a file
+				bwr.write(res.toString());
+
+				// flush the stream
+				bwr.flush();
+
+				// close the stream
+				bwr.close();
+				// session.setAttribute("MESSAGE", "New page configuration has
+				// been inserted to storage!");
+				return "setParserConfig";
 			} else {
 				session.setAttribute("MESSAGE", "Page configuration fails!");
 				return "errorPage";
@@ -1083,17 +1278,26 @@ public class CrawlerController extends HttpServlet {
 			HttpSession session = request.getSession();
 			String url = (String) session.getAttribute("URL");
 			// session.setAttribute("URL", null);
+			String rate = "N/A";
+			String userRate = request.getParameter("USER_RATE");
+			if (userRate == null || userRate.isEmpty() || userRate == "") {
+				userRate = rate;
+			}
+			System.out.println("user rate: " + userRate);
 			List<String> xpaths = new ArrayList<String>();
+			String addr = request.getParameter("ADDRESS");
+			if(addr.contains("id='place-address'")){
+				addr = "//*[@id='place-address']";
+			}
 			xpaths.add(request.getParameter("NAME"));
-			xpaths.add(request.getParameter("ADDRESS"));
-			xpaths.add(request.getParameter("USER_RATE"));
-			xpaths.add(request.getParameter("MAP"));
+			xpaths.add(addr);
+			xpaths.add(userRate);
 
 			for (String xpath : xpaths) {
 				System.out.println(xpath);
 			}
 
-			ConfigDTO newConfig = new ConfigDTO(url, xpaths.get(0), xpaths.get(1), xpaths.get(2), xpaths.get(3));
+			ConfigDTO newConfig = new ConfigDTO(url, xpaths.get(0), xpaths.get(1), xpaths.get(2));
 
 			// Load file XPath cÃƒÂ³ sÃ¡ÂºÂµn
 			String xmlFilePath = parserConfigXML;
