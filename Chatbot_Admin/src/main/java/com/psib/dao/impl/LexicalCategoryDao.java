@@ -51,16 +51,16 @@ public class LexicalCategoryDao extends BaseDao<LexicalCategory, Integer> implem
 	 */
 	@Transactional
 	@Override
-	public String checkExistName(String name) {
+	public int checkExistName(String name) {
 		LOG.info("[checkExistLexical] Start: name = " + name);
 		String sql = "From " + LexicalCategory.class.getSimpleName() + " where name = :name";
 		Query query = (Query) getSession().createQuery(sql);
 		query.setParameter("name", name);
 		LexicalCategory lexiacal = (LexicalCategory) query.uniqueResult();
 		if (lexiacal != null) {
-			return lexiacal.getName();
+			return lexiacal.getId();
 		}
-		return null;
+		return -1;
 	}
 
 }

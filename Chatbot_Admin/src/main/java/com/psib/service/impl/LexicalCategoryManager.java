@@ -93,7 +93,7 @@ public class LexicalCategoryManager implements ILexicalCategoryManager {
 	 * @see com.psib.service.ILexicalCategoryManager#checkExistLexical(java.lang.String)
 	 */
 	@Override
-	public String checkExistLexical(String name) {
+	public int checkExistLexical(String name) {
 		return dao.checkExistName(name);
 	}
 

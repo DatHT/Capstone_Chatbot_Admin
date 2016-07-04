@@ -31,5 +31,5 @@ public interface ILexicalCategoryManager {
 	
 	long insertLexicalToDatabase(LexicalCategory lexicalCategory);
 	
-	String checkExistLexical(String name);
+	int checkExistLexical(String name);
 }

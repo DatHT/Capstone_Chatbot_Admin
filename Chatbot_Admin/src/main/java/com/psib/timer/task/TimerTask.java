@@ -41,26 +41,27 @@ public class TimerTask {
     	try {
     		List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
     		for (LexicalCategoryDto dto : lexicals) {
-    			if (lexicalManager.checkExistLexical(dto.getName()) == null) {
+    			long id = 0;
+    			if ((id = lexicalManager.checkExistLexical(dto.getName())) == -1) {
     				// sync from lexical to db
     				LexicalCategory lexical = new LexicalCategory();
     				lexical.setName(dto.getName());
     				lexical.setLastModify(new Date());
-    				long id = lexicalManager.insertLexicalToDatabase(lexical);
-    				LexicalDto entry = lexicalManager.getApiLexicalById(String.valueOf(dto.getId()));
-    				for (Entry item : entry.getEntries()) {
-    					Phrase phrase = phraseManager.checkExist(item.getValue());
-    					if (phrase == null) {
-    						phrase = new Phrase();
-    						phrase.setAsynchronized(true);
-    						phrase.setLexicalId((int) id);
-    						phrase.setName(item.getValue());
-    						phraseManager.insertPhraseToDatabase(phrase);
-    						LOG.info("[Sync done]");
-    					}
-    				}
-
+    				id = lexicalManager.insertLexicalToDatabase(lexical);
+    				LOG.info("[Sync lexical phrase done]");
     			}
+    			LexicalDto entry = lexicalManager.getApiLexicalById(String.valueOf(dto.getId()));
+				for (Entry item : entry.getEntries()) {
+					Phrase phrase = phraseManager.checkExist(item.getValue());
+					if (phrase == null) {
+						phrase = new Phrase();
+						phrase.setAsynchronized(true);
+						phrase.setLexicalId((int) id);
+						phrase.setName(item.getValue());
+						phraseManager.insertPhraseToDatabase(phrase);
+						LOG.info("[Sync insert phrase done]");
+					}
+				}
     		}
             LOG.info("[doTimer] End");
     	}catch (IOException e) {
