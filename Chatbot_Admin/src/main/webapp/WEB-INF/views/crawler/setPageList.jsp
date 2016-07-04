@@ -70,9 +70,6 @@
 							<!--disable-->
 							<button type="button" class="btn btn-primary" id="btnPreview"
 								value="PREVIEW" onclick="openpopup('popup')" disabled>PREVIEW</button>
-							<button type="submit" class="btn btn-primary" id="btnAdd"
-								name="btnAction" value="AddNewPageList" onclick="addNew()"
-								disabled>AddNewPageList</button>
 							<button type="button" class="btn btn-primary" value="HOME"
 								onclick="window.location = 'crawler'">HOME</button>
 							<div class="table-responsive" style="min-height: 70px">
@@ -85,11 +82,11 @@
 								<br />
 							</div>
 						</div>
-						<div id="popup" class="popup"></div>
+						<div id="popup" class="popup" draggable="true"></div>
 						<div id="bg" class="popup_bg"></div>
 						<div class="col-sm-12 scollchange" style="">
 							<iframe style="width: 100%;"
-								sandbox="allow-same-origin" width="700" height="900"
+								sandbox="allow-same-origin" width="700" height="1200"
 								id="myframe" src="resources/tmp.html"> </iframe>
 						</div>
 						<table id="tbMain">
@@ -102,6 +99,17 @@
 		</div>
 	</section>
 </body>
+<style>
+#popup{
+    -webkit-user-drag: element;
+}
+</style>
+<script>
+$(document).ready(function() {
+     $(function() { $('#tbMain').draggable(); });
+     $(function() { $('.popup').draggable(); });
+});
+</script>
 <script>
 $(window).scroll(function(e) {
     // Get the position of the location where the scroller starts.
@@ -111,7 +119,7 @@ $(window).scroll(function(e) {
     if ($(this).scrollTop() >= scroller_anchor && $('.scroller').css('position') != 'fixed') 
     {    // Change the CSS of the scroller to hilight it and fix it at the top of the screen.
         $('.scroller').css({
-        	'width':'78.9%',
+        	'width':'88%',
             'position': 'fixed',
             'z-index':'100',
             'top': '0px'
@@ -123,11 +131,9 @@ $(window).scroll(function(e) {
             'positon':'absolute'
         });
         $('.popup').css({
-        	'z-index':'100',
         	'position': 'fixed',
-            'margin-top': '250px',
-            'margin-left': '300px',
-            'positon':'absolute'
+        	'z-index':'100',
+        	
         });
     } 
     else if ($(this).scrollTop() < scroller_anchor && $('.scroller').css('position') != 'relative') 

@@ -25,18 +25,32 @@ function loadProcess(selectName) {
 function loadNode(nodeCfg, nodePage, selectName) {
     if ((nodeCfg == null) || (nodePage == null)) {
         return;
-    }
-    var x = document.getElementById(selectName);
+    }    
     var resultCfg = nodeCfg.documentElement.childNodes;
     var resultPage = nodePage.documentElement.childNodes;
     for (var i = 0; i < resultCfg.length; i++) {
         for (var j = 0; j < resultPage.length; j++) {
             if (resultCfg[i].getAttribute('site') == resultPage[j].getAttribute('site')) {
-                var opt = document.createElement('option');
-                opt.value = resultPage[j].getAttribute('site');
-                opt.innerHTML = resultPage[j].getAttribute('site');
-                //c.text = result[i].getAttribute('site');
-                x.appendChild(opt);
+            	var nextPageNode = resultPage[j].getElementsByTagName('nextPage')[0];
+            	var y = nextPageNode.childNodes[0];
+            	var z = y.nodeValue;
+            	if(z!='N/A'){
+            		var x = document.getElementById('selectSite');
+            		var opt = document.createElement('option');
+                    opt.value = resultPage[j].getAttribute('site');
+                    opt.innerHTML = resultPage[j].getAttribute('site');
+                    //c.text = result[i].getAttribute('site');
+                    x.appendChild(opt);
+            	}
+            	if(z=='N/A'){
+            		var x = document.getElementById('selectPage');
+            		var opt = document.createElement('option');
+                    opt.value = resultPage[j].getAttribute('site');
+                    opt.innerHTML = resultPage[j].getAttribute('site');
+                    //c.text = result[i].getAttribute('site');
+                    x.appendChild(opt);
+            	}
+                
             }
         }
     }

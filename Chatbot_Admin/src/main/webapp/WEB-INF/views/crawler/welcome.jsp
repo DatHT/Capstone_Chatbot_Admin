@@ -25,7 +25,7 @@
 		</div>
 	</div>
 	<div class="col-lg-12">
-		<div class="col-lg-6">
+		<div class="col-lg-12">
 			<!--    Hover Rows  -->
 			<div class="card">
 				<div class="card-header">
@@ -42,31 +42,6 @@
 						<button type="submit" id="confirmation" class="btn btn-primary"
 							value="Set List Page" name="btnAction"
 							onclick="getVal(this.value)">Set List Page</button>
-						<!-- 							<input type="submit" id="confirmation" -->
-						<!-- 								class="btn btn-primary m-b-10" value="Set List Page" -->
-						<!-- 								name="btnAction" onclick="getVal(this.value)" /> -->
-					</form>
-				</div>
-			</div>
-			<!-- End  Hover Rows  -->
-		</div>
-		<div class="col-lg-6">
-			<!--    Hover Rows  -->
-			<div class="card">
-				<div class="card-header">
-					<h2 id="tableHeader">Set Page Details</h2>
-				</div>
-				<div class="panel-body">
-					<form action="processServlet"
-						onsubmit="return checkInputConfig(this)">
-						<div class="form-group">
-							<label for="input-01">URL of input page (required):</label> <input
-								type="url" class="form-control" size="45" name="txtURL"
-								id="input-01" required />
-						</div>
-						<button type="submit" id="confirmation" class="btn btn-primary"
-							value="Set Parser Config" name="btnAction"
-							onclick="getVal(this.value)">Set Page Details</button>
 						<!-- 							<input type="submit" id="confirmation" -->
 						<!-- 								class="btn btn-primary m-b-10" value="Set List Page" -->
 						<!-- 								name="btnAction" onclick="getVal(this.value)" /> -->
@@ -287,7 +262,6 @@
 	<script>
 		function loadPage() {
 			loadProcess('selectSite');
-			loadProcess('selectPage');
 		}
 	</script>
 

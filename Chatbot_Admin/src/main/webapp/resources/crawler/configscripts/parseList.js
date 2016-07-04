@@ -57,11 +57,6 @@ $(document).ready(function () {
     });
 });
 
-
-function disableClick(){
-	
-}
-
 function getEleCss(value) {
     var str_array = value.split("/");
     var l = str_array.length;
@@ -189,7 +184,7 @@ function next() {
     var haveData = 0;
     if ((count <= 4)) {
         if ((flagClick != 0) || (indexComplete[currentPosition] != "") || (count == 3)) {
-            if (flagClick == 4) {
+            if (flagClick == 1) {
                 indexComplete[count] = value;
             }
             if (flagClick == 0 && count == 3) {
@@ -602,7 +597,7 @@ function addRow(tableId, cells, type) {
                     newCell.innerHTML =
                             '<input type="hidden" name="IMAGE" value="' + cells[i] + '" size="78"/>';
                     break;
-                case 3:
+                case 4:
                     newCell.innerHTML =
                             '<input type="hidden" name="NEXTPAGE" value="' + cells[i] + '" size="78"/>';
                     break;

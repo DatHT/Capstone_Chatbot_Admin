@@ -87,11 +87,6 @@
 								<div class="circle">
 									<span class="labelRecipe">3</span> <span class="title">UserRate</span>
 								</div>
-								<span class="bar"></span>
-								<div class="circle">
-									<span class="labelRecipe">4</span> <span class="title">Map</span>
-								</div>
-
 							</div>
 							<button type="button" class="btn btn-primary" value="BACK"
 								onclick="back()">BACK</button>
@@ -155,10 +150,6 @@ $(window).scroll(function(e) {
         });
         $('.popup').css({
         	'z-index':'100',
-        	'position': 'fixed',
-            'margin-top': '250px',
-            'margin-left': '300px',
-            'positon':'absolute'
         });
     } 
     else if ($(this).scrollTop() < scroller_anchor && $('.scroller').css('position') != 'relative') 
