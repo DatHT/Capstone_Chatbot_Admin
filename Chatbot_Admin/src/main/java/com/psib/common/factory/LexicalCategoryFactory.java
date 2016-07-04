@@ -14,6 +14,7 @@ import com.psib.common.restclient.RestfulException;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
+import com.psib.dto.jsonmapper.ResultDto;
 import com.psib.dto.jsonmapper.StatusDto;
 
 /**
@@ -42,13 +43,13 @@ public class LexicalCategoryFactory extends AbstractFactory {
 		return response(result, LexicalDto.class);
 	}
 	
-	public StatusDto insertPhrase(Entry entry, String id) throws IOException, RestfulException {
+	public ResultDto insertPhrase(Entry entry, String id) throws IOException, RestfulException {
 		RestResult result = client.createInvoker(RequestMethod.POST)
 				.addHeader(AUTH_KEY, AUTH_VALUE)
 				.addRoute(id).addRoute("entries")
 				.invoke(entry);
 		
-		return response(result, StatusDto.class);
+		return response(result, ResultDto.class);
 		
 	}
 	

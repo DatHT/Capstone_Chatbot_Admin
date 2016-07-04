@@ -18,6 +18,7 @@ import com.psib.dao.IPhraseDao;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
+import com.psib.dto.jsonmapper.ResultDto;
 import com.psib.dto.jsonmapper.StatusDto;
 import com.psib.model.LexicalCategory;
 import com.psib.model.Phrase;
@@ -61,8 +62,8 @@ public class LexicalCategoryManager implements ILexicalCategoryManager {
 	 */
 	@Override
 	public StatusCode addPhrase(Entry entry, String id) throws IOException, RestfulException {
-		StatusDto status = factory.insertPhrase(entry, id);
-		switch (status.getCode()) {
+		ResultDto status = factory.insertPhrase(entry, id);
+		switch (status.getStatus().getCode()) {
 		case 200:
 			return StatusCode.SUCCESS;
 		case 0:
