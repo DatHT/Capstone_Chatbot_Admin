@@ -1,12 +1,14 @@
 package com.psib.dao.impl;
 
 import com.psib.dao.IProductDetailDao;
+import com.psib.dto.ProductDetailDto;
 import com.psib.model.ProductDetail;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -41,7 +43,8 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
                 .append(" OR P.addressName LIKE :searchPhrase")
                 .append(" OR P.districtName LIKE :searchPhrase")
                 .append(" OR str(P.rate) LIKE :searchPhrase")
-                .append(" OR P.restaurantName LIKE :searchPhrase"));
+                .append(" OR P.restaurantName LIKE :searchPhrase")
+                .append(" ORDER BY P.productId DESC"));
 
         Query query = getSession().createQuery(sql);
         query.setParameter("searchPhrase", "%" + searchPhrase + "%");
@@ -54,7 +57,7 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
 
     @Override
     @Transactional
-    public List<ProductDetail> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
+    public List<ProductDetailDto> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
             , String sortDistrictName, String sortRate, String sortRestaurantName
             , int maxResult, int skipResult) {
         LOG.info(new StringBuilder("[getBySearchPhraseAndSort] Start: searchPhrase = ").append(searchPhrase)
@@ -66,12 +69,14 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
                 .append(", maxResult = ").append(maxResult)
                 .append(", skipResult = ").append(skipResult));
 
-        StringBuilder sql = new StringBuilder("FROM ").append(ProductDetail.class.getSimpleName())
+        StringBuilder sql = new StringBuilder("SELECT P.productId, P.productName, P.addressName, P.rate, P.restaurantName FROM ")
+                .append(ProductDetail.class.getSimpleName())
                 .append(" P WHERE P.productName LIKE :searchPhrase")
                 .append(" OR P.addressName LIKE :searchPhrase")
                 .append(" OR P.districtName LIKE :searchPhrase")
                 .append(" OR str(P.rate) LIKE :searchPhrase")
-                .append(" OR P.restaurantName LIKE :searchPhrase");
+                .append(" OR P.restaurantName LIKE :searchPhrase")
+                .append(" ORDER BY P.productId DESC");
 
         if (sortProductName != null) {
             if (sortProductName.equals("asc")) {
@@ -110,7 +115,18 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
         query.setFirstResult(skipResult);
         query.setMaxResults(maxResult);
 
-        List<ProductDetail> result = query.list();
+        List<Object[]> rows = query.list();
+        List<ProductDetailDto> result = new ArrayList<>();
+
+        for (Object[] row : rows) {
+            ProductDetailDto dto = new ProductDetailDto();
+            dto.setProductId(Long.parseLong(String.valueOf(row[0])));
+            dto.setProductName(String.valueOf(row[1]));
+            dto.setAddressName(String.valueOf(row[2]));
+            dto.setRate(Double.parseDouble(String.valueOf(row[3])));
+            dto.setRestaurantName(String.valueOf(row[4]));
+            result.add(dto);
+        }
 
         LOG.info("[getBySearchPhraseAndSort] End");
         return result;

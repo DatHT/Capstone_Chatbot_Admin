@@ -16,7 +16,7 @@ public class ProductDto {
 
     private int rowCount;
 
-    private List<ProductDetailDto> rows;
+    private List<ProductDetailJsonDto> rows;
 
     private long total;
 
@@ -36,11 +36,11 @@ public class ProductDto {
         this.rowCount = rowCount;
     }
 
-    public List<ProductDetailDto> getRows() {
+    public List<ProductDetailJsonDto> getRows() {
         return rows;
     }
 
-    public void setRows(List<ProductDetailDto> rows) {
+    public void setRows(List<ProductDetailJsonDto> rows) {
         this.rows = rows;
     }
 

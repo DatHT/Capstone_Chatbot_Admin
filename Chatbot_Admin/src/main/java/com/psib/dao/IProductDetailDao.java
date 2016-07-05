@@ -2,6 +2,7 @@ package com.psib.dao;
 
 import java.util.List;
 
+import com.psib.dto.ProductDetailDto;
 import com.psib.model.ProductDetail;
 
 public interface IProductDetailDao {
@@ -10,7 +11,7 @@ public interface IProductDetailDao {
 
     long countBySearchPhrase(String searchPhrase);
 
-    List<ProductDetail> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
+    List<ProductDetailDto> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
             , String sortDistrictName, String sortRate, String sortRestaurantName
             , int maxResult, int skipResult);
 

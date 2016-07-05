@@ -6,6 +6,7 @@ import com.psib.dao.IDistrictDao;
 import com.psib.dao.IFileServerDao;
 import com.psib.dao.IProductDetailDao;
 import com.psib.dto.ProductDetailDto;
+import com.psib.dto.ProductDetailJsonDto;
 import com.psib.dto.ProductDto;
 import com.psib.model.Address;
 import com.psib.model.District;
@@ -56,23 +57,23 @@ public class ProductManager implements IProductManager {
                 .append(" ,sortRate = ").append(sortRate)
                 .append(" ,sortRestaurantName = ").append(sortRestaurantName));
 
-        List<ProductDetail> list;
+        List<ProductDetailDto> list;
         int start = current * rowCount - rowCount;
 
         list = productDetailDao.getBySearchPhraseAndSort(searchPhrase
                 , sortProductName, sortAddressName, sortDistrictName, sortRate, sortRestaurantName, rowCount, start);
 
-        List<ProductDetailDto> productDetailDtoList = new ArrayList<>();
+        List<ProductDetailJsonDto> productDetailJsonDtoList = new ArrayList<>();
         long size = list.size();
 
         for (int i = 0; i < size; i++) {
-            productDetailDtoList.add(new ProductDetailDto((start + i + 1), list.get(i)));
+            productDetailJsonDtoList.add(new ProductDetailJsonDto((start + i + 1), list.get(i)));
         }
 
         ProductDto dto = new ProductDto();
         dto.setCurrent(current);
         dto.setRowCount(rowCount);
-        dto.setRows(productDetailDtoList);
+        dto.setRows(productDetailJsonDtoList);
         dto.setTotal(productDetailDao.countBySearchPhrase(searchPhrase));
 
         LOG.info("[getAllForPaging] End");
@@ -233,7 +234,7 @@ public class ProductManager implements IProductManager {
 
                 bytes = file.getBytes();
 
-                String folderUrl = fileServerDao.getByName(SpringPropertiesUtil.getProperty("file_server_thumb")).getUrl();
+                String folderUrl = SpringPropertiesUtil.getProperty("file_server_thumb");
 
                 File dir = new File(folderUrl);
 
@@ -241,10 +242,10 @@ public class ProductManager implements IProductManager {
                     dir.mkdirs();
                 }
                 String fileType = StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
-
+                String fileName = String.valueOf(new StringBuilder(StringUtils.substringBeforeLast(file.getOriginalFilename(), "."))
+                        .append("_").append(System.currentTimeMillis()).append(".").append(fileType));
                 String url = String.valueOf(new StringBuilder(dir.getAbsolutePath()).append(File.separator)
-                        .append(StringUtils.substringBeforeLast(file.getOriginalFilename(), ".")).append("_")
-                        .append(System.currentTimeMillis()).append(".").append(fileType));
+                        .append(fileName));
 
                 File serverFile = new File(url);
 
@@ -253,7 +254,7 @@ public class ProductManager implements IProductManager {
                 stream.close();
 
                 LOG.info("[uploadThumbnail] End");
-                return url;
+                return SpringPropertiesUtil.getProperty("file_server_thumb_url_prefix") + fileName;
             }
         } catch (IOException e) {
             LOG.error("[uploadThumbnail] IOException: " + e.getMessage());

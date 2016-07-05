@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <script src="resources/assets/scripts/product.js"></script>
 <script src="resources/assets/scripts/commonScript.js"></script>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <head>
-<title>Manage Products</title>
+    <title>Manage Products</title>
 </head>
 
 <style>
-.help-block {
-	visibility: hidden;
-}
+    .help-block {
+        visibility: hidden;
+    }
 </style>
 <script src="resources/assets/scripts/product.js"></script>
 <script src="resources/assets/scripts/commonScript.js"></script>
 <div class="c-header">
-	<h2 id="tableHeader">Manage Products</h2>
+    <h2 id="tableHeader">Manage Products</h2>
 </div>
-
+<c:out value="${TEST}"/>
 <div class="card">
     <div class="card-body card-padding">
         <button class="btn btn-primary btn-lg waves-effect"
@@ -37,15 +37,18 @@
                                 </th>
                                 <th data-column-id="productName">Name</th>
                                 <th data-column-id="addressName">Address</th>
-                                <th data-column-id="districtName">District</th>
                                 <th data-column-id="rate">Rating</th>
                                 <th data-column-id="restaurantName">Restaurant</th>
-                                <th data-column-id="thumbPath" data-sortable="false">Thumb</th>
-                                <th data-column-id="urlRelate" data-sortable="false">Related Url</th>
-                                <th data-column-id="update" data-formatter="commandsUpdate" data-sortable="false">
+                                <th data-column-id="details" data-formatter="commandsDetails" data-sortable="false"
+                                    data-align="center" data-header-align="center">
+                                    Details
+                                </th>
+                                <th data-column-id="update" data-formatter="commandsUpdate" data-sortable="false"
+                                    data-align="center" data-header-align="center">
                                     Update
                                 </th>
-                                <th data-column-id="delete" data-formatter="commandsDelete" data-sortable="false">
+                                <th data-column-id="delete" data-formatter="commandsDelete" data-sortable="false"
+                                    data-align="center" data-header-align="center">
                                     Delete
                                 </th>
                             </tr>
@@ -92,9 +95,6 @@
             $('#updateProductId').val(${updateProductId});
             $('#myModal').modal('show');
         }
-		if ('${name}' != "") {
-			$('#myModal').modal('show');
-		}
 
         $('#myModal').on('hidden.bs.modal', function () {
             $("#name").val("");
@@ -134,26 +134,31 @@
             },
             url: "loadProduct",
             formatters: {
+                "commandsDetails": function (column, row) {
+                    return "<button class='btn btn-info btn-icon waves-effect waves-circle waves-float' onclick='showDeleteModal("
+                            + "`" + row.productId + "`"
+                            + ")'>" +
+                            "<i class='zmdi zmdi-more-vert'>" +
+                            "</i>" +
+                            "</button>";
+                },
                 "commandsUpdate": function (column, row) {
-
-                    return "<button class='btn btn-warning btn-icon waves-effect waves-circle waves-float' onclick='showUpdateModal("
+                    return "<button class='btn btn-success btn-icon waves-effect waves-circle waves-float' onclick='showUpdateModal("
                             + "`" + row.productId + "`"
                             + "," + "`" + row.productName.trim() + "`"
                             + "," + "`" + row.addressName.trim() + "`"
-                            + "," + "`" + row.urlRelate + "`"
                             + "," + "`" + row.rate + "`"
                             + "," + "`" + row.restaurantName.trim() + "`"
-                            + "," + "`" + row.districtName.trim() + "`"
                             + ")'>" +
                             "<i class='zmdi zmdi-edit zmdi-hc-fw'>" +
                             "</i>" +
                             "</button>";
                 },
                 "commandsDelete": function (column, row) {
-                    return "<button class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float' onclick='showDeleteModal("
+                    return "<button class='btn btn-danger btn-icon waves-effect waves-circle waves-float' onclick='showDeleteModal("
                             + "`" + row.productId + "`"
                             + ")'>" +
-                            "<i class='zmdi zmdi-edit zmdi-hc-fw'>" +
+                            "<i class='zmdi zmdi-close'>" +
                             "</i>" +
                             "</button>";
                 }
@@ -297,6 +302,7 @@
     </div>
 </div>
 <!-- End modal -->
+
 <input id="tmpName" type="hidden">
 <input id="tmpAddress" type="hidden">
 <input id="tmpRelatedUrl" type="hidden">
@@ -307,7 +313,7 @@
 
 <!-- Modals-->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
+     aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
