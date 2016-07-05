@@ -96,6 +96,13 @@ public class ProductController {
         return model;
     }
 
+    @RequestMapping(value = "/viewProductDetails", method = RequestMethod.GET)
+    public ModelAndView loadProduct(@RequestParam(name = "productId") String productId) {
+        ModelAndView model = new ModelAndView("productDetails");
+        System.out.println(productId);
+        return model;
+    }
+
     @RequestMapping(value = "/addProduct", method = RequestMethod.POST)
     @ResponseBody
     public ModelAndView addProduct(@RequestParam(name = "name") String name,

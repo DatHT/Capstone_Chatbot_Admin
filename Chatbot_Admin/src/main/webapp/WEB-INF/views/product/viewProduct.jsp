@@ -1,29 +1,27 @@
 <!DOCTYPE html>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<script src="resources/assets/scripts/product.js"></script>
-<script src="resources/assets/scripts/commonScript.js"></script>
+<script src="${pageContext.request.contextPath}/resources/assets/scripts/commonScript.js"></script>
+<script>
+    var tokenName = '${_csrf.parameterName}';
+    var tokenValue = '${_csrf.token}';
+</script>
+<script src="${pageContext.request.contextPath}/resources/assets/scripts/viewProduct.js"></script>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <head>
-    <title>Manage Products</title>
+    <spring:message code="product_header"/>
 </head>
 
-<style>
-    .help-block {
-        visibility: hidden;
-    }
-</style>
-<script src="resources/assets/scripts/product.js"></script>
-<script src="resources/assets/scripts/commonScript.js"></script>
 <div class="c-header">
-    <h2 id="tableHeader">Manage Products</h2>
+    <h2 id="tableHeader"><spring:message code="product_header"/></h2>
 </div>
-<c:out value="${TEST}"/>
+
 <div class="card">
     <div class="card-body card-padding">
-        <button class="btn btn-primary btn-lg waves-effect"
-                onclick="showAddModal()">Add New
+        <button class="btn btn-primary btn-lg waves-effect" onclick="showAddModal()">
+            <spring:message code="product_btn_add"/>
         </button>
         <div class="row m-t-20">
             <div class="panel panel-default">
@@ -32,24 +30,33 @@
                         <table id="data-table-basic" class="table table-condensed table-hover table-striped">
                             <thead>
                             <tr>
-                                <th data-column-id="number" data-type="numeric"
-                                    data-identifier="true" data-sortable="false">No.
+                                <th data-column-id="number" data-type="numeric" data-identifier="true"
+                                    data-sortable="false">
+                                    <spring:message code="product_no"/>
                                 </th>
-                                <th data-column-id="productName">Name</th>
-                                <th data-column-id="addressName">Address</th>
-                                <th data-column-id="rate">Rating</th>
-                                <th data-column-id="restaurantName">Restaurant</th>
+                                <th data-column-id="productName">
+                                    <spring:message code="product_name"/>
+                                </th>
+                                <th data-column-id="addressName">
+                                    <spring:message code="product_address"/>
+                                </th>
+                                <th data-column-id="rate">
+                                    <spring:message code="product_rating"/>
+                                </th>
+                                <th data-column-id="restaurantName">
+                                    <spring:message code="product_restaurant"/>
+                                </th>
                                 <th data-column-id="details" data-formatter="commandsDetails" data-sortable="false"
                                     data-align="center" data-header-align="center">
-                                    Details
+                                    <spring:message code="product_btn_details"/>
                                 </th>
                                 <th data-column-id="update" data-formatter="commandsUpdate" data-sortable="false"
                                     data-align="center" data-header-align="center">
-                                    Update
+                                    <spring:message code="product_btn_update"/>
                                 </th>
                                 <th data-column-id="delete" data-formatter="commandsDelete" data-sortable="false"
                                     data-align="center" data-header-align="center">
-                                    Delete
+                                    <spring:message code="product_btn_delete"/>
                                 </th>
                             </tr>
                             </thead>
@@ -66,113 +73,7 @@
 
 <!-- Data Table -->
 <script type="text/javascript">
-    $(document).ready(function () {
-        var addResult = '${addResult}';
-        var updateResult = '${updateResult}';
-        var deleteResult = '${deleteResult}';
 
-        if (addResult == 'true') {
-            notify("Add Product Successfully!", "info");
-        } else if (updateResult == 'true') {
-            notify("Update Product Successfully!", "info");
-        } else if (addResult == 'false') {
-            notify("Product Already Existed!", "warning");
-            showAddModal();
-        } else if (updateResult == 'false') {
-            notify("Product Already Existed!", "warning");
-            showUpdateModalOnStart();
-        } else if (deleteResult == 'true') {
-            notify("Delete Product Successfully!", "info");
-        }
-
-        if ('${name}' != "") {
-            $('#myModal').modal('show');
-        }
-
-        function showUpdateModalOnStart() {
-            $('#add-form').attr('action', 'updateProduct');
-            $('#user-say-in-modal').text('Update Product');
-            $('#updateProductId').val(${updateProductId});
-            $('#myModal').modal('show');
-        }
-
-        $('#myModal').on('hidden.bs.modal', function () {
-            $("#name").val("");
-            $("#address").val("");
-            $("#district").find('option:eq(0)').prop('selected', true);
-            $("#rating").val("");
-            $("#restaurant").val("");
-            $("#relatedUrl").val("");
-
-            $("#div-name").removeClass("has-error");
-            $("#error-name").text("");
-
-
-            $("#div-address").removeClass("has-error");
-            $("#error-address").text("");
-
-            $("#div-rating").removeClass("has-error");
-            $("#error-rating").text("");
-
-            $("#div-restaurant").removeClass("has-error");
-            $("#error-restaurant").text("");
-
-            $("#div-relatedUrl").removeClass("has-error");
-            $("#error-relatedUrl").text("");
-        });
-
-        $("#data-table-basic").bootgrid({
-            ajax: true,
-            post: function () {
-                console.info("${_csrf.parameterName}");
-                console.info("${_csrf.token}");
-                /* To accumulate custom parameter with the request object */
-                return {
-                    id: "b0df282a-0d67-40e5-8558-c9e93b7befed",
-                    '${_csrf.parameterName}': "${_csrf.token}"
-                };
-            },
-            url: "loadProduct",
-            formatters: {
-                "commandsDetails": function (column, row) {
-                    return "<button class='btn btn-info btn-icon waves-effect waves-circle waves-float' onclick='showDeleteModal("
-                            + "`" + row.productId + "`"
-                            + ")'>" +
-                            "<i class='zmdi zmdi-more-vert'>" +
-                            "</i>" +
-                            "</button>";
-                },
-                "commandsUpdate": function (column, row) {
-                    return "<button class='btn btn-success btn-icon waves-effect waves-circle waves-float' onclick='showUpdateModal("
-                            + "`" + row.productId + "`"
-                            + "," + "`" + row.productName.trim() + "`"
-                            + "," + "`" + row.addressName.trim() + "`"
-                            + "," + "`" + row.rate + "`"
-                            + "," + "`" + row.restaurantName.trim() + "`"
-                            + ")'>" +
-                            "<i class='zmdi zmdi-edit zmdi-hc-fw'>" +
-                            "</i>" +
-                            "</button>";
-                },
-                "commandsDelete": function (column, row) {
-                    return "<button class='btn btn-danger btn-icon waves-effect waves-circle waves-float' onclick='showDeleteModal("
-                            + "`" + row.productId + "`"
-                            + ")'>" +
-                            "<i class='zmdi zmdi-close'>" +
-                            "</i>" +
-                            "</button>";
-                }
-            },
-            ss: {
-                icon: 'zmdi icon',
-                iconColumns: 'zmdi-view-module',
-                iconDown: 'zmdi-expand-more',
-                iconRefresh: 'zmdi-refresh',
-                iconUp: 'zmdi-expand-less'
-            },
-        });
-    })
-    ;
 </script>
 
 <!-- Modals-->
