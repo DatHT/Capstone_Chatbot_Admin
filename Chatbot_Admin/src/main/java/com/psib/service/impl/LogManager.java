@@ -72,6 +72,26 @@ public class LogManager implements ILogManager {
 		return chatLogsFolder + "/log";
 	}
 
+	private String getTrainingPoolPath() {
+		if (chatLogsFolder == null) {
+			chatLogsFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl();
+		}
+		return chatLogsFolder + "/training";
+	}
+
+	private JSONArray getTrainingList() throws IOException, JSONException {
+		BufferedReader bufferedReader = FileUtils.readFile(this.getTrainingPoolPath());
+		StringBuilder stringBuilder = new StringBuilder();
+		String tempString = null;
+		while ((tempString = bufferedReader.readLine()) != null) {
+			stringBuilder.append(tempString);
+		}
+		if (stringBuilder.length() != 0) {
+			return new JSONArray(stringBuilder.toString());
+		}
+		return new JSONArray();
+	}
+
 	@Override
 	public JSONObject getLogJson() throws JSONException, IOException {
 		if (logJson != null) {
@@ -108,6 +128,7 @@ public class LogManager implements ILogManager {
 	public void updateLog() throws JSONException, IOException {
 		JSONObject logJson = this.getLogJson();
 		List<JSONObject> logs = this.getAllLogs();
+		JSONArray trainArr = this.getTrainingList();
 
 		JSONArray jsonArray;
 		// // uncomment when run in production by timer.
@@ -132,6 +153,10 @@ public class LogManager implements ILogManager {
 				log = this.getReportLog(tempJson);
 			} else if (statusCode == TRAINING_CODE) {
 				log = this.getTrainingLog(tempJson);
+				if (!checkTrainingExist(trainArr, log)) {
+					trainArr.put(log);
+					log = null;
+				}
 			} else if (statusCode == FEEDBACK_CODE) {
 				log = this.getFeedbackLog(tempJson);
 			}
@@ -150,7 +175,9 @@ public class LogManager implements ILogManager {
 		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(new Date()));
 
 		this.logJson = logJson;
-		FileUtils.writleFile(this.getLogFilePath(), this.logJson.toString());
+
+		FileUtils.writleFile(this.getTrainingPoolPath(), trainArr.toString(4));
+		FileUtils.writleFile(this.getLogFilePath(), this.logJson.toString(4));
 	}
 
 	/**
@@ -246,13 +273,27 @@ public class LogManager implements ILogManager {
 		return jsonObject;
 	}
 
-	private JSONObject getTrainingLog(JSONObject log) throws JSONException {
+	private JSONObject getTrainingLog(JSONObject log) throws JSONException, IOException {
 		String userSay = log.getJSONObject("result").getString("resolvedQuery");
 		String patternStr = "train:";
 
 		String train = userSay.substring(patternStr.length());
 
-		return new JSONObject().put("train", train);
+		return new JSONObject().put("train", train).put("isDeleted", false);
+	}
+
+	private boolean checkTrainingExist(JSONArray jsonArray, JSONObject log) throws JSONException {
+		boolean isExist = false;
+		int i = 0;
+		if (jsonArray.length() == 0) {
+			return false;
+		}
+		while (i < jsonArray.length() && !isExist) {
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			isExist = log.get("train").equals(jsonObject.get("train"));
+			i++;
+		}
+		return isExist;
 	}
 
 	private JSONObject getFeedbackLog(JSONObject log) throws JSONException {

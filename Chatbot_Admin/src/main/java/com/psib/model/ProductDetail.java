@@ -9,15 +9,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "ProductDetail")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductDetail implements Serializable {
 
 	@Id
 	@Column(name = "productId", nullable = false)
-	@JsonProperty("districtName")
+	@JsonProperty("productId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long productId;
 
@@ -34,11 +36,11 @@ public class ProductDetail implements Serializable {
 	private String districtName;
 
 	@Column(name = "latitude", nullable = false)
-	@JsonProperty("districtName")
+	@JsonProperty("latitude")
 	private double latitude;
 
 	@Column(name = "longitude", nullable = false)
-	@JsonProperty("districtName")
+	@JsonProperty("longitude")
 	private double longitude;
 
 	@Column(name = "numOfSearch", columnDefinition = "Integer default '0'")
@@ -53,19 +55,19 @@ public class ProductDetail implements Serializable {
 	private String restaurantName;
 
 	@Column(name = "thumbpath")
-	@JsonProperty("districtName")
+	@JsonProperty("thumbPath")
 	private String thumbPath;
 
 	@Column(name = "urlrelate", nullable = false, length = 500)
-	@JsonProperty("districtName")
+	@JsonProperty("urlRelate")
 	private String urlRelate;
 
 	@Column(name = "addressId", nullable = false)
-	@JsonProperty("districtName")
+	@JsonProperty("addressId")
 	private long addressId;
 
 	@Column(name = "source")
-	@JsonProperty("districtName")
+	@JsonProperty("source")
 	private String source;
 
 	public ProductDetail() {
