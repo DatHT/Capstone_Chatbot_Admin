@@ -66,8 +66,6 @@ public class LexicalCategoryManager implements ILexicalCategoryManager {
 		switch (status.getStatus().getCode()) {
 		case 200:
 			return StatusCode.SUCCESS;
-		case 0:
-			return StatusCode.SUCCESS;
 		case 409:
 			return StatusCode.CONFLICT;
 		default:
@@ -115,11 +113,9 @@ public class LexicalCategoryManager implements ILexicalCategoryManager {
 
 	@Override
 	public StatusCode deletePhrase(List<String> values, String name) throws IOException, RestfulException {
-		StatusDto status = factory.deletePhrase(name, values);
-		switch (status.getCode()) {
+		ResultDto status = factory.deletePhrase(name, values);
+		switch (status.getStatus().getCode()) {
 		case 200:
-			return StatusCode.SUCCESS;
-		case 0:
 			return StatusCode.SUCCESS;
 		case 409:
 			return StatusCode.CONFLICT;

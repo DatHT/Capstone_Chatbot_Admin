@@ -63,13 +63,13 @@ public class LexicalCategoryFactory extends AbstractFactory {
 		
 	}
 	
-	public StatusDto deletePhrase(String name, List<String> value) throws IOException, RestfulException {
+	public ResultDto deletePhrase(String name, List<String> value) throws IOException, RestfulException {
 		RestResult result = client.createInvoker(RequestMethod.DELETE)
 				.addHeader(AUTH_KEY, AUTH_VALUE)
 				.addRoute(name).addRoute("entries")
 				.invoke(value);
 		
-		return response(result, StatusDto.class);
+		return response(result, ResultDto.class);
 	}
 	
 }

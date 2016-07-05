@@ -80,6 +80,35 @@ public class LexicalCategoryController {
 		
 	}
 	
+	@RequestMapping(path="/delete", method = RequestMethod.POST)
+	public @ResponseBody String deletePhrase(@RequestParam("name") String name,
+			@RequestParam("lexicalName") String lexicalName, Model model) {
+		String responseText = "";
+		List<String> listPhrase = new ArrayList<>();
+		listPhrase.add(name);
+		try {
+			StatusCode code = manager.deletePhrase(listPhrase, lexicalName);
+			switch (code) {
+			case SUCCESS:
+				responseText = CodeManager.SUCCESS;
+				break;
+			case ERROR:
+				responseText = CodeManager.ERROR;
+				break;
+			case CONFLICT:
+				responseText = CodeManager.EXISTED;
+				break;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			model.addAttribute(ERROR, e.getMessage());
+		} catch (RestfulException e) {
+			// TODO Auto-generated catch block
+			model.addAttribute(ERROR, e.getMessage());
+		}
+		return responseText;
+	}
+	
 	@RequestMapping(path="/add", method = RequestMethod.POST)
 	public @ResponseBody String insertPharse(@RequestParam("name") String name,
 			@RequestParam("id") String id, Model model) {

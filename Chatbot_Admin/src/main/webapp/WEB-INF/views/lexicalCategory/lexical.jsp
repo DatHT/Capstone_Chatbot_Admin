@@ -67,7 +67,6 @@
 							<tr>
 								<th data-column-id="id" data-type="numeric" data-identifier="true">No.</th>
 								<th data-column-id="name">Name</th>
-								<th data-column-id="update" data-formatter="commandsUpdate" data-sortable="false">Update</th>
 								<th data-column-id="delete" data-formatter="commandsDelete" data-sortable="false">Delete</th>
 							</tr>
 						</thead>
@@ -84,3 +83,33 @@
 	</div>
 	</div>		
 </div>
+
+<!-- Modals-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete Product</h4>
+            </div>
+            <div class="modal-body" style="border-bottom: 0px">
+                <div>
+                    <h4>Are you sure to delete <strong id="deletePhraseName"></strong> ?</h4>
+                </div>
+            </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-danger"
+                            data-dismiss="modal">Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-success"
+                            onclick="deletePharse()">
+                        Delete
+                    </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
