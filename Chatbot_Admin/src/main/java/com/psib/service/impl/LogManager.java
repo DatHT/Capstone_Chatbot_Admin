@@ -40,6 +40,8 @@ public class LogManager implements ILogManager {
 
 	@Autowired
 	private ILexicalCategoryManager lexicalCategoryManager;
+	
+//	private static final Logger LOG = Logger.getLogger(LogManager.class);
 
 	private static String START_LOG = ">>>>>";
 	private static String END_LOG = "<<<<<";
@@ -47,6 +49,7 @@ public class LogManager implements ILogManager {
 	private static String status_code = "statusCode";
 	private static String log_json = "logJson";
 
+	private static int SUCCESS_CODE = 200;
 	private static int NOT_FOUND_CODE = 404;
 	private static int NO_ENTRY_CODE = 300;
 	private static int REPORT_CODE = 400;
@@ -59,9 +62,14 @@ public class LogManager implements ILogManager {
 	private static String LOG_JSON_FORMAT_CONTENTS = "contents";
 
 	private static String id = "id";
+	private static String sessionId = "sessionId";
 	private static String errCode = "errCode";
 	private static String userSay = "userSay";
 	private static String contexts = "contexts";
+	private static String action = "action";
+	private static String intentName = "intentName";
+	private static String result = "result";
+	private static String resolvedQuery = "resolvedQuery";
 
 	private static String count = "count";
 
@@ -187,6 +195,9 @@ public class LogManager implements ILogManager {
 			log.put(errCode, statusCode);
 
 			if (!checkExistLog(jsonArray, log)) {
+				log.put(action, tempJson.getJSONObject(result).get(action));
+				log.put(intentName, tempJson.getJSONObject(result).getJSONObject("metadata").get(intentName));
+
 				jsonArray.put(log);
 			}
 		}
@@ -251,7 +262,7 @@ public class LogManager implements ILogManager {
 	}
 
 	private JSONObject getNoEntryLog(JSONObject log) throws IOException, JSONException {
-		String userSay = log.getJSONObject("result").getString("resolvedQuery");
+		String userSay = log.getJSONObject(result).getString(resolvedQuery);
 
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(LogManager.userSay, userSay);
@@ -269,7 +280,7 @@ public class LogManager implements ILogManager {
 	}
 
 	private JSONObject getNotFoundLog(JSONObject log) throws IOException, JSONException {
-		JSONObject contextJson = log.getJSONObject("result").getJSONArray("contexts").getJSONObject(0)
+		JSONObject contextJson = log.getJSONObject(result).getJSONArray("contexts").getJSONObject(0)
 				.getJSONObject("parameters");
 
 		JSONObject jsonObject = new JSONObject();
@@ -460,6 +471,57 @@ public class LogManager implements ILogManager {
 	@Override
 	public void updateTrainingLog(String data) throws IOException {
 		FileUtils.writleFile(this.getTrainingFilePath(), data);
+	}
 		
+	/*
+	 * Collect all conversation with BOT by sessionId.
+	 */
+	public JSONArray conversationCollector() throws IOException, JSONException {
+		List<JSONObject> allLog = this.getAllLogs();
+		JSONArray jsonArray = new JSONArray();
+
+		String strSessionId = "";
+		for (JSONObject logJson : allLog) {
+			JSONObject log = logJson.getJSONObject(log_json);
+			
+			int statusCode = logJson.getInt(status_code);
+			if (statusCode == SUCCESS_CODE || statusCode == NO_ENTRY_CODE || statusCode == NOT_FOUND_CODE) {
+				JSONObject userSayObject = null;
+				try {
+					strSessionId = log.getString(sessionId);
+					userSayObject = new JSONObject();
+					userSayObject.put(userSay, log.getJSONObject(result).getString(resolvedQuery));
+					userSayObject.put(status_code, statusCode);
+				} catch (JSONException e) {
+					//LOG.error("JSON format is wrong", e);
+					System.out.println(e.getMessage());
+					System.out.println(statusCode +"  "+log);
+				}
+				
+				// if log json with wrong format, ignore it.
+				if (strSessionId.equals("") || userSayObject == null) {
+					continue;
+				}
+
+				boolean sessionIdIsExist = false;
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject jsonObject = jsonArray.getJSONObject(i);
+					if (jsonObject.getString(sessionId).equals(strSessionId)) {
+
+						jsonObject.getJSONArray("contents").put(userSayObject);
+						sessionIdIsExist = true;
+					}
+				}
+				if (!sessionIdIsExist) {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put(sessionId, strSessionId);
+					jsonObject.put("contents", new JSONArray().put(userSayObject));
+					
+					jsonArray.put(jsonObject);
+				}
+			}
+		}
+		FileUtils.writleFile("/Users/HuyTCM/Desktop/conversationCollector", jsonArray.toString());
+		return jsonArray;
 	}
 }
