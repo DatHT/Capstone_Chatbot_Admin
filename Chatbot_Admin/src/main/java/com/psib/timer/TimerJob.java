@@ -26,7 +26,8 @@ public class TimerJob {
 		if (System.getProperty("timerActive") != null) {
 			boolean isTimerActive = Boolean.parseBoolean(System.getProperty("timerActive"));
 			if (isTimerActive) {
-				task.synchronizeFromAPItoDB();
+				task.synchronizePhraseFromAPItoDB();
+				task.synchronizeIntentToBD();
 			}
 		}
 	}

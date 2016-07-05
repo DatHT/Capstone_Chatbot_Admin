@@ -13,17 +13,22 @@ import com.psib.common.factory.LexicalCategoryFactory;
 import com.psib.common.restclient.RestfulException;
 import com.psib.constant.CodeManager;
 import com.psib.constant.StatusCode;
+import com.psib.dao.IFileServerDao;
 import com.psib.dao.impl.LexicalCategoryDao;
 import com.psib.dao.impl.PhraseDao;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
+import com.psib.dto.jsonmapper.intent.IntentsDto;
 import com.psib.model.LexicalCategory;
 import com.psib.model.Phrase;
+import com.psib.service.IIntentManager;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.IPhraseManager;
 import com.psib.service.impl.LexicalCategoryManager;
 import com.psib.service.impl.PhraseManager;
+import com.psib.util.FileUtils;
+import com.psib.util.SpringPropertiesUtil;
 
 @Service
 public class TimerTask {
@@ -34,9 +39,35 @@ public class TimerTask {
 	private ILexicalCategoryManager lexicalManager;
 	@Autowired
 	private IPhraseManager phraseManager;
+	
+	@Autowired
+    private IFileServerDao fileServerDao;
+	
+	@Autowired
+	private IIntentManager intentManager;
+	
+	
+	public void synchronizeIntentToBD() {
+		LOG.info("[doTimer] Start - Syn Intent");
+		String folderUrl = fileServerDao.getByName(SpringPropertiesUtil.getProperty("file_server_intent")).getUrl();
+		try {
+			List<IntentsDto> listIntent = intentManager.getIntents();
+			for(IntentsDto dto : listIntent) {
+				String content = intentManager.getIntentById(dto.getId());
+				FileUtils.writleFile(folderUrl + "/" + dto.getId(), content);
+				LOG.info("[doTimer] Write file sucess");
+			}
+			
+			LOG.info("[doTimer] End - Syn Intent");
+		} catch (IOException e) {
+			LOG.error("[Sync error] " + e.getMessage());
+		} catch (RestfulException e) {
+			LOG.error("[Sync error] " + e.getMessage());
+		}
+	}
 
-	public void synchronizeFromAPItoDB() {
-		LOG.info("[doTimer] Start");
+	public void synchronizePhraseFromAPItoDB() {
+		LOG.info("[doTimer] Start - Syn Phrase");
 		try {
 			List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
 			for (LexicalCategoryDto dto : lexicals) {
@@ -62,7 +93,7 @@ public class TimerTask {
 					}
 				}
 			}
-			LOG.info("[doTimer] End");
+			LOG.info("[doTimer] End  - Syn Phrase");
 		} catch (IOException e) {
 			LOG.error("[Sync error] " + e.getMessage());
 		} catch (RestfulException e) {
