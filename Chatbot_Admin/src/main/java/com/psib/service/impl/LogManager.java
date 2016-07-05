@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.psib.common.JsonParser;
 import com.psib.common.restclient.RestfulException;
 import com.psib.constant.StatusCode;
+import com.psib.dao.IFileServerDao;
 import com.psib.dao.IProductDetailDao;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.model.ProductDetail;
@@ -25,11 +26,15 @@ import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.FileUtils;
+import com.psib.util.SpringPropertiesUtil;
 
 @Service
 public class LogManager implements ILogManager {
 	@Autowired
 	private IProductDetailDao productDetailDao;
+
+	@Autowired
+	private IFileServerDao fileServerDao;
 
 	@Autowired
 	private ILexicalCategoryManager lexicalCategoryManager;
@@ -46,8 +51,7 @@ public class LogManager implements ILogManager {
 	private static int TRAINING_CODE = 202;
 	private static int FEEDBACK_CODE = 609;
 
-	private static String chatLogsFolder = "G:/OneDrive/Documents/FPT/NewFPTOnedrive/Semester9/Capstone/Chatbot/repository/engine/Capstone_Chatbot_Engine/bin";
-	private static String logPath = chatLogsFolder + "/log";
+	private String chatLogsFolder;
 
 	private static String LOG_JSON_FORMAT_MODIFIED_DATE = "modifiedDate";
 	private static String LOG_JSON_FORMAT_CONTENTS = "contents";
@@ -61,13 +65,20 @@ public class LogManager implements ILogManager {
 
 	public JSONObject logJson;
 
+	private String getLogFilePath() {
+		if (chatLogsFolder == null) {
+			chatLogsFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl();
+		}
+		return chatLogsFolder + "/log";
+	}
+
 	@Override
 	public JSONObject getLogJson() throws JSONException, IOException {
 		if (logJson != null) {
 			return logJson;
 		}
 
-		logJson = readJsonLogFile(logPath);
+		logJson = readJsonLogFile(this.getLogFilePath());
 		if (logJson == null) {
 			logJson = new JSONObject();
 
@@ -139,7 +150,7 @@ public class LogManager implements ILogManager {
 		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(new Date()));
 
 		this.logJson = logJson;
-		FileUtils.writleFile(logPath, this.logJson.toString());
+		FileUtils.writleFile(this.getLogFilePath(), this.logJson.toString());
 	}
 
 	/**
@@ -223,7 +234,6 @@ public class LogManager implements ILogManager {
 	private JSONObject getReportLog(JSONObject log) throws JSONException {
 
 		long productId = log.getLong("itemId");
-		long addressId = log.getLong("addressId");
 
 		ProductDetail productDetail = productDetailDao.getProductDetailById(productId);
 
@@ -239,18 +249,18 @@ public class LogManager implements ILogManager {
 	private JSONObject getTrainingLog(JSONObject log) throws JSONException {
 		String userSay = log.getJSONObject("result").getString("resolvedQuery");
 		String patternStr = "train:";
-		
+
 		String train = userSay.substring(patternStr.length());
-		
+
 		return new JSONObject().put("train", train);
 	}
-	
+
 	private JSONObject getFeedbackLog(JSONObject log) throws JSONException {
 		String userSay = log.getJSONObject("result").getString("resolvedQuery");
 		String patternStr = "feedback:";
-		
+
 		String feedback = userSay.substring(patternStr.length());
-		
+
 		return new JSONObject().put("feedback", feedback);
 	}
 
@@ -350,7 +360,7 @@ public class LogManager implements ILogManager {
 		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(new Date()));
 
 		this.logJson = logJson;
-		FileUtils.writleFile(logPath, this.logJson.toString());
+		FileUtils.writleFile(this.getLogFilePath(), this.logJson.toString());
 	}
 
 	@Override
