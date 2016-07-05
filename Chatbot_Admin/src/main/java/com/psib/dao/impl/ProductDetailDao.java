@@ -134,6 +134,18 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
 
     @Override
     @Transactional
+    public ProductDetail getById(ProductDetail productDetail) {
+        LOG.info("[getById] Start: id = " + productDetail.getProductId());
+        String sql = "FROM " + ProductDetail.class.getSimpleName() + " P WHERE P.productId = :productId";
+        Query query = getSession().createQuery(sql);
+        query.setParameter("productId", productDetail.getProductId());
+        ProductDetail result = (ProductDetail) query.uniqueResult();
+        LOG.info("[getById] End");
+        return result;
+    }
+
+    @Override
+    @Transactional
     public void insertProductDetail(ProductDetail productDetail) {
         LOG.info("[insertProductDetail] Start: productName = " + productDetail.getProductName());
         insert(productDetail);
@@ -169,7 +181,7 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
 
     @Override
     @Transactional
-    public long checkProductExist(ProductDetail productDetail) {
+    public ProductDetail checkProductExist(ProductDetail productDetail) {
         LOG.info(new StringBuilder("[checkProductExist] Start: productName = ").append(productDetail.getProductName())
                 .append(" , addressName = ").append(productDetail.getAddressName()));
         String sql = String.valueOf(new StringBuilder("FROM ").append(ProductDetail.class.getSimpleName())
@@ -181,9 +193,9 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
         ProductDetail result = (ProductDetail) query.uniqueResult();
         if (result != null) {
             LOG.info("[checkProductExist] End");
-            return result.getProductId();
+            return result;
         }
         LOG.info("[checkProductExist] End");
-        return 0;
+        return null;
     }
 }

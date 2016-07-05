@@ -74,7 +74,7 @@
     <!-- Begin Manage Product Page -->
     <!-- *************************************************************************** -->
     <definition name="product" extends="base.definition">
-        <put-attribute name="title" value="Entity Manager"/>
+        <put-attribute name="title" value="Manage Product"/>
         <put-attribute name="body"
                        value="/WEB-INF/views/product/viewProduct.jsp"/>
         <put-attribute name="current" value="product"/>
@@ -83,9 +83,18 @@
     <!-- Product Details Page -->
     <!-- *************************************************************************** -->
     <definition name="productDetails" extends="base.definition">
-        <put-attribute name="title" value="Entity Manager"/>
+        <put-attribute name="title" value="Manage Product"/>
         <put-attribute name="body"
                        value="/WEB-INF/views/product/viewProductDetails.jsp"/>
+        <put-attribute name="current" value="product"/>
+    </definition>
+
+    <!-- Update Product Page -->
+    <!-- *************************************************************************** -->
+    <definition name="viewUpdateProduct" extends="base.definition">
+        <put-attribute name="title" value="Manage Product"/>
+        <put-attribute name="body"
+                       value="/WEB-INF/views/product/viewUpdateProduct.jsp"/>
         <put-attribute name="current" value="product"/>
     </definition>
 

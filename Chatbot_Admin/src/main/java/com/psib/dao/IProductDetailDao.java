@@ -15,6 +15,8 @@ public interface IProductDetailDao {
             , String sortDistrictName, String sortRate, String sortRestaurantName
             , int maxResult, int skipResult);
 
+    ProductDetail getById(ProductDetail productDetail);
+
     void insertProductDetail(ProductDetail productDetail);
 
     void updateProductDetail(ProductDetail productDetail);
@@ -23,5 +25,5 @@ public interface IProductDetailDao {
 
     void deleteById(ProductDetail productDetail);
 
-    long checkProductExist(ProductDetail productDetail);
+    ProductDetail checkProductExist(ProductDetail productDetail);
 }
