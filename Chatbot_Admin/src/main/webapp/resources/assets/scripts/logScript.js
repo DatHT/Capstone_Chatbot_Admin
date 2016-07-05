@@ -108,6 +108,11 @@ xmlhttp.onreadystatechange = function() {
                 iconDown: 'zmdi-expand-more',
                 iconRefresh: 'zmdi-refresh',
                 iconUp: 'zmdi-expand-less'
+            },
+            formatters: {
+                "updateProduct": function (column, row) {
+                    return "<button data-row-food='" + row.food + "' data-row-location='" + row.location + "' data-toggle='modal' data-target='#myModal' class='btn btn-warning btn-icon waves-effect waves-circle waves-float'><i class='zmdi zmdi-edit zmdi-hc-fw'></i></button>";
+                }
             }
         })
 	}

@@ -122,6 +122,7 @@
 								<th data-column-id="productName">Product</th>
 								<th data-column-id="districtName">District</th>
 								<th data-column-id="restaurantName">Restaurant</th>
+								<th data-column-id="updateProduct" data-formatter="updateProduct" data-sortable="false">Update product</th>
 							</tr>
 						</thead>
 						<tbody id="reported-product-table-body">
