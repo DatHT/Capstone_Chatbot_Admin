@@ -32,14 +32,16 @@ function addIntentRows(tableId, data) {
 		cells[1] = jsonData.templates[i];
 		cells[2] = "<button id='"
 				+ jsonData.templates[i]
-				+ "' onclick='deletePhrase(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+				+ "' onclick='showDeleteModal(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
 
 		addRow(tableElem, cells);
 	}
 
 }
 
-function deletePhrase(id) {
+function deletePattern() {
+	$('#deleteModal').modal('hide');
+	var id = document.getElementById("deletePatternName").innerHTML;
 	var jsonData = JSON.parse(resultIntents);
 	delete jsonData.userSays;
 	delete jsonData.priority;
@@ -57,18 +59,28 @@ function deletePhrase(id) {
 
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			swal("Good job!", xmlhttp.responseText, "success");
+			var result = xmlhttp.responseText;
+			if (result.indexOf("success") > -1) {
+				swal("Good job!", xmlhttp.responseText, "success");
+			}
+			if (result.indexOf("wrong") > -1) {
+				swal("Error!", xmlhttp.responseText, "error");
+			}
+			if (result.indexOf("Sorry") > -1) {
+				swal("Dupplicate!", xmlhttp.responseText, "info");
+			}
 			loadIntent(cate);
-			// moveDiv("droptarget", "box-dragable");
 		}
 
 	}
 	var param = document.getElementById("paramName").value;
 	var token = document.getElementById("token").value;
+	var chosenExample = "";
 	xmlhttp.open("POST", "/chatbot_admin/example/add", true);
 	xmlhttp.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded;charset=utf-8");
-	xmlhttp.send("pattern=" + JSON.stringify(jsonData) + "&id=" + intentId + "&" + param + "=" + token);
+	xmlhttp.send("pattern=" + JSON.stringify(jsonData) + "&id=" + intentId + "&" + param + "=" + token
+			 + "&trainingSentence=" + chosenExample);
 	// action here
 
 }
@@ -110,7 +122,7 @@ function loadIntent(id) {
 									"commands" : function(column, row) {
 										return "<button id='"
 												+ row.name
-												+ "' onclick='deletePhrase(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+												+ "' onclick='showDeleteModal(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
 									}
 								}
 							});
@@ -166,20 +178,31 @@ function insertPattern() {
 
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					// swal("Good job!", xmlhttp.responseText, "success");
-					// loadIntent(cate);
-					location.reload();
-					// moveDiv("droptarget", "box-dragable");
+					var result = xmlhttp.responseText;
+					if (xmlhttp.responseText.indexOf('success') > 0) {
+						swal({title: "Good job!", text: xmlhttp.responseText, type: "success"}, 
+								function() {
+									setTimeout(function() {
+										location.reload();
+									}, 500);
+									
+								}
+							);
+					} else {
+						swal("Sorry!", xmlhttp.responseText, "error");
+					}
+					
 				}
 
 			}
+			var chosenExample = $("#chosenExample p").text();
 			var param = document.getElementById("paramName").value;
 			var token = document.getElementById("token").value;
 			xmlhttp.open("POST", "/chatbot_admin/example/add", true);
 			xmlhttp.setRequestHeader("Content-type",
 					"application/x-www-form-urlencoded;charset=utf-8");
 			xmlhttp.send("pattern=" + JSON.stringify(jsonData) + "&id="
-					+ intentId  + "&" + param + "=" + token);
+					+ intentId  + "&" + param + "=" + token + "&trainingSentence=" + chosenExample);
 			// action here
 
 		} else {
@@ -242,3 +265,7 @@ function displayStep3() {
 	}
 }
 
+function showDeleteModal(name) {
+    $('#deletePatternName').text(name);
+    $('#deleteModal').modal('show');
+}

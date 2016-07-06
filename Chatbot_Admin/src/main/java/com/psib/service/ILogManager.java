@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.psib.common.restclient.RestfulException;
 import com.psib.constant.StatusCode;
+import com.psib.dto.jsonmapper.TrainDto;
 
 public interface ILogManager {
 
@@ -18,4 +19,8 @@ public interface ILogManager {
 	List<JSONObject> getAllLogs() throws IOException, JSONException;
 
 	public StatusCode addPhrase(String listPhrase) throws JSONException, IOException, RestfulException;
+
+	public List<TrainDto> getTraingPool() throws IOException;
+	
+	public void updateTrainingLog(String data) throws IOException ;
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import com.psib.constant.StatusCode;
 import com.psib.dao.IFileServerDao;
 import com.psib.dao.IProductDetailDao;
 import com.psib.dto.jsonmapper.Entry;
+import com.psib.dto.jsonmapper.TrainDto;
 import com.psib.model.ProductDetail;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
@@ -71,6 +73,11 @@ public class LogManager implements ILogManager {
 		}
 		return chatLogsFolder + "/log";
 	}
+	
+	private String getTrainingFilePath() {
+		return fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl() + "/training";
+	}
+	
 
 	private String getTrainingPoolPath() {
 		if (chatLogsFolder == null) {
@@ -120,6 +127,19 @@ public class LogManager implements ILogManager {
 		}
 		if (stringBuilder.length() != 0) {
 			return new JSONObject(stringBuilder.toString());
+		}
+		return null;
+	}
+	
+	private String readJsonTrainingFile(String logPath) throws IOException {
+		BufferedReader bufferedReader = FileUtils.readFile(logPath);
+		StringBuilder stringBuilder = new StringBuilder();
+		String tempString = null;
+		while ((tempString = bufferedReader.readLine()) != null) {
+			stringBuilder.append(tempString);
+		}
+		if (stringBuilder.length() != 0) {
+			return stringBuilder.toString();
 		}
 		return null;
 	}
@@ -424,5 +444,22 @@ public class LogManager implements ILogManager {
 			code = lexicalCategoryManager.addPhrase(entry, value);
 		}
 		return code;
+	}
+
+	@Override
+	public List<TrainDto> getTraingPool() throws IOException {
+		String trainJson = "";
+		trainJson = readJsonTrainingFile(this.getTrainingFilePath());
+		if (!trainJson.isEmpty()) {
+			List<TrainDto> list = JsonParser.toList(trainJson, TrainDto.class);
+			return list;
+		}
+		return null;
+	}
+
+	@Override
+	public void updateTrainingLog(String data) throws IOException {
+		FileUtils.writleFile(this.getTrainingFilePath(), data);
+		
 	}
 }

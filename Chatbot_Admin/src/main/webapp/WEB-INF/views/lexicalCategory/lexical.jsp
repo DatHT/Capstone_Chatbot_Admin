@@ -100,11 +100,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                    <button type="button" class="btn btn-danger"
+                    <button type="button" class="btn btn-success"
                             data-dismiss="modal">Cancel
                     </button>
 
-                    <button type="submit" class="btn btn-success"
+                    <button type="submit" class="btn btn-danger"
                             onclick="deletePharse()">
                         Delete
                     </button>

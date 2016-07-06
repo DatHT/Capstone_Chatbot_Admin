@@ -83,7 +83,10 @@
 							<option value="empty"></option>
 							<c:if test="${not empty logs}">
 								<c:forEach var="log" items="${logs}">
-									<option value="${log}">${log}</option>
+									<c:if test="${not log.delete}">
+										<option value="${log.train}">${log.train}</option>
+									</c:if>
+									
 								</c:forEach>
 							</c:if>
 						</select>
@@ -213,3 +216,32 @@
 	background: #ececec;
 }
 </style>
+<!-- Modals-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete Product</h4>
+            </div>
+            <div class="modal-body" style="border-bottom: 0px">
+                <div>
+                    <h4>Are you sure to delete this pattern <strong id="deletePatternName"></strong> ?</h4>
+                </div>
+            </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-success"
+                            data-dismiss="modal">Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-danger"
+                            onclick="deletePattern()">
+                        Delete
+                    </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
