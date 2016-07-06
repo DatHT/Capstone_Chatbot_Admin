@@ -21,6 +21,7 @@ import com.psib.common.restclient.RestfulException;
 import com.psib.constant.StatusCode;
 import com.psib.dao.IFileServerDao;
 import com.psib.dao.IProductDetailDao;
+import com.psib.dto.DateDto;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.TrainDto;
 import com.psib.model.ProductDetail;
@@ -40,8 +41,8 @@ public class LogManager implements ILogManager {
 
 	@Autowired
 	private ILexicalCategoryManager lexicalCategoryManager;
-	
-//	private static final Logger LOG = Logger.getLogger(LogManager.class);
+
+	// private static final Logger LOG = Logger.getLogger(LogManager.class);
 
 	private static String START_LOG = ">>>>>";
 	private static String END_LOG = "<<<<<";
@@ -483,7 +484,7 @@ public class LogManager implements ILogManager {
 		String strSessionId = "";
 		for (JSONObject logJson : allLog) {
 			JSONObject log = logJson.getJSONObject(log_json);
-			
+
 			int statusCode = logJson.getInt(status_code);
 			if (statusCode == SUCCESS_CODE || statusCode == NO_ENTRY_CODE || statusCode == NOT_FOUND_CODE) {
 				JSONObject userSayObject = null;
@@ -493,11 +494,11 @@ public class LogManager implements ILogManager {
 					userSayObject.put(userSay, log.getJSONObject(result).getString(resolvedQuery));
 					userSayObject.put(status_code, statusCode);
 				} catch (JSONException e) {
-					//LOG.error("JSON format is wrong", e);
+					// LOG.error("JSON format is wrong", e);
 					System.out.println(e.getMessage());
-					System.out.println(statusCode +"  "+log);
+					System.out.println(statusCode + "  " + log);
 				}
-				
+
 				// if log json with wrong format, ignore it.
 				if (strSessionId.equals("") || userSayObject == null) {
 					continue;
@@ -516,12 +517,36 @@ public class LogManager implements ILogManager {
 					JSONObject jsonObject = new JSONObject();
 					jsonObject.put(sessionId, strSessionId);
 					jsonObject.put("contents", new JSONArray().put(userSayObject));
-					
+
 					jsonArray.put(jsonObject);
 				}
 			}
 		}
 		FileUtils.writleFile("/Users/HuyTCM/Desktop/conversationCollector", jsonArray.toString());
 		return jsonArray;
+	}
+
+	@Override
+	public List<DateDto> getListDateLog() {
+		if (chatLogsFolder == null) {
+			chatLogsFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl();
+		}
+		List<DateDto> listDateFolderName = new ArrayList<>();
+		File file = new File(chatLogsFolder);
+		if (!file.isDirectory()) {
+			return null;
+		}
+
+		for (File dirList : file.listFiles()) {
+			if (!dirList.isDirectory()) {
+				continue;
+			}
+			String dateFolder = CommonUtils.parseDateFormat(dirList.getName());
+			if (dateFolder != null) {
+				DateDto date = new DateDto(dateFolder, dirList.getName());
+				listDateFolderName.add(date);
+			}
+		}
+		return listDateFolderName;
 	}
 }

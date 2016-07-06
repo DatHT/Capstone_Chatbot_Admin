@@ -1,6 +1,7 @@
 package com.psib.util;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -51,10 +52,10 @@ public class CommonUtils {
 		String tmp = StringUtils.substringAfter(url, "(");
 		return StringUtils.substringBeforeLast(tmp, ")");
 	}
-	
+
 	public static boolean checkExistName(String name, List<Entry> list) {
-		
-		for(Entry value : list) {
+
+		for (Entry value : list) {
 			if (name != null) {
 				if (!name.equals("")) {
 					if (name.equals(value.getValue())) {
@@ -62,12 +63,29 @@ public class CommonUtils {
 					}
 				}
 			}
-			
+
 		}
 		return false;
 	}
+
 	public static String getDateStringFormat(Date date) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		return dateFormat.format(date);
+	}
+
+	/*
+	 * Parse Date format form yyyyMMdd to yyyy/MM/dd
+	 */
+	public static String parseDateFormat(String strDate) {
+		DateFormat oldFormat = new SimpleDateFormat("yyyyMMdd");
+		Date date;
+		try {
+			date = oldFormat.parse(strDate);
+			DateFormat newFormat = new SimpleDateFormat("yyyy/MM/dd");
+			return newFormat.format(date);
+		} catch (ParseException e) {
+			System.out.println("Wrong date format: " + strDate + "---" + e.getLocalizedMessage());
+		}
+		return null;
 	}
 }
