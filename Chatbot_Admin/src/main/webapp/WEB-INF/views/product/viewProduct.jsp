@@ -4,6 +4,7 @@
 <script>
     var tokenName = '${_csrf.parameterName}';
     var tokenValue = '${_csrf.token}';
+    var addResult = '${addResult}';
 </script>
 <script src="${pageContext.request.contextPath}/resources/assets/scripts/viewProduct.js"></script>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -17,9 +18,9 @@
 
 <div class="card">
     <div class="card-body card-padding">
-        <button class="btn btn-primary btn-lg waves-effect" onclick="showAddModal()">
+        <a class="btn btn-primary btn-lg waves-effect" href="viewAddProduct">
             <spring:message code="product_btn_add"/>
-        </button>
+        </a>
         <div class="row m-t-20">
             <div class="panel panel-default">
                 <div class="panel-body">

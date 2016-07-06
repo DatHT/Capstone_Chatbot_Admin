@@ -1,4 +1,9 @@
 $(document).ready(function () {
+
+    if (addResult == 'true') {
+        notify("Add Product Successfully!", "info");
+    }
+
     $("#data-table-basic").bootgrid({
         ajax: true,
         post: function () {

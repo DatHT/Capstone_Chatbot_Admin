@@ -34,9 +34,7 @@ public class ProductController {
 
     @RequestMapping(value = "/product", method = RequestMethod.GET)
     public ModelAndView loadProduct(@ModelAttribute(value = "addResult") String addResult,
-                                    @ModelAttribute(value = "deleteResult") String deleteResult,
-                                    @RequestParam(value = "txtDistrict", required = false) String txtDistrict,
-                                    @RequestParam(value = "updateProductId", required = false) String updateProductId) {
+                                    @ModelAttribute(value = "deleteResult") String deleteResult) {
         LOG.info("[loadProduct] Start");
 
         ModelAndView model = new ModelAndView("product");
@@ -67,6 +65,73 @@ public class ProductController {
 
         LOG.info("[viewProductDetails] End");
         return model;
+    }
+
+    @RequestMapping(value = "/viewAddProduct", method = RequestMethod.GET)
+    public ModelAndView viewAddProduct(@ModelAttribute(value = "addResult") String addResult,
+                                       @ModelAttribute(value = "name") String name,
+                                       @ModelAttribute(value = "address") String address,
+                                       @ModelAttribute(value = "district") String district,
+                                       @ModelAttribute(value = "rating") String rating,
+                                       @ModelAttribute(value = "restaurant") String restaurant,
+                                       @ModelAttribute(value = "relatedUrl") String relatedUrl) {
+        LOG.info("[viewAddProduct] Start");
+        ModelAndView model = new ModelAndView("viewAddProduct");
+
+        List<District> districtList = productManager.getAllDistrict();
+        Collections.sort(districtList);
+        model.addObject("districtList", districtList);
+
+        if (!addResult.equals("")) {
+            model.addObject(name);
+            model.addObject(address);
+            model.addObject("districtName", district);
+            model.addObject(rating);
+            model.addObject(restaurant);
+            model.addObject(relatedUrl);
+        }
+        LOG.info("[viewAddProduct] End");
+        return model;
+    }
+
+    @RequestMapping(value = "/addProduct", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelAndView addProduct(@RequestParam(name = "name") String name,
+                                   @RequestParam(name = "address") String address,
+                                   @RequestParam(name = "district") String district,
+                                   @RequestParam(name = "rating") String rating,
+                                   @RequestParam(name = "restaurant") String restaurant,
+                                   @RequestParam(name = "relatedUrl") String relatedUrl,
+                                   @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        LOG.info("[addProduct] Start");
+        ModelAndView model = new ModelAndView("redirect:viewAddProduct");
+        try {
+            int result = productManager.insertProduct(name.trim(), address.trim(), district, rating.trim()
+                    , restaurant.trim(), relatedUrl.trim(), file);
+
+            if (result == 0) {
+                redirectAttributes.addFlashAttribute("addResult", false);
+                redirectAttributes.addFlashAttribute("name", name);
+                redirectAttributes.addFlashAttribute("address", address);
+                redirectAttributes.addFlashAttribute("district", district);
+                redirectAttributes.addFlashAttribute("rating", rating);
+                redirectAttributes.addFlashAttribute("restaurant", restaurant);
+                redirectAttributes.addFlashAttribute("relatedUrl", relatedUrl);
+                LOG.info("[addProduct] End");
+                return model;
+            } else {
+                redirectAttributes.addFlashAttribute("addResult", true);
+                model = new ModelAndView("redirect:product");
+                LOG.info("[addProduct] End");
+                return model;
+            }
+
+        } catch (DatabaseException e) {
+            LOG.error("[addProduct] DatabaseException: " + e.getMessage());
+            model = new ModelAndView("error");
+            model.addObject(ERROR, e.getMessage());
+            return model;
+        }
     }
 
     @RequestMapping(value = "/viewUpdateProduct", method = RequestMethod.GET)
@@ -102,43 +167,6 @@ public class ProductController {
         model.addObject(relatedUrl);
 
         LOG.info("[viewUpdateProduct] End");
-        return model;
-    }
-
-    @RequestMapping(value = "/addProduct", method = RequestMethod.POST)
-    @ResponseBody
-    public ModelAndView addProduct(@RequestParam(name = "name") String name,
-                                   @RequestParam(name = "address") String address,
-                                   @RequestParam(name = "district") String district,
-                                   @RequestParam(name = "rating") String rating,
-                                   @RequestParam(name = "restaurant") String restaurant,
-                                   @RequestParam(name = "relatedUrl") String relatedUrl,
-                                   @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-        LOG.info("[addProduct] Start");
-        ModelAndView model = new ModelAndView("redirect:product");
-        try {
-            int result = productManager.insertProduct(name.trim(), address.trim(), district, rating.trim()
-                    , restaurant.trim(), relatedUrl.trim(), file);
-
-            if (result == 0) {
-                redirectAttributes.addFlashAttribute("addResult", false);
-                redirectAttributes.addFlashAttribute("name", name);
-                redirectAttributes.addFlashAttribute("address", address);
-                redirectAttributes.addFlashAttribute("district", district);
-                redirectAttributes.addFlashAttribute("rating", rating);
-                redirectAttributes.addFlashAttribute("restaurant", restaurant);
-                redirectAttributes.addFlashAttribute("relatedUrl", relatedUrl);
-            } else {
-                redirectAttributes.addFlashAttribute("addResult", true);
-            }
-
-        } catch (DatabaseException e) {
-            LOG.error("[addProduct] DatabaseException: " + e.getMessage());
-            model = new ModelAndView("error");
-            model.addObject(ERROR, e.getMessage());
-            return model;
-        }
-        LOG.info("[addProduct] End");
         return model;
     }
 

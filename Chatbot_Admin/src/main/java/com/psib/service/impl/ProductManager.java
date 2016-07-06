@@ -135,7 +135,9 @@ public class ProductManager implements IProductManager {
                 productDetail.setDistrictName(district);
                 productDetail.setLatitude(latitude);
                 productDetail.setLongitude(longitude);
-                productDetail.setRate(Double.parseDouble(rating));
+                if(!rating.equals("")){
+                    productDetail.setRate(Double.parseDouble(rating));
+                }
                 productDetail.setRestaurantName(restaurant);
                 productDetail.setAddressId(addressId);
                 productDetail.setUrlRelate(relatedUrl);

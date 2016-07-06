@@ -1,5 +1,4 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<link href="${pageContext.request.contextPath}/resources/assets/css/productDetails.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/resources/assets/scripts/commonScript.js"></script>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
@@ -14,7 +13,8 @@
     <div class="pm-overview c-overflow">
         <div class="pmo-pic">
             <div class="p-relative">
-                <img id="thumbImg" class="img-responsive" src="${productDetail.thumbPath}" alt="">
+                <img id="thumbImg" class="img-responsive" src="${productDetail.thumbPath}"
+                     alt="<spring:message code="product_no_image"/>">
             </div>
         </div>
     </div>

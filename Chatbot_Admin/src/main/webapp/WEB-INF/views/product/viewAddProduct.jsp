@@ -3,9 +3,9 @@
 <script src="${pageContext.request.contextPath}/resources/assets/scripts/commonScript.js"></script>
 <script src="${pageContext.request.contextPath}/resources/assets/scripts/product.js"></script>
 <script>
-    var updateResult = '${updateResult}';
+    var addResult = '${addResult}';
 </script>
-<script src="${pageContext.request.contextPath}/resources/assets/scripts/updateProduct.js"></script>
+<script src="${pageContext.request.contextPath}/resources/assets/scripts/addProduct.js"></script>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -19,8 +19,7 @@
     <div class="pm-overview c-overflow">
         <div class="pmo-pic">
             <div class="p-relative">
-                <img id="thumbImg" class="img-responsive" src="${productDetail.thumbPath}"
-                     alt="<spring:message code="product_no_image_upload"/>">
+                <img id="thumbImg" class="img-responsive" src="" alt="<spring:message code="product_no_image_upload"/>">
                 <a id="uploadThumb" href="#" class="pmop-edit" onclick="performClick('file')">
                     <i class="zmdi zmdi-camera"></i> <span class="hidden-xs"><spring:message
                         code="product_upload_image"/></span>
@@ -32,11 +31,11 @@
     <div class="pm-body clearfix">
         <div class="pmb-block">
             <div class="pmbb-header">
-                <h2><i class="zmdi zmdi-edit m-r-5"></i> <spring:message code="product_header_update"/></h2>
+                <h2><i class="zmdi zmdi-bookmark m-r-5"></i> <spring:message code="product_header_add"/></h2>
             </div>
             <div class="pmbb-body p-l-30">
                 <div class="pmbb-view">
-                    <form id="update-form" action="updateProduct" method="POST"
+                    <form id="update-form" action="addProduct" method="POST"
                           onsubmit="return validOnSubmit('#name','#div-name','#error-name'
                                   ,'#address','#div-address','#error-address'
                                   ,'#rating','#div-rating','#error-rating'
@@ -48,11 +47,8 @@
                                   '<spring:message code='product_error_invalid_url'/>')"
                           enctype="multipart/form-data">
 
-                        <input id="updateProductId" name="updateProductId" type="hidden"
-                               value="${productDetail.productId}">
-
-                        <c:if test="${updateResult != 'false'}">
-                            <%--Edit Name--%>
+                        <c:if test="${addResult != 'false'}">
+                            <%--Name--%>
                             <dt class="p-t-10"><spring:message code="product_name"/><span class="red-text">(*)</span>
                             </dt>
                             <dd>
@@ -63,14 +59,14 @@
                                                        '<spring:message code='product_error_empty_name'/>')"
                                                onkeyup="validName('#name','#div-name','#error-name',
                                                        '<spring:message code='product_error_empty_name'/>')"
-                                               value="${productDetail.productName}">
+                                               value="">
                                     </div>
                                     <small id="error-name" class="help-block"></small>
                                 </div>
                             </dd>
                             <br>
 
-                            <%--Edit Address--%>
+                            <%--Address--%>
                             <dt><spring:message code="product_address"/><span class="red-text">(*)</span></dt>
                             <dd>
                                 <div id="div-address">
@@ -81,32 +77,27 @@
                                                        '<spring:message code='product_error_empty_address'/>')"
                                                onkeyup="validAddress('#address','#div-address','#error-address',
                                                        '<spring:message code='product_error_empty_address'/>')"
-                                               value="${productDetail.addressName}">
+                                               value="">
                                     </div>
                                     <small id="error-address" class="help-block"></small>
                                 </div>
                             </dd>
                             <br>
 
-                            <%--Edit District--%>
+                            <%--District--%>
                             <dt><spring:message code="product_district"/><span class="red-text">(*)</span></dt>
                             <dd>
                                 <div class="fg-line">
                                     <select id="district" name="district" class="form-control">
                                         <c:forEach items="${districtList}" var="district">
-                                            <c:if test="${productDetail.districtName == district.name}">
-                                                <option value="${district.name}" selected>${district.name}</option>
-                                            </c:if>
-                                            <c:if test="${productDetail.districtName != district.name}">
-                                                <option value="${district.name}">${district.name}</option>
-                                            </c:if>
+                                            <option value="${district.name}">${district.name}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
                             </dd>
                             <br>
 
-                            <%--Edit Rating--%>
+                            <%--Rating--%>
                             <dt><spring:message code="product_rating"/></dt>
                             <dd>
                                 <div id="div-rating">
@@ -117,20 +108,20 @@
                                                        '<spring:message code='product_error_invalid_rating'/>')"
                                                onkeyup="validRating('#rating','#div-rating','#error-rating',
                                                        '<spring:message code='product_error_invalid_rating'/>')"
-                                               value="${productDetail.rate}">
+                                               value="">
                                     </div>
                                     <small id="error-rating" class="help-block"></small>
                                 </div>
                             </dd>
                             <br>
 
-                            <%--Edit Restaurant--%>
+                            <%--Restaurant--%>
                             <dt><spring:message code="product_restaurant"/></dt>
                             <dd>
                                 <div class="fg-line">
                                     <input id="restaurant" name="restaurant" type="text" class="form-control"
                                            autocomplete="off"
-                                           value="${productDetail.restaurantName}">
+                                           value="">
                                 </div>
                             </dd>
                             <br>
@@ -148,15 +139,15 @@
                                                onkeyup="validRelatedUrl('#relatedUrl','#div-relatedUrl','#error-relatedUrl',
                                                        '<spring:message code='product_error_empty_url'/>',
                                                        '<spring:message code='product_error_invalid_url'/>')"
-                                               value="${productDetail.urlRelate}">
+                                               value="">
                                     </div>
                                     <small id="error-relatedUrl" class="help-block"></small>
                                 </div>
                             </dd>
                         </c:if>
 
-                        <c:if test="${updateResult == 'false'}">
-                            <%--Edit Name--%>
+                        <c:if test="${addResult == 'false'}">
+                            <%--Name--%>
                             <dt class="p-t-10"><spring:message code="product_name"/><span class="red-text">(*)</span>
                             </dt>
                             <dd>
@@ -174,7 +165,7 @@
                             </dd>
                             <br>
 
-                            <%--Edit Address--%>
+                            <%--Address--%>
                             <dt><spring:message code="product_address"/><span class="red-text">(*)</span></dt>
                             <dd>
                                 <div id="div-address">
@@ -192,7 +183,7 @@
                             </dd>
                             <br>
 
-                            <%--Edit District--%>
+                            <%--District--%>
                             <dt><spring:message code="product_district"/><span class="red-text">(*)</span></dt>
                             <dd>
                                 <div class="fg-line">
@@ -210,7 +201,7 @@
                             </dd>
                             <br>
 
-                            <%--Edit Rating--%>
+                            <%--Rating--%>
                             <dt><spring:message code="product_rating"/></dt>
                             <dd>
                                 <div id="div-rating">
@@ -228,7 +219,7 @@
                             </dd>
                             <br>
 
-                            <%--Edit Restaurant--%>
+                            <%--Restaurant--%>
                             <dt><spring:message code="product_restaurant"/></dt>
                             <dd>
                                 <div class="fg-line">
@@ -239,7 +230,7 @@
                             </dd>
                             <br>
 
-                            <%--Edit Url--%>
+                            <%--Url--%>
                             <dt><spring:message code="product_url"/><span class="red-text">(*)</span></dt>
                             <dd>
                                 <div id="div-relatedUrl">

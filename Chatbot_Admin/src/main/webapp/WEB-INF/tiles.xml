@@ -91,6 +91,15 @@
 
     <!-- Update Product Page -->
     <!-- *************************************************************************** -->
+    <definition name="viewAddProduct" extends="base.definition">
+        <put-attribute name="title" value="Manage Product"/>
+        <put-attribute name="body"
+                       value="/WEB-INF/views/product/viewAddProduct.jsp"/>
+        <put-attribute name="current" value="product"/>
+    </definition>
+
+    <!-- Update Product Page -->
+    <!-- *************************************************************************** -->
     <definition name="viewUpdateProduct" extends="base.definition">
         <put-attribute name="title" value="Manage Product"/>
         <put-attribute name="body"
