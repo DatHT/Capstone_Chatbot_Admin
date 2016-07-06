@@ -41,7 +41,7 @@ function addRows(tableId, data) {
 }
 
 function loadPharse(id) {
-
+	$('#loadingModal').modal('show');
 	document.getElementById("tableHeader").innerHTML = id.options[id.selectedIndex].text;
 
 	if (window.XMLHttpRequest) {
@@ -75,7 +75,7 @@ function loadPharse(id) {
 									}
 								}
 							});
-
+			$('#loadingModal').modal('hide');
 		}
 
 	}

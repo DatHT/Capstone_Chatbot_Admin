@@ -40,7 +40,7 @@
 
 
 <div class="row">
-	<div class="col-lg-3">
+	<div class="col-lg-7" id="step1">
 
 		<div class="card">
 			<div class="card-header ch-dark palette-Purple-300 bg">
@@ -70,7 +70,7 @@
 	</div>
 
 
-	<div class="col-lg-3" style="display:none" id="step2">
+	<div class="col-lg-7" style="display:none" id="step2">
 		<div class="card">
 			<div class="card-header ch-dark palette-Purple-300 bg">
 				<h2>Step 2: Choose example</h2>
@@ -93,7 +93,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-lg-6" style="display:none" id="step3">
+	<div class="col-lg-7" style="display:none" id="step3">
 		<div class="card">
 		<div class="card-header ch-dark palette-Purple-300 bg">
 				<h2>Step 3: Start Training</h2>

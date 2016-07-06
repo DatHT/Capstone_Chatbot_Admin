@@ -97,7 +97,7 @@ function moveDiv(divFromId, divToId) {
 }
 
 function loadIntent(id) {
-
+	$('#loadingModal').modal('show');
 	if (window.XMLHttpRequest) {
 		xmlhttp = new XMLHttpRequest();
 	} else
@@ -126,7 +126,7 @@ function loadIntent(id) {
 									}
 								}
 							});
-
+			$('#loadingModal').modal('hide');
 		}
 
 	}
@@ -222,8 +222,10 @@ function displayStep2() {
 	if (selectId == "empty") {
 		notify("Please Choose intent first!", "info");
 	} else {
+		document.getElementById("step1").className = "col-lg-2";
 		var step2 = document.getElementById("step2");
 		step2.style.display = "block";
+		
 	}
 }
 function displayStep3() {
@@ -232,6 +234,7 @@ function displayStep3() {
 	if (selectId == "empty") {
 		notify("Please Choose Example first!", "info");
 	} else {
+		document.getElementById("step2").className = "col-lg-2";
 		var step3 = document.getElementById("step3");
 		step3.style.display = "block";
 		// display example
