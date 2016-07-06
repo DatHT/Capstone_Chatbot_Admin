@@ -17,7 +17,7 @@ public interface ILogManager {
 
 	void updateLog() throws JSONException, IOException;
 
-	List<JSONObject> getAllLogs() throws IOException, JSONException;
+	List<JSONObject> getLogs(String atDate) throws IOException, JSONException;
 
 	public StatusCode addPhrase(String listPhrase) throws JSONException, IOException, RestfulException;
 

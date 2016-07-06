@@ -67,8 +67,8 @@ public class LogManager implements ILogManager {
 	private static String errCode = "errCode";
 	private static String userSay = "userSay";
 	private static String contexts = "contexts";
-	private static String action = "action";
-	private static String intentName = "intentName";
+//	private static String action = "action";
+//	private static String intentName = "intentName";
 	private static String result = "result";
 	private static String resolvedQuery = "resolvedQuery";
 
@@ -156,7 +156,7 @@ public class LogManager implements ILogManager {
 	@Override
 	public void updateLog() throws JSONException, IOException {
 		JSONObject logJson = this.getLogJson();
-		List<JSONObject> logs = this.getAllLogs();
+		List<JSONObject> logs = this.getLogs(null);
 		JSONArray trainArr = this.getTrainingList();
 
 		JSONArray jsonArray;
@@ -196,9 +196,6 @@ public class LogManager implements ILogManager {
 			log.put(errCode, statusCode);
 
 			if (!checkExistLog(jsonArray, log)) {
-				log.put(action, tempJson.getJSONObject(result).get(action));
-				log.put(intentName, tempJson.getJSONObject(result).getJSONObject("metadata").get(intentName));
-
 				jsonArray.put(log);
 			}
 		}
@@ -220,10 +217,10 @@ public class LogManager implements ILogManager {
 	 * @throws JSONException
 	 */
 	@Override
-	public List<JSONObject> getAllLogs() throws IOException, JSONException {
+	public List<JSONObject> getLogs(String atDate) throws IOException, JSONException {
 		List<JSONObject> logs = new ArrayList<JSONObject>();
 
-		List<String> fileList = getNewFileLog();
+		List<String> fileList = getFileLogPath(atDate);
 
 		if (fileList != null) {
 			for (String filePath : fileList) {
@@ -337,8 +334,8 @@ public class LogManager implements ILogManager {
 		return new JSONObject().put("feedback", feedback);
 	}
 
-	private List<String> getNewFileLog() throws IOException, JSONException {
-		List<String> newFileLogPath = new ArrayList<String>();
+	private List<String> getFileLogPath(String strDate) throws IOException, JSONException {
+		List<String> fileLogPaths = new ArrayList<String>();
 
 		String lastModifiedDate = getLogJson().get(LOG_JSON_FORMAT_MODIFIED_DATE).toString();
 		File file = new File(chatLogsFolder);
@@ -350,14 +347,19 @@ public class LogManager implements ILogManager {
 			if (!dirList.isDirectory()) {
 				continue;
 			}
-			if (dirList.getName().compareTo(lastModifiedDate) >= 0) {
+			if (strDate != null && dirList.getName().equals(strDate)) {
 				for (File logFile : dirList.listFiles()) {
-					newFileLogPath.add(logFile.getPath());
+					fileLogPaths.add(logFile.getPath());
+				}
+			} else {
+				if (dirList.getName().compareTo(lastModifiedDate) >= 0) {
+					for (File logFile : dirList.listFiles()) {
+						fileLogPaths.add(logFile.getPath());
+					}
 				}
 			}
 		}
-
-		return newFileLogPath;
+		return fileLogPaths;
 	}
 
 	public boolean checkExistLog(JSONArray jsonArray, JSONObject jsonObject) throws JSONException {
@@ -477,8 +479,8 @@ public class LogManager implements ILogManager {
 	/*
 	 * Collect all conversation with BOT by sessionId.
 	 */
-	public JSONArray conversationCollector() throws IOException, JSONException {
-		List<JSONObject> allLog = this.getAllLogs();
+	public JSONArray conversationCollector(String atDate) throws IOException, JSONException {
+		List<JSONObject> allLog = this.getLogs(atDate);
 		JSONArray jsonArray = new JSONArray();
 
 		String strSessionId = "";
