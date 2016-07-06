@@ -260,9 +260,9 @@
                             <button type="submit" class="btn btn-success">
                                 <spring:message code="product_btn_save"/>
                             </button>
-                            <button data-pmb-action="reset" class="btn btn-danger">
+                            <a class="btn btn-danger" href="product">
                                 <spring:message code="product_btn_cancel"/>
-                            </button>
+                            </a>
                         </div>
                     </form>
                 </div>
