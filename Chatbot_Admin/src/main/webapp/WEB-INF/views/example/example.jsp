@@ -199,6 +199,7 @@
 	background-color: #03a9f4;
 	text-align: center;
 	border-radius: 0%;
+	color: white;
 	padding: 5px;
 	display: inline-block;
 	margin: 5px;
