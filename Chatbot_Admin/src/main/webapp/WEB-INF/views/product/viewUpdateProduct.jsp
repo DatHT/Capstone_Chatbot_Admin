@@ -258,7 +258,8 @@
                         </c:if>
 
 
-                        <input type="file" id="file" name="file" style="visibility: hidden;" onchange="previewFile()"/>
+                        <input type="file" id="file" name="file" style="visibility: hidden;" accept="image/*"
+                               onchange="previewFile()"/>
 
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
