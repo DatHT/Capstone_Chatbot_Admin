@@ -54,7 +54,7 @@ public class TimerTask {
 			List<IntentsDto> listIntent = intentManager.getIntents();
 			for(IntentsDto dto : listIntent) {
 				String content = intentManager.getIntentById(dto.getId());
-				FileUtils.writleFile(folderUrl + "/" + dto.getId(), content);
+				FileUtils.writleFile(folderUrl + "/" + dto.getName() + ".json", content);
 				LOG.info("[doTimer] Write file sucess");
 			}
 			
