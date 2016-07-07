@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.psib.common.JsonParser;
 import com.psib.dto.DateDto;
+import com.psib.dto.jsonmapper.TrainDto;
 import com.psib.service.ILogManager;
 
 @Controller
@@ -44,7 +46,29 @@ public class ConversationsController {
 	
 	@RequestMapping(value = "/addTraining", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public @ResponseBody String addTraining(@RequestParam("usersay") String usersay) {
-		System.out.println(usersay);
+		try {
+			List<TrainDto> pool = logManager.getTraingPool();
+			boolean isExist = false;
+			if (!usersay.isEmpty()) {
+				for (TrainDto dto : pool) {
+					if (dto.getTrain().equalsIgnoreCase(usersay)) {
+						isExist = true;
+					}
+				}
+				if (!isExist) {
+					TrainDto trainDto = new TrainDto();
+					trainDto.setTrain(usersay);
+					trainDto.setDelete(false);
+					
+					pool.add(trainDto);
+					logManager.updateTrainingLog(JsonParser.toJson(pool));
+				}
+			}
+			return "success";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return "failed";
 	}
 }
