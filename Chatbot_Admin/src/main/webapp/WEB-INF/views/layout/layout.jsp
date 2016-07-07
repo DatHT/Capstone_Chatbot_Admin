@@ -116,6 +116,9 @@
 				<li class="${current == 'log' ? 'selected' : ''}">
 					<a href="manageLog"> <i class="zmdi zmdi-format-underlined"></i> Manage Log</a>
 				</li>
+				<li class="${current == 'crawler' ? 'selected' : ''}">
+					<a href="crawler"> <i class="zmdi zmdi-cloud-download"></i> Crawler</a>
+				</li>
 				<li class="sub-menu"><a href="#"
 					data-ma-action="submenu-toggle"><i
 						class="zmdi zmdi-collection-text"></i> Manage Information</a>

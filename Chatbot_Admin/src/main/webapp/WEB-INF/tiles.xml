@@ -70,7 +70,62 @@
 		<put-attribute name="body" value="/WEB-INF/views/logs/manageLog.jsp" />
 		<put-attribute name="current" value="log" />
 	</definition>
-
+	<!-- Begin Crawler Page -->
+	<!-- *************************************************************************** -->
+	<definition name="crawler" extends="base.definition">
+		<put-attribute name="title" value="Crawler Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/welcome.jsp" />
+		<put-attribute name="current" value="crawler" />
+	</definition>
+	<definition name="manualAddFood" extends="base.definition">
+		<put-attribute name="title" value="Crawler Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/manualAddFood.jsp" />
+		<put-attribute name="current" value="manualAddFood"/>
+	</definition>
+	<definition name="configuration" extends="base.definition">
+		<put-attribute name="title" value="Crawler Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/welcome.jsp" />
+		<put-attribute name="current" value="configuration"/>
+	</definition>
+	<definition name="success" extends="base.definition">
+		<put-attribute name="title" value="Crawler Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/success.jsp" />
+		<put-attribute name="current" value="success"/>
+	</definition>
+	<definition name="successParse" extends="base.definition">
+		<put-attribute name="title" value="Crawler Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/successParse.jsp" />
+		<put-attribute name="current" value="successParse"/>
+	</definition>
+	<definition name="errorPage" extends="base.definition">
+		<put-attribute name="title" value="Crawler Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/error.jsp" />
+		<put-attribute name="current" value="Configuration"/>
+	</definition>
+	<definition name="setListPage" extends="base.definition">
+		<put-attribute name="title" value="Crawler Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/setPageList.jsp" />
+		<put-attribute name="current" value="setListPage"/>
+	</definition>
+	<definition name="setParserConfig" extends="base.definition">
+		<put-attribute name="title" value="Crawler Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/setPageConfig.jsp" />
+		<put-attribute name="current" value="setParserConfig"/>
+	</definition>
+	<definition name="parseManually" extends="base.definition">
+		<put-attribute name="title" value="Crawler Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/crawler/parseManually.jsp" />
+		<put-attribute name="current" value="parseManually"/>
+	</definition>
 	<!-- Begin Manage Full Conversations Page -->
 	<!-- *************************************************************************** -->
 	<definition name="conversations" extends="base.definition">
