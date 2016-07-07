@@ -3,6 +3,9 @@
  */
 package com.psib.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,6 +44,11 @@ public class DataConfigController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String loadDataConfig(Locale locale, Model model) {
+		long d1 = System.currentTimeMillis();
+		SimpleDateFormat df = new SimpleDateFormat("MM/dd/YYYY HH:mm a");
+		String formattedDate = df.format(d1);
+		System.out.println("TIME-----------" + formattedDate);
+		
 		model.addAttribute(API, manager.getSchedularByName("api"));
 		model.addAttribute(LOG, manager.getSchedularByName("log"));
 		return "dataConfig";
@@ -49,6 +57,12 @@ public class DataConfigController {
 	@RequestMapping(value = "/sync", method = RequestMethod.POST)
 	public @ResponseBody String synchronize(Model model, @RequestParam("api") String api,
 			@RequestParam("db") String db) {
+		//
+		long d1 = System.currentTimeMillis();
+		SimpleDateFormat df = new SimpleDateFormat("MM/dd/YYYY HH:mm a");
+		String formattedDate = df.format(d1);
+		System.out.println("TIME-----------" + formattedDate);
+		//
 		String responseText = "";
 			if (api.equals("yes")) {
 				Scheduler apiScheduler = manager.getSchedularByName("api");
