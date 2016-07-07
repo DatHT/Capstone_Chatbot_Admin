@@ -27,4 +27,8 @@ public interface IProductManager {
                       String productId, MultipartFile file);
 
     void deleteProduct(String productId);
+    
+    public ProductDetail checkProductExist(ProductDetail product);
+    
+    public void insertProductDetail(ProductDetail product);
 }

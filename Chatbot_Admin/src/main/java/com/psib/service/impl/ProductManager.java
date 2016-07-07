@@ -328,4 +328,16 @@ public class ProductManager implements IProductManager {
         }
         return "http://" + tmp2;
     }
+
+	@Override
+	public ProductDetail checkProductExist(ProductDetail product) {
+		// TODO Auto-generated method stub
+		return productDetailDao.checkProductExist(product);
+	}
+
+	@Override
+	public void insertProductDetail(ProductDetail product) {
+		// TODO Auto-generated method stub
+		productDetailDao.insertProductDetail(product);
+	}
 }

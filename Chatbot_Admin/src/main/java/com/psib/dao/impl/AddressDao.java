@@ -48,4 +48,18 @@ public class AddressDao extends BaseDao<Address, Long> implements IAddressDao {
         LOG.info("[checkAddressExist] End");
         return 0;
     }
+
+	@Override
+	@Transactional
+	public long getAddressIDByAddressName(String address) {
+		// TODO Auto-generated method stub
+		String sql="from Address where name=:name order by Id desc";
+		Query query = getSession().createQuery(sql);
+		query.setParameter("name", address);	
+		Address result = (Address) query.uniqueResult();
+		if(result!=null){
+			return result.getId();
+		}
+		return 0;
+	}
 }

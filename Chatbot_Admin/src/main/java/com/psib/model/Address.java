@@ -37,14 +37,11 @@ public class Address implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 	
+
 	public long getDistrictId() {
 		return districtId;
 	}
-	
-	private void set() {
-		// TODO Auto-generated method stub
 
-	}
 
 	public long getId() {
 		return id;
