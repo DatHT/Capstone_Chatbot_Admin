@@ -272,7 +272,7 @@ public class ProductManager implements IProductManager {
                 if (!oldThumb.equals("")) {
                     oldThumb = StringUtils.substringAfter(oldThumb, "\\");
                     oldThumb = StringUtils.substringAfter(oldThumb, "\\");
-                    oldThumb = fileServerDao.getByName(SpringPropertiesUtil.getProperty("file_server_thumb")).getUrl() + "\\" + oldThumb;
+                    oldThumb = SpringPropertiesUtil.getProperty("file_server_thumb") + "\\" + oldThumb;
                     File tmpFile = new File(oldThumb);
                     tmpFile.delete();
                 }
@@ -281,7 +281,7 @@ public class ProductManager implements IProductManager {
 
                 bytes = file.getBytes();
 
-                String folderUrl = fileServerDao.getByName(SpringPropertiesUtil.getProperty("file_server_thumb")).getUrl();
+                String folderUrl = SpringPropertiesUtil.getProperty("file_server_thumb");
 
                 File dir = new File(folderUrl);
 

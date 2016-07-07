@@ -16,3 +16,6 @@ web_crawler/Web_Crawler/target/classes/.gitignore
 draf/SeleniumCrawler/.idea/workspace.xml
 Chatbot_Admin/.idea/
 *.iml
+
+#string properties
+Chatbot_Admin/src/main/resources/string.properties
