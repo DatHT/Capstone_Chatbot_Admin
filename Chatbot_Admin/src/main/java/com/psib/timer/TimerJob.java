@@ -9,7 +9,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import com.psib.common.restclient.RestfulException;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
+import com.psib.model.Scheduler;
 import com.psib.service.ILexicalCategoryManager;
+import com.psib.service.ISchedulerManager;
 import com.psib.timer.task.TimerTask;
 import com.psib.util.SpringPropertiesUtil;
 
@@ -18,12 +20,16 @@ public class TimerJob {
 	
 	@Autowired
 	TimerTask task;
+	
+	@Autowired
+	ISchedulerManager manager;
 
 	public TimerJob() {
 	}
 
 	public void synchronizeJob() {
-		if (System.getProperty("timerActive") != null) {
+		Scheduler apiScheduler = manager.getSchedularByName("api");
+		if (apiScheduler.isStatus()) {
 			boolean isTimerActive = Boolean.parseBoolean(System.getProperty("timerActive"));
 			if (isTimerActive) {
 				task.synchronizePhraseFromAPItoDB();
