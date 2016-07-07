@@ -245,7 +245,7 @@ public class LogManager implements ILogManager {
 							jsonObject.put(log_json, new JSONObject(log.toString()));
 							logs.add(jsonObject);
 						} catch (JSONException e) {
-							System.out.println("Parsing JSON error!");
+							LOG.error("Parsing JSON error!", e);
 						}
 
 						continue;
