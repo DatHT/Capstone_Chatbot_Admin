@@ -59,7 +59,7 @@
                                                        '<spring:message code='product_error_empty_name'/>')"
                                                onkeyup="validName('#name','#div-name','#error-name',
                                                        '<spring:message code='product_error_empty_name'/>')"
-                                               value="">
+                                               value="${name}">
                                     </div>
                                     <small id="error-name" class="help-block"></small>
                                 </div>
@@ -90,7 +90,12 @@
                                 <div class="fg-line">
                                     <select id="district" name="district" class="form-control">
                                         <c:forEach items="${districtList}" var="district">
-                                            <option value="${district.name}">${district.name}</option>
+                                            <c:if test="${districtId == district.id}">
+ 												<option value="${district.id}" selected>${district.name}</option>
+ 											</c:if>
+ 											<c:if test="${districtId != district.id}">
+ 												<option value="${district.id}">${district.name}</option>
+ 											</c:if>
                                         </c:forEach>
                                     </select>
                                 </div>

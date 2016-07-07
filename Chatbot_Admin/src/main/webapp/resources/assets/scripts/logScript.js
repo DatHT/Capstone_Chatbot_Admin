@@ -96,7 +96,7 @@ xmlhttp.onreadystatechange = function() {
         }).on("loaded.rs.jquery.bootgrid", function() {
         	/* Executes after data is loaded and rendered */
             $('#not-found-data-table').find(".action-add-product").on("click", function(e) {
-            	window.location.href= 'product?txtDistrict=' + $(this).data("row-location") + "&txtFood=" + $(this).data("row-food");
+            	window.location.href= 'viewAddProduct?txtDistrict=' + $(this).data("row-location") + "&txtFood=" + $(this).data("row-food");
             });
         });
 		
@@ -111,10 +111,15 @@ xmlhttp.onreadystatechange = function() {
             },
             formatters: {
                 "updateProduct": function (column, row) {
-                    return "<button data-row-food='" + row.food + "' data-row-location='" + row.location + "' data-toggle='modal' data-target='#myModal' class='btn btn-warning btn-icon waves-effect waves-circle waves-float'><i class='zmdi zmdi-edit zmdi-hc-fw'></i></button>";
+                    return "<button data-row-product-id='" + row.productId + "' class='btn btn-warning btn-icon waves-effect waves-circle waves-float update-product'><i class='zmdi zmdi-edit zmdi-hc-fw'></i></button>";
                 }
             }
-        })
+        }).on("loaded.rs.jquery.bootgrid", function() {
+        	/* Executes after data is loaded and rendered */
+            $('#reported-data-table').find(".update-product").on("click", function(e) {
+            	window.location.href= 'viewUpdateProduct?productId=' + $(this).data("row-product-id");
+            });
+        });
 	}
 };
 xmlhttp.open('GET', '/chatbot_admin/getLog', true);
