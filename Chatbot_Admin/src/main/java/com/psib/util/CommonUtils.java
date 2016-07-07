@@ -329,7 +329,7 @@ public class CommonUtils {
 		if (src.contains("href=\"css")) {
 			src = url + "/" + src;
 		}
-		if (src.contains("href=\"/")) {
+		if (src.contains("href=\"/")||src.contains("href=\"/")) {
 			src = src.replaceAll("href=\"" + "/", "href=\"" + url + "/");
 		}
 		if (src.contains("href=\"" + url + "//")) {

@@ -8,29 +8,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional.TxType;
-
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.By.ByLinkText;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +33,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.google.common.io.Files;
-import com.jaunt.ResponseException;
-import com.jaunt.UserAgent;
 import com.psib.dto.configuration.ConfigDTO;
 import com.psib.dto.configuration.ConfigDTOList;
 import com.psib.dto.configuration.PageDTO;
@@ -810,45 +798,103 @@ public class CrawlerController extends HttpServlet {
 					// add xpath
 					xpaths.add(config.getName());
 					xpaths.add(config.getAddress());
-					xpaths.add(config.getUserRate());
-					for (String xpath : xpaths) {
-						System.out.println("Xpath: " + xpath + " : " + count);
-						count++;
-						if (xpath != null) {
-							List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
-							for (WebElement content : contents) {
-								countTam++;
-								switch (count) {
-								case 1:
-									restaurantName = content.getText();
-									break;
-								case 2:
-									address = content.getText();
-									break;
-								case 3:
-									userRate = content.getText();
-									break;
-								// case 4:
-								// map = content.getAttribute("src");
-								// break;
+					String rat = config.getUserRate();
+					if (rat.equals("N/A")) {
+						for (String xpath : xpaths) {
+							System.out.println("Xpath: " + xpath + " : " + count);
+							count++;
+							if (xpath != null) {
+								List<WebElement> contents = (List<WebElement>) driver
+										.findElements(By.xpath(xpath));
+								for (WebElement content : contents) {
+									countTam++;
+									switch (count) {
+									case 1:
+										restaurantName = content.getText();
+										break;
+									case 2:
+										address = content.getText();
+										break;
+									// case 3:
+									// userRate = content.getText();
+									// break;
+									// case 4:
+									// map =
+									// content.getAttribute("src");
+									// break;
+									}
+									// contents.add(tmpString);
 								}
-								// contents.add(tmpString);
+							}
+						}
+					}
+					int countT=0;
+					if (!rat.equals("N/A")) {
+						xpaths.add(config.getUserRate());
+						for (String xpath : xpaths) {
+							System.out.println("Xpath: " + xpath + " : " + countT);
+							countT++;
+							if (xpath != null) {
+								List<WebElement> contents = (List<WebElement>) driver
+										.findElements(By.xpath(xpath));
+								for (WebElement content : contents) {
+									countTam++;
+									switch (count) {
+									case 1:
+										restaurantName = content.getText();
+										break;
+									case 2:
+										address = content.getText();
+										break;
+									case 3:
+										userRate = content.getText();
+										break;
+									// case 4:
+									// map =
+									// content.getAttribute("src");
+									// break;
+									}
+									// contents.add(tmpString);
+								}
 							}
 						}
 					}
 					List<WebElement> listimg = driver.findElements(By.tagName("img"));
-					String imgVal;
+					String imgVal = "";
 					for (WebElement elem : listimg) {
-						imgVal = elem.getAttribute("src");
-						if (imgVal.contains("106-") || imgVal.contains("106.")) {
-							map = imgVal;
+						if (elem.getAttribute("src").contains("106-")
+								|| elem.getAttribute("src").contains("106.")) {
+							imgVal = elem.getAttribute("src");
+						} else {
+							listimg = driver.findElements(By.tagName("a"));
+							for (WebElement element : listimg) {
+
+								if (element.getAttribute("data-lat") != null
+										&& element.getAttribute("data-lng") != null) {
+									imgVal = element.getAttribute("data-lat") + ","
+											+ element.getAttribute("data-lng");
+								}
+							}
 						}
 					}
+					map = imgVal;
 					double latitude = CommonUtils.splitLat(map);
 					double longitude = CommonUtils.splitLong(map);
-
+					System.out.println("Address: "+address);
 					String district = CommonUtils.splitDistrict(address);
 					String newAddress = CommonUtils.splitAddress(address);
+
+					if (!userRate.equals("")) {
+						double rate = Double.parseDouble(userRate);
+						if (rate <= 5) {
+							rate = rate * 2;
+							userRate = "" + rate;
+						}
+					}
+					if(userRate.equals("")){
+						userRate="0.0";
+					}
+
 
 					Product productDAO = new Product();
 					District districtDAO = new District();
@@ -974,7 +1020,7 @@ public class CrawlerController extends HttpServlet {
 
 	@RequestMapping(value = "/processServlet", method = RequestMethod.GET)
 	public String configGuration(@RequestParam String btnAction, Model model, HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ResponseException {
+			HttpServletResponse response) throws IOException{
 		if (btnAction.equals("Set List Page")) {
 			String str = request.getParameter("txtURL");
 			System.out.println(str);
@@ -999,7 +1045,7 @@ public class CrawlerController extends HttpServlet {
 			String pageSource = driver.getPageSource();
 
 			String source = CommonUtils.makeContentPage(pageSource, result);
-			// String source = pageSource;
+			//String source = pageSource;
 			String inputLine;
 			StringBuffer res;
 			res = new StringBuffer();
