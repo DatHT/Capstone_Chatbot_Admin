@@ -121,6 +121,7 @@ xmlhttp.open('GET', '/chatbot_admin/getLog', true);
 xmlhttp.send(null);
 
 function updateLog(param, token) {
+	$('#loadingModal').modal('show');
 	var xmlhttp;
 	if (window.XMLHttpRequest) {
 		xmlhttp = new XMLHttpRequest();
@@ -129,7 +130,10 @@ function updateLog(param, token) {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			if (xmlhttp.responseText == 'true') {
-				location.reload();
+				setTimeout(function() {
+					location.reload();
+					$('#loadingModal').modal('hide');
+				}, 500);
 			} else {
 				swal('Error occurs. Please try again later!');
 			}
@@ -170,6 +174,7 @@ function closeModalDialog() {
 }
 
 function requestAddPhrase(param, token) {
+	$('#loadingModal').modal('show');
 	var xmlhttp;
 	if (window.XMLHttpRequest) {
 		xmlhttp = new XMLHttpRequest();
@@ -178,6 +183,7 @@ function requestAddPhrase(param, token) {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			if (xmlhttp.responseText) {
+				$('#loadingModal').modal('hide');
 				swal("Good job!", xmlhttp.responseText, "success");
 				closeModalDialog();
 			}

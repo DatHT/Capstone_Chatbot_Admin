@@ -2,6 +2,7 @@
  * 
  */
 function loadFullConversation(date) {
+	$('#loadingModal').modal('show');
 	var panelGroup = document.getElementById('panel-group');
 	panelGroup.innerHTML = '';
 	var xmlhttp;
@@ -80,6 +81,7 @@ function loadFullConversation(date) {
 					
 					panelGroup.appendChild(panelCollapse);
 					panelCollapse.removeAttribute('hidden');
+					$('#loadingModal').modal('hide');
 				}
 			} else {
 				swal('Error occurs. Please try again later!');
