@@ -65,9 +65,9 @@ function loadFullConversation(date) {
 							var button = document.createElement('button');
 							button.className = "btn btn-primary btn-icon waves-effect waves-circle waves-float";
 							button.style.float = "right";
-							var i = document.createElement('i');
-							i.className = "zmdi zmdi-archive";
-							button.appendChild(i);
+							var iEl = document.createElement('i');
+							iEl.className = "zmdi zmdi-archive";
+							button.appendChild(iEl);
 							td.appendChild(button);
 							button.setAttribute("onclick", "addTrainingSentence('"+obj.contents[j].userSay+"')");
  						} 
