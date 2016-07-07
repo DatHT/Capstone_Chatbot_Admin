@@ -1,22 +1,14 @@
-/**
- *
- */
 package com.psib.dto;
 
 import java.util.List;
 
-/**
- * @author DatHT
- *         Jun 5, 2016
- * @Email: datht0601@gmail.com
- */
-public class ProductDto {
+public class BootGirdDto<T> {
 
     private int current;
 
     private int rowCount;
 
-    private List<ProductDetailJsonDto> rows;
+    private List<T> rows;
 
     private long total;
 
@@ -36,11 +28,11 @@ public class ProductDto {
         this.rowCount = rowCount;
     }
 
-    public List<ProductDetailJsonDto> getRows() {
+    public List<T> getRows() {
         return rows;
     }
 
-    public void setRows(List<ProductDetailJsonDto> rows) {
+    public void setRows(List<T> rows) {
         this.rows = rows;
     }
 

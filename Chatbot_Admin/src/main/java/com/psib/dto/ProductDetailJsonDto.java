@@ -2,9 +2,6 @@ package com.psib.dto;
 
 import com.psib.model.ProductDetail;
 
-/**
- * Created by manlm1 on 6/28/2016.
- */
 public class ProductDetailJsonDto {
 
     public ProductDetailJsonDto(int number, ProductDetailDto productDetailDto) {

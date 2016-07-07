@@ -5,9 +5,9 @@ import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
 import com.psib.dao.IFileServerDao;
 import com.psib.dao.IProductDetailDao;
+import com.psib.dto.BootGirdDto;
 import com.psib.dto.ProductDetailDto;
 import com.psib.dto.ProductDetailJsonDto;
-import com.psib.dto.ProductDto;
 import com.psib.model.Address;
 import com.psib.model.District;
 import com.psib.model.ProductDetail;
@@ -45,7 +45,7 @@ public class ProductManager implements IProductManager {
     private IFileServerDao fileServerDao;
 
     @Override
-    public ProductDto getAllForPaging(int current, int rowCount, String searchPhrase,
+    public BootGirdDto getAllForPaging(int current, int rowCount, String searchPhrase,
                                       String sortProductName, String sortAddressName, String sortDistrictName,
                                       String sortRate, String sortRestaurantName) {
         LOG.info(new StringBuilder("[getAllForPaging] Start: current = ").append(current)
@@ -70,7 +70,7 @@ public class ProductManager implements IProductManager {
             productDetailJsonDtoList.add(new ProductDetailJsonDto((start + i + 1), list.get(i)));
         }
 
-        ProductDto dto = new ProductDto();
+        BootGirdDto dto = new BootGirdDto();
         dto.setCurrent(current);
         dto.setRowCount(rowCount);
         dto.setRows(productDetailJsonDtoList);

@@ -258,10 +258,10 @@
 
                         <div class="m-t-30">
                             <button type="submit" class="btn btn-success">
-                                <spring:message code="product_btn_save"/>
+                                <spring:message code="btn_save"/>
                             </button>
                             <a class="btn btn-danger" href="product">
-                                <spring:message code="product_btn_cancel"/>
+                                <spring:message code="btn_cancel"/>
                             </a>
                         </div>
                     </form>
