@@ -58,6 +58,17 @@ function loadFullConversation(date) {
 						var td = document.createElement('td');
 						var textNode = document.createTextNode(obj.contents[j].userSay);
 						td.appendChild(textNode);
+						if (obj.contents[j].statusCode === 300) {
+							tr.style.backgroundColor = "#ff5252";
+							tr.style.color = "#ffffff";
+							var button = document.createElement('button');
+							button.className = "btn btn-primary btn-icon waves-effect waves-circle waves-float";
+							button.style.float = "right";
+							var i = document.createElement('i');
+							i.className = "zmdi zmdi-archive";
+							button.appendChild(i);
+							td.appendChild(button);
+						} 
 						tr.appendChild(td);
 						tableBody.appendChild(tr);
 					}

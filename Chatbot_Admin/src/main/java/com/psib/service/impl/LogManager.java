@@ -9,10 +9,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +42,7 @@ public class LogManager implements ILogManager {
 	@Autowired
 	private ILexicalCategoryManager lexicalCategoryManager;
 
-	// private static final Logger LOG = Logger.getLogger(LogManager.class);
+	private static final Logger LOG = Logger.getLogger(LogManager.class);
 
 	private static String START_LOG = ">>>>>";
 	private static String END_LOG = "<<<<<";
@@ -82,11 +82,10 @@ public class LogManager implements ILogManager {
 		}
 		return chatLogsFolder + "/log";
 	}
-	
+
 	private String getTrainingFilePath() {
 		return fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl() + "/training";
 	}
-	
 
 	private String getTrainingPoolPath() {
 		if (chatLogsFolder == null) {
@@ -139,7 +138,7 @@ public class LogManager implements ILogManager {
 		}
 		return null;
 	}
-	
+
 	private String readJsonTrainingFile(String logPath) throws IOException {
 		BufferedReader bufferedReader = FileUtils.readFile(logPath);
 		StringBuilder stringBuilder = new StringBuilder();
@@ -347,10 +346,13 @@ public class LogManager implements ILogManager {
 			if (!dirList.isDirectory()) {
 				continue;
 			}
-			if (strDate != null && dirList.getName().equals(strDate)) {
-				for (File logFile : dirList.listFiles()) {
-					fileLogPaths.add(logFile.getPath());
+			if (strDate != null) {
+				if (dirList.getName().equals(strDate)) {
+					for (File logFile : dirList.listFiles()) {
+						fileLogPaths.add(logFile.getPath());
+					}
 				}
+				continue;
 			} else {
 				if (dirList.getName().compareTo(lastModifiedDate) >= 0) {
 					for (File logFile : dirList.listFiles()) {
@@ -475,7 +477,7 @@ public class LogManager implements ILogManager {
 	public void updateTrainingLog(String data) throws IOException {
 		FileUtils.writleFile(this.getTrainingFilePath(), data);
 	}
-		
+
 	/*
 	 * Collect all conversation with BOT by sessionId.
 	 */
@@ -496,9 +498,7 @@ public class LogManager implements ILogManager {
 					userSayObject.put(userSay, log.getJSONObject(result).getString(resolvedQuery));
 					userSayObject.put(status_code, statusCode);
 				} catch (JSONException e) {
-					// LOG.error("JSON format is wrong", e);
-					System.out.println(e.getMessage());
-					System.out.println(statusCode + "  " + log);
+					LOG.error("JSON format is wrong", e);
 				}
 
 				// if log json with wrong format, ignore it.
