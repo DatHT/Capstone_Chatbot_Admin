@@ -1,18 +1,17 @@
 package com.psib.service;
 
-import java.util.List;
-
-import com.psib.dto.ProductDto;
+import com.psib.dto.BootGirdDto;
+import com.psib.model.District;
 import com.psib.model.ProductDetail;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.psib.model.District;
+import java.util.List;
 
 public interface IProductManager {
 
-    ProductDto getAllForPaging(int current, int rowCount, String searchPhrase,
-                               String sortProductName, String sortAddressName, String sortDistrictName,
-                               String sortRate, String sortRestaurantName);
+    BootGirdDto getAllForPaging(int current, int rowCount, String searchPhrase,
+                                String sortProductName, String sortAddressName, String sortDistrictName,
+                                String sortRate, String sortRestaurantName);
 
     ProductDetail getProductById(long productId);
 

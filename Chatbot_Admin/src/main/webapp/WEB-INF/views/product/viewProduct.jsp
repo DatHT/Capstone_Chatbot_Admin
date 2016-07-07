@@ -19,7 +19,7 @@
 <div class="card">
     <div class="card-body card-padding">
         <a class="btn btn-primary btn-lg waves-effect" href="viewAddProduct">
-            <spring:message code="product_btn_add"/>
+            <spring:message code="btn_add"/>
         </a>
         <div class="row m-t-20">
             <div class="panel panel-default">
@@ -46,15 +46,15 @@
                                 </th>
                                 <th data-column-id="details" data-formatter="commandsDetails" data-sortable="false"
                                     data-align="center" data-header-align="center">
-                                    <spring:message code="product_btn_details"/>
+                                    <spring:message code="btn_details"/>
                                 </th>
                                 <th data-column-id="update" data-formatter="commandsUpdate" data-sortable="false"
                                     data-align="center" data-header-align="center">
-                                    <spring:message code="product_btn_update"/>
+                                    <spring:message code="btn_update"/>
                                 </th>
                                 <th data-column-id="delete" data-formatter="commandsDelete" data-sortable="false"
                                     data-align="center" data-header-align="center">
-                                    <spring:message code="product_btn_delete"/>
+                                    <spring:message code="btn_delete"/>
                                 </th>
                             </tr>
                             </thead>

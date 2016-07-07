@@ -83,40 +83,52 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
                 .append(" OR P.addressName LIKE :searchPhrase")
                 .append(" OR P.districtName LIKE :searchPhrase")
                 .append(" OR str(P.rate) LIKE :searchPhrase")
-                .append(" OR P.restaurantName LIKE :searchPhrase")
-                .append(" ORDER BY P.productId DESC");
+                .append(" OR P.restaurantName LIKE :searchPhrase");
 
         if (sortProductName != null) {
             if (sortProductName.equals("asc")) {
                 sql.append(" ORDER BY P.productName ASC");
+                sql.append(",P.productId DESC");
             } else {
                 sql.append(" ORDER BY P.productName DESC");
+                sql.append(",P.productId DESC");
             }
         } else if (sortAddressName != null) {
             if (sortAddressName.equals("asc")) {
                 sql.append(" ORDER BY P.addressName ASC");
+                sql.append(",P.productId DESC");
             } else {
                 sql.append(" ORDER BY P.addressName DESC");
+                sql.append(",P.productId DESC");
             }
         } else if (sortDistrictName != null) {
             if (sortDistrictName.equals("asc")) {
                 sql.append(" ORDER BY P.districtName ASC");
+                sql.append(",P.productId DESC");
             } else {
                 sql.append(" ORDER BY P.districtName DESC");
+                sql.append(",P.productId DESC");
             }
         } else if (sortRate != null) {
             if (sortRate.equals("asc")) {
                 sql.append(" ORDER BY P.rate ASC");
+                sql.append(",P.productId DESC");
             } else {
                 sql.append(" ORDER BY P.rate DESC");
+                sql.append(",P.productId DESC");
             }
         } else if (sortRestaurantName != null) {
             if (sortRestaurantName.equals("asc")) {
                 sql.append(" ORDER BY P.restaurantName ASC");
+                sql.append(",P.productId DESC");
             } else {
                 sql.append(" ORDER BY P.restaurantName DESC");
+                sql.append(",P.productId DESC");
             }
+        } else {
+            sql.append(" ORDER BY P.productId DESC");
         }
+
 
         Query query = getSession().createQuery(String.valueOf(sql));
         query.setParameter("searchPhrase", "%" + searchPhrase + "%");
