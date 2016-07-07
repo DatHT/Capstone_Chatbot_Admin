@@ -3,6 +3,7 @@ var col = 0, count = 0, flagBack = 0, flagDeleteName = 0, flagClick = 0, flagEdi
 var currentPosition = 0;
 var step = 3;
 var str1, str2, content, value, oldWrap;
+var preview = [];
 var indexComplete = [ "", "", "", "" ];
 $(document)
 		.ready(
@@ -14,9 +15,9 @@ $(document)
 										event.preventDefault();
 										if (count < 3) {
 											urlXPath = createXPathFromElement(event.target);
-											content = event.target.innerHTML;
+											 content = event.target.innerHTML;
 											// alert(standardContent(content));
-											content = standardContent(content);
+											 content = standardContent(content);
 											if (flagClick == 1) {
 												deleteRow('tbItems', 1);
 
@@ -32,11 +33,22 @@ $(document)
 											if (count >= 3) {
 												value = commonXpath(urlXPath);
 											}
-											if (value.indexOf('img') > -1) {
-												showCart("image" + "'\'",
+											if (count == 0) {
+												var no1 = event.target.innerHTML;
+												preview.push(no1);
+												showCart(no1 + "'\'",
 														'tbItems', 1);
-											} else {
+											}
+											if (count == 1) {
+//												var no2 = event.target.innerHTML;
+												preview.push(content);
 												showCart(content + "'\'",
+														'tbItems', 1);
+											}
+											if (count == 2) {
+												var no3 = event.target.innerHTML;
+												preview.push(no3);
+												showCart(no3 + "'\'",
 														'tbItems', 1);
 											}
 											// alert("CONTENT: " +
@@ -262,25 +274,30 @@ function back() {
 			deleteRow('tbItems', 1);
 		}
 		// show current content
-		var newX = indexComplete[currentPosition];
-		value = newX;
-		var a = window.frames[0].document.evaluate(newX,
-				window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-		var b = a.iterateNext();
+		var newX = preview[currentPosition];
+		// value = newX;
+		// var a = window.frames[0].document.evaluate(newX,
+		// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+		// var b = a.iterateNext();
 		// ???
 		flagClick = 1;
 		// Apply highlight div
 		// alert(getEleCss(newX));
-		var alertText = ""
-		while (b) {
-			alertText += b.textContent + "    "
-			b = a.iterateNext();
-		}
+		// var alertText = ""
+		// while (b) {
+		// alertText += b.textContent + " "
+		// b = a.iterateNext();
+		// }
 		// alert(alertText);
-		if (newX.indexOf('img') > -1) {
-			showCart("image" + "'\'", 'tbItems', 1);
-		} else {
-			showCart(alertText + "'\'", 'tbItems', 1);
+		if (currentPosition == 0) {
+			showCart(preview[0] + "'\'", 'tbItems', 1);
+		}
+		if (currentPosition == 1) {
+			showCart(preview[1] + "'\'", 'tbItems', 1);
+		}
+
+		if (currentPosition == 2) {
+			showCart(preview[2] + "'\'", 'tbItems', 1);
 		}
 
 		try {
@@ -688,38 +705,41 @@ function appendcontents(item) {
 	var content = '<h3>Information</h3><br/><table border="1" style="width: 485px" class="table"><thead></thead><tr><th style="width: 10%">Type</th><th style="width: 90%">Content</th></tr><tbody>';
 
 	content = content + '<tr><td><strong>Restaurant Name</strong></td><td>';
-	var a = window.frames[0].document.evaluate(item[0],
-			window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-	var b = a.iterateNext();
-	var alertText = ""
-	while (b) {
-		alertText += b.textContent + "<br/>"
-		b = a.iterateNext();
-	}
-	content = content+'<input type="hidden" name="txtPageContent" value="'+alertText+'"/>'
+	// var a = window.frames[0].document.evaluate(item[0],
+	// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+	// var b = a.iterateNext();
+	var alertText = "" + preview[0]
+//	while (b) {
+//		alertText += b.textContent + "<br/>"
+//		b = a.iterateNext();
+//	}
+	content = content + '<input type="hidden" name="txtPageContent" value="'
+			+ alertText + '"/>'
 	content = content + alertText
 			+ '</td></tr><tr><td><strong>Address</strong></td><td>';
 
 	// get Address
-	a = window.frames[0].document.evaluate(item[1], window.frames[0].document,
-			null, XPathResult.ANY_TYPE, null);
-	b = a.iterateNext();
-	alertText = ""
-	while (b) {
-		alertText += b.textContent + "<br/>";
-		b = a.iterateNext();
-	}
-//	content = content + alertText
-//			+ '</td></tr><tr><td><strong>UserRate</strong></td><td style="width: '
-//			+ '200px;  vertical-align: top">';
-//
-//	// getImage
-//	a = window.frames[0].document.evaluate(item[2],
-//			window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-//	b = a.iterateNext();
-//	alertText = ""
+	// a = window.frames[0].document.evaluate(item[1],
+	// window.frames[0].document,
+	// null, XPathResult.ANY_TYPE, null);
+	// b = a.iterateNext();
+	alertText = "" + preview[1]
 //	while (b) {
-//		alertText += b.textContent+"</br>";
+//		alertText += b.textContent + "<br/>";
+//		b = a.iterateNext();
+//	}
+	content = content
+			+ alertText
+			+ '</td></tr><tr><td><strong>UserRate</strong></td><td style="width: '
+			+ '200px;  vertical-align: top">';
+
+	// getImage
+	// a = window.frames[0].document.evaluate(item[2],
+	// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+	// b = a.iterateNext();
+	alertText = "" + preview[2]
+//	while (b) {
+//		alertText += b.textContent + "</br>";
 //		b = a.iterateNext();
 //	}
 	content = content + alertText + '</td></tr></tbody></table>';

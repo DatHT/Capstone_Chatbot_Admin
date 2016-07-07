@@ -57,7 +57,7 @@
 		</div>
 	</div>
 	<div class="col-lg-12">
-		<div class="col-lg-6">
+		<div class="col-lg-12" id="viewStatic">
 			<!--    Hover Rows  -->
 			<div class="card">
 				<div class="card-header">
@@ -108,8 +108,8 @@
 							</div>
 						</div>
 						<div>
-							<button type="submit" data-toggle="modal" href="#parsing" class="btn btn-primary"
-								value="StaticParse" name="btnAction">StaticParse</button>
+							<button type="submit" data-toggle="modal" href="#parsing"
+								class="btn btn-primary" value="StaticParse" name="btnAction">StaticParse</button>
 						</div>
 					</form>
 					<!-- Modal -->
@@ -147,7 +147,7 @@
 			</div>
 			<!-- End  Hover Rows  -->
 		</div>
-		<div class="col-lg-6">
+		<div class="col-lg-12" id="viewDynamic">
 			<!--    Hover Rows  -->
 			<div class="card">
 				<div class="card-header">
@@ -262,6 +262,17 @@
 	<script>
 		function loadPage() {
 			loadProcess('selectSite');
+			checkSelect();
+		}
+	</script>
+	<script type="text/javascript">
+		function checkSelect() {
+			if (document.getElementById("selectSite").value == "") {
+				document.getElementById("viewStatic").style.display = 'none';
+			}
+			if (document.getElementById("selectPage").value == "") {
+				document.getElementById("viewDynamic").style.display = 'none';
+			}
 		}
 	</script>
 

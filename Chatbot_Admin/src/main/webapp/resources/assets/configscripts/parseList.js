@@ -3,6 +3,7 @@ var col = 0, count = 0, flagBack = 0, flagDeleteName = 0, flagClick = 0, flagEdi
 var currentPosition = 0;
 var step = 3;
 var str1, str2, content, value, oldWrap;
+var preview = [];
 var indexComplete = [ "", "", "", "" ];
 $(document)
 		.ready(
@@ -16,7 +17,9 @@ $(document)
 											urlXPath = createXPathFromElement(event.target);
 											content = event.target.innerHTML;
 											// alert(standardContent(content));
-											content = standardContent(content);
+											// content =
+											// standardContent(content);
+
 											if (flagClick == 1) {
 												deleteRow('tbItems', 1);
 
@@ -37,10 +40,20 @@ $(document)
 												}
 											}
 											if (value.indexOf('img') > -1) {
-												showCart("image" + "'\'",
-														'tbItems', 1);
-											} else {
-												showCart(content + "'\'",
+												var n = event.target.src;
+												preview.push(n);
+												showCart(n + "'\'", 'tbItems',
+														3);
+											}
+											if (count == 0) {
+												var no1 = event.target.href;
+												preview.push(no1);
+												showCart(no1 + "'\'", 'tbItems',
+														1);
+											} if(count==1) {
+												var no2 = event.target.innerHTML;
+												preview.push(no2);
+												showCart(no2 + "'\'",
 														'tbItems', 1);
 											}
 											// alert("CONTENT: " +
@@ -243,7 +256,7 @@ function next() {
 				// openpopup('popup');
 				document.getElementById("btnNext").disabled = true;
 				document.getElementById("btnPreview").disabled = false;
-				document.getElementById("btnAdd").disabled = false;
+				//document.getElementById("btnAdd").disabled = false;
 			}
 		} else {
 			alert("PLEASE CHOOSE ONE ELEMENT");
@@ -266,27 +279,31 @@ function back() {
 			deleteRow('tbItems', 1);
 		}
 		// show current content
-		var newX = indexComplete[currentPosition];
-		value = newX;
-		var a = window.frames[0].document.evaluate(newX,
-				window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-		var b = a.iterateNext();
-		// ???
+		var newX = preview[currentPosition];
+//		value = newX;
+//		var a = window.frames[0].document.evaluate(newX,
+//				window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+//		var b = a.iterateNext();
+//		// ???
 		flagClick = 1;
-		// Apply highlight div
-		// alert(getEleCss(newX));
-		var alertText = ""
-		while (b) {
-			alertText += b.textContent + "    "
-			b = a.iterateNext();
-		}
+//		// Apply highlight div
+//		// alert(getEleCss(newX));
+//		var alertText = ""
+//		while (b) {
+//			alertText += b.textContent + "    "
+//			b = a.iterateNext();
+//		}
 		// alert(alertText);
-		if (newX.indexOf('img') > -1) {
-			showCart("image" + "'\'", 'tbItems', 1);
-		} else {
-			showCart(alertText + "'\'", 'tbItems', 1);
+		if (currentPosition==0) {
+			showCart(preview[0] + "'\'", 'tbItems', 1);
 		}
-
+		if (currentPosition==1) {
+			showCart(preview[1] + "'\'", 'tbItems', 1);
+		}
+		
+		if (currentPosition==2) {
+			showCart(preview[2] + "'\'", 'tbItems', 3);
+		}
 		try {
 			$("#myframe").contents().find(oldWrap).removeAttr("style",
 					"background-color: #69c2fe;");
@@ -587,6 +604,13 @@ function addRow(tableId, cells, type) {
 				break;
 			}
 
+		} else if (type == 3) {
+			newCell.innerHTML = '<img src="'
+					+ cells[i]
+					+ '"/>'
+					+ '</br>'
+					+ '</br>'
+					+ '<input type="button" class="btn btn-info m-b-less" value="Edit" onclick="showXPath()"/>';
 		} else if (type == 4) {
 			newCell.innerHTML = '<input type="text" style="color:red;" name="txtTemp" class="form-control" value="'
 					+ cells[i]
@@ -695,45 +719,47 @@ function appendcontents(item) {
 	// var item = items.split("'\'");
 	var content = '<h3>Information</h3><br/><table border="1" style="width: 485px" class="table"><thead></thead><tr><th style="width: 10%">Type</th><th style="width: 90%">Content</th></tr><tbody>';
 
-	content = content + '<tr><td><strong>Earch Product</strong></td><td>';
-	var a = window.frames[0].document.evaluate(item[0] + '/@href',
-			window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-	var b = a.iterateNext();
-	var alertText = ""+b.textContent
-//	while (b) {
-//		alertText += b.textContent + "<br/>"
-//		//b = a.iterateNext();
-//	}
-	content = content+'<input type="hidden" name="txtPageContent" value="'+alertText+'"/>'
+	content = content
+			+ '<tr><td><strong>Product Description Link</strong></td><td>';
+//	var a = window.frames[0].document.evaluate(item[0] + '/@href',
+//			window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+//	var b = a.iterateNext();
+	var alertText = "" + preview[0]
+	// while (b) {
+	// alertText += b.textContent + "<br/>"
+	// //b = a.iterateNext();
+	// }
+	content = content + '<input type="hidden" name="txtPageContent" value="'
+			+ alertText + '"/>'
 	content = content + alertText
 			+ '</td></tr><tr><td><strong>Product Name</strong></td><td>';
 
 	// get Address
-	a = window.frames[0].document.evaluate(item[1], window.frames[0].document,
-			null, XPathResult.ANY_TYPE, null);
-	b = a.iterateNext();
-	alertText = ""+b.textContent
-//	while (b) {
-//		if (b.textContent.length < 150) {
-//			alertText += b.textContent + "<br/>";
-//		} else {
-//			alertText += b.textContent.substring(0, 220) + "...<br/>";
-//		}
-//		b = a.iterateNext();
-//	}
+//	a = window.frames[0].document.evaluate(item[1], window.frames[0].document,
+//			null, XPathResult.ANY_TYPE, null);
+//	b = a.iterateNext();
+	alertText = "" + preview[1]
+	// while (b) {
+	// if (b.textContent.length < 150) {
+	// alertText += b.textContent + "<br/>";
+	// } else {
+	// alertText += b.textContent.substring(0, 220) + "...<br/>";
+	// }
+	// b = a.iterateNext();
+	// }
 	content = content + alertText
 			+ '</td></tr><tr><td><strong>Image</strong></td><td style="width: '
 			+ '200px;  vertical-align: top"><img src =';
 
 	// getImage
-	a = window.frames[0].document.evaluate(item[2] + '/@src',
-			window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-	b = a.iterateNext();
-	alertText = ""+b.textContent
-//	while (b) {
-//		alertText += b.textContent+"</br>";
-//		b = a.iterateNext();
-//	}
+//	a = window.frames[0].document.evaluate(item[2] + '/@src',
+//			window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+//	b = a.iterateNext();
+	alertText = "" + preview[2]
+	// while (b) {
+	// alertText += b.textContent+"</br>";
+	// b = a.iterateNext();
+	// }
 	content = content + alertText + '></td></tr></tbody></table>';
 	appendto = document.getElementById('popup');
 	appendto.innerHTML = content
