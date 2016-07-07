@@ -9,39 +9,31 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name = "FileServer")
-public class FileServer implements Serializable {
-
+@Table(name = "Scheduler")
+public class Scheduler implements Serializable {
+	
 	@Id
-	@Column(name = "Id", nullable = false)
+	@Column(name = "ID", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int Id;
+	private int id;
 
-	@Column(name = "name", nullable = false, length = 4000)
+	@Column(name = "name", nullable = false, length = 128)
 	private String name;
 	
-	@Column(name = "url", nullable = false)
-	private String url;
+	@Column(name = "status", nullable = false, columnDefinition = "Boolean default '0'")
+	private boolean status;
 	
-	public FileServer() {
+	public Scheduler() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public FileServer(int id, String name, String url) {
-		super();
-		Id = id;
-		this.name = name;
-		this.url = url;
-	}
-
 	public int getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(int id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public String getName() {
@@ -52,13 +44,14 @@ public class FileServer implements Serializable {
 		this.name = name;
 	}
 
-	public String getUrl() {
-		return url;
+	public boolean isStatus() {
+		return status;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 	
 	
+
 }

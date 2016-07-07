@@ -1,6 +1,7 @@
 <script src="resources/assets/scripts/dataConfig.js"></script>
-<c:set var="intents" value="${INTENTS}" />
-<c:set var="lexicals" value="${LEXICAL}" />
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="api" value="${api_sync}" />
+<c:set var="log" value="${log_sync}" />
 <div class="c-header">
 	<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
 	<input type="hidden" value="${_csrf.token}" id="token" />
@@ -32,28 +33,38 @@
 		<div class="card-body card-padding">
 			<div class="row">
 				<button class="btn btn-primary btn-lg waves-effect"
-			onclick="applySynchronize()" style="float:right">Apply</button>
+					onclick="applySynchronize()" style="float: right">Apply</button>
 			</div>
 			<div class="row">
-				<div class="col-sm-4 m-b-20">
-					<div class="toggle-switch">
+				<div class="toggle-switch col-lg-6" style="min-width: 800px !important;">
+					<div class="col-md-8">
 						<label for="ts1" class="ts-label">Synchronize From API To
-							Database</label> <input id="ts1" type="checkbox" hidden="hidden">
-						<label for="ts1" class="ts-helper"></label>
+							Database </label>
+					</div>
+					<div class="col-md-4">
+						<input id="ts1" type="checkbox" hidden="hidden"
+							<c:if test="${api.status}">checked</c:if>
+							> 
+							<label
+							for="ts1" class="ts-helper"></label>
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-sm-4 m-b-20">
-					<div class="toggle-switch">
-						<label for="ts2" class="ts-label">Synchronize Database to
-							API</label> <input id="ts2" type="checkbox" hidden="hidden"> <label
+			<div class="row" style="margin-top: 15px;">
+				<div class="toggle-switch col-lg-6" style="min-width: 800px !important;">
+					<div class="col-md-8">
+						<label for="ts2" class="ts-label">Update Log</label>
+
+					</div>
+					<div class="col-md-4">
+						<input id="ts2" type="checkbox" hidden="hidden"
+							<c:if test="${log.status}">checked</c:if>> <label
 							for="ts2" class="ts-helper"></label>
 					</div>
 				</div>
 			</div>
-
 		</div>
-
-
 	</div>
+
+
+</div>

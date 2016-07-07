@@ -16,16 +16,16 @@ public class Phrase implements Serializable {
 	@Id
 	@Column(name = "Id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int Id;
+	private int Id;
 
 	@Column(name = "name", nullable = false, length = 512)
-	String name;
+	private String name;
 
 	@Column(name = "isAsynchronized")
-	boolean isAsynchronized;
+	private boolean isAsynchronized;
 
 	@Column(name = "lexicalId")
-	int lexicalId;
+	private int lexicalId;
 
 	public Phrase() {
 		// TODO Auto-generated constructor stub
