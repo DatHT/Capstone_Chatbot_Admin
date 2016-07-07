@@ -6,6 +6,7 @@ import com.psib.dao.IDistrictDao;
 import com.psib.dao.IFileServerDao;
 import com.psib.dao.IProductDetailDao;
 import com.psib.dto.ProductDetailDto;
+import com.psib.dto.ProductDetailJsonDto;
 import com.psib.dto.ProductDto;
 import com.psib.model.Address;
 import com.psib.model.District;
@@ -56,27 +57,36 @@ public class ProductManager implements IProductManager {
                 .append(" ,sortRate = ").append(sortRate)
                 .append(" ,sortRestaurantName = ").append(sortRestaurantName));
 
-        List<ProductDetail> list;
+        List<ProductDetailDto> list;
         int start = current * rowCount - rowCount;
 
         list = productDetailDao.getBySearchPhraseAndSort(searchPhrase
                 , sortProductName, sortAddressName, sortDistrictName, sortRate, sortRestaurantName, rowCount, start);
 
-        List<ProductDetailDto> productDetailDtoList = new ArrayList<>();
+        List<ProductDetailJsonDto> productDetailJsonDtoList = new ArrayList<>();
         long size = list.size();
 
         for (int i = 0; i < size; i++) {
-            productDetailDtoList.add(new ProductDetailDto((start + i + 1), list.get(i)));
+            productDetailJsonDtoList.add(new ProductDetailJsonDto((start + i + 1), list.get(i)));
         }
 
         ProductDto dto = new ProductDto();
         dto.setCurrent(current);
         dto.setRowCount(rowCount);
-        dto.setRows(productDetailDtoList);
+        dto.setRows(productDetailJsonDtoList);
         dto.setTotal(productDetailDao.countBySearchPhrase(searchPhrase));
 
         LOG.info("[getAllForPaging] End");
         return dto;
+    }
+
+    @Override
+    public ProductDetail getProductById(long productId) {
+        LOG.info("[getProductById] Start: " + productId);
+        ProductDetail productDetail = new ProductDetail();
+        productDetail.setProductId(productId);
+        LOG.info("[getProductById] End");
+        return productDetailDao.getById(productDetail);
     }
 
     @Override
@@ -85,6 +95,7 @@ public class ProductManager implements IProductManager {
         LOG.info("[getAllDistrict] End");
         return districtDao.getAllDistrict();
     }
+
 
     @Override
     public int insertProduct(String name, String address, String district, String rating, String restaurant,
@@ -102,7 +113,7 @@ public class ProductManager implements IProductManager {
             productDetail.setProductName(name);
             productDetail.setAddressName(address);
 
-            if (productDetailDao.checkProductExist(productDetail) == 0) {
+            if (productDetailDao.checkProductExist(productDetail) == null) {
                 String latLongs[] = LatitudeAndLongitudeWithPincode.getLatLongPositions(address);
                 double latitude;
                 double longitude;
@@ -119,12 +130,14 @@ public class ProductManager implements IProductManager {
 
                 long addressId = insertAddress(addressObj, latitude, longitude, restaurant, district);
 
-                String thumbUrl = uploadThumbnail(file);
+                String thumbUrl = uploadThumbnail(file, "");
 
                 productDetail.setDistrictName(district);
                 productDetail.setLatitude(latitude);
                 productDetail.setLongitude(longitude);
-                productDetail.setRate(Double.parseDouble(rating));
+                if(!rating.equals("")){
+                    productDetail.setRate(Double.parseDouble(rating));
+                }
                 productDetail.setRestaurantName(restaurant);
                 productDetail.setAddressId(addressId);
                 productDetail.setUrlRelate(relatedUrl);
@@ -160,12 +173,17 @@ public class ProductManager implements IProductManager {
             productDetail.setProductName(name);
             productDetail.setAddressName(address);
 
-            long tmpProductId = productDetailDao.checkProductExist(productDetail);
+            ProductDetail tmpProductDetail = productDetailDao.checkProductExist(productDetail);
 
-            if (tmpProductId != Long.parseLong(productId) && tmpProductId != 0) {
-                LOG.info("[insertProduct] End");
-                return 0;
+            if (tmpProductDetail != null) {
+                if (tmpProductDetail.getProductId() != Long.parseLong(productId)) {
+                    LOG.info("[insertProduct] End");
+                    return 0;
+                }
             }
+
+            productDetail.setProductId(Long.parseLong(productId));
+            tmpProductDetail = productDetailDao.getById(productDetail);
 
             String latLongs[] = LatitudeAndLongitudeWithPincode.getLatLongPositions(address);
             double latitude;
@@ -183,17 +201,39 @@ public class ProductManager implements IProductManager {
 
             long tmpAddressId = insertAddress(addressObj, latitude, longitude, restaurant, district);
 
-            String thumbUrl = uploadThumbnail(file);
+            String thumbUrl;
+
+            if (tmpProductDetail.getThumbPath() == null) {
+                thumbUrl = uploadThumbnail(file, "");
+            } else {
+                thumbUrl = uploadThumbnail(file, tmpProductDetail.getThumbPath());
+            }
+
+
             productDetail.setProductId(Long.parseLong(productId));
             productDetail.setDistrictName(district);
             productDetail.setLatitude(latitude);
             productDetail.setLongitude(longitude);
-            productDetail.setRate(Double.parseDouble(rating));
+            if (rating.equals("")) {
+                productDetail.setRate(0);
+            } else {
+                productDetail.setRate(Double.parseDouble(rating));
+            }
             productDetail.setRestaurantName(restaurant);
             productDetail.setAddressId(tmpAddressId);
             productDetail.setUrlRelate(relatedUrl);
             productDetail.setSource(getSourceFromUrl(relatedUrl));
-            productDetail.setThumbPath(thumbUrl);
+
+            if (!thumbUrl.equals("")) {
+                productDetail.setThumbPath(thumbUrl);
+            } else {
+                if (tmpProductDetail.getThumbPath() != null) {
+                    productDetail.setThumbPath(tmpProductDetail.getThumbPath());
+                } else {
+                    productDetail.setThumbPath("");
+                }
+            }
+
             productDetailDao.updateProductDetail(productDetail);
 
             LOG.info("[insertProduct] End");
@@ -223,11 +263,19 @@ public class ProductManager implements IProductManager {
         return addressId;
     }
 
-    private String uploadThumbnail(MultipartFile file) {
+    private String uploadThumbnail(MultipartFile file, String oldThumb) {
         LOG.info("[uploadThumbnail] Start: thumbnail = " + file.getOriginalFilename());
 
         try {
             if (!file.isEmpty()) {
+
+                if (!oldThumb.equals("")) {
+                    oldThumb = StringUtils.substringAfter(oldThumb, "\\");
+                    oldThumb = StringUtils.substringAfter(oldThumb, "\\");
+                    oldThumb = fileServerDao.getByName(SpringPropertiesUtil.getProperty("file_server_thumb")).getUrl() + "\\" + oldThumb;
+                    File tmpFile = new File(oldThumb);
+                    tmpFile.delete();
+                }
 
                 byte[] bytes;
 
@@ -241,10 +289,10 @@ public class ProductManager implements IProductManager {
                     dir.mkdirs();
                 }
                 String fileType = StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
-
+                String fileName = String.valueOf(new StringBuilder(StringUtils.substringBeforeLast(file.getOriginalFilename(), "."))
+                        .append("_").append(System.currentTimeMillis()).append(".").append(fileType));
                 String url = String.valueOf(new StringBuilder(dir.getAbsolutePath()).append(File.separator)
-                        .append(StringUtils.substringBeforeLast(file.getOriginalFilename(), ".")).append("_")
-                        .append(System.currentTimeMillis()).append(".").append(fileType));
+                        .append(fileName));
 
                 File serverFile = new File(url);
 
@@ -253,15 +301,15 @@ public class ProductManager implements IProductManager {
                 stream.close();
 
                 LOG.info("[uploadThumbnail] End");
-                return url;
+                return SpringPropertiesUtil.getProperty("file_server_thumb_url_prefix") + fileName;
             }
         } catch (IOException e) {
             LOG.error("[uploadThumbnail] IOException: " + e.getMessage());
-            return null;
+            return "";
         }
 
         LOG.info("[uploadThumbnail] End");
-        return null;
+        return "";
     }
 
     @Override

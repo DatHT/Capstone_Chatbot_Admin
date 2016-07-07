@@ -2,6 +2,7 @@ package com.psib.dao;
 
 import java.util.List;
 
+import com.psib.dto.ProductDetailDto;
 import com.psib.model.ProductDetail;
 
 public interface IProductDetailDao {
@@ -11,10 +12,13 @@ public interface IProductDetailDao {
 
 	long countBySearchPhrase(String searchPhrase);
 
-	List<ProductDetail> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName,
-			String sortDistrictName, String sortRate, String sortRestaurantName, int maxResult, int skipResult);
+    List<ProductDetailDto> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
+            , String sortDistrictName, String sortRate, String sortRestaurantName
+            , int maxResult, int skipResult);
 
-	void insertProductDetail(ProductDetail productDetail);
+    ProductDetail getById(ProductDetail productDetail);
+
+    void insertProductDetail(ProductDetail productDetail);
 
 	void updateProductDetail(ProductDetail productDetail);
 
@@ -22,5 +26,5 @@ public interface IProductDetailDao {
 
 	void deleteById(ProductDetail productDetail);
 
-	long checkProductExist(ProductDetail productDetail);
+    ProductDetail checkProductExist(ProductDetail productDetail);
 }

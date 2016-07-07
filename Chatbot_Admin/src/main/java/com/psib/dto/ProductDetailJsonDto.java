@@ -1,6 +1,22 @@
 package com.psib.dto;
 
-public class ProductDetailDto {
+import com.psib.model.ProductDetail;
+
+/**
+ * Created by manlm1 on 6/28/2016.
+ */
+public class ProductDetailJsonDto {
+
+    public ProductDetailJsonDto(int number, ProductDetailDto productDetailDto) {
+        this.number = number;
+        this.productId = productDetailDto.getProductId();
+        this.productName = productDetailDto.getProductName();
+        this.addressName = productDetailDto.getAddressName();
+        this.rate = productDetailDto.getRate();
+        this.restaurantName = productDetailDto.getRestaurantName();
+    }
+
+    private long number;
 
     private long productId;
 
@@ -11,6 +27,14 @@ public class ProductDetailDto {
     private double rate;
 
     private String restaurantName;
+
+    public long getNumber() {
+        return number;
+    }
+
+    public void setNumber(long number) {
+        this.number = number;
+    }
 
     public long getProductId() {
         return productId;

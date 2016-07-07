@@ -3,25 +3,21 @@
  */
 package com.psib.controller;
 
-import java.util.Collections;
-import java.util.List;
-
+import com.psib.common.DatabaseException;
+import com.psib.common.JsonParser;
+import com.psib.model.District;
+import com.psib.model.ProductDetail;
+import com.psib.service.IProductManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.psib.common.DatabaseException;
-import com.psib.common.JsonParser;
-import com.psib.model.District;
-import com.psib.service.IProductManager;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author DatHT Jun 4, 2016
@@ -38,36 +34,15 @@ public class ProductController {
 
     @RequestMapping(value = "/product", method = RequestMethod.GET)
     public ModelAndView loadProduct(@ModelAttribute(value = "addResult") String addResult,
-                                    @ModelAttribute(value = "updateResult") String updateResult,
-                                    @ModelAttribute(value = "deleteResult") String deleteResult,
-                                    @ModelAttribute(value = "name") String name,
-                                    @ModelAttribute(value = "address") String address,
-                                    @ModelAttribute(value = "district") String district,
-                                    @ModelAttribute(value = "rating") String rating,
-                                    @ModelAttribute(value = "restaurant") String restaurant,
-                                    @ModelAttribute(value = "relatedUrl") String relatedUrl,
-                                    @RequestParam(value = "txtDistrict", required = false) String txtDistrict,
-                                    @RequestParam(value = "txtFood", required = false) String txtFood,
-                                    @RequestParam(value = "updateProductId", required = false) String updateProductId) {
+                                    @ModelAttribute(value = "deleteResult") String deleteResult) {
         LOG.info("[loadProduct] Start");
 
         ModelAndView model = new ModelAndView("product");
-
-        List<District> districtList = productManager.getAllDistrict();
-        Collections.sort(districtList);
-
-        model.addObject("districtList", districtList);
 
         if (addResult.equals("")) {
             model.addObject("addResult", "1st load");
         } else {
             model.addObject(addResult);
-        }
-
-        if (updateResult.equals("")) {
-            model.addObject("updateResult", "1st load");
-        } else {
-            model.addObject(updateResult);
         }
 
         if (deleteResult.equals("")) {
@@ -76,28 +51,46 @@ public class ProductController {
             model.addObject(deleteResult);
         }
 
-
-        District dis = null;
-        if (txtDistrict != null && txtFood != null) {
-            dis = productManager.getDistrict(txtDistrict);
-        }
-        if (dis != null) {
-            model.addObject("name", txtFood);
-            model.addObject("districtName", dis.getName());
-        } else {
-            model.addObject("districtName", district);
-            model.addObject(name);
-        }
-        model.addObject(address);
-        model.addObject(rating);
-        model.addObject(restaurant);
-        model.addObject(relatedUrl);
-        if (updateProductId != null) {
-            model.addObject(updateProductId);
-        }
-
-
         LOG.info("[loadProduct] End");
+        return model;
+    }
+
+    @RequestMapping(value = "/viewProductDetails", method = RequestMethod.GET)
+    public ModelAndView viewProductDetails(@RequestParam(name = "productId") String productId) {
+        LOG.info("[viewProductDetails] Start");
+
+        ModelAndView model = new ModelAndView("productDetails");
+        ProductDetail productDetail = productManager.getProductById(Long.parseLong(productId));
+        model.addObject("productDetail", productDetail);
+
+        LOG.info("[viewProductDetails] End");
+        return model;
+    }
+
+    @RequestMapping(value = "/viewAddProduct", method = RequestMethod.GET)
+    public ModelAndView viewAddProduct(@ModelAttribute(value = "addResult") String addResult,
+                                       @ModelAttribute(value = "name") String name,
+                                       @ModelAttribute(value = "address") String address,
+                                       @ModelAttribute(value = "district") String district,
+                                       @ModelAttribute(value = "rating") String rating,
+                                       @ModelAttribute(value = "restaurant") String restaurant,
+                                       @ModelAttribute(value = "relatedUrl") String relatedUrl) {
+        LOG.info("[viewAddProduct] Start");
+        ModelAndView model = new ModelAndView("viewAddProduct");
+
+        List<District> districtList = productManager.getAllDistrict();
+        Collections.sort(districtList);
+        model.addObject("districtList", districtList);
+
+        if (!addResult.equals("")) {
+            model.addObject(name);
+            model.addObject(address);
+            model.addObject("districtName", district);
+            model.addObject(rating);
+            model.addObject(restaurant);
+            model.addObject(relatedUrl);
+        }
+        LOG.info("[viewAddProduct] End");
         return model;
     }
 
@@ -111,7 +104,7 @@ public class ProductController {
                                    @RequestParam(name = "relatedUrl") String relatedUrl,
                                    @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         LOG.info("[addProduct] Start");
-        ModelAndView model = new ModelAndView("redirect:product");
+        ModelAndView model = new ModelAndView("redirect:viewAddProduct");
         try {
             int result = productManager.insertProduct(name.trim(), address.trim(), district, rating.trim()
                     , restaurant.trim(), relatedUrl.trim(), file);
@@ -124,8 +117,13 @@ public class ProductController {
                 redirectAttributes.addFlashAttribute("rating", rating);
                 redirectAttributes.addFlashAttribute("restaurant", restaurant);
                 redirectAttributes.addFlashAttribute("relatedUrl", relatedUrl);
+                LOG.info("[addProduct] End");
+                return model;
             } else {
                 redirectAttributes.addFlashAttribute("addResult", true);
+                model = new ModelAndView("redirect:product");
+                LOG.info("[addProduct] End");
+                return model;
             }
 
         } catch (DatabaseException e) {
@@ -134,7 +132,41 @@ public class ProductController {
             model.addObject(ERROR, e.getMessage());
             return model;
         }
-        LOG.info("[addProduct] End");
+    }
+
+    @RequestMapping(value = "/viewUpdateProduct", method = RequestMethod.GET)
+    public ModelAndView viewUpdateProduct(@RequestParam(name = "productId") String productId,
+                                          @ModelAttribute(value = "updateResult") String updateResult,
+                                          @ModelAttribute(value = "name") String name,
+                                          @ModelAttribute(value = "address") String address,
+                                          @ModelAttribute(value = "district") String district,
+                                          @ModelAttribute(value = "rating") String rating,
+                                          @ModelAttribute(value = "restaurant") String restaurant,
+                                          @ModelAttribute(value = "relatedUrl") String relatedUrl) {
+        LOG.info("[viewUpdateProduct] Start");
+
+        ModelAndView model = new ModelAndView("viewUpdateProduct");
+        ProductDetail productDetail = productManager.getProductById(Long.parseLong(productId));
+        model.addObject("productDetail", productDetail);
+
+        List<District> districtList = productManager.getAllDistrict();
+        Collections.sort(districtList);
+        model.addObject("districtList", districtList);
+
+        if (updateResult.equals("")) {
+            model.addObject("updateResult", "1st load");
+        } else {
+            model.addObject(updateResult);
+        }
+
+        model.addObject(name);
+        model.addObject(address);
+        model.addObject("districtName", district);
+        model.addObject(rating);
+        model.addObject(restaurant);
+        model.addObject(relatedUrl);
+
+        LOG.info("[viewUpdateProduct] End");
         return model;
     }
 
@@ -143,13 +175,13 @@ public class ProductController {
     public ModelAndView updateProduct(@RequestParam(name = "name") String name,
                                       @RequestParam(name = "address") String address,
                                       @RequestParam(name = "district") String district,
-                                      @RequestParam(name = "rating") String rating,
-                                      @RequestParam(name = "restaurant") String restaurant,
+                                      @RequestParam(name = "rating", required = false) String rating,
+                                      @RequestParam(name = "restaurant", required = false) String restaurant,
                                       @RequestParam(name = "relatedUrl") String relatedUrl,
                                       @RequestParam(name = "updateProductId") String productId,
                                       @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         LOG.info("[updateProduct] Start");
-        ModelAndView model = new ModelAndView("redirect:product");
+        ModelAndView model = new ModelAndView("redirect:viewUpdateProduct?productId=" + productId);
         try {
             int result = productManager.updateProduct(name.trim(), address.trim(), district, rating.trim(),
                     restaurant.trim(), relatedUrl.trim(), productId.trim(), file);
@@ -162,7 +194,6 @@ public class ProductController {
                 redirectAttributes.addFlashAttribute("rating", rating);
                 redirectAttributes.addFlashAttribute("restaurant", restaurant);
                 redirectAttributes.addFlashAttribute("relatedUrl", relatedUrl);
-                redirectAttributes.addFlashAttribute("updateProductId", productId);
             } else {
                 redirectAttributes.addFlashAttribute("updateResult", true);
             }

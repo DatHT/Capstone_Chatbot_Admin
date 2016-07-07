@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE tiles-definitions PUBLIC
-       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
-       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
 	<definition name="base.definition" template="/WEB-INF/views/layout/layout.jsp">
@@ -14,9 +14,9 @@
 
 	<!-- Begin Auth Page -->
 	<!-- *************************************************************************** -->
-		<definition name="login" template="/WEB-INF/views/login.jsp">
-		</definition>
-	
+	<definition name="login" template="/WEB-INF/views/login.jsp">
+	</definition>
+
 
 	<!-- Begin Manage Lexical Catergory Page -->
 	<!-- *************************************************************************** -->
@@ -70,24 +70,51 @@
 		<put-attribute name="body" value="/WEB-INF/views/logs/manageLog.jsp" />
 		<put-attribute name="current" value="log" />
 	</definition>
-	
+
 	<!-- Begin Manage Full Conversations Page -->
 	<!-- *************************************************************************** -->
 	<definition name="conversations" extends="base.definition">
 		<put-attribute name="title" value="Conversations" />
-		<put-attribute name="body" value="/WEB-INF/views/conversations/fullConversations.jsp" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/conversations/fullConversations.jsp" />
 		<put-attribute name="current" value="conversations" />
 	</definition>
 
 	<!-- Begin Manage Product Page -->
 	<!-- *************************************************************************** -->
 	<definition name="product" extends="base.definition">
-		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="title" value="Manage Product" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/entity/updateEntity.jsp" />
+			value="/WEB-INF/views/product/viewProduct.jsp" />
 		<put-attribute name="current" value="product" />
 	</definition>
 
+	<!-- Product Details Page -->
+	<!-- *************************************************************************** -->
+	<definition name="productDetails" extends="base.definition">
+		<put-attribute name="title" value="Manage Product" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/product/viewProductDetails.jsp" />
+		<put-attribute name="current" value="product" />
+	</definition>
+
+	<!-- Update Product Page -->
+	<!-- *************************************************************************** -->
+	<definition name="viewAddProduct" extends="base.definition">
+		<put-attribute name="title" value="Manage Product" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/product/viewAddProduct.jsp" />
+		<put-attribute name="current" value="product" />
+	</definition>
+
+	<!-- Update Product Page -->
+	<!-- *************************************************************************** -->
+	<definition name="viewUpdateProduct" extends="base.definition">
+		<put-attribute name="title" value="Manage Product" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/product/viewUpdateProduct.jsp" />
+		<put-attribute name="current" value="product" />
+	</definition>
 
 	<!-- Begin Manage Synonym Page -->
 	<!-- *************************************************************************** -->
@@ -114,7 +141,7 @@
 		<put-attribute name="body" value="/WEB-INF/views/blank/export.jsp" />
 		<put-attribute name="current" value="abc" />
 	</definition>
-	
+
 	<definition name="dashboard" extends="base.definition">
 		<put-attribute name="title" value="Entity Manager" />
 		<put-attribute name="body" value="/WEB-INF/views/blank/dashboard.jsp" />
