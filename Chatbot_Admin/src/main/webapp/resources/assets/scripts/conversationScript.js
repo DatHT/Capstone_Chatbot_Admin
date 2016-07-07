@@ -68,7 +68,8 @@ function loadFullConversation(date) {
 							i.className = "zmdi zmdi-archive";
 							button.appendChild(i);
 							td.appendChild(button);
-						} 
+							button.setAttribute("onclick", "addTrainingSentence('"+obj.contents[j].userSay+"')");
+ 						} 
 						tr.appendChild(td);
 						tableBody.appendChild(tr);
 					}
@@ -87,5 +88,25 @@ function loadFullConversation(date) {
 	}
 
 	xmlhttp.open('GET', '/chatbot_admin/fullConversation?date=' + date.value, true);
+	xmlhttp.send(null);
+}
+
+function addTrainingSentence(sentence) {
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			if (xmlhttp.responseText == 'true') {
+				location.reload();
+			} else {
+				//swal('Error occurs. Please try again later!');
+			}
+		}
+	}
+
+	xmlhttp.open('GET', '/chatbot_admin/addTraining?usersay=' + sentence, true);
 	xmlhttp.send(null);
 }

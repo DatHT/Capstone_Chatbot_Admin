@@ -41,4 +41,10 @@ public class ConversationsController {
 		}
 		return "failed";
 	}
+	
+	@RequestMapping(value = "/addTraining", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+	public @ResponseBody String addTraining(@RequestParam("usersay") String usersay) {
+		System.out.println(usersay);
+		return "failed";
+	}
 }
