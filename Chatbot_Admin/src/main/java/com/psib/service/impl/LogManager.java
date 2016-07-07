@@ -67,8 +67,8 @@ public class LogManager implements ILogManager {
 	private static String errCode = "errCode";
 	private static String userSay = "userSay";
 	private static String contexts = "contexts";
-//	private static String action = "action";
-//	private static String intentName = "intentName";
+	// private static String action = "action";
+	// private static String intentName = "intentName";
 	private static String result = "result";
 	private static String resolvedQuery = "resolvedQuery";
 
@@ -524,7 +524,8 @@ public class LogManager implements ILogManager {
 				}
 			}
 		}
-		FileUtils.writleFile("/Users/HuyTCM/Desktop/conversationCollector", jsonArray.toString());
+		FileUtils.writleFile(fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl() + "/"
+				+ atDate + "/collector" + atDate, jsonArray.toString(4));
 		return jsonArray;
 	}
 
