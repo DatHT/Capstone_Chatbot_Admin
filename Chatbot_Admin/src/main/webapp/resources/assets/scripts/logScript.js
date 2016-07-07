@@ -96,7 +96,7 @@ xmlhttp.onreadystatechange = function() {
         }).on("loaded.rs.jquery.bootgrid", function() {
         	/* Executes after data is loaded and rendered */
             $('#not-found-data-table').find(".action-add-product").on("click", function(e) {
-            	window.location.href= 'product?txtDistrict=' + $(this).data("row-location") + "&txtFood=" + $(this).data("row-food");
+            	window.location.href= 'viewAddProduct?txtDistrict=' + $(this).data("row-location") + "&txtFood=" + $(this).data("row-food");
             });
         });
 		

@@ -74,14 +74,23 @@ public class ProductController {
                                        @ModelAttribute(value = "district") String district,
                                        @ModelAttribute(value = "rating") String rating,
                                        @ModelAttribute(value = "restaurant") String restaurant,
-                                       @ModelAttribute(value = "relatedUrl") String relatedUrl) {
+                                       @ModelAttribute(value = "relatedUrl") String relatedUrl,
+                                       @RequestParam(value = "txtDistrict", required = false) String txtDistrict,
+                                       @RequestParam(value = "txtFood", required = false) String txtFood) {
         LOG.info("[viewAddProduct] Start");
         ModelAndView model = new ModelAndView("viewAddProduct");
 
         List<District> districtList = productManager.getAllDistrict();
         Collections.sort(districtList);
         model.addObject("districtList", districtList);
-
+        
+        if (txtDistrict != null && txtFood != null) {
+			District districtObj = productManager.getDistrict(txtDistrict);
+			if (districtObj != null) {
+				model.addObject("name", txtFood);
+				model.addObject("districtId", districtObj.getId());
+			}
+		}
         if (!addResult.equals("")) {
             model.addObject(name);
             model.addObject(address);
