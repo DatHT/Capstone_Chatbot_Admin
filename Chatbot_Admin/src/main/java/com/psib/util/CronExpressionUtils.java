@@ -1,61 +1,51 @@
 package com.psib.util;
 
+import com.psib.common.CronExpressionException;
 import com.psib.constant.DayOfWeek;
 
 public class CronExpressionUtils {
 
-	public static String daily(String second, String minute, String hour) {
-		return CronExpressionUtils.converCronExpression(second, minute, hour, "1/1", "*", null);
+	public static String daily(int second, int minute, int hour) throws CronExpressionException {
+		return CronExpressionUtils.convertCronExpression(second, minute, hour, "1/1", "*", DayOfWeek.Unknown);
 	}
 
-	public static String weekly(DayOfWeek weekday) {
-		return CronExpressionUtils.converCronExpression(null, null, null, "?", "*", weekday.getValue());
+	public static String weekly(DayOfWeek weekday) throws CronExpressionException {
+		return CronExpressionUtils.convertCronExpression(0, 0, 0, "?", "*", weekday);
+	}
+	
+	public static String weekly(DayOfWeek weekday, int second, int minute, int hour) throws CronExpressionException {
+		return CronExpressionUtils.convertCronExpression(second, minute, hour, "?", "*", weekday);
 	}
 
-	public static String monthly(String day) {
-		return CronExpressionUtils.converCronExpression(null, null, null, day, "1/1", null);
+	public static String monthly(int day) throws CronExpressionException {
+		if (0 > day && day > 31) {
+			throw new CronExpressionException("Invalid day!");
+		}
+		return CronExpressionUtils.convertCronExpression(0, 0, 0, String.valueOf(day), "1/1", DayOfWeek.Unknown);
+	}
+	
+	public static String monthly(int day, int second, int minute, int hour) throws CronExpressionException {
+		if (0 > day && day > 31) {
+			throw new CronExpressionException("Invalid day!");
+		}
+		return CronExpressionUtils.convertCronExpression(second, minute, hour, String.valueOf(day), "1/1",
+				DayOfWeek.Unknown);
 	}
 
-	public static String converCronExpression(String second, String minute, String hour, String day, String month,
-			String weekday) {
-		String sec = "0";
-		if (minute != null) {
-			if (0 < Integer.parseInt(second) && Integer.parseInt(second) < 60) {
-				sec = second;
-			}
+	private static String convertCronExpression(int second, int minute, int hour, String day, String month,
+			DayOfWeek weekday) throws CronExpressionException {
+		if (0 > second && second > 59) {
+			throw new CronExpressionException("Invalid second!");
 		}
 
-		String min = "0";
-		if (minute != null) {
-			if (0 < Integer.parseInt(minute) && Integer.parseInt(minute) <= 59) {
-				min = minute;
-			}
+		if (0 > minute && minute > 59) {
+			throw new CronExpressionException("Invalid minute!");
 		}
 
-		String h = "0";
-		if (hour != null) {
-			if (0 < Integer.parseInt(hour) && Integer.parseInt(hour) <= 59) {
-				h = hour;
-			}
+		if (0 > hour && hour > 23) {
+			throw new CronExpressionException("Invalid hour!");
 		}
 
-		String d = "*";
-		if (day != null) {
-			if (0 < Integer.parseInt(day) && Integer.parseInt(day) <= 31) {
-				d = day;
-			}
-		}
-
-		String mon = "*";
-		if (month != null) {
-			mon = month;
-		}
-
-		String wd = "?";
-		if (weekday != null) {
-			wd = weekday;
-		}
-
-		return sec + " " + min + " " + h + " " + d + " " + mon + " " + wd;
+		return second + " " + minute + " " + hour + " " + day + " " + month + " " + weekday.getValue();
 	}
 }

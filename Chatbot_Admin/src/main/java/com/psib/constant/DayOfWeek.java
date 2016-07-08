@@ -1,7 +1,7 @@
 package com.psib.constant;
 
 public enum DayOfWeek {
-	Monday("MON"), Tuesday("TUE"), Wednesday("WED"), Thursday("THU"), Friday("FRI"), Saturday("SAT"), Sunday("SUN");
+	Monday("MON"), Tuesday("TUE"), Wednesday("WED"), Thursday("THU"), Friday("FRI"), Saturday("SAT"), Sunday("SUN"), Unknown("?");
 
 	private String value;
 
