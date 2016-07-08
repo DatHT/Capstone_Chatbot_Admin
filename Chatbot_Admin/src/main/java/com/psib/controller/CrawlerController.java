@@ -47,6 +47,7 @@ import com.psib.service.IAddressManager;
 import com.psib.service.IDistrictManager;
 import com.psib.service.IProductManager;
 import com.psib.util.CommonUtils;
+import com.psib.util.LatitudeAndLongitudeWithPincode;
 import com.psib.util.XMLUtils;
 
 @Controller
@@ -295,11 +296,9 @@ public class CrawlerController extends HttpServlet {
 							List<WebElement> listimg = driver.findElements(By.tagName("a"));
 							String imgVal = "";
 							for (WebElement elem : listimg) {
-								if (elem.getAttribute("data-lat") != null
-												&& elem.getAttribute("data-lng") != null) {
-											imgVal = elem.getAttribute("data-lat") + ","
-													+ elem.getAttribute("data-lng");
-										}
+								if (elem.getAttribute("data-lat") != null && elem.getAttribute("data-lng") != null) {
+									imgVal = elem.getAttribute("data-lat") + "," + elem.getAttribute("data-lng");
+								}
 							}
 							map = imgVal;
 							double latitude = CommonUtils.splitLat(map);
@@ -317,7 +316,7 @@ public class CrawlerController extends HttpServlet {
 							District districtDAO = new District();
 							Address addressDAO = new Address();
 							ProductDetail productDetails = new ProductDetail();
-							
+
 							boolean checkExistDistrict = districtManager.checkExitDistrict(district);
 							if (!checkExistDistrict) {
 								countAdded++;
@@ -344,16 +343,15 @@ public class CrawlerController extends HttpServlet {
 										productDetails.setUrlRelate(str);
 										productDetails.setAddressId(addressID);
 										productDetails.setSource(url);
-										
+
 										ProductDetail productDAO = productManager.checkProductExist(productDetails);
-										if(productDAO==null){
+										if (productDAO == null) {
 											productManager.insertProductDetail(productDetails);
 										}
 									}
 								}
 								System.out.println("Add to database success");
-							}
-							else{
+							} else {
 								countExits++;
 								System.out.println("Cannot add to database");
 							}
@@ -512,11 +510,9 @@ public class CrawlerController extends HttpServlet {
 						List<WebElement> listimg = driver.findElements(By.tagName("a"));
 						String imgVal = "";
 						for (WebElement elem : listimg) {
-							if (elem.getAttribute("data-lat") != null
-											&& elem.getAttribute("data-lng") != null) {
-										imgVal = elem.getAttribute("data-lat") + ","
-												+ elem.getAttribute("data-lng");
-									}
+							if (elem.getAttribute("data-lat") != null && elem.getAttribute("data-lng") != null) {
+								imgVal = elem.getAttribute("data-lat") + "," + elem.getAttribute("data-lng");
+							}
 						}
 						map = imgVal;
 						double latitude = CommonUtils.splitLat(map);
@@ -534,7 +530,7 @@ public class CrawlerController extends HttpServlet {
 						District districtDAO = new District();
 						Address addressDAO = new Address();
 						ProductDetail productDetails = new ProductDetail();
-						
+
 						boolean checkExistDistrict = districtManager.checkExitDistrict(district);
 						if (!checkExistDistrict) {
 							countAdded++;
@@ -561,16 +557,15 @@ public class CrawlerController extends HttpServlet {
 									productDetails.setUrlRelate(str);
 									productDetails.setAddressId(addressID);
 									productDetails.setSource(url);
-									
+
 									ProductDetail productDAO = productManager.checkProductExist(productDetails);
-									if(productDAO==null){
+									if (productDAO == null) {
 										productManager.insertProductDetail(productDetails);
 									}
 								}
 							}
 							System.out.println("Add to database success");
-						}
-						else{
+						} else {
 							countExits++;
 							System.out.println("Cannot add to database");
 						}
@@ -801,21 +796,34 @@ public class CrawlerController extends HttpServlet {
 					}
 
 					List<WebElement> listimg = driver.findElements(By.tagName("img"));
-					
+
 					String imgVal = "";
 					for (WebElement elem : listimg) {
 						imgVal = elem.getAttribute("src");
 						if (imgVal.contains("_106-") || imgVal.contains("_106.")) {
-							map=imgVal;
+							map = imgVal;
 						}
 					}
-					
-					
-					double latitude = CommonUtils.splitLat(map);
-					double longitude = CommonUtils.splitLong(map);
+					double latitude=0;
+					double longitude=0;
+					if (map == "" || map == null || map.isEmpty()) {
+						String latLongs[] = LatitudeAndLongitudeWithPincode.getLatLongPositions(address);
+
+						if (latLongs == null) {
+							latitude = 0;
+							longitude = 0;
+						} else {
+							latitude = Double.parseDouble(latLongs[0]);
+							longitude = Double.parseDouble(latLongs[1]);
+						}
+					}
+					if (map != null && !map.isEmpty() && map != "") {
+						latitude = CommonUtils.splitLat(map);
+						longitude = CommonUtils.splitLong(map);
+					}
 					String district = CommonUtils.splitDistrict(address);
 					String newAddress = CommonUtils.splitAddress(address);
-					
+
 					double rate = 0;
 					if (!userRate.equals("")) {
 						rate = Double.parseDouble(userRate);
@@ -826,7 +834,7 @@ public class CrawlerController extends HttpServlet {
 					District districtDAO = new District();
 					Address addressDAO = new Address();
 					ProductDetail productDetails = new ProductDetail();
-					
+
 					boolean checkExistDistrict = districtManager.checkExitDistrict(district);
 					if (!checkExistDistrict) {
 						countAdded++;
