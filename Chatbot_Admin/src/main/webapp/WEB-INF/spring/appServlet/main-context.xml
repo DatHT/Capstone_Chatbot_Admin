@@ -27,7 +27,7 @@
             <property name="targetMethod" value="startTimerForApiAndLog" />
          </bean>
       </constructor-arg>
-      <constructor-arg value="0 20 15 1/1 * ?" />
+      <constructor-arg value="${timer.cron.expression}" />
 	</bean>
 	<!-- task timer -->
 	
