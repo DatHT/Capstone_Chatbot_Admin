@@ -3,7 +3,6 @@ package com.psib.service.impl;
 import com.psib.common.DatabaseException;
 import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
-import com.psib.dao.IFileServerDao;
 import com.psib.dao.IProductDetailDao;
 import com.psib.dto.BootGirdDto;
 import com.psib.dto.ProductDetailDto;
@@ -41,13 +40,10 @@ public class ProductManager implements IProductManager {
     @Autowired
     private IAddressDao addressDao;
 
-    @Autowired
-    private IFileServerDao fileServerDao;
-
     @Override
     public BootGirdDto getAllForPaging(int current, int rowCount, String searchPhrase,
-                                      String sortProductName, String sortAddressName, String sortDistrictName,
-                                      String sortRate, String sortRestaurantName) {
+                                       String sortProductName, String sortAddressName, String sortDistrictName,
+                                       String sortRate, String sortRestaurantName) {
         LOG.info(new StringBuilder("[getAllForPaging] Start: current = ").append(current)
                 .append(" ,rowCount = ").append(rowCount)
                 .append(" ,searchPhrase = ").append(searchPhrase)
@@ -135,7 +131,7 @@ public class ProductManager implements IProductManager {
                 productDetail.setDistrictName(district);
                 productDetail.setLatitude(latitude);
                 productDetail.setLongitude(longitude);
-                if(!rating.equals("")){
+                if (!rating.equals("")) {
                     productDetail.setRate(Double.parseDouble(rating));
                 }
                 productDetail.setRestaurantName(restaurant);
