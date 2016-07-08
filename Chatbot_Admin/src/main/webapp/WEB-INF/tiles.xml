@@ -119,9 +119,9 @@
 	<!-- Begin Manage Synonym Page -->
 	<!-- *************************************************************************** -->
 	<definition name="synonym" extends="base.definition">
-		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="title" value="Manage Synonym" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/entity/updateEntity.jsp" />
+			value="/WEB-INF/views/synonym/viewSynonym.jsp" />
 		<put-attribute name="current" value="synonym" />
 	</definition>
 
