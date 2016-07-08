@@ -801,20 +801,21 @@ public class CrawlerController extends HttpServlet {
 					}
 
 					List<WebElement> listimg = driver.findElements(By.tagName("img"));
-
+					
 					String imgVal = "";
-					String imgvalue = "";
 					for (WebElement elem : listimg) {
 						imgVal = elem.getAttribute("src");
-						if (imgVal.contains("106-") || imgVal.contains("106.")) {
-							imgvalue = imgVal;
+						if (imgVal.contains("_106-") || imgVal.contains("_106.")) {
+							map=imgVal;
 						}
 					}
-					map = imgvalue;
+					
+					
 					double latitude = CommonUtils.splitLat(map);
 					double longitude = CommonUtils.splitLong(map);
 					String district = CommonUtils.splitDistrict(address);
 					String newAddress = CommonUtils.splitAddress(address);
+					
 					double rate = 0;
 					if (!userRate.equals("")) {
 						rate = Double.parseDouble(userRate);
@@ -825,7 +826,7 @@ public class CrawlerController extends HttpServlet {
 					District districtDAO = new District();
 					Address addressDAO = new Address();
 					ProductDetail productDetails = new ProductDetail();
-
+					
 					boolean checkExistDistrict = districtManager.checkExitDistrict(district);
 					if (!checkExistDistrict) {
 						countAdded++;
