@@ -1,41 +1,41 @@
 package com.psib.timer;
 
-import java.io.IOException;
-import java.util.List;
+import java.util.Date;
+import java.util.concurrent.ScheduledFuture;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.Trigger;
+import org.springframework.scheduling.TriggerContext;
+import org.springframework.scheduling.support.CronTrigger;
 
-import com.psib.common.restclient.RestfulException;
-import com.psib.dto.jsonmapper.LexicalCategoryDto;
-import com.psib.model.Scheduler;
-import com.psib.service.ILexicalCategoryManager;
-import com.psib.service.ISchedulerManager;
-import com.psib.timer.task.TimerTask;
-import com.psib.util.SpringPropertiesUtil;
-
-public class TimerJob {
+public class TimerJob implements Trigger {
 	private static final Logger LOG = Logger.getLogger(TimerJob.class);
-	
-	@Autowired
-	TimerTask task;
-	
-	@Autowired
-	ISchedulerManager manager;
 
-	public TimerJob() {
+	private TaskScheduler scheduler;
+	private Runnable runnableTask;
+	private ScheduledFuture<?> future;
+	private String cron;
+
+	public TimerJob(TaskScheduler scheduler, Runnable task, String cron) {
+		this.scheduler = scheduler;
+		this.runnableTask = task;
+		reset(cron);
 	}
 
-	public void synchronizeJob() {
-		Scheduler apiScheduler = manager.getSchedularByName("api");
-		if (apiScheduler.isStatus()) {
-			boolean isTimerActive = Boolean.parseBoolean(System.getProperty("timerActive"));
-			if (isTimerActive) {
-				task.synchronizePhraseFromAPItoDB();
-				task.synchronizeIntentToBD();
-			}
+	@Override
+	public Date nextExecutionTime(TriggerContext arg0) {
+		return null;
+	}
+
+	public void reset(String cron) {
+		if (future != null) {
+			System.out.println("Cancelling task...");
+			future.cancel(true);
 		}
+		this.cron = cron;
+		System.out.println("Starting task...");
+		future = scheduler.schedule(runnableTask, new CronTrigger(cron));
 	}
 
 }

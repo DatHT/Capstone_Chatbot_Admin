@@ -12,14 +12,24 @@
 		>
 
 	<context:component-scan base-package="com.psib.controller" />
-	
-	<!-- task -->
+
+	<!-- task timer -->
 	<context:property-placeholder location="classpath:data-config.properties" />
 	<task:annotation-driven />
-	<bean id="schedulerTask" class="com.psib.timer.TimerJob"></bean>
-	<task:scheduled-tasks>
-	  	<task:scheduled ref="schedulerTask" method="synchronizeJob" cron="${timer.cron.expression}" />
-	</task:scheduled-tasks>
+	
+	<task:scheduler id="scheduler"/>
+	<bean id="timerTask" class="com.psib.timer.task.TimerTask"></bean>
+	<bean id="schedulerTask" class="com.psib.timer.TimerJob">
+		<constructor-arg ref="scheduler"/>
+		<constructor-arg>
+         <bean class="org.springframework.scheduling.support.MethodInvokingRunnable">
+            <property name="targetObject" ref="timerTask" />
+            <property name="targetMethod" value="startTimerForApiAndLog" />
+         </bean>
+      </constructor-arg>
+      <constructor-arg value="0 20 15 1/1 * ?" />
+	</bean>
+	<!-- task timer -->
 	
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.UrlBasedViewResolver">

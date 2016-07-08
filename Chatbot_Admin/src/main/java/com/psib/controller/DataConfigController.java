@@ -23,6 +23,7 @@ import com.psib.model.Scheduler;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.IPhraseManager;
 import com.psib.service.ISchedulerManager;
+import com.psib.timer.trigger.ScheduleChanger;
 
 /**
  * @author DatHT Jun 4, 2016
@@ -41,6 +42,9 @@ public class DataConfigController {
 
 	@Autowired
 	private ISchedulerManager manager;
+	
+	@Autowired
+	ScheduleChanger changer;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String loadDataConfig(Locale locale, Model model) {
@@ -68,6 +72,7 @@ public class DataConfigController {
 				Scheduler apiScheduler = manager.getSchedularByName("api");
 				apiScheduler.setStatus(true);
 				manager.updateShedulerStatus(apiScheduler);
+				//changer.change("");
 				responseText = "done";
 			}
 			// sync to api

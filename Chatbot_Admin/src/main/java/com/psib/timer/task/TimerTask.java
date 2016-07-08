@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.psib.common.factory.LexicalCategoryFactory;
@@ -22,15 +23,17 @@ import com.psib.dto.jsonmapper.LexicalDto;
 import com.psib.dto.jsonmapper.intent.IntentsDto;
 import com.psib.model.LexicalCategory;
 import com.psib.model.Phrase;
+import com.psib.model.Scheduler;
 import com.psib.service.IIntentManager;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.IPhraseManager;
+import com.psib.service.ISchedulerManager;
 import com.psib.service.impl.LexicalCategoryManager;
 import com.psib.service.impl.PhraseManager;
 import com.psib.util.FileUtils;
 import com.psib.util.SpringPropertiesUtil;
 
-@Service
+@Component
 public class TimerTask {
 
 	private static final Logger LOG = Logger.getLogger(TimerTask.class);
@@ -39,67 +42,79 @@ public class TimerTask {
 	private ILexicalCategoryManager lexicalManager;
 	@Autowired
 	private IPhraseManager phraseManager;
-	
+
 	@Autowired
-    private IFileServerDao fileServerDao;
-	
+	ISchedulerManager manager;
+
+	@Autowired
+	private IFileServerDao fileServerDao;
+
 	@Autowired
 	private IIntentManager intentManager;
 	
-	
-	public void synchronizeIntentToBD() {
+	public void startTimerForApiAndLog() {
+		synchronizePhraseFromAPItoDB();
+		synchronizeIntentToBD();
+	}
+
+	private void synchronizeIntentToBD() {
 		LOG.info("[doTimer] Start - Syn Intent");
-		String folderUrl = fileServerDao.getByName(SpringPropertiesUtil.getProperty("file_server_intent")).getUrl();
-		try {
-			List<IntentsDto> listIntent = intentManager.getIntents();
-			for(IntentsDto dto : listIntent) {
-				String content = intentManager.getIntentById(dto.getId());
-				FileUtils.writleFile(folderUrl + "/" + dto.getName() + ".json", content);
-				LOG.info("[doTimer] Write file sucess");
+		Scheduler apiScheduler = manager.getSchedularByName("api");
+		if (apiScheduler.isStatus()) {
+			String folderUrl = fileServerDao.getByName(SpringPropertiesUtil.getProperty("file_server_intent")).getUrl();
+			try {
+				List<IntentsDto> listIntent = intentManager.getIntents();
+				for (IntentsDto dto : listIntent) {
+					String content = intentManager.getIntentById(dto.getId());
+					FileUtils.writleFile(folderUrl + "/" + dto.getName() + ".json", content);
+					LOG.info("[doTimer] Write file sucess");
+				}
+
+				LOG.info("[doTimer] End - Syn Intent");
+			} catch (IOException e) {
+				LOG.error("[Sync error] " + e.getMessage());
+			} catch (RestfulException e) {
+				LOG.error("[Sync error] " + e.getMessage());
 			}
-			
-			LOG.info("[doTimer] End - Syn Intent");
-		} catch (IOException e) {
-			LOG.error("[Sync error] " + e.getMessage());
-		} catch (RestfulException e) {
-			LOG.error("[Sync error] " + e.getMessage());
 		}
 	}
 
-	public void synchronizePhraseFromAPItoDB() {
+	private void synchronizePhraseFromAPItoDB() {
 		LOG.info("[doTimer] Start - Syn Phrase");
-		try {
-			List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
-			for (LexicalCategoryDto dto : lexicals) {
-				long id = 0;
-				if ((id = lexicalManager.checkExistLexical(dto.getName())) == -1) {
-					// sync from lexical to db
-					LexicalCategory lexical = new LexicalCategory();
-					lexical.setName(dto.getName());
-					lexical.setLastModify(new Date());
-					id = lexicalManager.insertLexicalToDatabase(lexical);
-					LOG.info("[Sync lexical phrase done]");
-				}
-				LexicalDto entry = lexicalManager.getApiLexicalById(String.valueOf(dto.getId()));
-				for (Entry item : entry.getEntries()) {
-					Phrase phrase = phraseManager.checkExist(item.getValue());
-					if (phrase == null) {
-						phrase = new Phrase();
-						phrase.setAsynchronized(true);
-						phrase.setLexicalId((int) id);
-						phrase.setName(item.getValue());
-						phraseManager.insertPhraseToDatabase(phrase);
-						LOG.info("[Sync insert phrase done]");
+		Scheduler apiScheduler = manager.getSchedularByName("api");
+		if (apiScheduler.isStatus()) {
+			try {
+				List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
+				for (LexicalCategoryDto dto : lexicals) {
+					long id = 0;
+					if ((id = lexicalManager.checkExistLexical(dto.getName())) == -1) {
+						// sync from lexical to db
+						LexicalCategory lexical = new LexicalCategory();
+						lexical.setName(dto.getName());
+						lexical.setLastModify(new Date());
+						id = lexicalManager.insertLexicalToDatabase(lexical);
+						LOG.info("[Sync lexical phrase done]");
+					}
+					LexicalDto entry = lexicalManager.getApiLexicalById(String.valueOf(dto.getId()));
+					for (Entry item : entry.getEntries()) {
+						Phrase phrase = phraseManager.checkExist(item.getValue());
+						if (phrase == null) {
+							phrase = new Phrase();
+							phrase.setAsynchronized(true);
+							phrase.setLexicalId((int) id);
+							phrase.setName(item.getValue());
+							phraseManager.insertPhraseToDatabase(phrase);
+							LOG.info("[Sync insert phrase done]");
+						}
 					}
 				}
+				LOG.info("[doTimer] End  - Syn Phrase");
+			} catch (IOException e) {
+				LOG.error("[Sync error] " + e.getMessage());
+			} catch (RestfulException e) {
+				LOG.error("[Sync error] " + e.getMessage());
 			}
-			LOG.info("[doTimer] End  - Syn Phrase");
-		} catch (IOException e) {
-			LOG.error("[Sync error] " + e.getMessage());
-		} catch (RestfulException e) {
-			LOG.error("[Sync error] " + e.getMessage());
 		}
-
 	}
 
 	// TODO: use for future plan
