@@ -90,11 +90,11 @@
                                 <div class="fg-line">
                                     <select id="district" name="district" class="form-control">
                                         <c:forEach items="${districtList}" var="district">
-                                            <c:if test="${districtId == district.id}">
- 												<option value="${district.id}" selected>${district.name}</option>
+                                            <c:if test="${districtName == district.name}">
+ 												<option value="${district.name}" selected>${district.name}</option>
  											</c:if>
- 											<c:if test="${districtId != district.id}">
- 												<option value="${district.id}">${district.name}</option>
+ 											<c:if test="${districtName != district.name}">
+ 												<option value="${district.name}">${district.name}</option>
  											</c:if>
                                         </c:forEach>
                                     </select>

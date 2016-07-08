@@ -27,7 +27,7 @@ public class ProductController {
 
     private static final Logger LOG = Logger.getLogger(ProductController.class);
 
-    private static final String ERROR = null;
+    private static final String ERROR = "ERROR";
 
     @Autowired
     private IProductManager productManager;
@@ -88,7 +88,7 @@ public class ProductController {
 			District districtObj = productManager.getDistrict(txtDistrict);
 			if (districtObj != null) {
 				model.addObject("name", txtFood);
-				model.addObject("districtId", districtObj.getId());
+				model.addObject("districtName", districtObj.getName());
 			}
 		}
         if (!addResult.equals("")) {
