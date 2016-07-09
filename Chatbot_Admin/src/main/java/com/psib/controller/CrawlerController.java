@@ -56,8 +56,8 @@ public class CrawlerController extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String pageConfigXML = "D:/Capstone/pageconfig.xml";
-	private static final String parserConfigXML = "D:/Capstone/parserconfig.xml";
+	private static final String pageConfigXML = "D:/Config/pageconfig.xml";
+	private static final String parserConfigXML = "D:/Config/parserconfig.xml";
 	private static final Logger logger = LoggerFactory.getLogger(CrawlerController.class);
 
 	@Autowired
@@ -317,43 +317,50 @@ public class CrawlerController extends HttpServlet {
 							Address addressDAO = new Address();
 							ProductDetail productDetails = new ProductDetail();
 
-							boolean checkExistDistrict = districtManager.checkExitDistrict(district);
-							if (!checkExistDistrict) {
-								countAdded++;
+							long districtID = districtManager.checkExitDistrict(district);
+							if (districtID == 0 ) {
+								
 								districtDAO.setName(district);
-								long districtID = districtManager.insert(districtDAO);
+								districtID = districtManager.insert(districtDAO);
+								
+								System.out.println("Add district done");
+							}
+							if(districtID!=0) {
+								System.out.println("District exist");
 								addressDAO.setDistrictId(districtID);
 								addressDAO.setName(newAddress);
 								addressDAO.setLatitude(latitude);
 								addressDAO.setLongitude(longitude);
 								addressDAO.setRestaurantName(restaurantName);
+							}
+							long addressID = addressManager.checkExitsAddress(addressDAO);
+							if (addressID == 0) {
+								addressID = addressManager.insert(addressDAO);
+								System.out.println("Add address done");
+							}
+							if (addressID != 0) {
+								productDetails.setProductName(newProductName);
+								productDetails.setAddressName(address);
+								productDetails.setDistrictName(district);
+								productDetails.setLatitude(latitude);
+								productDetails.setLongitude(longitude);
+								productDetails.setRate(rate);
+								productDetails.setRestaurantName(restaurantName);
+								productDetails.setThumbPath(thumbpath);
+								productDetails.setUrlRelate(str);
+								productDetails.setAddressId(addressID);
+								productDetails.setSource(url);
 
-								long addressID = addressManager.checkExitsAddress(addressDAO);
-								if (addressID == 0) {
-									addressID = addressManager.insert(addressDAO);
-									if (addressID != 0) {
-										productDetails.setProductName(newProductName);
-										productDetails.setAddressName(address);
-										productDetails.setDistrictName(district);
-										productDetails.setLatitude(latitude);
-										productDetails.setLongitude(longitude);
-										productDetails.setRate(rate);
-										productDetails.setRestaurantName(restaurantName);
-										productDetails.setThumbPath(thumbpath);
-										productDetails.setUrlRelate(str);
-										productDetails.setAddressId(addressID);
-										productDetails.setSource(url);
-
-										ProductDetail productDAO = productManager.checkProductExist(productDetails);
-										if (productDAO == null) {
-											productManager.insertProductDetail(productDetails);
-										}
-									}
+								ProductDetail productDAO = productManager.checkProductExist(productDetails);
+								if (productDAO == null) {
+									productManager.insertProductDetail(productDetails);
+									countAdded++;
+									System.out.println("Add to database success");
 								}
-								System.out.println("Add to database success");
-							} else {
-								countExits++;
-								System.out.println("Cannot add to database");
+								else {
+									countExits++;
+									System.out.println("Cannot add to database");
+								}
 							}
 						}
 					}
@@ -531,43 +538,50 @@ public class CrawlerController extends HttpServlet {
 						Address addressDAO = new Address();
 						ProductDetail productDetails = new ProductDetail();
 
-						boolean checkExistDistrict = districtManager.checkExitDistrict(district);
-						if (!checkExistDistrict) {
-							countAdded++;
+						long districtID = districtManager.checkExitDistrict(district);
+						if (districtID == 0 ) {
+							
 							districtDAO.setName(district);
-							long districtID = districtManager.insert(districtDAO);
+							districtID = districtManager.insert(districtDAO);
+							
+							System.out.println("Add district done");
+						}
+						if(districtID!=0) {
+							System.out.println("District exist");
 							addressDAO.setDistrictId(districtID);
 							addressDAO.setName(newAddress);
 							addressDAO.setLatitude(latitude);
 							addressDAO.setLongitude(longitude);
 							addressDAO.setRestaurantName(restaurantName);
+						}
+						long addressID = addressManager.checkExitsAddress(addressDAO);
+						if (addressID == 0) {
+							addressID = addressManager.insert(addressDAO);
+							System.out.println("Add address done");
+						}
+						if (addressID != 0) {
+							productDetails.setProductName(newProductName);
+							productDetails.setAddressName(address);
+							productDetails.setDistrictName(district);
+							productDetails.setLatitude(latitude);
+							productDetails.setLongitude(longitude);
+							productDetails.setRate(rate);
+							productDetails.setRestaurantName(restaurantName);
+							productDetails.setThumbPath(thumbpath);
+							productDetails.setUrlRelate(str);
+							productDetails.setAddressId(addressID);
+							productDetails.setSource(url);
 
-							long addressID = addressManager.checkExitsAddress(addressDAO);
-							if (addressID == 0) {
-								addressID = addressManager.insert(addressDAO);
-								if (addressID != 0) {
-									productDetails.setProductName(newProductName);
-									productDetails.setAddressName(address);
-									productDetails.setDistrictName(district);
-									productDetails.setLatitude(latitude);
-									productDetails.setLongitude(longitude);
-									productDetails.setRate(rate);
-									productDetails.setRestaurantName(restaurantName);
-									productDetails.setThumbPath(thumbpath);
-									productDetails.setUrlRelate(str);
-									productDetails.setAddressId(addressID);
-									productDetails.setSource(url);
-
-									ProductDetail productDAO = productManager.checkProductExist(productDetails);
-									if (productDAO == null) {
-										productManager.insertProductDetail(productDetails);
-									}
-								}
+							ProductDetail productDAO = productManager.checkProductExist(productDetails);
+							if (productDAO == null) {
+								productManager.insertProductDetail(productDetails);
+								countAdded++;
+								System.out.println("Add to database success");
 							}
-							System.out.println("Add to database success");
-						} else {
-							countExits++;
-							System.out.println("Cannot add to database");
+							else {
+								countExits++;
+								System.out.println("Cannot add to database");
+							}
 						}
 					}
 				}
@@ -835,44 +849,51 @@ public class CrawlerController extends HttpServlet {
 					Address addressDAO = new Address();
 					ProductDetail productDetails = new ProductDetail();
 
-					boolean checkExistDistrict = districtManager.checkExitDistrict(district);
-					if (!checkExistDistrict) {
-						countAdded++;
+					long districtID = districtManager.checkExitDistrict(district);
+					if (districtID == 0 ) {
+						
 						districtDAO.setName(district);
-						long districtID = districtManager.insert(districtDAO);
+						districtID = districtManager.insert(districtDAO);
+						
+						System.out.println("Add district done");
+					}
+					if(districtID!=0) {
+						System.out.println("District exist");
 						addressDAO.setDistrictId(districtID);
 						addressDAO.setName(newAddress);
 						addressDAO.setLatitude(latitude);
 						addressDAO.setLongitude(longitude);
 						addressDAO.setRestaurantName(restaurantName);
-
-						long addressID = addressManager.checkExitsAddress(addressDAO);
-						if (addressID == 0) {
-							addressID = addressManager.insert(addressDAO);
-							if (addressID != 0) {
-								productDetails.setProductName(newProductName);
-								productDetails.setAddressName(address);
-								productDetails.setDistrictName(district);
-								productDetails.setLatitude(latitude);
-								productDetails.setLongitude(longitude);
-								productDetails.setRate(rate);
-								productDetails.setRestaurantName(restaurantName);
-								productDetails.setThumbPath(thumbpath);
-								productDetails.setUrlRelate(str);
-								productDetails.setAddressId(addressID);
-								productDetails.setSource(url);
-
-								ProductDetail productDAO = productManager.checkProductExist(productDetails);
-								if (productDAO == null) {
-									productManager.insertProductDetail(productDetails);
-								}
-							}
-						}
-						System.out.println("Add to database success");
-					} else {
-						countExits++;
-						System.out.println("Cannot add to database");
 					}
+					long addressID = addressManager.checkExitsAddress(addressDAO);
+					if (addressID == 0) {
+						addressID = addressManager.insert(addressDAO);
+						System.out.println("Add address done");
+					}
+					if (addressID != 0) {
+						productDetails.setProductName(newProductName);
+						productDetails.setAddressName(address);
+						productDetails.setDistrictName(district);
+						productDetails.setLatitude(latitude);
+						productDetails.setLongitude(longitude);
+						productDetails.setRate(rate);
+						productDetails.setRestaurantName(restaurantName);
+						productDetails.setThumbPath(thumbpath);
+						productDetails.setUrlRelate(str);
+						productDetails.setAddressId(addressID);
+						productDetails.setSource(url);
+
+						ProductDetail productDAO = productManager.checkProductExist(productDetails);
+						if (productDAO == null) {
+							productManager.insertProductDetail(productDetails);
+							countAdded++;
+							System.out.println("Add to database success");
+						}
+						else {
+							countExits++;
+							System.out.println("Cannot add to database");
+						}
+					} 
 				}
 				driver.close();
 				System.out.println("Sucessfull Added Record: " + countAdded);
