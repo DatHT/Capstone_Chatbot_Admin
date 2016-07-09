@@ -26,7 +26,7 @@
 
             <div class="card-body card-padding">
                 <a class="btn btn-primary waves-effect"
-                   onclick="showFormOrigin('<spring:message code="synonym_header_add_origin"/>')">
+                   onclick="showFormOrigin('<spring:message code="synonym_header_add_origin"/>',0)">
                     <spring:message code="btn_add"/>
                 </a>
                 <div class="row m-t-20">
@@ -80,15 +80,18 @@
             </div>
             <div class="card-body card-padding">
                 <dt class="p-t-10">
-                    Word
+                    <spring:message code="synonym_word"/>
                 </dt>
                 <dd class="p-t-10">
-                    <div class="fg-line">
-                        <input id="txtOriginName" type="text" class="form-control">
+                    <div id="div-origin-name">
+                        <div class="fg-line">
+                            <input id="txtOriginName" type="text" class="form-control">
+                        </div>
+                        <small id="error-origin" class="help-block"></small>
                     </div>
                 </dd>
                 <div class="m-t-30">
-                    <button type="submit" class="btn btn-success">
+                    <button type="button" id="btnAddOrigin" class="btn btn-success" onclick="addUpdateOrigin()">
                         <spring:message code="btn_save"/>
                     </button>
                     <button class="btn btn-danger" onclick="hideFormOrigin()">
@@ -105,7 +108,7 @@
     <div class="col-sm-8">
         <div class="card">
             <div class="card-header">
-                <h2 id="synonymHeader"><spring:message code="synonym_header_synonyms"/></h2>
+                <h2 id="synonymHeader"></h2>
             </div>
 
             <div class="card-body card-padding">
@@ -158,11 +161,14 @@
             </div>
             <div class="card-body card-padding">
                 <dt class="p-t-10">
-                    Word
+                    <spring:message code="synonym_word"/>
                 </dt>
                 <dd class="p-t-10">
-                    <div class="fg-line">
-                        <input id="txtSynonymName" type="text" class="form-control">
+                    <div id="div-synonym-name">
+                        <div class="fg-line">
+                            <input id="txtSynonymName" type="text" class="form-control">
+                        </div>
+                        <small id="error-synonym" class="help-block"></small>
                     </div>
                 </dd>
                 <div class="m-t-30">
@@ -205,8 +211,6 @@
                     </button>
                     <input id="deleteWordId" name="deleteWordId" type="hidden"/>
                     <input id="wordType" name="wordType" type="hidden"/>
-                    <input type="hidden" name="${_csrf.parameterName}"
-                           value="${_csrf.token}"/>
                 </form>
             </div>
         </div>

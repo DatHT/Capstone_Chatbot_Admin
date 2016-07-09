@@ -15,5 +15,9 @@ public interface ISynonymDao {
     List<Synonym> getSynonymsBySearchPhraseAndSort(String searchPhrase, String sortName, int maxResult, int skipResult
             , int originId);
 
+    void insertWord(Synonym synonym);
+
     void deleteById(Synonym synonym);
+
+    int checkWordExist(Synonym synonym);
 }

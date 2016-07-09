@@ -54,7 +54,7 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
         StringBuilder sql = new StringBuilder("SELECT S.Id, S.name FROM ")
                 .append(Synonym.class.getSimpleName())
                 .append(" S WHERE S.name LIKE :searchPhrase")
-                .append(" AND S.synonymId IS NULL");
+                .append(" AND S.synonymId = 0");
 
         if (sortName != null) {
             if (sortName.equals("asc")) {
@@ -95,7 +95,7 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
         StringBuilder sql = new StringBuilder("SELECT COUNT(S.Id) FROM ")
                 .append(Synonym.class.getSimpleName())
                 .append(" S WHERE S.name LIKE :searchPhrase AND synonymId = :synonymId")
-                .append(" AND S.synonymId IS NOT NULL")
+                .append(" AND S.synonymId != 0")
                 .append(" ORDER BY S.Id DESC");
 
         Query query = getSession().createQuery(String.valueOf(sql));
@@ -156,6 +156,14 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
 
     @Override
     @Transactional
+    public void insertWord(Synonym synonym) {
+        LOG.info("[insertWord] Start: name = " + synonym.getName());
+        insert(synonym);
+        LOG.info("[insertWord] End");
+    }
+
+    @Override
+    @Transactional
     public void deleteById(Synonym synonym) {
         LOG.info("[deleteById] Start: id = " + synonym.getId());
         String sql = "DELETE FROM " + Synonym.class.getSimpleName() + " S WHERE S.id = :wordId OR S.synonymId = :wordId";
@@ -163,5 +171,23 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
         query.setParameter("wordId", synonym.getId());
         query.executeUpdate();
         LOG.info("[deleteById] End");
+    }
+
+    @Override
+    @Transactional
+    public int checkWordExist(Synonym synonym) {
+        LOG.info("[checkWordExist] Start: name = " + synonym.getName());
+
+        String sql = "FROM " + Synonym.class.getSimpleName() + " S WHERE S.name = :wordName";
+        Query query = getSession().createQuery(sql);
+        query.setParameter("wordName", synonym.getName());
+        Synonym result = (Synonym) query.uniqueResult();
+        if (result != null) {
+            LOG.info("[checkWordExist] End");
+            return result.getId();
+        }
+
+        LOG.info("[checkWordExist] End");
+        return 0;
     }
 }

@@ -1,4 +1,6 @@
 var originId = "";
+var isAddOrigin;
+var isAddSynonym;
 
 $(document).ready(function () {
     $("#div-synonyms").hide()
@@ -6,7 +8,7 @@ $(document).ready(function () {
     $("#divAddSynonyms").hide()
 
     // Table Origin
-    var grid = $("#data-table-origin").bootgrid({
+    $("#data-table-origin").bootgrid({
         ajax: true,
         post: function () {
             /* To accumulate custom parameter with the request object */
@@ -28,10 +30,10 @@ $(document).ready(function () {
                     + "</a>";
             },
             "commandsUpdate": function (column, row) {
-                return "<a class='btn btn-success btn-icon waves-effect waves-circle waves-float' "
-                    + "href='viewUpdateProduct?productId="
-                    + row.id
-                    + "'>"
+                return "<a class='btn btn-success btn-icon waves-effect waves-circle waves-float' onclick='showFormOrigin("
+                    + "`" + "Update Origin" + "`"
+                    + ",1"
+                    + ")'>"
                     + "<i class='zmdi zmdi-edit zmdi-hc-fw'>"
                     + "</i>"
                     + "</a>";
@@ -104,44 +106,54 @@ $(document).ready(function () {
     $("#data-table-synonym-footer .infoBar").addClass("col-sm-2");
     $("#data-table-synonym-footer .pagination").parent().removeClass("col-sm-6");
     $("#data-table-synonym-footer .pagination").parent().addClass("col-sm-10");
-
-
 });
 
 function showSynonyms(id, name) {
-    var header = $("#synonymHeader").text()
-    $("#synonymHeader").text(header + " of " + name);
+    $("#synonymHeader").text("Synonyms of " + name);
     $("#div-synonyms").show();
     originId = id;
     reloadTable("#data-table-synonym");
-    scrolltoSynonyms();
+    scrollToSynonyms();
 }
 
-function showFormOrigin(title) {
+function showFormOrigin(title, type) {
     $("#originTitle").text(title);
+    $("#div-origin-name").removeClass("has-error");
+    $("#error-origin").text("");
     $("#divAddOrigin").show();
+    if (type == 0) {
+        isAddOrigin = 0;
+    } else if (type == 1) {
+        isAddOrigin = 1;
+    }
 }
 
 function showFormSynonym(title) {
     $("#synonymTitle").text(title);
+    $("#div-synonym-name").removeClass("has-error");
+    $("#error-synonym").text("");
     $("#divAddSynonyms").show();
 }
 
 function hideFormOrigin() {
     $("#divAddOrigin").hide();
     $("#txtOriginName").val("");
+    $("#div-origin-name").removeClass("has-error");
+    $("#error-origin").text("");
 }
 
 function hideFormSynonym() {
     $("#divAddSynonyms").hide();
     $("#txtSynonymName").val("");
+    $("#div-synonym-name").removeClass("has-error");
+    $("#error-synonym").text("");
 }
 
 function reloadTable(tableId) {
     $(tableId).bootgrid('reload');
 }
 
-function scrolltoSynonyms() {
+function scrollToSynonyms() {
     $("#data-table-synonym-footer")[0].scrollIntoView();
 }
 
@@ -149,6 +161,35 @@ function showDeleteModal(id, type) {
     $('#deleteWordId').val(id);
     $('#wordType').val(type);
     $('#deleteModal').modal('show');
+}
+
+function addUpdateOrigin() {
+
+    if (validName("#txtOriginName", "#div-origin-name", "#error-origin", "Please enter word")) {
+
+        var wordName = $('#txtOriginName').val();
+        var data = {
+            "wordName": wordName,
+        };
+        if (isAddOrigin == 0) {
+            $.ajax({
+                type: "POST",
+                data: data,
+                async: false,
+                url: "addOrigin?" + tokenName + "=" + tokenValue,
+                success: function (data) {
+                    if (data.result == true) {
+                        notify("Add Successfully!", "info");
+                        reloadTable("#data-table-origin");
+                    } else {
+                        notify("Word Already Existed!", "warning");
+                    }
+                }
+            });
+        } else if (isAddOrigin == 1) {
+
+        }
+    }
 }
 
 function deleteWord() {
@@ -162,9 +203,9 @@ function deleteWord() {
         data: data,
         async: false,
         url: "deleteWord?" + tokenName + "=" + tokenValue,
-        success: function (result) {
+        success: function (data) {
             $('#deleteModal').modal('hide');
-            if (result == 'true') {
+            if (data.result == true) {
                 notify("Delete Successfully!", "info");
             }
             if ($('#wordType').val() == 0) {
@@ -175,4 +216,17 @@ function deleteWord() {
             }
         }
     });
+}
+
+function validName(fieldId, divId, errorId, emptyMessage) {
+    var value = $(fieldId).val();
+    if (value.length < 1) {
+        $(divId).addClass("has-error");
+        $(errorId).text(emptyMessage);
+        $(errorId).css("visibility", "visible");
+        return 0;
+    }
+    $(divId).removeClass("has-error");
+    $(errorId).text("");
+    return 1;
 }

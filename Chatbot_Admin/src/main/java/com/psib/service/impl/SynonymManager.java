@@ -81,6 +81,42 @@ public class SynonymManager implements ISynonymManager {
     }
 
     @Override
+    public int insertWord(String name) {
+        LOG.info("[insertWord] name = " + name);
+        Synonym synonym = new Synonym();
+        synonym.setName(name);
+        synonym.setSynonymId(0);
+        int id = synonymDao.checkWordExist(synonym);
+
+        if (id != 0) {
+            return 0;
+        }
+
+        synonymDao.insertWord(synonym);
+
+        LOG.info("[insertWord] End");
+        return 1;
+    }
+
+    @Override
+    public int insertWord(String name, int synonymId) {
+        LOG.info("[insertWord] name = " + name);
+        Synonym synonym = new Synonym();
+        synonym.setName(name);
+        synonym.setSynonymId(synonymId);
+        int id = synonymDao.checkWordExist(synonym);
+
+        if (id != 0) {
+            return 0;
+        }
+
+        synonymDao.insertWord(synonym);
+
+        LOG.info("[insertWord] End");
+        return 1;
+    }
+
+    @Override
     public void deleteWord(int deleteWordId) {
         LOG.info("[deleteProduct] Start: deleteWordId = " + deleteWordId);
         Synonym synonym = new Synonym();
