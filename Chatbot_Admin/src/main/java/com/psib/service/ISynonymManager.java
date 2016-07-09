@@ -9,5 +9,9 @@ public interface ISynonymManager {
     BootGirdDto getAllSynonymsForPaging(int current, int rowCount, String searchPhrase, String sortName,
                                         int originId);
 
+    int insertWord(String name);
+
+    int insertWord(String name, int synonymId);
+
     void deleteWord(int deleteWordId);
 }

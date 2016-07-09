@@ -43,19 +43,41 @@ public class SynonymController {
         return model;
     }
 
-    @RequestMapping(value = "/deleteWord", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/addOrigin", method = RequestMethod.POST)
     @ResponseBody
-    public String deleteProduct(@RequestParam(name = "deleteWordId") String deleteWordId) {
+    public HashMap<String, Object> addOrigin(@RequestParam(name = "wordName") String wordName) {
+        LOG.info("[addOrigin] Start");
+        HashMap<String, Object> response = new HashMap<>();
+        try {
+            int result = synonymManager.insertWord(wordName);
+            if (result == 0) {
+                response.put("result", false);
+            } else {
+                response.put("result", true);
+            }
+            LOG.info("[addOrigin] End");
+            return response;
+        } catch (DatabaseException e) {
+            LOG.error("[addOrigin] DatabaseException: " + e.getMessage());
+            return response;
+        }
+    }
+
+    @RequestMapping(value = "/deleteWord", method = RequestMethod.POST)
+    @ResponseBody
+    public HashMap<String, Object> deleteProduct(@RequestParam(name = "deleteWordId") String deleteWordId) {
         LOG.info("[deleteWord] Start");
+        HashMap<String, Object> response = new HashMap<>();
         try {
             synonymManager.deleteWord(Integer.parseInt(deleteWordId));
+            response.put("result", true);
             LOG.info("[deleteWord] End");
-            return JsonParser.toJson(true);
+            return response;
         } catch (DatabaseException e) {
             LOG.error("[deleteProduct] DatabaseException: " + e.getMessage());
-            return JsonParser.toJson(false);
+            response.put("result", false);
+            return response;
         }
-
     }
 
     @RequestMapping(value = "/loadOrigin", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
