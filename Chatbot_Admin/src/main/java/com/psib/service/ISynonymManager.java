@@ -6,5 +6,8 @@ public interface ISynonymManager {
 
     BootGirdDto getAllOriginForPaging(int current, int rowCount, String searchPhrase, String sortName);
 
-    BootGirdDto getAllSynonymsForPaging(int current, int rowCount, String searchPhrase, String sortName);
+    BootGirdDto getAllSynonymsForPaging(int current, int rowCount, String searchPhrase, String sortName,
+                                        int originId);
+
+    void deleteWord(int deleteWordId);
 }

@@ -4,6 +4,10 @@ $(document).ready(function () {
         notify("Add Product Successfully!", "info");
     }
 
+    if (deleteResult == 'true') {
+        notify("Delete Product Successfully!", "info");
+    }
+    
     $("#data-table-basic").bootgrid({
         ajax: true,
         post: function () {
@@ -51,8 +55,7 @@ $(document).ready(function () {
     });
 });
 
-function showDeleteModal(productId, addressName) {
+function showDeleteModal(productId) {
     $('#deleteProductId').val(productId);
-    $('#deleteAddressName').val(addressName);
     $('#deleteModal').modal('show');
 }

@@ -5,6 +5,7 @@
     var tokenName = '${_csrf.parameterName}';
     var tokenValue = '${_csrf.token}';
     var addResult = '${addResult}';
+    var deleteResult = '${deleteResult}';
 </script>
 <script src="${pageContext.request.contextPath}/resources/assets/scripts/viewProduct.js"></script>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -77,22 +78,21 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Delete Product</h4>
+                <h4 class="modal-title"><spring:message code="text_delete_product"/></h4>
             </div>
             <div class="modal-body" style="border-bottom: 0px">
                 <div>
-                    <h4>Are you sure?</h4>
+                    <h4><spring:message code="text_confirm_delete"/></h4>
                 </div>
             </div>
             <div class="modal-footer">
                 <form action="deleteProduct" method="POST">
-                    <button type="button" class="btn btn-danger"
-                            data-dismiss="modal">Cancel
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <spring:message code="btn_cancel"/>
                     </button>
 
-                    <button type="submit" class="btn btn-success"
-                            onclick="">
-                        Delete
+                    <button type="submit" class="btn btn-success">
+                        <spring:message code="btn_delete"/>
                     </button>
                     <input id="deleteProductId" name="deleteProductId" type="hidden"/>
                     <input type="hidden" name="${_csrf.parameterName}"

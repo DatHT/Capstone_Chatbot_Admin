@@ -50,16 +50,18 @@ public class SynonymManager implements ISynonymManager {
     }
 
     @Override
-    public BootGirdDto getAllSynonymsForPaging(int current, int rowCount, String searchPhrase, String sortName) {
+    public BootGirdDto getAllSynonymsForPaging(int current, int rowCount, String searchPhrase, String sortName,
+                                               int originId) {
         LOG.info(new StringBuilder("[getAllSynonymsForPaging] Start: current = ").append(current)
                 .append(" ,rowCount = ").append(rowCount)
                 .append(" ,searchPhrase = ").append(searchPhrase)
-                .append(" sortName = ").append(sortName));
+                .append(" sortName = ").append(sortName)
+                .append(", originId = ").append(originId));
 
         List<Synonym> list;
         int start = current * rowCount - rowCount;
 
-        list = synonymDao.getSynonymsBySearchPhraseAndSort(searchPhrase, sortName, rowCount, start);
+        list = synonymDao.getSynonymsBySearchPhraseAndSort(searchPhrase, sortName, rowCount, start, originId);
 
         List<SynonymJsonDto> synonymJsonDtoList = new ArrayList<>();
         long size = list.size();
@@ -72,9 +74,18 @@ public class SynonymManager implements ISynonymManager {
         dto.setCurrent(current);
         dto.setRowCount(rowCount);
         dto.setRows(synonymJsonDtoList);
-        dto.setTotal(synonymDao.countSynonymsBySearchPhrase(searchPhrase));
+        dto.setTotal(synonymDao.countSynonymsBySearchPhrase(searchPhrase, originId));
 
         LOG.info("[getAllSynonymsForPaging] End");
         return dto;
+    }
+
+    @Override
+    public void deleteWord(int deleteWordId) {
+        LOG.info("[deleteProduct] Start: deleteWordId = " + deleteWordId);
+        Synonym synonym = new Synonym();
+        synonym.setId(deleteWordId);
+        synonymDao.deleteById(synonym);
+        LOG.info("[deleteWordId] End");
     }
 }

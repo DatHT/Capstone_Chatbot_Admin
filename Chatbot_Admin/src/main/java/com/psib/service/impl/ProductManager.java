@@ -242,9 +242,11 @@ public class ProductManager implements IProductManager {
 
     @Override
     public void deleteProduct(String productId) {
+        LOG.info("[deleteProduct] Start: productId = " + productId);
         ProductDetail productDetail = new ProductDetail();
         productDetail.setProductId(Long.parseLong(productId));
         productDetailDao.deleteById(productDetail);
+        LOG.info("[deleteProduct] End");
     }
 
     private long insertAddress(Address address, double latitude, double longitude, String restaurant, String district) {
