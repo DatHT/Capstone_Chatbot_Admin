@@ -186,28 +186,28 @@ public class CommonUtils {
 				district = listAddress[listAddress.length - 1];
 			}
 			if (district.contains("Q.")) {
-				district = district.replace("Q.", "Quáº­n ");
+				district = district.replace("Q.", "Quận ");
 			}
 			if (district.contains("Q.") || district.contains("Qu") || district.contains("q.")
 					|| district.contains("qu")) {
 				return district;
 			} else {
-				district = "Quáº­n" + district;
+				district = "Quận" + district;
 			}
 		}
 		if (listAddress.length == 2) {
 			district = listAddress[listAddress.length - 1];
 			if (district.contains("Q.")) {
-				district = district.replace("Q.", "Quáº­n ");
+				district = district.replace("Q.", "Quận ");
 			}
 		}
 		if (listAddress.length == 3) {
 			district = listAddress[listAddress.length - 2];
-			if(district.contains("P.")){
+			if(district.contains("P.")||district.toLowerCase().contains("phường")){
 				district = listAddress[listAddress.length - 1];
 			}
 			if (district.contains("Q.")) {
-				district = district.replace("Q.", "Quáº­n ");
+				district = district.replace("Q.", "Quận ");
 			}
 		}
 		if (listAddress.length == 4) {
@@ -216,13 +216,13 @@ public class CommonUtils {
 				district = listAddress[listAddress.length - 2];
 			}
 			if (district.contains("Q.")) {
-				district = district.replace("Q.", "Quáº­n ");
+				district = district.replace("Q.", "Quận ");
 			}
 		}
 		if (listAddress.length == 6) {
 			district = listAddress[listAddress.length - 3];
 			if (district.contains("Q.")) {
-				district = district.replace("Q.", "Quáº­n ");
+				district = district.replace("Q.", "Quận ");
 			}
 		}
 //		else {
