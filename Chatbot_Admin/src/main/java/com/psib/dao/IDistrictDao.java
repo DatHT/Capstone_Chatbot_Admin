@@ -13,5 +13,5 @@ public interface IDistrictDao {
 
 	District getDistrictByName(String name);
 	
-	public boolean checkExitDistrict(String name);
+	public long checkExitDistrict(String name);
 }

@@ -23,7 +23,7 @@ public class DistrictManager implements IDistrictManager{
 
 	@Override
 	@Transactional
-	public boolean checkExitDistrict(String name) {
+	public long checkExitDistrict(String name) {
 		// TODO Auto-generated method stub
 		return districtDao.checkExitDistrict(name);
 	}

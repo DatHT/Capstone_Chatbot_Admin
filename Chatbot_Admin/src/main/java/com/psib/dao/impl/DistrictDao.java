@@ -64,15 +64,15 @@ public class DistrictDao extends BaseDao<District, Long> implements IDistrictDao
     }
     @Override
     @Transactional
-	public boolean checkExitDistrict(String name) {
+	public long checkExitDistrict(String name) {
 		// TODO Auto-generated method stub
 		String sql = "from District where name =:name";
 		Query query = getSession().createQuery(sql);
 		query.setParameter("name", name);
 		District result = (District) query.setMaxResults(1).uniqueResult();
 		if(result!=null){
-			return true;			
+			return result.getId();			
 		}
-		return false;
+		return 0;
 	}
 }

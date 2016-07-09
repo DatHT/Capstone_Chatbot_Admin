@@ -34,6 +34,8 @@
 		<div class="card scroller" style="">
 			<div class="card-header">
 				<h2>Please Select An Element And Get XPath</h2>
+				<div>
+				</div>
 			</div>
 			<div class="progressRecipe card-body card-padding form-group">
 				<div class="circle done">
@@ -113,7 +115,7 @@
 				if ($(this).scrollTop() >= scroller_anchor
 						&& $('.scroller').css('position') != 'fixed') { // Change the CSS of the scroller to hilight it and fix it at the top of the screen.
 					$('.scroller').css({
-						'width' : '76%',
+						'width' : '78.5%',
 						'position' : 'fixed',
 						'z-index' : '100',
 						'top' : '0px'

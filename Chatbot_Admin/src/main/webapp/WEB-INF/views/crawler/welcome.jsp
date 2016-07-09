@@ -110,36 +110,36 @@
 							</div>
 						</div>
 					</form>
-					<!-- Modal -->
-					<form action="staticParse">
-						<div aria-hidden="true" aria-labelledby="myModalLabel"
-							role="dialog" tabindex="-1" id="parsing" class="modal fade">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h4 class="modal-title">Your system is parsing now</h4>
-									</div>
-									<div class="modal-body">
-										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									</div>
-									<div class="modal-footer">
+<!-- 					Modal -->
+<!-- 					<form action="staticParse"> -->
+<!-- 						<div aria-hidden="true" aria-labelledby="myModalLabel" -->
+<!-- 							role="dialog" tabindex="-1" id="parsing" class="modal fade"> -->
+<!-- 							<div class="modal-dialog"> -->
+<!-- 								<div class="modal-content"> -->
+<!-- 									<div class="modal-header"> -->
+<!-- 										<h4 class="modal-title">Your system is parsing now</h4> -->
+<!-- 									</div> -->
+<!-- 									<div class="modal-body"> -->
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<!-- 									</div> -->
+<!-- 									<div class="modal-footer"> -->
 
-										<button class="btn btn-primary" type="submit" value="STOP"
-											name="btnAction">STOP</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</form>
+<!-- 										<button class="btn btn-primary" type="submit" value="STOP" -->
+<!-- 											name="btnAction">STOP</button> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</form> -->
 					<!-- modal -->
 				</div>
 				<!-- End  Hover Rows  -->
@@ -191,17 +191,9 @@
 							<div class="form-group">
 								<button type="submit" data-toggle="modal" href="#parsing"
 									class="btn btn-primary" style="margin-top: 8px"
-									value="DynamicParse" name="btnAction">DynamicParse</button>
+									value="DynamicParse" name="btnAction" onclick="showModal()">DynamicParse</button>
 							</div>
-
-						</div>
-					</form>
-					<!-- Modal -->
-					<form action="dynamicParse">
-						<div aria-hidden="true" aria-labelledby="myModalLabel"
-							role="dialog" tabindex="-1" id="parsing" class="modal fade">
-							<div class="modal-dialog">
-								<div class="modal-content">
+							<div class="" style="display:none" id="loading_image">
 									<div class="modal-header">
 										<h4 class="modal-title">Your system is parsing now</h4>
 									</div>
@@ -217,15 +209,40 @@
 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
 									</div>
-									<div class="modal-footer">
-
-										<button class="btn btn-primary" type="submit" value="STOP"
-											name="btnAction">STOP</button>
-									</div>
 								</div>
-							</div>
+
 						</div>
 					</form>
+					<!-- Modal -->
+<!-- 					<form action="dynamicParse"> -->
+<!-- 						<div aria-hidden="true" aria-labelledby="myModalLabel" -->
+<!-- 							role="dialog" tabindex="-1" id="parsing" class="modal fade"> -->
+<!-- 							<div class="modal-dialog"> -->
+<!-- 								<div class="modal-content"> -->
+<!-- 									<div class="modal-header"> -->
+<!-- 										<h4 class="modal-title">Your system is parsing now</h4> -->
+<!-- 									</div> -->
+<!-- 									<div class="modal-body"> -->
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
+<!-- 									</div> -->
+<!-- 									<div class="modal-footer"> -->
+
+<!-- 										<button class="btn btn-primary" type="submit" value="STOP" -->
+<!-- 											name="btnAction">STOP</button> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</form> -->
 					<!-- modal -->
 				</div>
 			</div>
@@ -251,7 +268,11 @@
 			return true; // allow regular form submission
 		});
 	</script>
-
+	<script>
+	function showModal() {
+		document.getElementById("loading_image").style.display='block';
+	}
+	</script>
 	<script>
 		function changeNoPage() {
 			document.getElementById("input-no-page").value = "";
