@@ -89,16 +89,17 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
 
     @Override
     @Transactional
-    public long countSynonymsBySearchPhrase(String searchPhrase) {
-        LOG.info("[countSynonymsBySearchPhrase] Start: searchPhrase = " + searchPhrase);
-
+    public long countSynonymsBySearchPhrase(String searchPhrase, int originId) {
+        LOG.info(new StringBuilder("[countSynonymsBySearchPhrase] Start: searchPhrase = ").append(searchPhrase)
+                .append(", originId = ").append(originId));
         StringBuilder sql = new StringBuilder("SELECT COUNT(S.Id) FROM ")
                 .append(Synonym.class.getSimpleName())
-                .append(" S WHERE S.name LIKE :searchPhrase")
+                .append(" S WHERE S.name LIKE :searchPhrase AND synonymId = :synonymId")
                 .append(" AND S.synonymId IS NOT NULL")
                 .append(" ORDER BY S.Id DESC");
 
         Query query = getSession().createQuery(String.valueOf(sql));
+        query.setParameter("synonymId", originId);
         query.setParameter("searchPhrase", "%" + searchPhrase + "%");
 
         Long count = (Long) query.uniqueResult();
@@ -109,7 +110,8 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
 
     @Override
     @Transactional
-    public List<Synonym> getSynonymsBySearchPhraseAndSort(String searchPhrase, String sortName, int maxResult, int skipResult) {
+    public List<Synonym> getSynonymsBySearchPhraseAndSort(String searchPhrase, String sortName, int maxResult
+            , int skipResult, int originId) {
         LOG.info(new StringBuilder("[getSynonymsBySearchPhraseAndSort] Start: searchPhrase = ").append(searchPhrase)
                 .append(" ,sortName = ").append(sortName)
                 .append(",maxResult = ").append(maxResult)
@@ -117,7 +119,7 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
 
         StringBuilder sql = new StringBuilder("SELECT S.Id, S.name FROM ")
                 .append(Synonym.class.getSimpleName())
-                .append(" S WHERE S.name LIKE :searchPhrase")
+                .append(" S WHERE S.name LIKE :searchPhrase AND synonymId = :synonymId")
                 .append(" AND S.synonymId IS NOT NULL");
 
         if (sortName != null) {
@@ -133,6 +135,7 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
         }
 
         Query query = getSession().createQuery(String.valueOf(sql));
+        query.setParameter("synonymId", originId);
         query.setParameter("searchPhrase", "%" + searchPhrase + "%");
         query.setFirstResult(skipResult);
         query.setMaxResults(maxResult);
@@ -149,5 +152,16 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
 
         LOG.info("[getSynonymsBySearchPhraseAndSort] End");
         return result;
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Synonym synonym) {
+        LOG.info("[deleteById] Start: id = " + synonym.getId());
+        String sql = "DELETE FROM " + Synonym.class.getSimpleName() + " S WHERE S.id = :wordId OR S.synonymId = :wordId";
+        Query query = getSession().createQuery(sql);
+        query.setParameter("wordId", synonym.getId());
+        query.executeUpdate();
+        LOG.info("[deleteById] End");
     }
 }

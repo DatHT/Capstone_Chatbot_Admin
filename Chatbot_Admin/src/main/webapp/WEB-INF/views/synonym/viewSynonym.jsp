@@ -17,7 +17,7 @@
 </div>
 
 <%--Origin--%>
-<div class="row">
+<div id="div-origin" class="row">
     <div class="col-sm-8">
         <div class="card">
             <div class="card-header">
@@ -25,6 +25,10 @@
             </div>
 
             <div class="card-body card-padding">
+                <a class="btn btn-primary waves-effect"
+                   onclick="showFormOrigin('<spring:message code="synonym_header_add_origin"/>')">
+                    <spring:message code="btn_add"/>
+                </a>
                 <div class="row m-t-20">
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -39,6 +43,21 @@
                                         <th data-column-id="name">
                                             <spring:message code="synonym_word"/>
                                         </th>
+                                        <th data-column-id="synonym" data-formatter="commandsSynonym"
+                                            data-sortable="false"
+                                            data-align="center" data-header-align="center">
+                                            <spring:message code="btn_synonyms"/>
+                                        </th>
+                                        <th data-column-id="update" data-formatter="commandsUpdate"
+                                            data-sortable="false"
+                                            data-align="center" data-header-align="center">
+                                            <spring:message code="btn_update"/>
+                                        </th>
+                                        <th data-column-id="delete" data-formatter="commandsDelete"
+                                            data-sortable="false"
+                                            data-align="center" data-header-align="center">
+                                            <spring:message code="btn_delete"/>
+                                        </th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -54,9 +73,10 @@
     </div>
 
     <div class="col-sm-4">
+        <%--Add Origin--%>
         <div id="divAddOrigin" class="card">
             <div class="card-header">
-                <h2><spring:message code="synonym_header_add_origin"/></h2>
+                <h2 id="originTitle"></h2>
             </div>
             <div class="card-body card-padding">
                 <dt class="p-t-10">
@@ -64,12 +84,15 @@
                 </dt>
                 <dd class="p-t-10">
                     <div class="fg-line">
-                        <input type="text" class="form-control">
+                        <input id="txtOriginName" type="text" class="form-control">
                     </div>
                 </dd>
                 <div class="m-t-30">
                     <button type="submit" class="btn btn-success">
                         <spring:message code="btn_save"/>
+                    </button>
+                    <button class="btn btn-danger" onclick="hideFormOrigin()">
+                        <spring:message code="btn_cancel"/>
                     </button>
                 </div>
             </div>
@@ -78,14 +101,18 @@
 </div>
 
 <%--Synonyms--%>
-<div class="row">
+<div id="div-synonyms" class="row">
     <div class="col-sm-8">
         <div class="card">
             <div class="card-header">
-                <h2><spring:message code="synonym_header_synonyms"/></h2>
+                <h2 id="synonymHeader"><spring:message code="synonym_header_synonyms"/></h2>
             </div>
 
             <div class="card-body card-padding">
+                <a class="btn btn-primary waves-effect"
+                   onclick="showFormSynonym('<spring:message code="synonym_header_add_synonym"/>')">
+                    <spring:message code="btn_add"/>
+                </a>
                 <div class="row m-t-20">
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -100,6 +127,16 @@
                                         <th data-column-id="name">
                                             <spring:message code="synonym_word"/>
                                         </th>
+                                        <th data-column-id="update" data-formatter="commandsUpdate"
+                                            data-sortable="false"
+                                            data-align="center" data-header-align="center">
+                                            <spring:message code="btn_update"/>
+                                        </th>
+                                        <th data-column-id="delete" data-formatter="commandsDelete"
+                                            data-sortable="false"
+                                            data-align="center" data-header-align="center">
+                                            <spring:message code="btn_delete"/>
+                                        </th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -114,9 +151,10 @@
         </div>
     </div>
     <div class="col-sm-4">
+        <%--Add Synonym--%>
         <div class="card" id="divAddSynonyms">
             <div class="card-header">
-                <h2><spring:message code="synonym_header_add_synonym"/></h2>
+                <h2 id="synonymTitle"></h2>
             </div>
             <div class="card-body card-padding">
                 <dt class="p-t-10">
@@ -124,15 +162,54 @@
                 </dt>
                 <dd class="p-t-10">
                     <div class="fg-line">
-                        <input type="text" class="form-control">
+                        <input id="txtSynonymName" type="text" class="form-control">
                     </div>
                 </dd>
                 <div class="m-t-30">
                     <button type="submit" class="btn btn-success">
                         <spring:message code="btn_save"/>
                     </button>
+                    <button class="btn btn-danger" onclick="hideFormSynonym()">
+                        <spring:message code="btn_cancel"/>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<!-- Modals-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><spring:message code="text_delete_word"/></h4>
+            </div>
+            <div class="modal-body" style="border-bottom: 0px">
+                <div>
+                    <h4><spring:message code="text_confirm_delete"/></h4>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form action="deleteWord" method="POST">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <spring:message code="btn_cancel"/>
+                    </button>
+
+                    <button type="button" class="btn btn-success" onclick="deleteWord()">
+                        <spring:message code="btn_delete"/>
+                    </button>
+                    <input id="deleteWordId" name="deleteWordId" type="hidden"/>
+                    <input id="wordType" name="wordType" type="hidden"/>
+                    <input type="hidden" name="${_csrf.parameterName}"
+                           value="${_csrf.token}"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->

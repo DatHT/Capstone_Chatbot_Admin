@@ -10,7 +10,10 @@ public interface ISynonymDao {
 
     List<Synonym> getOriginBySearchPhraseAndSort(String searchPhrase, String sortName, int maxResult, int skipResult);
 
-    long countSynonymsBySearchPhrase(String searchPhrase);
+    long countSynonymsBySearchPhrase(String searchPhrase, int originId);
 
-    List<Synonym> getSynonymsBySearchPhraseAndSort(String searchPhrase, String sortName, int maxResult, int skipResult);
+    List<Synonym> getSynonymsBySearchPhraseAndSort(String searchPhrase, String sortName, int maxResult, int skipResult
+            , int originId);
+
+    void deleteById(Synonym synonym);
 }
