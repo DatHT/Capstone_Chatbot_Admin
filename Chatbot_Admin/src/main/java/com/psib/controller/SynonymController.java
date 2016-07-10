@@ -63,6 +63,27 @@ public class SynonymController {
         }
     }
 
+    @RequestMapping(value = "/updateOrigin", method = RequestMethod.POST)
+    @ResponseBody
+    public HashMap<String, Object> updateOrigin(@RequestParam(name = "wordId") String wordId,
+                                                @RequestParam(name = "wordName") String wordName) {
+        LOG.info("[updateOrigin] Start");
+        HashMap<String, Object> response = new HashMap<>();
+        try {
+            int result = synonymManager.updateWord(Integer.parseInt(wordId), wordName, 0);
+            if (result == 0) {
+                response.put("result", false);
+            } else {
+                response.put("result", true);
+            }
+            LOG.info("[updateOrigin] End");
+            return response;
+        } catch (DatabaseException e) {
+            LOG.error("[updateOrigin] DatabaseException: " + e.getMessage());
+            return response;
+        }
+    }
+
     @RequestMapping(value = "/deleteWord", method = RequestMethod.POST)
     @ResponseBody
     public HashMap<String, Object> deleteProduct(@RequestParam(name = "deleteWordId") String deleteWordId) {

@@ -17,7 +17,9 @@ public interface ISynonymDao {
 
     void insertWord(Synonym synonym);
 
+    void updateWord(Synonym synonym);
+
     void deleteById(Synonym synonym);
 
-    int checkWordExist(Synonym synonym);
+    Synonym checkWordExist(Synonym synonym);
 }

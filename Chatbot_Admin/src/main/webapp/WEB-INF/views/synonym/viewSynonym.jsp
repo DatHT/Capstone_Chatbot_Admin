@@ -26,7 +26,7 @@
 
             <div class="card-body card-padding">
                 <a class="btn btn-primary waves-effect"
-                   onclick="showFormOrigin('<spring:message code="synonym_header_add_origin"/>',0)">
+                   onclick="showFormOrigin('<spring:message code="synonym_header_add_origin"/>',0,0,'')">
                     <spring:message code="btn_add"/>
                 </a>
                 <div class="row m-t-20">
@@ -217,3 +217,5 @@
     </div>
 </div>
 <!-- End modal -->
+
+<input id="originUpdateId" type="hidden"/>
