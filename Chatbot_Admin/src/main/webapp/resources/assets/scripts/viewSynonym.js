@@ -75,10 +75,10 @@ $(document).ready(function () {
         url: "loadSynonyms?" + tokenName + "=" + tokenValue,
         formatters: {
             "commandsUpdate": function (column, row) {
-                return "<a class='btn btn-success btn-icon waves-effect waves-circle waves-float' "
-                    + "href='viewUpdateProduct?productId="
-                    + row.id
-                    + "'>"
+                return "<a class='btn btn-success btn-icon waves-effect waves-circle waves-float' onclick='showFormSynonym("
+                    + "`" + "Update Synonym" + "`"
+                    + ",1" + "," + row.id + "," + "`" + row.name + "`"
+                    + ")'>"
                     + "<i class='zmdi zmdi-edit zmdi-hc-fw'>"
                     + "</i>"
                     + "</a>";
@@ -131,11 +131,19 @@ function showFormOrigin(title, type, id, wordName) {
     }
 }
 
-function showFormSynonym(title) {
+function showFormSynonym(title, type, id, wordName) {
     $("#synonymTitle").text(title);
     $("#div-synonym-name").removeClass("has-error");
     $("#error-synonym").text("");
     $("#divAddSynonyms").show();
+    if (type == 0) {
+        isAddSynonym = 0;
+        $('#txtSynonymName').val("");
+    } else if (type == 1) {
+        isAddSynonym = 1;
+        $("#synonymUpdateId").val(id);
+        $('#txtSynonymName').val(wordName);
+    }
 }
 
 function hideFormOrigin() {
@@ -203,6 +211,59 @@ function addUpdateOrigin() {
                 type: "POST",
                 data: data,
                 url: "updateOrigin?" + tokenName + "=" + tokenValue,
+                success: function (data) {
+                    if (data.result == true) {
+                        notify("Update Successfully!", "info");
+                        reloadTable("#data-table-origin");
+                        reloadTable("#data-table-synonym");
+                    } else {
+                        notify("Word Already Existed!", "warning");
+                    }
+                }
+            });
+        }
+    }
+}
+
+function addUpdateSynonym() {
+
+    if (validName("#txtSynonymName", "#div-synonym-name", "#error-synonym", "Please enter word")) {
+
+        var wordName = $('#txtSynonymName').val();
+
+        if (isAddSynonym == 0) {
+            var data = {
+                "wordName": wordName,
+                "originId": originId,
+            };
+
+            $.ajax({
+                type: "POST",
+                data: data,
+                url: "addSynonym?" + tokenName + "=" + tokenValue,
+                success: function (data) {
+                    if (data.result == true) {
+                        notify("Add Successfully!", "info");
+                        reloadTable("#data-table-synonym");
+                    } else {
+                        notify("Word Already Existed!", "warning");
+                    }
+                }
+            });
+        } else if (isAddSynonym == 1) {
+
+            var wordId = $("#synonymUpdateId").val();
+
+            var data = {
+                "wordId": wordId,
+                "wordName": wordName,
+                "originId": originId,
+            };
+
+            $.ajax({
+                type: "POST",
+                data: data,
+                url: "updateSynonym?" + tokenName + "=" + tokenValue,
                 success: function (data) {
                     if (data.result == true) {
                         notify("Update Successfully!", "info");
