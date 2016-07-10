@@ -48,13 +48,16 @@
 									<span class="labelRecipe">0</span> <span class="title">Welcome</span>
 								</div>
 								<span class="bar half"></span>
+								<span class="bar"></span>
 								<div class="circle active">
-									<span class="labelRecipe">1</span> <span class="title">Name</span>
+									<span class="labelRecipe">1</span> <span class="title" style="margin-left:-30px"s>RestaurantName</span>
 								</div>
+								<span class="bar"></span>
 								<span class="bar"></span>
 								<div class="circle">
 									<span class="labelRecipe">2</span> <span class="title">Address</span>
 								</div>
+								<span class="bar"></span>
 								<span class="bar"></span>
 								<div class="circle">
 									<span class="labelRecipe">3</span> <span class="title">UserRate</span>

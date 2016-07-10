@@ -42,17 +42,22 @@
 					<span class="labelRecipe">0</span> <span class="title">Welcome</span>
 				</div>
 				<span class="bar half"></span>
+				<span class="bar"></span>
 				<div class="circle active">
-					<span class="labelRecipe">1</span> <span class="title">EachProduct</span>
+					<span class="labelRecipe">1</span> <span class="title" style="margin-left:-20px">DescriptionLink</span>
 				</div>
 				<span class="bar"></span>
-				<div class="circle">
-					<span class="labelRecipe">2</span> <span class="title">FoodName</span>
-				</div>
 				<span class="bar"></span>
 				<div class="circle">
-					<span class="labelRecipe">3</span> <span class="title">Image</span>
+					<span class="labelRecipe">2</span> <span class="title" style="margin-left:-20px">ProductName</span>
 				</div>
+				<span class="bar"></span>
+				<span class="bar"></span>
+				<div class="circle">
+					<span class="labelRecipe">3</span>
+					<span class="title" style="margin-left:-20px">ProductImage</span>
+				</div>
+				<span class="bar"></span>
 				<span class="bar"></span>
 				<div class="circle">
 					<span class="labelRecipe">4</span> <span class="title">NextPage</span>
