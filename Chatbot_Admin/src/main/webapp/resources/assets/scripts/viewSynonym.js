@@ -32,7 +32,7 @@ $(document).ready(function () {
             "commandsUpdate": function (column, row) {
                 return "<a class='btn btn-success btn-icon waves-effect waves-circle waves-float' onclick='showFormOrigin("
                     + "`" + "Update Origin" + "`"
-                    + ",1"
+                    + ",1" + "," + row.id + "," + "`" + row.name + "`"
                     + ")'>"
                     + "<i class='zmdi zmdi-edit zmdi-hc-fw'>"
                     + "</i>"
@@ -116,15 +116,18 @@ function showSynonyms(id, name) {
     scrollToSynonyms();
 }
 
-function showFormOrigin(title, type) {
+function showFormOrigin(title, type, id, wordName) {
     $("#originTitle").text(title);
     $("#div-origin-name").removeClass("has-error");
     $("#error-origin").text("");
     $("#divAddOrigin").show();
     if (type == 0) {
         isAddOrigin = 0;
+        $('#txtOriginName').val("");
     } else if (type == 1) {
         isAddOrigin = 1;
+        $("#originUpdateId").val(id);
+        $('#txtOriginName').val(wordName);
     }
 }
 
@@ -168,14 +171,15 @@ function addUpdateOrigin() {
     if (validName("#txtOriginName", "#div-origin-name", "#error-origin", "Please enter word")) {
 
         var wordName = $('#txtOriginName').val();
-        var data = {
-            "wordName": wordName,
-        };
+
         if (isAddOrigin == 0) {
+            var data = {
+                "wordName": wordName,
+            };
+
             $.ajax({
                 type: "POST",
                 data: data,
-                async: false,
                 url: "addOrigin?" + tokenName + "=" + tokenValue,
                 success: function (data) {
                     if (data.result == true) {
@@ -188,6 +192,27 @@ function addUpdateOrigin() {
             });
         } else if (isAddOrigin == 1) {
 
+            var wordId = $("#originUpdateId").val();
+
+            var data = {
+                "wordId": wordId,
+                "wordName": wordName,
+            };
+
+            $.ajax({
+                type: "POST",
+                data: data,
+                url: "updateOrigin?" + tokenName + "=" + tokenValue,
+                success: function (data) {
+                    if (data.result == true) {
+                        notify("Update Successfully!", "info");
+                        reloadTable("#data-table-origin");
+                        reloadTable("#data-table-synonym");
+                    } else {
+                        notify("Word Already Existed!", "warning");
+                    }
+                }
+            });
         }
     }
 }
@@ -201,7 +226,6 @@ function deleteWord() {
     $.ajax({
         type: "POST",
         data: data,
-        async: false,
         url: "deleteWord?" + tokenName + "=" + tokenValue,
         success: function (data) {
             $('#deleteModal').modal('hide');

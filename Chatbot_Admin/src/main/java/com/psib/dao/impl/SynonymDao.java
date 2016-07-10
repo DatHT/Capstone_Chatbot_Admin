@@ -164,6 +164,14 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
 
     @Override
     @Transactional
+    public void updateWord(Synonym synonym) {
+        LOG.info("[updateWord] Start: name = " + synonym.getName());
+        update(synonym);
+        LOG.info("[updateWord] End");
+    }
+
+    @Override
+    @Transactional
     public void deleteById(Synonym synonym) {
         LOG.info("[deleteById] Start: id = " + synonym.getId());
         String sql = "DELETE FROM " + Synonym.class.getSimpleName() + " S WHERE S.id = :wordId OR S.synonymId = :wordId";
@@ -175,19 +183,13 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
 
     @Override
     @Transactional
-    public int checkWordExist(Synonym synonym) {
+    public Synonym checkWordExist(Synonym synonym) {
         LOG.info("[checkWordExist] Start: name = " + synonym.getName());
-
         String sql = "FROM " + Synonym.class.getSimpleName() + " S WHERE S.name = :wordName";
         Query query = getSession().createQuery(sql);
         query.setParameter("wordName", synonym.getName());
         Synonym result = (Synonym) query.uniqueResult();
-        if (result != null) {
-            LOG.info("[checkWordExist] End");
-            return result.getId();
-        }
-
         LOG.info("[checkWordExist] End");
-        return 0;
+        return result;
     }
 }

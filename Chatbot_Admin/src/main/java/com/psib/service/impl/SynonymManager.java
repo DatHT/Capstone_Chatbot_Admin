@@ -86,9 +86,9 @@ public class SynonymManager implements ISynonymManager {
         Synonym synonym = new Synonym();
         synonym.setName(name);
         synonym.setSynonymId(0);
-        int id = synonymDao.checkWordExist(synonym);
+        Synonym tmp = synonymDao.checkWordExist(synonym);
 
-        if (id != 0) {
+        if (tmp != null) {
             return 0;
         }
 
@@ -104,15 +104,37 @@ public class SynonymManager implements ISynonymManager {
         Synonym synonym = new Synonym();
         synonym.setName(name);
         synonym.setSynonymId(synonymId);
-        int id = synonymDao.checkWordExist(synonym);
 
-        if (id != 0) {
+        Synonym tmp = synonymDao.checkWordExist(synonym);
+
+        if (tmp != null) {
             return 0;
         }
 
         synonymDao.insertWord(synonym);
 
         LOG.info("[insertWord] End");
+        return 1;
+    }
+
+    @Override
+    public int updateWord(int id, String name, int synonymId) {
+        LOG.info(new StringBuilder("[updateWord] Start: id = ").append(id)
+                .append(" ,name = ").append(name)
+                .append(" ,synonymId = ").append(synonymId));
+        Synonym synonym = new Synonym();
+        synonym.setId(id);
+        synonym.setName(name);
+        synonym.setSynonymId(synonymId);
+        Synonym tmp = synonymDao.checkWordExist(synonym);
+
+        if (tmp != null) {
+            return 0;
+        }
+
+        synonymDao.updateWord(synonym);
+
+        LOG.info("[updateWord] End");
         return 1;
     }
 

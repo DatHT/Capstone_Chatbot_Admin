@@ -13,5 +13,7 @@ public interface ISynonymManager {
 
     int insertWord(String name, int synonymId);
 
+    int updateWord(int id, String name, int synonymId);
+
     void deleteWord(int deleteWordId);
 }
