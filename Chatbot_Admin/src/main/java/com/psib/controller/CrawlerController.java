@@ -981,10 +981,19 @@ public class CrawlerController extends HttpServlet {
 			String filePath = servletContext.getRealPath("/resources/");
 			System.out.println(filePath);
 			String htmlFilePath = filePath + "tmp.html";
-			WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
-			driver.get(str);
-
-			String pageSource = driver.getPageSource();
+			String pageSource = "";
+			WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, true);
+			try {
+				driver.get(str);
+				String javascript = "return arguments[0].innerHTML";
+				pageSource = (String) ((JavascriptExecutor) driver).executeScript(javascript,
+						driver.findElement(By.tagName("html")));
+				pageSource = "<html>" + pageSource + "</html>";
+			} catch (Exception ex) {
+				System.out.print("Cannot load this url");
+				session.setAttribute("MESSAGE", "Cannot load this url");
+				return "errorPage";
+			}
 
 			String source = CommonUtils.makeContentPage(pageSource, result);
 			// String source = pageSource;
@@ -1044,38 +1053,37 @@ public class CrawlerController extends HttpServlet {
 			String pageSource = driver.getPageSource();
 			driver.close();
 			String source = CommonUtils.makeContentPage(pageSource, result);
-			//String source = pageSource;
-			 String inputLine;
-			 StringBuffer res;
-			 res = new StringBuffer();
-			 try {
-			 InputStream stream = new
-			 ByteArrayInputStream(source.getBytes(Charset.forName("UTF-8")));
-			 BufferedReader in;
-			 in = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-			 while ((inputLine = in.readLine()) != null) {
-			 // System.out.println(in.readLine());
-			 res.append(CommonUtils.htmlEncode(inputLine) + "\n");
-			 // res.append(inputLine + "\n");
-			 }
-			 // System.out.println(res);
-			 in.close();
-			 } catch (Exception e) {
-			 System.out.println("Cannot encoding");
-			 }
-			
-			 BufferedWriter bwr = new BufferedWriter(new
-			 FileWriter(htmlFilePath));
-			
-			 // write contents of StringBuffer to a file
-			 bwr.write(res.toString());
-			
-			 // flush the stream
-			 bwr.flush();
-			
-			 // close the stream
-			 bwr.close();
-//			FileUtils.writeStringToFile(new File(htmlFilePath), source, "UTF-8");
+			// String source = pageSource;
+			String inputLine;
+			StringBuffer res;
+			res = new StringBuffer();
+			try {
+				InputStream stream = new ByteArrayInputStream(source.getBytes(Charset.forName("UTF-8")));
+				BufferedReader in;
+				in = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+				while ((inputLine = in.readLine()) != null) {
+					// System.out.println(in.readLine());
+					res.append(CommonUtils.htmlEncode(inputLine) + "\n");
+					// res.append(inputLine + "\n");
+				}
+				// System.out.println(res);
+				in.close();
+			} catch (Exception e) {
+				System.out.println("Cannot encoding");
+			}
+
+			BufferedWriter bwr = new BufferedWriter(new FileWriter(htmlFilePath));
+
+			// write contents of StringBuffer to a file
+			bwr.write(res.toString());
+
+			// flush the stream
+			bwr.flush();
+
+			// close the stream
+			bwr.close();
+			// FileUtils.writeStringToFile(new File(htmlFilePath), source,
+			// "UTF-8");
 			return "setParserConfig";
 		}
 		if (btnAction.equals("AddNewPageList"))
