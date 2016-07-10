@@ -71,7 +71,7 @@
 					<div class="col-md-3">
 						<div class="fg-line">
 							<div class="select">
-								<select class="form-control">
+								<select class="form-control" id="select-day">
 									<option value="everyday" selected="selected">Everyday</option>
 									<option value="everyweek">EveryWeek</option>
 									<option value="everymonth">EveryMonth</option>
@@ -81,8 +81,8 @@
 					</div>
 					<div class="col-md-2">
 						<div class="fg-line">
-							<div class="select">
-								<select class="form-control">
+							<div class="select" >
+								<select id="select-hour" class="form-control">
 									<option value="0">00</option>
 									<option value="1">01</option>
 									<option value="2">02</option>
@@ -114,7 +114,7 @@
 					<div class="col-md-2">
 						<div class="fg-line">
 							<div class="select">
-								<select class="form-control">
+								<select class="form-control"  id="select-minute">
 									<option selected="selected" value="0">00</option>
 									<option value="1">01</option>
 									<option value="2">02</option>

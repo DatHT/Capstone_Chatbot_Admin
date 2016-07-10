@@ -19,11 +19,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.psib.common.CronExpressionException;
+import com.psib.constant.DayOfWeek;
+import com.psib.constant.TimeSchedule;
 import com.psib.model.Scheduler;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.IPhraseManager;
 import com.psib.service.ISchedulerManager;
 import com.psib.timer.trigger.ScheduleChanger;
+import com.psib.util.CronExpressionUtils;
 
 /**
  * @author DatHT Jun 4, 2016
@@ -36,13 +40,13 @@ public class DataConfigController {
 	private static final Logger logger = LoggerFactory.getLogger(DataConfigController.class);
 
 	public static final String ERROR = "ERROR";
-	
+
 	private static final String API = "api_sync";
 	private static final String LOG = "log_sync";
 
 	@Autowired
 	private ISchedulerManager manager;
-	
+
 	@Autowired
 	ScheduleChanger changer;
 
@@ -52,7 +56,7 @@ public class DataConfigController {
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/YYYY HH:mm a");
 		String formattedDate = df.format(d1);
 		System.out.println("TIME-----------" + formattedDate);
-		
+
 		model.addAttribute(API, manager.getSchedularByName("api"));
 		model.addAttribute(LOG, manager.getSchedularByName("log"));
 		return "dataConfig";
@@ -60,27 +64,90 @@ public class DataConfigController {
 
 	@RequestMapping(value = "/sync", method = RequestMethod.POST)
 	public @ResponseBody String synchronize(Model model, @RequestParam("api") String api,
-			@RequestParam("db") String db) {
-		//
-		long d1 = System.currentTimeMillis();
-		SimpleDateFormat df = new SimpleDateFormat("MM/dd/YYYY HH:mm a");
-		String formattedDate = df.format(d1);
-		System.out.println("TIME-----------" + formattedDate);
-		//
+			@RequestParam("log") String log, @RequestParam("day") String day, @RequestParam("hour") String hour,
+			@RequestParam("minute") String minute) {
+
 		String responseText = "";
-			if (api.equals("yes")) {
-				Scheduler apiScheduler = manager.getSchedularByName("api");
-				apiScheduler.setStatus(true);
-				manager.updateShedulerStatus(apiScheduler);
-				//changer.change("");
+		if (api.equals("yes")) {
+			Scheduler apiScheduler = manager.getSchedularByName("api");
+			apiScheduler.setStatus(true);
+			manager.updateShedulerStatus(apiScheduler);
+			logger.info("[Start Change Scheduler]");
+			String cron = convertToCron(day, hour, minute);
+			logger.info("[CRON_] " + cron);
+			changer.change(cron);
+			logger.info("[End Change Scheduler]");
+			switch (day) {
+			case TimeSchedule.EVERYDAY:
+				responseText = "You Set Schedule everyday at " + hour + ":" + minute;
+				break;
+			case TimeSchedule.EVERYWEEK:
+				responseText = "You Set Schedule every week at " + getDayOfWeek() + "-" + hour + ":" + minute;
+				break;
+			case TimeSchedule.EVERYMONTH:
+				Calendar now = Calendar.getInstance();
+				responseText = "You Set Schedule every month at " + now.get(Calendar.DATE) + "-" + hour + ":" + minute;
+				break;
+			default:
 				responseText = "done";
+				break;
 			}
-			// sync to api
-			if (db.equals("yes")) {
-				Scheduler logScheduler = manager.getSchedularByName("api");
-				
-			}
-		
+		}
+		// sync to api
+		if (log.equals("yes")) {
+			Scheduler logScheduler = manager.getSchedularByName("api");
+
+		}
+
 		return responseText;
+	}
+
+	private String convertToCron(String day, String hour, String minute) {
+		try {
+
+			switch (day) {
+			case TimeSchedule.EVERYDAY:
+				return CronExpressionUtils.daily(0, Integer.parseInt(minute), Integer.parseInt(hour));
+			case TimeSchedule.EVERYWEEK:
+				return CronExpressionUtils.weekly(getDayOfWeek(), 0, Integer.parseInt(minute), Integer.parseInt(hour));
+			case TimeSchedule.EVERYMONTH:
+				Calendar now = Calendar.getInstance();
+				return CronExpressionUtils.monthly(now.get(Calendar.DATE), 0, Integer.parseInt(minute),
+						Integer.parseInt(hour));
+			default:
+				return "";
+			}
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CronExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "";
+	}
+
+	private DayOfWeek getDayOfWeek() {
+		Calendar calendar = Calendar.getInstance();
+		int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+		switch (day) {
+		case Calendar.SUNDAY:
+			return DayOfWeek.Sunday;
+		case Calendar.MONDAY:
+			return DayOfWeek.Monday;
+		case Calendar.TUESDAY:
+			return DayOfWeek.Tuesday;
+		case Calendar.WEDNESDAY:
+			return DayOfWeek.Wednesday;
+		case Calendar.THURSDAY:
+			return DayOfWeek.Thursday;
+		case Calendar.FRIDAY:
+			return DayOfWeek.Friday;
+		case Calendar.SATURDAY:
+			return DayOfWeek.Saturday;
+		}
+		return DayOfWeek.Unknown;
 	}
 }
