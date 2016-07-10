@@ -70,14 +70,7 @@ public class DataConfigController {
 		String responseText = "";
 		Scheduler apiScheduler = manager.getSchedularByName("api");
 		if (api.equals("yes")) {
-
 			apiScheduler.setStatus(true);
-			logger.info("[Start Change Scheduler]");
-			String cron = convertToCron(day, hour, minute);
-			logger.info("[CRON_] " + cron);
-			changer.change(cron);
-			logger.info("[End Change Scheduler]");
-
 		} else {
 			apiScheduler.setStatus(false);
 		}
@@ -90,6 +83,11 @@ public class DataConfigController {
 			logScheduler.setStatus(false);
 		}
 		manager.updateShedulerStatus(logScheduler);
+		logger.info("[Start Change Scheduler]");
+		String cron = convertToCron(day, hour, minute);
+		logger.info("[CRON_] " + cron);
+		changer.change(cron);
+		logger.info("[End Change Scheduler]");
 		switch (day) {
 		case TimeSchedule.EVERYDAY:
 			responseText = "You Set Schedule everyday at " + hour + ":" + minute;
