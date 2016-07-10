@@ -69,7 +69,7 @@
 								value="PREVIEW" onclick="openpopup('popup')" disabled>PREVIEW</button>
 							<button type="submit" class="btn btn-primary" id="btnAdd"
 								name="btnAction" value="AddNewConfiguration" onclick="addNew()"
-								disabled>AddNewConfiguration</button>
+								disabled>AddNewPageDetails</button>
 							<button type="button" class="btn btn-primary" value="HOME"
 								onclick="window.location = 'crawler'">HOME</button>
 							<div class="table-responsive" style="min-height: 70px">

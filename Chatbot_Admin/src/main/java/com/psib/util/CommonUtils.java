@@ -211,10 +211,7 @@ public class CommonUtils {
 			}
 		}
 		if (listAddress.length == 4) {
-			district = listAddress[listAddress.length - 3];
-			if(district.contains("P.")){
-				district = listAddress[listAddress.length - 2];
-			}
+			district = listAddress[listAddress.length - 2];
 			if (district.contains("Q.")) {
 				district = district.replace("Q.", "Quận ");
 			}

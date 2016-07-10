@@ -48,10 +48,11 @@ $(document)
 											if (count == 0) {
 												var no1 = event.target.href;
 												preview.push(no1);
-												showCart(no1 + "'\'", 'tbItems',
-														1);
-											} if(count==1) {
-												var no2 = event.target.innerHTML;
+												showCart(no1 + "'\'",
+														'tbItems', 1);
+											}
+											if (count == 1) {
+												var no2 = event.target.innerText;
 												preview.push(no2);
 												showCart(no2 + "'\'",
 														'tbItems', 1);
@@ -222,6 +223,9 @@ function next() {
 				indexComplete[count] = "";
 			}
 			currentPosition++;
+			if(currentPosition==3){
+				alert("If this page has next page, please choose next page. If not, please click Next")
+			}
 			$("#myframe").contents().find(oldWrap).removeAttr("style",
 					"background-color: #69c2fe;");
 			deleteRow('tbItems', 1);
@@ -256,7 +260,7 @@ function next() {
 				// openpopup('popup');
 				document.getElementById("btnNext").disabled = true;
 				document.getElementById("btnPreview").disabled = false;
-				//document.getElementById("btnAdd").disabled = false;
+				// document.getElementById("btnAdd").disabled = false;
 			}
 		} else {
 			alert("PLEASE CHOOSE ONE ELEMENT");
@@ -280,28 +284,28 @@ function back() {
 		}
 		// show current content
 		var newX = preview[currentPosition];
-//		value = newX;
-//		var a = window.frames[0].document.evaluate(newX,
-//				window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-//		var b = a.iterateNext();
-//		// ???
+		// value = newX;
+		// var a = window.frames[0].document.evaluate(newX,
+		// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+		// var b = a.iterateNext();
+		// // ???
 		flagClick = 1;
-//		// Apply highlight div
-//		// alert(getEleCss(newX));
-//		var alertText = ""
-//		while (b) {
-//			alertText += b.textContent + "    "
-//			b = a.iterateNext();
-//		}
+		// // Apply highlight div
+		// // alert(getEleCss(newX));
+		// var alertText = ""
+		// while (b) {
+		// alertText += b.textContent + " "
+		// b = a.iterateNext();
+		// }
 		// alert(alertText);
-		if (currentPosition==0) {
+		if (currentPosition == 0) {
 			showCart(preview[0] + "'\'", 'tbItems', 1);
 		}
-		if (currentPosition==1) {
+		if (currentPosition == 1) {
 			showCart(preview[1] + "'\'", 'tbItems', 1);
 		}
-		
-		if (currentPosition==2) {
+
+		if (currentPosition == 2) {
 			showCart(preview[2] + "'\'", 'tbItems', 3);
 		}
 		try {
@@ -605,7 +609,7 @@ function addRow(tableId, cells, type) {
 			}
 
 		} else if (type == 3) {
-			newCell.innerHTML = '<img src="'
+			newCell.innerHTML = '<img style="width:100px;height:100px" src="'
 					+ cells[i]
 					+ '"/>'
 					+ '</br>'
@@ -698,9 +702,12 @@ function openpopup(id) {
 	divobj.style.top = divTop + "px";
 	// Put a Close button for closing the popped up Div tag
 	if (divobj.innerHTML.indexOf("closepopup('" + id + "')") < 0)
-		divobj.innerHTML = "<a href=\"#\" onclick=\"closepopup('"
+		divobj.innerHTML = "<div class=\"panel panel-primary\" style=\"position:fixed\"><div class=\"panel-heading\" style=\"position:fixed;height:42px;width:510px;margin:-5px\">"
+				+ "<p style=\"font-size:18px;float:left;padding:8px\">Preview Your Selected Field</p>"
+				+ "<button style=\"margin:5px 16px\" type=\"submit\" class=\"btn btn-info m-b-10\" id=\"btnAdd\" name =\"btnAction\" value=\"AddNewPageList\" onclick=\"addNew()\" >AddNewPageList</button>"
+				+ "<a style=\"float:right;padding:5px;margin-right:70px\" href=\"#\" onclick=\"closepopup('"
 				+ id
-				+ "')\"><span class=\"btn btn-info m-b-less\" style=\"float: right\">X</span></a>"
+				+ "')\"><span class=\"btn btn-danger m-b-less\" style=\"float:right;position:fixed\">Close</span></a></div></div>"
 				+ divobj.innerHTML;
 }
 function closepopup(id) {
@@ -717,13 +724,13 @@ function closepopup(id) {
 }
 function appendcontents(item) {
 	// var item = items.split("'\'");
-	var content = '<h3>Information</h3><br/><table border="1" style="width: 485px" class="table"><thead></thead><tr><th style="width: 10%">Type</th><th style="width: 90%">Content</th></tr><tbody>';
+	var content = '</br></br><table border="1" style="width: 485px" class="table"><thead></thead><tr><th style="width: 10%">Type</th><th style="width: 90%">Content</th></tr><tbody>';
 
 	content = content
 			+ '<tr><td><strong>Product Description Link</strong></td><td>';
-//	var a = window.frames[0].document.evaluate(item[0] + '/@href',
-//			window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-//	var b = a.iterateNext();
+	// var a = window.frames[0].document.evaluate(item[0] + '/@href',
+	// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+	// var b = a.iterateNext();
 	var alertText = "" + preview[0]
 	// while (b) {
 	// alertText += b.textContent + "<br/>"
@@ -735,9 +742,10 @@ function appendcontents(item) {
 			+ '</td></tr><tr><td><strong>Product Name</strong></td><td>';
 
 	// get Address
-//	a = window.frames[0].document.evaluate(item[1], window.frames[0].document,
-//			null, XPathResult.ANY_TYPE, null);
-//	b = a.iterateNext();
+	// a = window.frames[0].document.evaluate(item[1],
+	// window.frames[0].document,
+	// null, XPathResult.ANY_TYPE, null);
+	// b = a.iterateNext();
 	alertText = "" + preview[1]
 	// while (b) {
 	// if (b.textContent.length < 150) {
@@ -749,12 +757,12 @@ function appendcontents(item) {
 	// }
 	content = content + alertText
 			+ '</td></tr><tr><td><strong>Image</strong></td><td style="width: '
-			+ '200px;  vertical-align: top"><img src =';
+			+ '150px;  vertical-align: top"><img style="width:150px;height:150px" src =';
 
 	// getImage
-//	a = window.frames[0].document.evaluate(item[2] + '/@src',
-//			window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-//	b = a.iterateNext();
+	// a = window.frames[0].document.evaluate(item[2] + '/@src',
+	// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+	// b = a.iterateNext();
 	alertText = "" + preview[2]
 	// while (b) {
 	// alertText += b.textContent+"</br>";
@@ -762,7 +770,6 @@ function appendcontents(item) {
 	// }
 	content = content + alertText + '></td></tr></tbody></table>';
 	appendto = document.getElementById('popup');
-	appendto.innerHTML = content
-			+ '<button type="submit" class="btn btn-info m-b-10" id="btnAdd" name ="btnAction" value="AddNewPageList" onclick="addNew()" >AddNewPageList</button>';
+	appendto.innerHTML = content;
 	// sessionStorage.cart = '';
 }

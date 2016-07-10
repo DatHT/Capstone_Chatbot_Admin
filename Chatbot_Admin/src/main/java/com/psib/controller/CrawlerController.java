@@ -16,12 +16,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +75,7 @@ public class CrawlerController extends HttpServlet {
 		return "manualAddFood";
 	}
 
-	@RequestMapping(value = "/staticParse", method = RequestMethod.GET)
+	@RequestMapping(value = "staticParse", method = RequestMethod.GET)
 	public String staticParse(@RequestParam String btnAction, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws InterruptedException {
 		java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(java.util.logging.Level.OFF);
@@ -318,14 +321,14 @@ public class CrawlerController extends HttpServlet {
 							ProductDetail productDetails = new ProductDetail();
 
 							long districtID = districtManager.checkExitDistrict(district);
-							if (districtID == 0 ) {
-								
+							if (districtID == 0) {
+
 								districtDAO.setName(district);
 								districtID = districtManager.insert(districtDAO);
-								
+
 								System.out.println("Add district done");
 							}
-							if(districtID!=0) {
+							if (districtID != 0) {
 								System.out.println("District exist");
 								addressDAO.setDistrictId(districtID);
 								addressDAO.setName(newAddress);
@@ -356,8 +359,7 @@ public class CrawlerController extends HttpServlet {
 									productManager.insertProductDetail(productDetails);
 									countAdded++;
 									System.out.println("Add to database success");
-								}
-								else {
+								} else {
 									countExits++;
 									System.out.println("Cannot add to database");
 								}
@@ -539,14 +541,14 @@ public class CrawlerController extends HttpServlet {
 						ProductDetail productDetails = new ProductDetail();
 
 						long districtID = districtManager.checkExitDistrict(district);
-						if (districtID == 0 ) {
-							
+						if (districtID == 0) {
+
 							districtDAO.setName(district);
 							districtID = districtManager.insert(districtDAO);
-							
+
 							System.out.println("Add district done");
 						}
-						if(districtID!=0) {
+						if (districtID != 0) {
 							System.out.println("District exist");
 							addressDAO.setDistrictId(districtID);
 							addressDAO.setName(newAddress);
@@ -577,8 +579,7 @@ public class CrawlerController extends HttpServlet {
 								productManager.insertProductDetail(productDetails);
 								countAdded++;
 								System.out.println("Add to database success");
-							}
-							else {
+							} else {
 								countExits++;
 								System.out.println("Cannot add to database");
 							}
@@ -818,8 +819,8 @@ public class CrawlerController extends HttpServlet {
 							map = imgVal;
 						}
 					}
-					double latitude=0;
-					double longitude=0;
+					double latitude = 0;
+					double longitude = 0;
 					if (map == "" || map == null || map.isEmpty()) {
 						String latLongs[] = LatitudeAndLongitudeWithPincode.getLatLongPositions(address);
 
@@ -850,14 +851,14 @@ public class CrawlerController extends HttpServlet {
 					ProductDetail productDetails = new ProductDetail();
 
 					long districtID = districtManager.checkExitDistrict(district);
-					if (districtID == 0 ) {
-						
+					if (districtID == 0) {
+
 						districtDAO.setName(district);
 						districtID = districtManager.insert(districtDAO);
-						
+
 						System.out.println("Add district done");
 					}
-					if(districtID!=0) {
+					if (districtID != 0) {
 						System.out.println("District exist");
 						addressDAO.setDistrictId(districtID);
 						addressDAO.setName(newAddress);
@@ -888,12 +889,11 @@ public class CrawlerController extends HttpServlet {
 							productManager.insertProductDetail(productDetails);
 							countAdded++;
 							System.out.println("Add to database success");
-						}
-						else {
+						} else {
 							countExits++;
 							System.out.println("Cannot add to database");
 						}
-					} 
+					}
 				}
 				driver.close();
 				System.out.println("Sucessfull Added Record: " + countAdded);
@@ -904,6 +904,7 @@ public class CrawlerController extends HttpServlet {
 				session.setAttribute("MESSAGE", "Force parse success! New data has been inserted to storage!");
 				return "success";
 			} catch (Exception e) {
+				driver.close();
 				System.out.println("STOP PARSE");
 				HttpSession session = request.getSession();
 				session.setAttribute("MESSAGE", "STOP! Force Parse Has Been STOP!");
@@ -1043,36 +1044,38 @@ public class CrawlerController extends HttpServlet {
 			String pageSource = driver.getPageSource();
 			driver.close();
 			String source = CommonUtils.makeContentPage(pageSource, result);
-			String inputLine;
-			StringBuffer res;
-			res = new StringBuffer();
-			try {
-				InputStream stream = new ByteArrayInputStream(source.getBytes(Charset.forName("UTF-8")));
-				BufferedReader in;
-				in = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-				while ((inputLine = in.readLine()) != null) {
-					// System.out.println(in.readLine());
-					res.append(CommonUtils.htmlEncode(inputLine) + "\n");
-					// res.append(inputLine + "\n");
-				}
-				// System.out.println(res);
-				in.close();
-			} catch (Exception e) {
-				System.out.println("Cannot encoding");
-			}
-
-			BufferedWriter bwr = new BufferedWriter(new FileWriter(htmlFilePath));
-
-			// write contents of StringBuffer to a file
-			bwr.write(res.toString());
-
-			// flush the stream
-			bwr.flush();
-
-			// close the stream
-			bwr.close();
-			// FileUtils.writeStringToFile(new File(htmlFilePath), source,
-			// "UTF-8");
+			//String source = pageSource;
+			 String inputLine;
+			 StringBuffer res;
+			 res = new StringBuffer();
+			 try {
+			 InputStream stream = new
+			 ByteArrayInputStream(source.getBytes(Charset.forName("UTF-8")));
+			 BufferedReader in;
+			 in = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+			 while ((inputLine = in.readLine()) != null) {
+			 // System.out.println(in.readLine());
+			 res.append(CommonUtils.htmlEncode(inputLine) + "\n");
+			 // res.append(inputLine + "\n");
+			 }
+			 // System.out.println(res);
+			 in.close();
+			 } catch (Exception e) {
+			 System.out.println("Cannot encoding");
+			 }
+			
+			 BufferedWriter bwr = new BufferedWriter(new
+			 FileWriter(htmlFilePath));
+			
+			 // write contents of StringBuffer to a file
+			 bwr.write(res.toString());
+			
+			 // flush the stream
+			 bwr.flush();
+			
+			 // close the stream
+			 bwr.close();
+//			FileUtils.writeStringToFile(new File(htmlFilePath), source, "UTF-8");
 			return "setParserConfig";
 		}
 		if (btnAction.equals("AddNewPageList"))

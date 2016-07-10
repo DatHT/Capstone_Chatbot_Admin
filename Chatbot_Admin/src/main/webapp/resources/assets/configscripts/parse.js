@@ -34,19 +34,19 @@ $(document)
 												value = commonXpath(urlXPath);
 											}
 											if (count == 0) {
-												var no1 = event.target.innerHTML;
+												var no1 = event.target.innerText;
 												preview.push(no1);
 												showCart(no1 + "'\'",
 														'tbItems', 1);
 											}
 											if (count == 1) {
-//												var no2 = event.target.innerHTML;
-												preview.push(content);
-												showCart(content + "'\'",
+												var no2 = event.target.innerText;
+												preview.push(no2);
+												showCart(no2 + "'\'",
 														'tbItems', 1);
 											}
 											if (count == 2) {
-												var no3 = event.target.innerHTML;
+												var no3 = event.target.innerText;
 												preview.push(no3);
 												showCart(no3 + "'\'",
 														'tbItems', 1);
@@ -217,6 +217,9 @@ function next() {
 				indexComplete[count] = "";
 			}
 			currentPosition++;
+			if(currentPosition==2){
+				alert("If this page has rating, please choose rating. If not, please click Next");
+			}
 			$("#myframe").contents().find(oldWrap).removeAttr("style",
 					"background-color: #69c2fe;");
 			deleteRow('tbItems', 1);
@@ -683,9 +686,12 @@ function openpopup(id) {
 	divobj.style.top = divTop + "px";
 	// Put a Close button for closing the popped up Div tag
 	if (divobj.innerHTML.indexOf("closepopup('" + id + "')") < 0)
-		divobj.innerHTML = "<a href=\"#\" onclick=\"closepopup('"
+		divobj.innerHTML = "<div class=\"panel panel-primary\" style=\"position:fixed\"><div class=\"panel-heading\" style=\"position:fixed;height:42px;width:510px;margin:-5px\">"
+				+ "<p style=\"font-size:18px;float:left;padding:8px\">Preview Your Selected Field</p>"
+				+ "<button style=\"margin:5px 0px\" type=\"submit\" class=\"btn btn-info m-b-10\" id=\"btnAdd\" name =\"btnAction\" value=\"AddNewConfiguration\" onclick=\"addNew()\" >AddNewPageDetails</button>"
+				+ "<a style=\"float:right;padding:5px;margin-right:70px\" href=\"#\" onclick=\"closepopup('"
 				+ id
-				+ "')\"><span class=\"btn btn-info m-b-less\" style=\"float: right\">X</span></a>"
+				+ "')\"><span class=\"btn btn-danger m-b-less\" style=\"float:right;position:fixed\">Close</span></a></div></div>"
 				+ divobj.innerHTML;
 }
 function closepopup(id) {
@@ -702,7 +708,7 @@ function closepopup(id) {
 }
 function appendcontents(item) {
 	// var item = items.split("'\'");
-	var content = '<h3>Information</h3><br/><table border="1" style="width: 485px" class="table"><thead></thead><tr><th style="width: 10%">Type</th><th style="width: 90%">Content</th></tr><tbody>';
+	var content = '<br/><br/><br/><table border="1" style="width: 485px" class="table"><thead></thead><tr><th style="width: 10%">Type</th><th style="width: 90%">Content</th></tr><tbody>';
 
 	content = content + '<tr><td><strong>Restaurant Name</strong></td><td>';
 	// var a = window.frames[0].document.evaluate(item[0],
@@ -744,7 +750,6 @@ function appendcontents(item) {
 //	}
 	content = content + alertText + '</td></tr></tbody></table>';
 	appendto = document.getElementById('popup');
-	appendto.innerHTML = content
-			+ '<button type="submit" class="btn btn-info m-b-10" id="btnAdd" name ="btnAction" value="AddNewConfiguration" onclick="addNew()" >AddNewConfiguration</button>';
+	appendto.innerHTML = content;
 	// sessionStorage.cart = '';
 }
