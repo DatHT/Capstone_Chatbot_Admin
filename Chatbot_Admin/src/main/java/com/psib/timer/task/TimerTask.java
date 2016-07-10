@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import com.psib.model.Phrase;
 import com.psib.model.Scheduler;
 import com.psib.service.IIntentManager;
 import com.psib.service.ILexicalCategoryManager;
+import com.psib.service.ILogManager;
 import com.psib.service.IPhraseManager;
 import com.psib.service.ISchedulerManager;
 import com.psib.service.impl.LexicalCategoryManager;
@@ -52,9 +54,21 @@ public class TimerTask {
 	@Autowired
 	private IIntentManager intentManager;
 	
+	private ILogManager logManager;
+	
 	public void startTimerForApiAndLog() {
 		synchronizePhraseFromAPItoDB();
 		synchronizeIntentToBD();
+		try {
+			LOG.info("[doTimer] Start - Syn Log");
+			logManager.updateLog();
+			LOG.info("[doTimer] End - Syn Log");
+		} catch (JSONException e) {
+			LOG.info("[doTimer] error-" + e.getMessage());
+			
+		} catch (IOException e) {
+			LOG.info("[doTimer] error-" + e.getMessage());
+		}
 	}
 
 	private void synchronizeIntentToBD() {

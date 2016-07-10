@@ -68,37 +68,43 @@ public class DataConfigController {
 			@RequestParam("minute") String minute) {
 
 		String responseText = "";
+		Scheduler apiScheduler = manager.getSchedularByName("api");
 		if (api.equals("yes")) {
-			Scheduler apiScheduler = manager.getSchedularByName("api");
+
 			apiScheduler.setStatus(true);
-			manager.updateShedulerStatus(apiScheduler);
 			logger.info("[Start Change Scheduler]");
 			String cron = convertToCron(day, hour, minute);
 			logger.info("[CRON_] " + cron);
 			changer.change(cron);
 			logger.info("[End Change Scheduler]");
-			switch (day) {
-			case TimeSchedule.EVERYDAY:
-				responseText = "You Set Schedule everyday at " + hour + ":" + minute;
-				break;
-			case TimeSchedule.EVERYWEEK:
-				responseText = "You Set Schedule every week at " + getDayOfWeek() + "-" + hour + ":" + minute;
-				break;
-			case TimeSchedule.EVERYMONTH:
-				Calendar now = Calendar.getInstance();
-				responseText = "You Set Schedule every month at " + now.get(Calendar.DATE) + "-" + hour + ":" + minute;
-				break;
-			default:
-				responseText = "done";
-				break;
-			}
+
+		} else {
+			apiScheduler.setStatus(false);
 		}
+		manager.updateShedulerStatus(apiScheduler);
 		// sync to api
+		Scheduler logScheduler = manager.getSchedularByName("log");
 		if (log.equals("yes")) {
-			Scheduler logScheduler = manager.getSchedularByName("api");
-
+			logScheduler.setStatus(true);
+		} else {
+			logScheduler.setStatus(false);
 		}
-
+		manager.updateShedulerStatus(logScheduler);
+		switch (day) {
+		case TimeSchedule.EVERYDAY:
+			responseText = "You Set Schedule everyday at " + hour + ":" + minute;
+			break;
+		case TimeSchedule.EVERYWEEK:
+			responseText = "You Set Schedule every week at " + getDayOfWeek() + "-" + hour + ":" + minute;
+			break;
+		case TimeSchedule.EVERYMONTH:
+			Calendar now = Calendar.getInstance();
+			responseText = "You Set Schedule every month at " + now.get(Calendar.DATE) + "-" + hour + ":" + minute;
+			break;
+		default:
+			responseText = "done";
+			break;
+		}
 		return responseText;
 	}
 
@@ -124,7 +130,7 @@ public class DataConfigController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return "";
 	}
 

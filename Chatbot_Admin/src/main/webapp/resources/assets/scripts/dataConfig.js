@@ -19,10 +19,14 @@ function applySynchronize() {
 	var fromLog = document.getElementById("ts2");
 	if (fromAPI.checked) {
 		api = 'yes';
+	}else {
+		api = 'no';
 	}
 	if (fromLog.checked) {
 		log = 'yes';
-	}	
+	}else {
+		log = 'no';
+	}
 	if (window.XMLHttpRequest) {
 		xmlhttp = new XMLHttpRequest();
 	} else
@@ -30,8 +34,7 @@ function applySynchronize() {
 
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			alert(xmlhttp.responseText);
-			location.reload();
+			swal("Good job!", xmlhttp.responseText, "success");
 		}
 
 	}
