@@ -113,7 +113,7 @@
 
             <div class="card-body card-padding">
                 <a class="btn btn-primary waves-effect"
-                   onclick="showFormSynonym('<spring:message code="synonym_header_add_synonym"/>')">
+                   onclick="showFormSynonym('<spring:message code="synonym_header_add_synonym"/>',0,0,'')">
                     <spring:message code="btn_add"/>
                 </a>
                 <div class="row m-t-20">
@@ -172,7 +172,7 @@
                     </div>
                 </dd>
                 <div class="m-t-30">
-                    <button type="submit" class="btn btn-success">
+                    <button type="button" class="btn btn-success" onclick="addUpdateSynonym()">
                         <spring:message code="btn_save"/>
                     </button>
                     <button class="btn btn-danger" onclick="hideFormSynonym()">
@@ -219,3 +219,4 @@
 <!-- End modal -->
 
 <input id="originUpdateId" type="hidden"/>
+<input id="synonymUpdateId" type="hidden"/>
