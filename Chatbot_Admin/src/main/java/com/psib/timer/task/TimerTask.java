@@ -53,21 +53,30 @@ public class TimerTask {
 
 	@Autowired
 	private IIntentManager intentManager;
-	
+
+	@Autowired
 	private ILogManager logManager;
-	
+
 	public void startTimerForApiAndLog() {
 		synchronizePhraseFromAPItoDB();
 		synchronizeIntentToBD();
-		try {
-			LOG.info("[doTimer] Start - Syn Log");
-			logManager.updateLog();
-			LOG.info("[doTimer] End - Syn Log");
-		} catch (JSONException e) {
-			LOG.info("[doTimer] error-" + e.getMessage());
-			
-		} catch (IOException e) {
-			LOG.info("[doTimer] error-" + e.getMessage());
+		synchronizeLog();
+
+	}
+
+	private void synchronizeLog() {
+		LOG.info("[doTimer] Start - Syn Log");
+		Scheduler apiScheduler = manager.getSchedularByName("log");
+		if (apiScheduler.isStatus()) {
+			try {
+				logManager.updateLog();
+				LOG.info("[doTimer] End - Syn Log");
+			} catch (JSONException e) {
+				LOG.info("[doTimer] log-error-" + e.getMessage());
+
+			} catch (IOException e) {
+				LOG.info("[doTimer] log-error-" + e.getMessage());
+			}
 		}
 	}
 
