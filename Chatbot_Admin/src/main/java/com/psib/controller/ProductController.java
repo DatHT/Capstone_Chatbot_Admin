@@ -34,6 +34,7 @@ public class ProductController {
 
     @RequestMapping(value = "/product", method = RequestMethod.GET)
     public ModelAndView loadProduct(@ModelAttribute(value = "addResult") String addResult,
+                                    @ModelAttribute(value = "updateResult") String updateResult,
                                     @ModelAttribute(value = "deleteResult") String deleteResult) {
         LOG.info("[loadProduct] Start");
 
@@ -43,6 +44,12 @@ public class ProductController {
             model.addObject("addResult", "1st load");
         } else {
             model.addObject(addResult);
+        }
+
+        if (updateResult.equals("")) {
+            model.addObject("updateResult", "1st load");
+        } else {
+            model.addObject(updateResult);
         }
 
         if (deleteResult.equals("")) {
@@ -83,14 +90,14 @@ public class ProductController {
         List<District> districtList = productManager.getAllDistrict();
         Collections.sort(districtList);
         model.addObject("districtList", districtList);
-        
+
         if (txtDistrict != null && txtFood != null) {
-			District districtObj = productManager.getDistrict(txtDistrict);
-			if (districtObj != null) {
-				model.addObject("name", txtFood);
-				model.addObject("districtName", districtObj.getName());
-			}
-		}
+            District districtObj = productManager.getDistrict(txtDistrict);
+            if (districtObj != null) {
+                model.addObject("name", txtFood);
+                model.addObject("districtName", districtObj.getName());
+            }
+        }
         if (!addResult.equals("")) {
             model.addObject(name);
             model.addObject(address);
@@ -204,6 +211,7 @@ public class ProductController {
                 redirectAttributes.addFlashAttribute("restaurant", restaurant);
                 redirectAttributes.addFlashAttribute("relatedUrl", relatedUrl);
             } else {
+                model = new ModelAndView("redirect:product");
                 redirectAttributes.addFlashAttribute("updateResult", true);
             }
 

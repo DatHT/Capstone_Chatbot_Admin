@@ -75,7 +75,7 @@ $(document).ready(function () {
         url: "loadSynonyms?" + tokenName + "=" + tokenValue,
         formatters: {
             "commandsUpdate": function (column, row) {
-                return "<a class='btn btn-success btn-icon waves-effect waves-circle waves-float' onclick='showFormSynonym("
+                return "<a id='" + row.id + "' class='btn btn-success btn-icon waves-effect waves-circle waves-float' onclick='showFormSynonym("
                     + "`" + "Update Synonym" + "`"
                     + ",1" + "," + row.id + "," + "`" + row.name + "`"
                     + ")'>"
@@ -136,6 +136,7 @@ function showFormSynonym(title, type, id, wordName) {
     $("#div-synonym-name").removeClass("has-error");
     $("#error-synonym").text("");
     $("#divAddSynonyms").show();
+    $("#divAddSynonyms").css("margin-top", "");
     if (type == 0) {
         isAddSynonym = 0;
         $('#txtSynonymName').val("");
@@ -143,6 +144,10 @@ function showFormSynonym(title, type, id, wordName) {
         isAddSynonym = 1;
         $("#synonymUpdateId").val(id);
         $('#txtSynonymName').val(wordName);
+        var eleId = "#" + id;
+        var viewableOffset = $(eleId).offset().top - $(window).scrollTop() + $("#divAddSynonyms").height();
+        console.info(viewableOffset)
+        $("#divAddSynonyms").css("margin-top", viewableOffset);
     }
 }
 
@@ -191,6 +196,7 @@ function addUpdateOrigin() {
                 url: "addOrigin?" + tokenName + "=" + tokenValue,
                 success: function (data) {
                     if (data.result == true) {
+                        $('#txtOriginName').val("");
                         notify("Add Successfully!", "info");
                         reloadTable("#data-table-origin");
                     } else {
@@ -213,6 +219,7 @@ function addUpdateOrigin() {
                 url: "updateOrigin?" + tokenName + "=" + tokenValue,
                 success: function (data) {
                     if (data.result == true) {
+                        $('#txtOriginName').val("");
                         notify("Update Successfully!", "info");
                         reloadTable("#data-table-origin");
                         reloadTable("#data-table-synonym");
@@ -243,6 +250,7 @@ function addUpdateSynonym() {
                 url: "addSynonym?" + tokenName + "=" + tokenValue,
                 success: function (data) {
                     if (data.result == true) {
+                        $('#txtSynonymName').val("");
                         notify("Add Successfully!", "info");
                         reloadTable("#data-table-synonym");
                     } else {
@@ -266,6 +274,7 @@ function addUpdateSynonym() {
                 url: "updateSynonym?" + tokenName + "=" + tokenValue,
                 success: function (data) {
                     if (data.result == true) {
+                        $('#txtSynonymName').val("");
                         notify("Update Successfully!", "info");
                         reloadTable("#data-table-origin");
                         reloadTable("#data-table-synonym");

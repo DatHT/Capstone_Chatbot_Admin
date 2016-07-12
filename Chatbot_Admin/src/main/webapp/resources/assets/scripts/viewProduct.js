@@ -3,11 +3,15 @@ $(document).ready(function () {
     if (addResult == 'true') {
         notify("Add Product Successfully!", "info");
     }
+    
+    if (updateResult == 'true') {
+        notify("Update Successfully!", "info");
+    }
 
     if (deleteResult == 'true') {
         notify("Delete Product Successfully!", "info");
     }
-    
+
     $("#data-table-basic").bootgrid({
         ajax: true,
         post: function () {
