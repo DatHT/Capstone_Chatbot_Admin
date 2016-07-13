@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.psib.common.restclient.RestfulException;
 import com.psib.constant.CodeManager;
+import com.psib.constant.LogStatus;
 import com.psib.constant.StatusCode;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.intent.IntentsDto;
@@ -63,6 +64,23 @@ public class ManageLogController {
 
 		try {
 			response = logManager.getLogJson().toString();
+		} catch (JSONException | IOException e) {
+			model.addAttribute(ERROR, e.getMessage());
+			e.printStackTrace();
+			logger.error(e.toString());
+		}
+
+		return response;
+	}
+
+	@RequestMapping(value = "/updateLogStatus", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+	public @ResponseBody String updateLogStatus(@RequestParam("logId") String logId,
+			@RequestParam("status") String status, Model model) {
+		String response = "";
+
+		try {
+			logManager.setLogStatus(logId, status == "DELETED" ? LogStatus.DELETED : LogStatus.READ);
+			response = "success";
 		} catch (JSONException | IOException e) {
 			model.addAttribute(ERROR, e.getMessage());
 			e.printStackTrace();

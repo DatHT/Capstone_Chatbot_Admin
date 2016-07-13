@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.psib.common.restclient.RestfulException;
+import com.psib.constant.LogStatus;
 import com.psib.constant.StatusCode;
 import com.psib.dto.DateDto;
 import com.psib.dto.jsonmapper.TrainDto;
@@ -29,4 +30,6 @@ public interface ILogManager {
 	public JSONArray conversationCollector(String atDate) throws IOException, JSONException;
 	
 	public List<DateDto> getListDateLog();
+	
+	public JSONObject setLogStatus(String logId, LogStatus logStatus) throws JSONException, IOException;
 }

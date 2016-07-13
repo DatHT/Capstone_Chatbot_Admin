@@ -12,118 +12,182 @@ if (window.XMLHttpRequest) {
 xmlhttp.onreadystatechange = function() {
 	if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 		var data = JSON.parse(xmlhttp.responseText);
-		var listContent = data.contents;
-
-		for (var int = 0; int < listContent.length; int++) {
-			if (listContent[int].errCode == '300') {
-				createRowNoEntry("no-entry-table-body",
-						listContent[int]);
-			} else if (listContent[int].errCode == '404') {
-				createRowNotFound("not-found-table-body",
-						listContent[int]);
-			} else if (listContent[int].errCode == '400') {
-				createReportedProduct("reported-product-table-body", listContent[int]);
-			}
-		}
-		$('#no-entry-data-table').bootgrid({
-			rowCount: 5,
-            css: {
-                icon: 'zmdi icon',
-                iconColumns: 'zmdi-view-module',
-                iconDown: 'zmdi-expand-more',
-                iconRefresh: 'zmdi-refresh',
-                iconUp: 'zmdi-expand-less'
-            },
-            formatters: {
-                "commands": function (column, row) {
-                    return "<button data-row-id='" + row.usersay + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
-                    "   <button class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
-                }
-            }
-        }).on("loaded.rs.jquery.bootgrid", function() {
-            /* Executes after data is loaded and rendered */
-            $('#no-entry-data-table').find(".action-add").on("click", function(e) {
-            	$("#myModal").modal();
-            	var listPhraseContent = document.getElementById('list-phrase');
-            	// Get the modal
-        		var modal = document.getElementById('myModal');
-        		var pContainer = document.getElementById('user-say-container');
-        		var p = document.getElementById('user-say-in-modal').innerHTML = $(this).data("row-id");
-        		modal.style.display = "block";
-        		// Get the <span> element that closes the modal
-        		var span = document.getElementsByClassName("close")[0];
-
-        		pContainer.addEventListener('mouseup', function() {
-        			var text = getTextSelection().trim();
-        			if (text && listPhrase[text] === undefined) {
-        				listPhraseContent.appendChild(createPhraseElement(text));
-        			}
-        		});
-        		
-        		var saveButton = document.getElementById('save-button');
-        		checkSaveButtonState();
-        		
-        		span.onclick = function() {
-        			closeModalDialog();
-        		}
-        		// When the user clicks anywhere outside of the modal,
-        		// close it
-        		window.onclick = function(event) {
-        			if (event.target == modal) {
-        				closeModalDialog();
-        			}
-        		}
-            }).end().find(".action-delete").on("click", function(e)
-            {
-                alert("You pressed delete on row: ");
-            });
-        });
-		
-		$('#not-found-data-table').bootgrid({
-			rowCount: 5,
-            css: {
-                icon: 'zmdi icon',
-                iconColumns: 'zmdi-view-module',
-                iconDown: 'zmdi-expand-more',
-                iconRefresh: 'zmdi-refresh',
-                iconUp: 'zmdi-expand-less'
-            },
-            formatters: {
-                "addProduct": function (column, row) {
-                    return "<button data-row-food='" + row.food + "' data-row-location='" + row.location + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add-product'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>";
-                }
-            }
-        }).on("loaded.rs.jquery.bootgrid", function() {
-        	/* Executes after data is loaded and rendered */
-            $('#not-found-data-table').find(".action-add-product").on("click", function(e) {
-            	window.location.href= 'viewAddProduct?txtDistrict=' + $(this).data("row-location") + "&txtFood=" + $(this).data("row-food");
-            });
-        });
-		
-		$('#reported-data-table').bootgrid({
-			rowCount: 5,
-            css: {
-                icon: 'zmdi icon',
-                iconColumns: 'zmdi-view-module',
-                iconDown: 'zmdi-expand-more',
-                iconRefresh: 'zmdi-refresh',
-                iconUp: 'zmdi-expand-less'
-            },
-            formatters: {
-                "updateProduct": function (column, row) {
-                    return "<button data-row-product-id='" + row.productId + "' class='btn btn-warning btn-icon waves-effect waves-circle waves-float update-product'><i class='zmdi zmdi-edit zmdi-hc-fw'></i></button>";
-                }
-            }
-        }).on("loaded.rs.jquery.bootgrid", function() {
-        	/* Executes after data is loaded and rendered */
-            $('#reported-data-table').find(".update-product").on("click", function(e) {
-            	window.location.href= 'viewUpdateProduct?productId=' + $(this).data("row-product-id");
-            });
-        });
+		setDataContentsToTable(data);
 	}
 };
 xmlhttp.open('GET', '/chatbot_admin/getLog', true);
 xmlhttp.send(null);
+
+function setDataContentsToTable(data) {
+	destroyBootgrid();
+	
+	var listContent = data.contents;
+	for (var int = 0; int < listContent.length; int++) {
+		if (listContent[int].errCode == '300') {
+			createRowNoEntry("no-entry-table-body",
+					listContent[int]);
+		} else if (listContent[int].errCode == '404') {
+			createRowNotFound("not-found-table-body",
+					listContent[int]);
+		} else if (listContent[int].errCode == '400') {
+			createReportedProduct("reported-product-table-body", listContent[int]);
+		}
+	}
+	reloadBootgridTable();
+}
+
+function destroyBootgrid() {
+	$('#no-entry-data-table').bootgrid("destroy");
+	var noEntryBody = document.getElementById('no-entry-table-body');
+	while (noEntryBody.firstChild) {
+		noEntryBody.removeChild(noEntryBody.firstChild);
+	}
+	
+	$('#not-found-data-table').bootgrid("destroy");
+	var notFoundBody = document.getElementById('not-found-table-body');
+	while (notFoundBody.firstChild) {
+		notFoundBody.removeChild(notFoundBody.firstChild);
+	}
+	
+	$('#reported-data-table').bootgrid("destroy");
+	var reportedBody = document.getElementById('reported-product-table-body');
+	while (reportedBody.firstChild) {
+		reportedBody.removeChild(reportedBody.firstChild);
+	}
+}
+
+function reloadBootgridTable() {
+	$('#no-entry-data-table').bootgrid({
+		rowCount: 5,
+        css: {
+            icon: 'zmdi icon',
+            iconColumns: 'zmdi-view-module',
+            iconDown: 'zmdi-expand-more',
+            iconRefresh: 'zmdi-refresh',
+            iconUp: 'zmdi-expand-less'
+        },
+        formatters: {
+        	"unreadText": function (column, row) {
+        		if(row.status == "UNREAD") {
+        			return "<strong>"+row.usersay+"</strong>";
+        		} else {
+        			return row.usersay;
+        		}
+        	},
+        	"statusIcon": function (column, row) {
+        		if(row.status == "UNREAD") {
+        			return "<i class='zmdi zmdi-email zmdi-hc-fw'></i>";
+        		} else {
+        			return "<i class='zmdi zmdi-email-open zmdi-hc-fw'></i>";
+        		}
+        	},
+            "commands": function (column, row) {
+                return "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
+                "   <button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+            }
+        }
+    }).on("loaded.rs.jquery.bootgrid", function() {
+        /* Executes after data is loaded and rendered */
+        $('#no-entry-data-table').find(".action-add").on("click", function(e) {
+        	$("#myModal").modal();
+        	updateLogStatus($(this).data("row-id"), "READ");
+        	var listPhraseContent = document.getElementById('list-phrase');
+        	// Get the modal
+    		var modal = document.getElementById('myModal');
+    		var pContainer = document.getElementById('user-say-container');
+    		var p = document.getElementById('user-say-in-modal').innerHTML = $(this).data("row-usersay");
+    		modal.style.display = "block";
+    		// Get the <span> element that closes the modal
+    		var span = document.getElementsByClassName("close")[0];
+
+    		pContainer.addEventListener('mouseup', function() {
+    			var text = getTextSelection().trim();
+    			if (text && listPhrase[text] === undefined) {
+    				listPhraseContent.appendChild(createPhraseElement(text));
+    			}
+    		});
+    		
+    		var saveButton = document.getElementById('save-button');
+    		checkSaveButtonState();
+    		
+    		span.onclick = function() {
+    			closeModalDialog();
+    		}
+    		// When the user clicks anywhere outside of the modal,
+    		// close it
+    		window.onclick = function(event) {
+    			if (event.target == modal) {
+    				closeModalDialog();
+    			}
+    		}
+        }).end().find(".action-delete").on("click", function(e)
+        {
+            alert("You pressed delete on row: " + $(this).data("row-usersay"));
+        });
+    });
+	
+	$('#not-found-data-table').bootgrid({
+		rowCount: 5,
+        css: {
+            icon: 'zmdi icon',
+            iconColumns: 'zmdi-view-module',
+            iconDown: 'zmdi-expand-more',
+            iconRefresh: 'zmdi-refresh',
+            iconUp: 'zmdi-expand-less'
+        },
+        formatters: {
+            "addProduct": function (column, row) {
+                return "<button data-row-food='" + row.food + "' data-row-location='" + row.location + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add-product'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>";
+            }
+        }
+    }).on("loaded.rs.jquery.bootgrid", function() {
+    	/* Executes after data is loaded and rendered */
+        $('#not-found-data-table').find(".action-add-product").on("click", function(e) {
+        	window.location.href= 'viewAddProduct?txtDistrict=' + $(this).data("row-location") + "&txtFood=" + $(this).data("row-food");
+        });
+    });
+	
+	$('#reported-data-table').bootgrid({
+		rowCount: 5,
+        css: {
+            icon: 'zmdi icon',
+            iconColumns: 'zmdi-view-module',
+            iconDown: 'zmdi-expand-more',
+            iconRefresh: 'zmdi-refresh',
+            iconUp: 'zmdi-expand-less'
+        },
+        formatters: {
+            "updateProduct": function (column, row) {
+                return "<button data-row-product-id='" + row.productId + "' class='btn btn-warning btn-icon waves-effect waves-circle waves-float update-product'><i class='zmdi zmdi-edit zmdi-hc-fw'></i></button>";
+            }
+        }
+    }).on("loaded.rs.jquery.bootgrid", function() {
+    	/* Executes after data is loaded and rendered */
+        $('#reported-data-table').find(".update-product").on("click", function(e) {
+        	window.location.href= 'viewUpdateProduct?productId=' + $(this).data("row-product-id");
+        });
+    });
+}
+
+function updateLogStatus(id, status) {
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			if (xmlhttp.responseText == "success") {
+				//setDataContentsToTable(JSON.parse(xmlhttp.responseText));
+			} else {
+				swal('Error occurs. Please try again later!');
+			}
+		}
+	}
+
+	xmlhttp.open('GET', '/chatbot_admin/updateLogStatus?logId=' + id +'&status=' + status, false);
+	xmlhttp.send(null);
+}
 
 function updateLog(param, token) {
 	$('#loadingModal').modal('show');
@@ -155,9 +219,25 @@ function createRowNoEntry(id, data) {
 	
 	var totalCount = data.totalCount;
 	var userSay = data.userSay;
+	var status = data.status;
+	
+	var tdId = document.createElement('td');
+	var pEl = document.createElement('p');
+	var idText = document.createTextNode(data.id);
+	pEl.appendChild(idText);
+	tdId.appendChild(pEl);
+	tr.appendChild(tdId);
 
+	var tdIcon = document.createElement('td');
+	var pstatus = document.createElement('p');
+	var statusText = document.createTextNode(status);
+	pstatus.appendChild(statusText);
+	tdIcon.appendChild(pstatus);
+	tr.appendChild(tdIcon);
+	
 	var tdUserSay = document.createElement('td');
 	var textUserSay = document.createTextNode(userSay);
+	
 	tdUserSay.appendChild(textUserSay);
 	tr.appendChild(tdUserSay);
 	
@@ -176,6 +256,19 @@ function closeModalDialog() {
 	while (listPhraseContent.firstChild) {
 		listPhraseContent.removeChild(listPhraseContent.firstChild);
 	}
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+			var data = JSON.parse(xmlhttp.responseText);
+			setDataContentsToTable(data);
+		}
+	};
+	xmlhttp.open('GET', '/chatbot_admin/getLog', true);
+	xmlhttp.send(null);
 }
 
 function requestAddPhrase(param, token) {

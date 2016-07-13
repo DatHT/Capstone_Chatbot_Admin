@@ -69,7 +69,9 @@
 					<table id="no-entry-data-table" class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
-								<th data-column-id="usersay" data-identifier="true">User say</th>
+								<th data-column-id="logid" data-visible="false">ID</th>
+								<th data-column-id="status" data-formatter="statusIcon"></th>
+								<th data-column-id="usersay" data-formatter="unreadText" data-identifier="true">User say</th>
 								<th data-column-id="count">Count</th>
 								<th data-column-id="commands" data-formatter="commands" data-sortable="false">Commands</th>
 							</tr>

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.psib.common.JsonParser;
 import com.psib.common.restclient.RestfulException;
+import com.psib.constant.LogStatus;
 import com.psib.constant.StatusCode;
 import com.psib.dao.IFileServerDao;
 import com.psib.dao.IProductDetailDao;
@@ -49,6 +50,7 @@ public class LogManager implements ILogManager {
 
 	private static String status_code = "statusCode";
 	private static String log_json = "logJson";
+	private static String status_of_log = "status";
 
 	private static int SUCCESS_CODE = 200;
 	private static int NOT_FOUND_CODE = 404;
@@ -193,6 +195,7 @@ public class LogManager implements ILogManager {
 			}
 
 			log.put(errCode, statusCode);
+			log.put(status_of_log, LogStatus.UNREAD);
 
 			if (!checkExistLog(jsonArray, log)) {
 				jsonArray.put(log);
@@ -551,5 +554,23 @@ public class LogManager implements ILogManager {
 			}
 		}
 		return listDateFolderName;
+	}
+
+	@Override
+	public JSONObject setLogStatus(String logId, LogStatus logStatus) throws JSONException, IOException {
+		System.out.println("go here" + logId + logStatus);
+		JSONArray logs = this.getLogJson().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
+		for (int i = 0; i < logs.length(); i++) {
+			JSONObject log = logs.getJSONObject(i);
+			int errorCode = log.getInt(errCode);
+			if (errorCode == NO_ENTRY_CODE || errorCode == NOT_FOUND_CODE) {
+				if (log.getString(id).equals(logId)) {
+					log.put(status_of_log, logStatus);
+					break;
+				}
+			}
+		}
+		FileUtils.writleFile(this.getLogFilePath(), this.logJson.toString(4));
+		return this.getLogJson();
 	}
 }
