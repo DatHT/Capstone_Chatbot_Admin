@@ -171,7 +171,9 @@ public class LogManager implements ILogManager {
 			int statusCode = Integer.parseInt(jsonObject.get(status_code).toString());
 
 			log = null;
+			String filePath = jsonObject.getString("filePath");
 			tempJson = jsonObject.getJSONObject(log_json);
+			tempJson.put("filePath", filePath);
 
 			if (statusCode == NOT_FOUND_CODE) {
 				log = this.getNotFoundLog(tempJson);
@@ -245,6 +247,7 @@ public class LogManager implements ILogManager {
 						JSONObject jsonObject = new JSONObject();
 						try {
 							jsonObject.put(status_code, logCode);
+							jsonObject.put("filePath", filePath);
 							jsonObject.put(log_json, new JSONObject(log.toString()));
 							logs.add(jsonObject);
 						} catch (JSONException e) {
@@ -263,7 +266,8 @@ public class LogManager implements ILogManager {
 
 	private JSONObject getNoEntryLog(JSONObject log) throws IOException, JSONException {
 		String userSay = log.getJSONObject(result).getString(resolvedQuery);
-
+		String sessionIdStr = log.getString(sessionId);
+		
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(LogManager.userSay, userSay);
 
@@ -271,6 +275,8 @@ public class LogManager implements ILogManager {
 
 		JSONObject idObj = new JSONObject();
 		idObj.put(id, log.get(id));
+		idObj.put(sessionId, sessionIdStr);
+		idObj.put("filePath", log.getString("filePath"));
 		arrId.put(idObj);
 
 		jsonObject.put(count, arrId);
@@ -390,9 +396,10 @@ public class LogManager implements ILogManager {
 						}
 
 						if (isCount) {
-							JSONObject idObj = new JSONObject();
-							idObj.put(id, jsonObject.get(id));
-							arrId.put(idObj);
+//							JSONObject idObj = new JSONObject();
+//							idObj.put(id, jsonObject.get(id));
+//							idObj.put(sessionId, jsonObject.getString(sessionId));
+							arrId.put(jsonObject.getJSONArray(count).get(0));
 						}
 						log.put("totalCount", arrId.length());
 						return true;
