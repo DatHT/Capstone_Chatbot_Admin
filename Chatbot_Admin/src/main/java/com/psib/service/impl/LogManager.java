@@ -558,7 +558,6 @@ public class LogManager implements ILogManager {
 
 	@Override
 	public JSONObject setLogStatus(String logId, LogStatus logStatus) throws JSONException, IOException {
-		System.out.println("go here" + logId + logStatus);
 		JSONArray logs = this.getLogJson().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
 		for (int i = 0; i < logs.length(); i++) {
 			JSONObject log = logs.getJSONObject(i);

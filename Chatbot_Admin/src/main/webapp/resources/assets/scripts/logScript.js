@@ -122,7 +122,21 @@ function reloadBootgridTable() {
     		}
         }).end().find(".action-delete").on("click", function(e)
         {
-            alert("You pressed delete on row: " + $(this).data("row-usersay"));
+//            alert("You pressed delete on row: " + $(this).data("row-usersay"));
+        	var logid = $(this).data("row-id");
+        	swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover it!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function(){
+            	updateLogStatus(logid, "DELETED");
+                swal("Deleted!", "It has been deleted.", "success");
+                closeModalDialog();
+            });
         });
     });
 	
@@ -220,6 +234,9 @@ function createRowNoEntry(id, data) {
 	var totalCount = data.totalCount;
 	var userSay = data.userSay;
 	var status = data.status;
+	if (status == "DELETED") {
+		return;
+	}
 	
 	var tdId = document.createElement('td');
 	var pEl = document.createElement('p');

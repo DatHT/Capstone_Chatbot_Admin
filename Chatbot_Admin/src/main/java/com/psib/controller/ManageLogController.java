@@ -79,7 +79,7 @@ public class ManageLogController {
 		String response = "";
 
 		try {
-			logManager.setLogStatus(logId, status == "DELETED" ? LogStatus.DELETED : LogStatus.READ);
+			logManager.setLogStatus(logId, status.equals("DELETED") ? LogStatus.DELETED : LogStatus.READ);
 			response = "success";
 		} catch (JSONException | IOException e) {
 			model.addAttribute(ERROR, e.getMessage());
