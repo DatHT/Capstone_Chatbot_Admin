@@ -17,4 +17,6 @@ public interface IPhraseDao {
 	public Phrase checkExistName(String name);
 
 	public List<Phrase> getAllPhrases();
+	
+	public void updatePhrase(Phrase phrase);
 }

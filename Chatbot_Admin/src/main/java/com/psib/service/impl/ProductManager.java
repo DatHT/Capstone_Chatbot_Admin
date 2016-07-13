@@ -326,4 +326,11 @@ public class ProductManager implements IProductManager {
         }
         return "http://" + tmp2;
     }
+
+	@Override
+	public List<ProductDetail> getAllProductDetail() {
+		LOG.info("[getAllProductDetail] start");
+		LOG.info("[getAllProductDetail] end");
+		return productDetailDao.getAllItem();
+	}
 }

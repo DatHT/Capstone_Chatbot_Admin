@@ -19,4 +19,6 @@ public interface IPhraseManager {
 	Phrase checkExist(String name);
 	
 	List<Phrase> getAll();
+	
+	void updatePhrase(Phrase phrase);
 }

@@ -2,6 +2,7 @@ package com.psib.timer.task;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -9,29 +10,25 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import com.psib.common.factory.LexicalCategoryFactory;
 import com.psib.common.restclient.RestfulException;
-import com.psib.constant.CodeManager;
 import com.psib.constant.StatusCode;
 import com.psib.dao.IFileServerDao;
-import com.psib.dao.impl.LexicalCategoryDao;
-import com.psib.dao.impl.PhraseDao;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
 import com.psib.dto.jsonmapper.intent.IntentsDto;
 import com.psib.model.LexicalCategory;
 import com.psib.model.Phrase;
+import com.psib.model.ProductDetail;
 import com.psib.model.Scheduler;
 import com.psib.service.IIntentManager;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
 import com.psib.service.IPhraseManager;
+import com.psib.service.IProductManager;
 import com.psib.service.ISchedulerManager;
-import com.psib.service.impl.LexicalCategoryManager;
-import com.psib.service.impl.PhraseManager;
+import com.psib.util.CommonUtils;
 import com.psib.util.FileUtils;
 import com.psib.util.SpringPropertiesUtil;
 
@@ -57,10 +54,42 @@ public class TimerTask {
 	@Autowired
 	private ILogManager logManager;
 
+	@Autowired
+	private IProductManager productManager;
+
 	public void startTimerForApiAndLog() {
 		synchronizePhraseFromAPItoDB();
 		synchronizeIntentToBD();
 		synchronizeLog();
+		insertStreetToPhrase();
+		synchronizeFromDBToAPI();
+
+	}
+
+	private void insertStreetToPhrase() {
+		List<ProductDetail> list = productManager.getAllProductDetail();
+		List<String> addresses = new ArrayList<>();
+		for (ProductDetail productDetail : list) {
+			addresses.add(productDetail.getAddressName());
+		}
+		List<String> result = CommonUtils.splitAddresses(addresses);
+		int count = 1;
+		for (String string : result) {
+			LOG.info("[doTimer] insert Phrase: " + count + "-" + string);
+			if (phraseManager.checkExist(string) == null) {
+				int id = lexicalManager.checkExistLexical("Location");
+				if (id != -1) {
+					Phrase phrase = new Phrase();
+					phrase.setAsynchronized(false);
+					phrase.setLexicalId(id);
+					phrase.setName(string);
+					phraseManager.insertPhraseToDatabase(phrase);
+					LOG.info("[doTimer] insert Success Phrase: " + count + "-" + string);
+				}
+
+			}
+			count++;
+		}
 
 	}
 
@@ -140,37 +169,42 @@ public class TimerTask {
 		}
 	}
 
-	// TODO: use for future plan
+	// Sync Location to API
 	public void synchronizeFromDBToAPI() {
-		// try {
-		// List<Phrase> phrases = phraseManager.getAll();
-		// for (int i = 0; i < phrases.size(); i++) {
-		// Phrase p = phrases.get(i);
-		// Entry entry = new Entry();
-		// entry.setValue(p.getName());
-		// List<String> synonym = new ArrayList<>();
-		// synonym.add(p.getName());
-		// entry.setSynonyms(synonym);
-		// StatusCode code = lexicalManager.addPhrase(entry,
-		// "bf8bb68e-dde4-4a7a-ac7c-9d4101e9aaf7");
-		// switch (code) {
-		// case SUCCESS:
-		// LOG.info("[Sync to api] success ");
-		// break;
-		// case ERROR:
-		// LOG.info("[Sync to api] error ");
-		// break;
-		// case CONFLICT:
-		// LOG.info("[Sync to api] conflict ");
-		// break;
-		// }
-		// LOG.info("[Sync to api] done " + i);
-		// }
-		// }catch (IOException e) {
-		// LOG.error("[Sync error] " + e.getMessage());
-		// } catch (RestfulException e) {
-		// LOG.error("[Sync error] " + e.getMessage());
-		// }
+		try {
+			List<Phrase> phrases = phraseManager.getAll();
+			for (int i = 0; i < phrases.size(); i++) {
+				Phrase p = phrases.get(i);
+				if (!p.isAsynchronized()) {
+					LOG.info("[doTimer] start sync location to api");
+					Entry entry = new Entry();
+					entry.setValue(p.getName());
+					List<String> synonym = new ArrayList<>();
+					synonym.addAll(Arrays.asList(CommonUtils.generateSynonym(p.getName())));
+					entry.setSynonyms(synonym);
+					StatusCode code = lexicalManager.addPhrase(entry, "b4941838-ac17-4777-b870-36b0a21a6eeb");
+					switch (code) {
+					case SUCCESS:
+						LOG.info("[Sync to api] success ");
+						p.setAsynchronized(true);
+						phraseManager.updatePhrase(p);
+						break;
+					case ERROR:
+						LOG.info("[Sync to api] error ");
+						break;
+					case CONFLICT:
+						LOG.info("[Sync to api] conflict ");
+						break;
+					}
+					LOG.info("[Sync to api] done " + i);
+				}
+
+			}
+		} catch (IOException e) {
+			LOG.error("[Sync error] " + e.getMessage());
+		} catch (RestfulException e) {
+			LOG.error("[Sync error] " + e.getMessage());
+		}
 	}
 
 	// TODO: use for use again in delete function
