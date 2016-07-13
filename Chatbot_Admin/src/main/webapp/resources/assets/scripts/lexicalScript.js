@@ -69,12 +69,26 @@ function loadPharse(id) {
 								},
 								formatters : {
 									"commandsDelete" : function(column, row) {
-										return "<button onclick='showDeleteModal(`"
-												+ row.name
-												+ "`)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+										return "<button data-row-pharsename='"+row.name+"' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float btn-delete-lexical'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
 									}
 								}
-							});
+							}).on("loaded.rs.jquery.bootgrid", function() {
+						    	/* Executes after data is loaded and rendered */
+						        $('#phraseTable').find(".btn-delete-lexical").on("click", function(e) {
+						        	var name = $(this).data("row-pharsename");
+						        	swal({
+						                title: "Are you sure?",
+						                text: "You will not be able to recover it!",
+						                type: "warning",
+						                showCancelButton: true,
+						                confirmButtonColor: "#DD6B55",
+						                confirmButtonText: "Yes, delete it!",
+						                closeOnConfirm: false
+						            }, function(){
+						            	deletePharse(name);
+						            });
+						        });
+						    });
 			$('#loadingModal').modal('hide');
 		}
 
@@ -84,9 +98,9 @@ function loadPharse(id) {
 
 }
 
-function deletePharse() {
+function deletePharse(name) {
 	$('#deleteModal').modal('hide');
-	var name = document.getElementById("deletePhraseName").innerHTML;
+//	var name = document.getElementById("deletePhraseName").innerHTML;
 	var cate = document.getElementById("selectCategory");
 	var categoryName = cate.options[cate.selectedIndex].text;
 	console.info(categoryName);

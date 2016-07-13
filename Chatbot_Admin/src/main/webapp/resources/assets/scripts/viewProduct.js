@@ -37,9 +37,7 @@ $(document).ready(function () {
                     + "</a>";
             },
             "commandsDelete": function (column, row) {
-                return "<button class='btn btn-danger btn-icon waves-effect waves-circle waves-float' onclick='showDeleteModal("
-                    + "`" + row.productId + "`"
-                    + ")'>" +
+                return "<button data-row-product-id='"+row.productId+"' class='btn btn-danger btn-icon waves-effect waves-circle waves-float btn-delete-product' >" +
                     "<i class='zmdi zmdi-close'>" +
                     "</i>" +
                     "</button>";
@@ -52,6 +50,22 @@ $(document).ready(function () {
             iconRefresh: 'zmdi-refresh',
             iconUp: 'zmdi-expand-less'
         },
+    }).on("loaded.rs.jquery.bootgrid", function() {
+    	/* Executes after data is loaded and rendered */
+        $('#data-table-basic').find(".btn-delete-product").on("click", function(e) {
+        	var productId = $(this).data("row-product-id");
+        	swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover it!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function(){
+            	window.location.href= 'deleteProduct?deleteProductId=' + productId;
+            });
+        });
     });
 });
 

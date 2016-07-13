@@ -217,7 +217,7 @@ public class ProductController {
         return model;
     }
 
-    @RequestMapping(value = "/deleteProduct", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/deleteProduct", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     public ModelAndView deleteProduct(@RequestParam(name = "deleteProductId") String productId,
                                       RedirectAttributes redirectAttributes) {
         LOG.info("[deleteProduct] Start");
