@@ -75,7 +75,7 @@ $(document).ready(function () {
         url: "loadSynonyms?" + tokenName + "=" + tokenValue,
         formatters: {
             "commandsUpdate": function (column, row) {
-                return "<a id='" + row.id + "' class='btn btn-success btn-icon waves-effect waves-circle waves-float' onclick='showFormSynonym("
+                return "<a id='" + "syn" + row.id + "' class='btn btn-success btn-icon waves-effect waves-circle waves-float' onclick='showFormSynonym("
                     + "`" + "Update Synonym" + "`"
                     + ",1" + "," + row.id + "," + "`" + row.name + "`"
                     + ")'>"
@@ -144,10 +144,10 @@ function showFormSynonym(title, type, id, wordName) {
         isAddSynonym = 1;
         $("#synonymUpdateId").val(id);
         $('#txtSynonymName').val(wordName);
-        var eleId = "#" + id;
-        var viewableOffset = $(eleId).offset().top - $(window).scrollTop() + $("#divAddSynonyms").height();
-        console.info(viewableOffset)
-        $("#divAddSynonyms").css("margin-top", viewableOffset);
+        // var eleId = "#" + "syn" + id;
+        // var viewableOffset = ($(eleId).parent().parent().parent().offset().top - $(window).scrollTop() + $("#divAddSynonyms").height() - $(eleId).parent().parent().parent().height()) / 2;
+        // console.info(viewableOffset)
+        // $("#divAddSynonyms").css("margin-top", viewableOffset);
     }
 }
 
