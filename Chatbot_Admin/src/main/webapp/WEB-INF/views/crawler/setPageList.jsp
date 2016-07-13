@@ -21,7 +21,7 @@
 </head>
 <body>
 	<c:set var="url" value="${sessionScope.URL}" />
-	<div class="card-header">
+	<div class="c-header">
 		<h2>Configuration</h2>
 	</div>
 	<form:form name="myForm" id="myForm" action="addPageList" method="post">
@@ -29,31 +29,28 @@
 		<div class="card scroller" style="">
 			<div class="card-header">
 				<h2>Please Select An Element And Get XPath</h2>
-				<div>
-				</div>
+				<div></div>
 			</div>
-			<div class="progressRecipe card-body card-padding form-group">
+			<div class="progressRecipe card-body card-padding">
 				<div class="circle done">
 					<span class="labelRecipe">0</span> <span class="title">Welcome</span>
 				</div>
-				<span class="bar half"></span>
-				<span class="bar"></span>
+				<span class="bar half"></span> <span class="bar"></span>
 				<div class="circle active">
-					<span class="labelRecipe">1</span> <span class="title" style="margin-left:-20px">DescriptionLink</span>
+					<span class="labelRecipe">1</span> <span class="title"
+						style="margin-left: -20px">DescriptionLink</span>
 				</div>
-				<span class="bar"></span>
-				<span class="bar"></span>
+				<span class="bar"></span> <span class="bar"></span>
 				<div class="circle">
-					<span class="labelRecipe">2</span> <span class="title" style="margin-left:-20px">ProductName</span>
+					<span class="labelRecipe">2</span> <span class="title"
+						style="margin-left: -20px">ProductName</span>
 				</div>
-				<span class="bar"></span>
-				<span class="bar"></span>
+				<span class="bar"></span> <span class="bar"></span>
 				<div class="circle">
-					<span class="labelRecipe">3</span>
-					<span class="title" style="margin-left:-20px">ProductImage</span>
+					<span class="labelRecipe">3</span> <span class="title"
+						style="margin-left: -20px">ProductImage</span>
 				</div>
-				<span class="bar"></span>
-				<span class="bar"></span>
+				<span class="bar"></span> <span class="bar"></span>
 				<div class="circle">
 					<span class="labelRecipe">4</span> <span class="title">NextPage</span>
 				</div>
@@ -115,10 +112,11 @@
 				if ($(this).scrollTop() >= scroller_anchor
 						&& $('.scroller').css('position') != 'fixed') { // Change the CSS of the scroller to hilight it and fix it at the top of the screen.
 					$('.scroller').css({
-						'width' : '78.5%',
+						'width' : '82.2%',
 						'position' : 'fixed',
-						'z-index' : '100',
-						'top' : '0px'
+						'z-index' : '10',
+						'top' : '0px',
+						'right':'40px',
 					});
 					// Changing the height of the scroller anchor to that of scroller so that there is no change in the overall height of the page.
 					$('.scroller_anchor').css('height', '50px');
@@ -129,6 +127,7 @@
 					$('.popup').css({
 						'position' : 'fixed',
 						'z-index' : '100',
+						'left':'50%',
 
 					});
 				} else if ($(this).scrollTop() < scroller_anchor
@@ -140,8 +139,10 @@
 					// Change the CSS and put it back to its original position.
 					$('.scroller').css({
 						'position' : 'relative',
-						'z-index' : '100',
+						'z-index' : '0',
 						'width' : '100%',
+						'right' : '0px',
+						
 					});
 					$('.scollchange').css({
 						'margin-top' : '0px'

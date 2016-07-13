@@ -17,7 +17,6 @@
 		<h2>Crawler Manger</h2>
 	</div>
 	<div class="card">
-
 		<div class="form-horizontal">
 			<div class="card-header">
 				<h2>Configuration</h2>
