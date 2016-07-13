@@ -1,5 +1,7 @@
 package com.psib.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.psib.controller.CrawlerController;
 import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
+import com.psib.dao.IFileServerDao;
 import com.psib.dao.IProductDetailDao;
 import com.psib.dto.configuration.ConfigDTO;
 import com.psib.dto.configuration.ConfigDTOList;
@@ -33,12 +36,13 @@ import com.psib.service.IForceParseManager;
 import com.psib.service.IProductManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
+import com.psib.util.SpringPropertiesUtil;
 import com.psib.util.XMLUtils;
 
 @Service
 public class ForceParseManager implements IForceParseManager {
-	private static final String pageConfigXML = "D:/Config/pageconfig.xml";
-	private static final String parserConfigXML = "D:/Config/parserconfig.xml";
+
+	private String xmlFilePathFolder;
 
 	@Autowired
 	private IProductDetailDao productManager;
@@ -46,6 +50,22 @@ public class ForceParseManager implements IForceParseManager {
 	private IAddressDao addressManager;
 	@Autowired
 	private IDistrictDao districtManager;
+	@Autowired
+	private IFileServerDao fileServerDao;
+
+	public String getPageConfigFilePath() throws IOException {
+		if (xmlFilePathFolder == null) {
+			xmlFilePathFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("xml_file_path")).getUrl();
+		}
+		return xmlFilePathFolder + "/pageconfig.xml";
+	}
+
+	public String getParserConfigFilePath() throws IOException {
+		if (xmlFilePathFolder == null) {
+			xmlFilePathFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("xml_file_path")).getUrl();
+		}
+		return xmlFilePathFolder + "/parserconfig.xml";
+	}
 
 	@Override
 	public String dynamicParse(String numPage, int numOfPage, String url) {
@@ -54,7 +74,7 @@ public class ForceParseManager implements IForceParseManager {
 		WebDriver driver = new FirefoxDriver();
 		try {
 			// lay url page
-			String xmlFilePath = pageConfigXML;
+			String xmlFilePath = getPageConfigFilePath();
 			PageDTOList tmpPage = XMLUtils.unmarshallPage(xmlFilePath);
 
 			List<PageDTO> pageConfigs = tmpPage.getConfig();
@@ -162,7 +182,7 @@ public class ForceParseManager implements IForceParseManager {
 				int count = 0;
 				int countTam = 0;
 				// lay config page
-				xmlFilePath = parserConfigXML;
+				xmlFilePath = getParserConfigFilePath();
 				ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
 				List<ConfigDTO> configs = tmp.getConfig();
 				System.out.println("Config Size: " + configs.size());
@@ -367,7 +387,7 @@ public class ForceParseManager implements IForceParseManager {
 			System.out.println(noOfPage);
 
 			// lay url page
-			String xmlFilePath = pageConfigXML;
+			String xmlFilePath = getPageConfigFilePath();
 			PageDTOList tmpPage = XMLUtils.unmarshallPage(xmlFilePath);
 
 			List<PageDTO> pageConfigs = tmpPage.getConfig();
@@ -472,7 +492,7 @@ public class ForceParseManager implements IForceParseManager {
 						int countTam = 0;
 						int countT = 0;
 						// lay config page
-						xmlFilePath = parserConfigXML;
+						xmlFilePath = getParserConfigFilePath();
 						ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
 						List<ConfigDTO> configs = tmp.getConfig();
 						System.out.println("Config Size: " + configs.size());
@@ -707,7 +727,7 @@ public class ForceParseManager implements IForceParseManager {
 					int count = 0;
 					int countTam = 0;
 					// lay config page
-					xmlFilePath = parserConfigXML;
+					xmlFilePath = getParserConfigFilePath();
 					ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
 					List<ConfigDTO> configs = tmp.getConfig();
 					System.out.println("Config Size: " + configs.size());

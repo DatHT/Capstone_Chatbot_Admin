@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.ScriptException;
+import com.psib.dao.IFileServerDao;
 import com.psib.dto.configuration.ConfigDTO;
 import com.psib.dto.configuration.ConfigDTOList;
 import com.psib.dto.configuration.PageDTO;
@@ -48,13 +49,11 @@ public class CrawlerController extends HttpServlet {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	private static final String pageConfigXML = "D:/Config/pageconfig.xml";
-	private static final String parserConfigXML = "D:/Config/parserconfig.xml";
-	
-
 	@Autowired
 	private IForceParseManager forceParseManager;
+	
+	private static final long serialVersionUID = 1L;
+	
 
 	@RequestMapping(value = "/staticParse", method = RequestMethod.POST)
 	public String staticParse(Model model, HttpServletRequest request, HttpServletResponse response)
@@ -101,6 +100,8 @@ public class CrawlerController extends HttpServlet {
 	public String configData(Model model, HttpServletRequest request, HttpServletResponse respone) throws IOException {
 		// String realPath = CommonUtils.getPath();
 		// get Config
+		String pageConfigXML = forceParseManager.getPageConfigFilePath();
+		String parserConfigXML = forceParseManager.getParserConfigFilePath();
 		String xmlFilePath = parserConfigXML;
 		if (!new File(xmlFilePath).exists()) {
 			File file = new File(xmlFilePath);
@@ -284,9 +285,9 @@ public class CrawlerController extends HttpServlet {
 	@RequestMapping(value = "/addPageList", method = RequestMethod.POST)
 	public String addNewPageList(@RequestParam String btnAction, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, Exception {
-		java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(java.util.logging.Level.OFF);
-		java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.OFF);
 
+		String pageConfigXML = forceParseManager.getPageConfigFilePath();
+		
 		String xpath = request.getParameter("PAGE");
 		HttpSession session = request.getSession();
 		String url = (String) session.getAttribute("URL");
@@ -484,6 +485,7 @@ public class CrawlerController extends HttpServlet {
 	@RequestMapping(value = "/addPageDetails", method = RequestMethod.POST)
 	public String addNewConfig(@RequestParam String btnAction, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
+		String parserConfigXML = forceParseManager.getParserConfigFilePath();
 		HttpSession session = request.getSession();
 		String url = (String) session.getAttribute("URL");
 		// session.setAttribute("URL", null);
