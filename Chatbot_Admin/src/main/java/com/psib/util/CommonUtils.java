@@ -305,8 +305,8 @@ public class CommonUtils {
 				|| src.contains("src=\"https://")) {
 			src = src;
 		}
-		if (src.contains("src=\"css")) {
-			src = url + "/" + src;
+		if (src.contains("src=\"\"")) {
+			src = src.replaceAll("src=\"\"", "src=\""+url+"/Content/css/images/image_defaul_128.jpg"+"\"");
 		}
 		if (src.contains("src=\"/")) {
 			src = src.replaceAll("src=\"" + "/", "src=\"" + url + "/");

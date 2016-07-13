@@ -1,11 +1,6 @@
-<%-- 
-    Document   : setPageList
-    Created on : Feb 23, 2016, 10:21:54 PM
-    Author     : Dell
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,7 +24,7 @@
 	<div class="card-header">
 		<h2>Configuration</h2>
 	</div>
-	<form name="myForm" id="myForm" action="processServlet" method="GET">
+	<form:form name="myForm" id="myForm" action="addPageList" method="post">
 		<div class="scroller_anchor"></div>
 		<div class="card scroller" style="">
 			<div class="card-header">
@@ -93,7 +88,7 @@
 		<table id="tbMain">
 
 		</table>
-	</form>
+	</form:form>
 </body>
 <style>
 #popup {

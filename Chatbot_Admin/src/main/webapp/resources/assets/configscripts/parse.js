@@ -15,9 +15,9 @@ $(document)
 										event.preventDefault();
 										if (count < 3) {
 											urlXPath = createXPathFromElement(event.target);
-											 content = event.target.innerHTML;
+											content = event.target.innerHTML;
 											// alert(standardContent(content));
-											 content = standardContent(content);
+											content = standardContent(content);
 											if (flagClick == 1) {
 												deleteRow('tbItems', 1);
 
@@ -217,7 +217,7 @@ function next() {
 				indexComplete[count] = "";
 			}
 			currentPosition++;
-			if(currentPosition==2){
+			if (currentPosition == 2) {
 				alert("If this page has rating, please choose rating. If not, please click Next");
 			}
 			$("#myframe").contents().find(oldWrap).removeAttr("style",
@@ -413,6 +413,9 @@ function createXPathFromElement(elm) {
 				segs.unshift(elm.localName.toLowerCase() + "[@id='"
 						+ elm.getAttribute('id') + "']");
 			}
+		} else if (elm.hasAttribute('itemprop')) {
+			segs.unshift(elm.localName.toLowerCase() + "[@itemprop='"
+					+ elm.getAttribute('itemprop') + "']");
 		} else if (elm.hasAttribute('class')) {
 			segs.unshift(elm.localName.toLowerCase() + "[@class='"
 					+ elm.getAttribute('class') + "']");
@@ -715,10 +718,10 @@ function appendcontents(item) {
 	// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
 	// var b = a.iterateNext();
 	var alertText = "" + preview[0]
-//	while (b) {
-//		alertText += b.textContent + "<br/>"
-//		b = a.iterateNext();
-//	}
+	// while (b) {
+	// alertText += b.textContent + "<br/>"
+	// b = a.iterateNext();
+	// }
 	content = content + '<input type="hidden" name="txtPageContent" value="'
 			+ alertText + '"/>'
 	content = content + alertText
@@ -730,10 +733,10 @@ function appendcontents(item) {
 	// null, XPathResult.ANY_TYPE, null);
 	// b = a.iterateNext();
 	alertText = "" + preview[1]
-//	while (b) {
-//		alertText += b.textContent + "<br/>";
-//		b = a.iterateNext();
-//	}
+	// while (b) {
+	// alertText += b.textContent + "<br/>";
+	// b = a.iterateNext();
+	// }
 	content = content
 			+ alertText
 			+ '</td></tr><tr><td><strong>UserRate</strong></td><td style="width: '
@@ -744,10 +747,10 @@ function appendcontents(item) {
 	// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
 	// b = a.iterateNext();
 	alertText = "" + preview[2]
-//	while (b) {
-//		alertText += b.textContent + "</br>";
-//		b = a.iterateNext();
-//	}
+	// while (b) {
+	// alertText += b.textContent + "</br>";
+	// b = a.iterateNext();
+	// }
 	content = content + alertText + '</td></tr></tbody></table>';
 	appendto = document.getElementById('popup');
 	appendto.innerHTML = content;

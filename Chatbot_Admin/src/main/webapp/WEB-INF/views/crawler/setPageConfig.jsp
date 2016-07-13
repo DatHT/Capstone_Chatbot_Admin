@@ -1,12 +1,7 @@
-<%-- 
-    Document   : index
-    Created on : Jan 14, 2016, 11:22:32 PM
-    Author     : Dell
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,8 +34,8 @@
 		<div class="col-lg-12">
 			<section class="panel">
 				<div class="panel-body ">
-					<form name="myForm" id="myForm" action="processServlet"
-						method="GET">
+					<form:form name="myForm" id="myForm" action="addPageDetails"
+						method="post">
 						<div class="scroller_anchor"></div>
 						<div class="form-group card card-header scroller" style="">
 							<div class="progressRecipe">
@@ -96,7 +91,7 @@
 						<table id="tbMain">
 
 						</table>
-					</form>
+					</form:form>
 				</div>
 			</section>
 		</div>

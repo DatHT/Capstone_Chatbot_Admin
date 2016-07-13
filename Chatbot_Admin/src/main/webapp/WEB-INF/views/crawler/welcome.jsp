@@ -1,16 +1,13 @@
-<%-- 
-    Document   : welcome
-    Created on : Mar 6, 2016, 12:26:43 PM
-    Author     : Dell
---%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script src="resources/crawler/configscripts/loadConfigs.js"
 	type="text/javascript"></script>
+</head>
 <body onload="return loadPage()" class="sticky-header">
 	<script>
 		regObjCfg = "${sessionScope.INFOCONFIG}";
@@ -26,8 +23,8 @@
 				<h2>Configuration</h2>
 			</div>
 			<div class="card-body card-padding">
-				<form action="processServlet"
-					onsubmit="return checkInputConfig(this)">
+				<form:form action="setListPage"
+					onsubmit="return checkInputConfig(this)" method="post">
 					<div class="card-body card-padding">
 						<div class="form-group">
 							<label for="input-01">URL of input page (required):</label> <input
@@ -40,7 +37,7 @@
 								onclick="getVal(this.value)">Set List Page</button>
 						</div>
 					</div>
-				</form>
+				</form:form>
 			</div>
 		</div>
 		<!-- End  Hover Rows  -->
@@ -56,8 +53,8 @@
 					<h2 id="tableHeader">Static Parse</h2>
 				</div>
 				<div class="card-body card-padding">
-					<form class="form-horizontal tasi-form" action="staticParse"
-						id="parseForm">
+					<form:form class="form-horizontal tasi-form" action="staticParse"
+						id="parseForm" method="post">
 						<div class="card-boy card-padding">
 							<div class="form-group">
 								<label class="col-sm-3 control-label" for="selectSite"
@@ -102,41 +99,28 @@
 							</div>
 							<div class="form-group">
 								<button type="submit" data-toggle="modal" href="#parsing"
-									class="btn btn-primary" value="StaticParse" name="btnAction">StaticParse</button>
+									class="btn btn-primary" value="StaticParse" name="btnAction"
+									onclick="showModal2()">StaticParse</button>
+							</div>
+							<div class="" style="display: none" id="loading_image">
+								<div class="modal-header">
+									<h4 class="modal-title">Your system is parsing now</h4>
+								</div>
+								<div class="modal-body">
+									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+								</div>
 							</div>
 						</div>
-					</form>
-					<!-- 					Modal -->
-					<!-- 					<form action="staticParse"> -->
-					<!-- 						<div aria-hidden="true" aria-labelledby="myModalLabel" -->
-					<!-- 							role="dialog" tabindex="-1" id="parsing" class="modal fade"> -->
-					<!-- 							<div class="modal-dialog"> -->
-					<!-- 								<div class="modal-content"> -->
-					<!-- 									<div class="modal-header"> -->
-					<!-- 										<h4 class="modal-title">Your system is parsing now</h4> -->
-					<!-- 									</div> -->
-					<!-- 									<div class="modal-body"> -->
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<!-- 									</div> -->
-					<!-- 									<div class="modal-footer"> -->
-
-					<!-- 										<button class="btn btn-primary" type="submit" value="STOP" -->
-					<!-- 											name="btnAction">STOP</button> -->
-					<!-- 									</div> -->
-					<!-- 								</div> -->
-					<!-- 							</div> -->
-					<!-- 						</div> -->
-					<!-- 					</form> -->
-					<!-- modal -->
+					</form:form>
 				</div>
 				<!-- End  Hover Rows  -->
 			</div>
@@ -146,8 +130,8 @@
 					<h2 id="tableHeader">Dynamic Parse</h2>
 				</div>
 				<div class="card-body card-padding">
-					<form class="form-horizontal tasi-form" action="dynamicParse"
-						id="parseForm">
+					<form:form class="form-horizontal tasi-form" action="dynamicParse"
+						id="parseForm" method="post">
 						<div class="card-boy card-padding">
 							<div class="form-group">
 								<label class="col-sm-3 control-label" for="selectPage"
@@ -189,7 +173,7 @@
 									class="btn btn-primary" style="margin-top: 8px"
 									value="DynamicParse" name="btnAction" onclick="showModal()">DynamicParse</button>
 							</div>
-							<div class="" style="display: none" id="loading_image">
+							<div class="" style="display: none" id="loading_image2">
 								<div class="modal-header">
 									<h4 class="modal-title">Your system is parsing now</h4>
 								</div>
@@ -207,38 +191,7 @@
 								</div>
 							</div>
 						</div>
-					</form>
-					<!-- Modal -->
-					<!-- 					<form action="dynamicParse"> -->
-					<!-- 						<div aria-hidden="true" aria-labelledby="myModalLabel" -->
-					<!-- 							role="dialog" tabindex="-1" id="parsing" class="modal fade"> -->
-					<!-- 							<div class="modal-dialog"> -->
-					<!-- 								<div class="modal-content"> -->
-					<!-- 									<div class="modal-header"> -->
-					<!-- 										<h4 class="modal-title">Your system is parsing now</h4> -->
-					<!-- 									</div> -->
-					<!-- 									<div class="modal-body"> -->
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<%-- 										<img src="<c:url value="/resources/assets/img/loader2.gif"/>" /> --%>
-					<!-- 									</div> -->
-					<!-- 									<div class="modal-footer"> -->
-
-					<!-- 										<button class="btn btn-primary" type="submit" value="STOP" -->
-					<!-- 											name="btnAction">STOP</button> -->
-					<!-- 									</div> -->
-					<!-- 								</div> -->
-					<!-- 							</div> -->
-					<!-- 						</div> -->
-					<!-- 					</form> -->
-					<!-- modal -->
+					</form:form>
 				</div>
 			</div>
 		</div>
@@ -265,6 +218,9 @@
 	</script>
 	<script>
 		function showModal() {
+			document.getElementById("loading_image2").style.display = 'block';
+		}
+		function showModal2() {
 			document.getElementById("loading_image").style.display = 'block';
 		}
 	</script>
@@ -299,7 +255,6 @@
 			}
 		}
 	</script>
-
 </body>
 </html>
 

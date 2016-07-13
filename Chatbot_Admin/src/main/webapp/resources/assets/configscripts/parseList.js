@@ -57,6 +57,12 @@ $(document)
 												showCart(no2 + "'\'",
 														'tbItems', 1);
 											}
+											if (count == 3) {
+												var no3 = event.target.innerHTML;
+												preview.push(no3);
+												showCart(no3 + "'\'",
+														'tbItems', 1);
+											}
 											// alert("CONTENT: " +
 											// event.target.innerHTML +
 											// "\nXPATH: " + urlXPath);

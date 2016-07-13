@@ -223,17 +223,17 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>2.53.0</version>
+			<version>2.53.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-firefox-driver</artifactId>
-			<version>2.53.0</version>
+			<version>2.52.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-remote-driver</artifactId>
-			<version>2.53.0</version>
+			<version>2.52.0</version>
 		</dependency>
 
 		<!--&lt;!&ndash; http://mvnrepository.com/artifact/com.github.detro.ghostdriver/phantomjsdriver 
@@ -273,12 +273,12 @@
 		<dependency>
 			<groupId>net.sourceforge.cssparser</groupId>
 			<artifactId>cssparser</artifactId>
-			<version>0.9.11</version>
+			<version>0.9.19</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.htmlunit</groupId>
 			<artifactId>htmlunit</artifactId>
-			<version>2.18</version>
+			<version>2.22</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.htmlunit</groupId>
@@ -315,7 +315,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-util</artifactId>
-			<version>8.1.12.v20130726</version>
+			<version>9.4.0.M0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty.aggregate</groupId>
