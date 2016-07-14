@@ -82,8 +82,9 @@ function reloadBootgridTable() {
         		}
         	},
             "commands": function (column, row) {
-                return "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
-                "   <button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+                return "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add' style='margin: 5px;'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
+                "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete' style='margin: 5px;'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>"+
+                "<button class='btn btn-default btn-icon waves-effect waves-circle waves-float' style='margin: 5px;'><i class='zmdi zmdi-comments'></i></button>";
             }
         }
     }).on("loaded.rs.jquery.bootgrid", function() {
