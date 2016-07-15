@@ -112,7 +112,7 @@
 				if ($(this).scrollTop() >= scroller_anchor
 						&& $('.scroller').css('position') != 'fixed') { // Change the CSS of the scroller to hilight it and fix it at the top of the screen.
 					$('.scroller').css({
-						'width' : '82.2%',
+						'width' : '77%',
 						'position' : 'fixed',
 						'z-index' : '10',
 						'top' : '0px',
@@ -127,7 +127,6 @@
 					$('.popup').css({
 						'position' : 'fixed',
 						'z-index' : '100',
-						'left':'50%',
 
 					});
 				} else if ($(this).scrollTop() < scroller_anchor

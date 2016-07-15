@@ -1,6 +1,5 @@
 package com.psib.service.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +10,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.psib.controller.CrawlerController;
 import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
 import com.psib.dao.IFileServerDao;
@@ -27,13 +23,11 @@ import com.psib.dto.configuration.ConfigDTO;
 import com.psib.dto.configuration.ConfigDTOList;
 import com.psib.dto.configuration.PageDTO;
 import com.psib.dto.configuration.PageDTOList;
+import com.psib.dto.configuration.PageDataDTO;
 import com.psib.model.Address;
 import com.psib.model.District;
 import com.psib.model.ProductDetail;
-import com.psib.service.IAddressManager;
-import com.psib.service.IDistrictManager;
 import com.psib.service.IForceParseManager;
-import com.psib.service.IProductManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
 import com.psib.util.SpringPropertiesUtil;
@@ -86,27 +80,27 @@ public class ForceParseManager implements IForceParseManager {
 					break;
 				}
 			}
-			// lay xpath foodName
-			List<String> pagexpaths = new ArrayList<String>();
-			pagexpaths.add(pageConfig.getXpath());
-			pagexpaths.add(pageConfig.getFoodName());
-			pagexpaths.add(pageConfig.getImage());
+			xmlFilePath = getParserConfigFilePath();
+			ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
+			List<ConfigDTO> configs = tmp.getConfig();
+			System.out.println("Config Size: " + configs.size());
+
+			ConfigDTO config = new ConfigDTO();
+			for (ConfigDTO cfg : configs) {
+				if (cfg.getSite().equals(url)) {
+					config = cfg;
+					break;
+				}
+			}
 
 			System.out.println("Page Config Link: " + pageConfig.getSite());
 			System.out.println("Page Config Xpath: " + pageConfig.getXpath());
 
-			// chuan bi parse
-			// parse voi trang foody.
-			// goi trinh duyet moi bang selenium
-
-			// page = webClient.getPage(pageConfig.getLinkPage());
 			driver.manage().deleteAllCookies();
 			driver.get(pageConfig.getLinkPage());
 			System.out.println("Link PAGE: " + pageConfig.getLinkPage());
-			// tu dong scroll chuot xuong cuoi cung
 			By selBy = By.tagName("body");
 			int initialHeight = driver.findElement(selBy).getSize().getHeight();
-			int currentHeight = 0;
 			for (int temp = 1; temp < numOfPage; temp++) {
 				initialHeight = driver.findElement(selBy).getSize().getHeight();
 
@@ -115,148 +109,49 @@ public class ForceParseManager implements IForceParseManager {
 
 				System.out.println("Sleeping... wleepy " + temp);
 				Thread.sleep(2000);
-				currentHeight = driver.findElement(selBy).getSize().getHeight();
 			}
-
-			// no++;
-			// HtmlPage page = webClient.getPage(pageConfig.getLinkPage());
-			// bat dau lay link de vao trang
 			System.out.println("XPath Link: " + pageConfig.getXpath());
 
-			String restaurantName = "", address = "", foodName = "", userRate = "", map = "";
+			String restaurantName = "", address = "", productName = "", userRate = "", map = "";
 			String thumbpath = "";
-			// list
-			List<String> pageUrl = new ArrayList<String>();
-			List<String> foodResult = new ArrayList<String>();
-			List<String> image = new ArrayList<String>();
-			int counter = 0;
-			List<WebElement> foodnamepage = null;
 
-			for (String foodname : pagexpaths) {
-				counter++;
-				foodnamepage = driver.findElements(By.xpath(foodname));
-				for (WebElement food : foodnamepage) {
-					switch (counter) {
-					case 1:
-						pageUrl.add(food.getAttribute("href"));
-						break;
-					case 2:
-						foodResult.add(food.getText());
-						break;
-					case 3:
-						image.add(food.getAttribute("src"));
-					}
-				}
-
+			List<PageDataDTO> pageList = new ArrayList<PageDataDTO>();
+			List<WebElement> despageUrls = driver.findElements(By.xpath(pageConfig.getXpath()));
+			List<WebElement> productNames = driver.findElements(By.xpath(pageConfig.getFoodName()));
+			List<WebElement> images = driver.findElements(By.xpath(pageConfig.getImage()));
+			for (int i = 0; i < despageUrls.size(); i++) {
+				PageDataDTO page = new PageDataDTO();
+				page.setNextPageUrl(despageUrls.get(i).getAttribute("href"));
+				page.setProductName(productNames.get(i).getText());
+				page.setImageLink(images.get(i).getAttribute("src"));
+				pageList.add(page);
 			}
-			System.out.println("--Number of record: " + foodnamepage.size());
+			System.out.println("--Number of record: " + pageList.size());
 
-			// for (WebElement data : pages) {
-			//
-			// }
-
-			// Load file XPath cÃƒÂ³ sÃ¡ÂºÂµn
 			int countAdded = 0;
 			int countExits = 0;
-			for (int i = 0; i < pageUrl.size(); i++) {
-				String str = pageUrl.get(i);
-				foodName = foodResult.get(i);
-				thumbpath = image.get(i);
-				System.out.println("==Parsing Page URL: " + str);
+			for (int i = 0; i < pageList.size(); i++) {
+				String pageDescriptionLink = pageList.get(i).getNextPageUrl();
+				productName = pageList.get(i).getProductName();
+				String newProductName = CommonUtils.splitName(productName);
+				thumbpath = pageList.get(i).getImageLink();
+
+				System.out.println("==Parsing Page URL: " + pageDescriptionLink);
 				System.out.println("-----Parsing Page Content-----");
-				CommonUtils common = new CommonUtils();
-				String newProductName = common.splitName(foodName);
 
-				counter++;
-
-				if (str.indexOf(url) == -1) {
-					str = url + str;
+				if (pageDescriptionLink.indexOf(url) == -1) {
+					pageDescriptionLink = url + pageDescriptionLink;
 				}
 
-				// Parse tÃ¡Â»Â«ng page
 				try {
-					driver.get(str);
+					driver.get(pageDescriptionLink);
 				} catch (FailingHttpStatusCodeException e) {
-					e.printStackTrace();
+					System.out.println("some thing wrong");
 				}
-				int count = 0;
-				int countTam = 0;
-				// lay config page
-				xmlFilePath = getParserConfigFilePath();
-				ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
-				List<ConfigDTO> configs = tmp.getConfig();
-				System.out.println("Config Size: " + configs.size());
-
-				// tao list xpath
-				List<String> xpaths = new ArrayList<String>();
-				ConfigDTO config = new ConfigDTO();
-				for (ConfigDTO cfg : configs) {
-					if (cfg.getSite().equals(url)) {
-						config = cfg;
-						break;
-					}
-				}
-				// add xpath
-				xpaths.add(config.getName());
-				xpaths.add(config.getAddress());
-				String rat = config.getUserRate();
-				if (rat.equals("N/A")) {
-					for (String xpath : xpaths) {
-						System.out.println("Xpath: " + xpath + " : " + count);
-						count++;
-						if (xpath != null) {
-							List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
-							for (WebElement content : contents) {
-								countTam++;
-								switch (count) {
-								case 1:
-									restaurantName = content.getText();
-									break;
-								case 2:
-									address = content.getText();
-									break;
-								// case 3:
-								// userRate = content.getText();
-								// break;
-								// case 4:
-								// map =
-								// content.getAttribute("src");
-								// break;
-								}
-								// contents.add(tmpString);
-							}
-						}
-					}
-				}
-				int countT = 0;
-				if (!rat.equals("N/A")) {
-					xpaths.add(config.getUserRate());
-					for (String xpath : xpaths) {
-						System.out.println("Xpath: " + xpath + " : " + countT);
-						countT++;
-						if (xpath != null) {
-							List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
-							for (WebElement content : contents) {
-								countTam++;
-								switch (countT) {
-								case 1:
-									restaurantName = content.getText();
-									break;
-								case 2:
-									address = content.getText();
-									break;
-								case 3:
-									userRate = content.getText();
-									break;
-								// case 4:
-								// map =
-								// content.getAttribute("src");
-								// break;
-								}
-								// contents.add(tmpString);
-							}
-						}
-					}
+				restaurantName = driver.findElement(By.xpath(config.getName())).getText();
+				address = driver.findElement(By.xpath(config.getAddress())).getText();
+				if (config.getUserRate() != "N/A") {
+					userRate = driver.findElement(By.xpath(config.getUserRate())).getText();
 				}
 
 				List<WebElement> listimg = driver.findElements(By.tagName("a"));
@@ -318,7 +213,6 @@ public class ForceParseManager implements IForceParseManager {
 					System.out.println("Add district done");
 				}
 				if (districtID != 0) {
-					System.out.println("District exist");
 					addressDAO.setDistrictId(districtID);
 					addressDAO.setName(newAddress);
 					addressDAO.setLatitude(latitude);
@@ -339,7 +233,7 @@ public class ForceParseManager implements IForceParseManager {
 					productDetails.setRate(rate);
 					productDetails.setRestaurantName(restaurantName);
 					productDetails.setThumbPath(thumbpath);
-					productDetails.setUrlRelate(str);
+					productDetails.setUrlRelate(pageDescriptionLink);
 					productDetails.setAddressId(addressID);
 					productDetails.setSource(url);
 
@@ -377,7 +271,7 @@ public class ForceParseManager implements IForceParseManager {
 			int numOfPage = 0;
 			int noOfPage = 0;
 			int countAdded = 0;
-			int countExits = 0;
+			int countExist = 0;
 			if (numPage != null && !numPage.isEmpty()) {
 				numOfPage = Integer.parseInt(numPage);
 			} else {
@@ -399,18 +293,23 @@ public class ForceParseManager implements IForceParseManager {
 					break;
 				}
 			}
-			// lay xpath foodName
-			List<String> pagexpaths = new ArrayList<String>();
-			pagexpaths.add(pageConfig.getXpath());
-			pagexpaths.add(pageConfig.getFoodName());
-			pagexpaths.add(pageConfig.getImage());
+			xmlFilePath = getParserConfigFilePath();
+			ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
+			List<ConfigDTO> configs = tmp.getConfig();
+			System.out.println("Config Size: " + configs.size());
+
+			ConfigDTO config = new ConfigDTO();
+			for (ConfigDTO cfg : configs) {
+				if (cfg.getSite().equals(url)) {
+					config = cfg;
+					break;
+				}
+			}
 
 			System.out.println("Page Config Link: " + pageConfig.getSite());
 			System.out.println("Page Config Xpath: " + pageConfig.getXpath());
 
-			// chuan bi parse
 			int no = 1;
-			// goi trinh duyet moi bang selenium
 			if (numOfPage > 0) {
 				while (no <= numOfPage) {
 					if (no == 1) {
@@ -435,138 +334,45 @@ public class ForceParseManager implements IForceParseManager {
 					}
 					no++;
 
-					String restaurantName = "", address = "", foodName = "", userRate = "", map = "";
+					String restaurantName = "", address = "", productName = "", userRate = "", map = "";
 					String thumbpath = "";
 					// list
-					List<String> pageUrl = new ArrayList<String>();
-					List<String> foodResult = new ArrayList<String>();
-					List<String> image = new ArrayList<String>();
-					int counter = 0;
-					List<WebElement> results = null;
-
-					for (String pagexpath : pagexpaths) {
-						counter++;
-						results = driver.findElements(By.xpath(pagexpath));
-						for (WebElement result : results) {
-							switch (counter) {
-							case 1:
-								pageUrl.add(result.getAttribute("href"));
-								break;
-							case 2:
-								foodResult.add(result.getText());
-								break;
-							case 3:
-								image.add(result.getAttribute("src"));
-							}
-						}
-
+					List<PageDataDTO> pageList = new ArrayList<PageDataDTO>();
+					List<WebElement> despageUrls = driver.findElements(By.xpath(pageConfig.getXpath()));
+					List<WebElement> productNames = driver.findElements(By.xpath(pageConfig.getFoodName()));
+					List<WebElement> images = driver.findElements(By.xpath(pageConfig.getImage()));
+					for (int i = 0; i < despageUrls.size(); i++) {
+						PageDataDTO page = new PageDataDTO();
+						page.setNextPageUrl(despageUrls.get(i).getAttribute("href"));
+						page.setProductName(productNames.get(i).getText());
+						page.setImageLink(images.get(i).getAttribute("src"));
+						pageList.add(page);
 					}
-					System.out.println("--Number of record: " + results.size());
+					System.out.println("--Number of record: " + pageList.size());
+					for (int i = 0; i < pageList.size(); i++) {
+						String pageDescriptionLink = pageList.get(i).getNextPageUrl();
+						productName = pageList.get(i).getProductName();
+						String newProductName = CommonUtils.splitName(productName);
+						thumbpath = pageList.get(i).getImageLink();
 
-					// for (WebElement data : pages) {
-					//
-					// }
-
-					// Load file XPath
-					for (int i = 0; i < pageUrl.size(); i++) {
-						String str = pageUrl.get(i);
-						foodName = foodResult.get(i);
-						thumbpath = image.get(i);
-						System.out.println("==Parsing Page URL: " + str);
+						System.out.println("==Parsing Page URL: " + pageDescriptionLink);
 						System.out.println("-----Parsing Page Content-----");
-						CommonUtils common = new CommonUtils();
-						String newProductName = common.splitName(foodName);
-						counter++;
 
-						if (str.indexOf(url) == -1) {
-							str = url + str;
+						if (pageDescriptionLink.indexOf(url) == -1) {
+							pageDescriptionLink = url + pageDescriptionLink;
 						}
 
-						// Parse từng page
 						try {
-							driver.get(str);
+							driver.get(pageDescriptionLink);
 						} catch (FailingHttpStatusCodeException e) {
-							e.printStackTrace();
+							System.out.println("some thing wrong");
 						}
-						int count = 0;
-						int countTam = 0;
-						int countT = 0;
-						// lay config page
-						xmlFilePath = getParserConfigFilePath();
-						ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
-						List<ConfigDTO> configs = tmp.getConfig();
-						System.out.println("Config Size: " + configs.size());
+						restaurantName = driver.findElement(By.xpath(config.getName())).getText();
+						address = driver.findElement(By.xpath(config.getAddress())).getText();
+						if (config.getUserRate() != "N/A") {
+							userRate = driver.findElement(By.xpath(config.getUserRate())).getText();
+						}
 
-						// tao list xpath
-						List<String> xpaths = new ArrayList<String>();
-						ConfigDTO config = new ConfigDTO();
-						for (ConfigDTO cfg : configs) {
-							if (cfg.getSite().equals(url)) {
-								config = cfg;
-								break;
-							}
-						}
-						// add xpath
-						xpaths.add(config.getName());
-						xpaths.add(config.getAddress());
-						String rat = config.getUserRate();
-						if (rat.equals("N/A")) {
-							for (String xpath : xpaths) {
-								System.out.println("Xpath: " + xpath + " : " + count);
-								count++;
-								if (xpath != null) {
-									List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
-									for (WebElement content : contents) {
-										countTam++;
-										switch (count) {
-										case 1:
-											restaurantName = content.getText();
-											break;
-										case 2:
-											address = content.getText();
-											break;
-										// case 3:
-										// userRate = content.getText();
-										// break;
-										// case 4:
-										// map =
-										// content.getAttribute("src");
-										// break;
-										}
-										// contents.add(tmpString);
-									}
-								}
-							}
-						}
-						if (!rat.equals("N/A")) {
-							xpaths.add(config.getUserRate());
-							for (String xpath : xpaths) {
-								System.out.println("XpathT: " + xpath + " : " + countT);
-								countT++;
-								if (xpath != null) {
-									List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
-									for (WebElement content : contents) {
-										countTam++;
-										switch (countT) {
-										case 1:
-											restaurantName = content.getText();
-											break;
-										case 2:
-											address = content.getText();
-											break;
-										case 3:
-											userRate = content.getText();
-											break;
-										// case 4:
-										// map =
-										// content.getAttribute("src");
-										// break;
-										}
-										// contents.add(tmpString);
-									}
-								}
-							}
-						}
 						List<WebElement> listimg = driver.findElements(By.tagName("a"));
 						String imgVal = "";
 						for (WebElement elem : listimg) {
@@ -586,7 +392,6 @@ public class ForceParseManager implements IForceParseManager {
 								}
 							}
 						}
-
 						double latitude = 0;
 						double longitude = 0;
 						if (map == "" || map == null || map.isEmpty()) {
@@ -604,9 +409,9 @@ public class ForceParseManager implements IForceParseManager {
 							latitude = CommonUtils.splitLat(map);
 							longitude = CommonUtils.splitLong(map);
 						}
-
 						String district = CommonUtils.splitDistrict(address);
 						String newAddress = CommonUtils.splitAddress(address);
+
 						double rate = 0;
 						if (!userRate.equals("")) {
 							rate = Double.parseDouble(userRate);
@@ -641,7 +446,7 @@ public class ForceParseManager implements IForceParseManager {
 						productDetails.setRate(rate);
 						productDetails.setRestaurantName(restaurantName);
 						productDetails.setThumbPath(thumbpath);
-						productDetails.setUrlRelate(str);
+						productDetails.setUrlRelate(pageDescriptionLink);
 						productDetails.setAddressId(addressID);
 						productDetails.setSource(url);
 
@@ -651,7 +456,7 @@ public class ForceParseManager implements IForceParseManager {
 							countAdded++;
 							System.out.println("Add to database success");
 						} else {
-							countExits++;
+							countExist++;
 							System.out.println("Cannot add to database");
 						}
 					}
@@ -671,140 +476,45 @@ public class ForceParseManager implements IForceParseManager {
 				}
 				System.out.println("XPath Link: " + pageConfig.getXpath());
 
-				String restaurantName = "", address = "", foodName = "", userRate = "", map = "";
+				String restaurantName = "", address = "", productName = "", userRate = "", map = "";
 				String thumbpath = "";
 				// list
-				List<String> pageUrl = new ArrayList<String>();
-				List<String> foodResult = new ArrayList<String>();
-				List<String> image = new ArrayList<String>();
-				int counter = 0;
-				List<WebElement> foodnamepage = null;
-
-				for (String foodname : pagexpaths) {
-					counter++;
-					foodnamepage = driver.findElements(By.xpath(foodname));
-					for (WebElement food : foodnamepage) {
-						switch (counter) {
-						case 1:
-							pageUrl.add(food.getAttribute("href"));
-							break;
-						case 2:
-							foodResult.add(food.getText());
-							break;
-						case 3:
-							image.add(food.getAttribute("src"));
-						}
-					}
-
+				List<PageDataDTO> pageList = new ArrayList<PageDataDTO>();
+				List<WebElement> despageUrls = driver.findElements(By.xpath(pageConfig.getXpath()));
+				List<WebElement> productNames = driver.findElements(By.xpath(pageConfig.getFoodName()));
+				List<WebElement> images = driver.findElements(By.xpath(pageConfig.getImage()));
+				for (int i = 0; i < despageUrls.size(); i++) {
+					PageDataDTO page = new PageDataDTO();
+					page.setNextPageUrl(despageUrls.get(i).getAttribute("href"));
+					page.setProductName(productNames.get(i).getText());
+					page.setImageLink(images.get(i).getAttribute("src"));
+					pageList.add(page);
 				}
-				System.out.println("--Number of record: " + foodnamepage.size());
+				System.out.println("--Number of record: " + pageList.size());
+				for (int i = 0; i < pageList.size(); i++) {
+					String pageDescriptionLink = pageList.get(i).getNextPageUrl();
+					productName = pageList.get(i).getProductName();
+					String newProductName = CommonUtils.splitName(productName);
+					thumbpath = pageList.get(i).getImageLink();
 
-				// for (WebElement data : pages) {
-				//
-				// }
-
-				// Load file XPath cÃƒÂ³ sÃ¡ÂºÂµn
-				for (int i = 0; i < pageUrl.size(); i++) {
-					String str = pageUrl.get(i);
-					foodName = foodResult.get(i);
-					thumbpath = image.get(i);
-					System.out.println("==Parsing Page URL: " + str);
+					System.out.println("==Parsing Page URL: " + pageDescriptionLink);
 					System.out.println("-----Parsing Page Content-----");
-					CommonUtils common = new CommonUtils();
-					String newProductName = common.splitName(foodName);
-					counter++;
 
-					if (str.indexOf(url) == -1) {
-						str = url + str;
+					if (pageDescriptionLink.indexOf(url) == -1) {
+						pageDescriptionLink = url + pageDescriptionLink;
 					}
 
-					// Parse tÃ¡Â»Â«ng page
 					try {
-						driver.get(str);
+						driver.get(pageDescriptionLink);
 					} catch (FailingHttpStatusCodeException e) {
-						e.printStackTrace();
+						System.out.println("some thing wrong");
 					}
-					int count = 0;
-					int countTam = 0;
-					// lay config page
-					xmlFilePath = getParserConfigFilePath();
-					ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
-					List<ConfigDTO> configs = tmp.getConfig();
-					System.out.println("Config Size: " + configs.size());
+					restaurantName = driver.findElement(By.xpath(config.getName())).getText();
+					address = driver.findElement(By.xpath(config.getAddress())).getText();
+					if (config.getUserRate() != "N/A") {
+						userRate = driver.findElement(By.xpath(config.getUserRate())).getText();
+					}
 
-					// tao list xpath
-					List<String> xpaths = new ArrayList<String>();
-					ConfigDTO config = new ConfigDTO();
-					for (ConfigDTO cfg : configs) {
-						if (cfg.getSite().equals(url)) {
-							config = cfg;
-							break;
-						}
-					}
-					// add xpath
-					xpaths.add(config.getName());
-					xpaths.add(config.getAddress());
-
-					String rat = config.getUserRate();
-					if (rat.equals("N/A")) {
-						for (String xpath : xpaths) {
-							System.out.println("Xpath: " + xpath + " : " + count);
-							count++;
-							if (xpath != null) {
-								List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
-								for (WebElement content : contents) {
-									countTam++;
-									switch (count) {
-									case 1:
-										restaurantName = content.getText();
-										break;
-									case 2:
-										address = content.getText();
-										break;
-									// case 3:
-									// userRate = content.getText();
-									// break;
-									// case 4:
-									// map =
-									// content.getAttribute("src");
-									// break;
-									}
-									// contents.add(tmpString);
-								}
-							}
-						}
-					}
-					int countT = 0;
-					if (!rat.equals("N/A")) {
-						xpaths.add(config.getUserRate());
-						for (String xpath : xpaths) {
-
-							System.out.println("Xpath: " + xpath + " : " + countT);
-							countT++;
-							if (xpath != null) {
-								List<WebElement> contents = (List<WebElement>) driver.findElements(By.xpath(xpath));
-								for (WebElement content : contents) {
-									countTam++;
-									switch (count) {
-									case 1:
-										restaurantName = content.getText();
-										break;
-									case 2:
-										address = content.getText();
-										break;
-									case 3:
-										userRate = content.getText();
-										break;
-									// case 4:
-									// map =
-									// content.getAttribute("src");
-									// break;
-									}
-									// contents.add(tmpString);
-								}
-							}
-						}
-					}
 					List<WebElement> listimg = driver.findElements(By.tagName("a"));
 					String imgVal = "";
 					for (WebElement elem : listimg) {
@@ -841,9 +551,9 @@ public class ForceParseManager implements IForceParseManager {
 						latitude = CommonUtils.splitLat(map);
 						longitude = CommonUtils.splitLong(map);
 					}
-
 					String district = CommonUtils.splitDistrict(address);
 					String newAddress = CommonUtils.splitAddress(address);
+
 					double rate = 0;
 					if (!userRate.equals("")) {
 						rate = Double.parseDouble(userRate);
@@ -863,7 +573,6 @@ public class ForceParseManager implements IForceParseManager {
 
 						System.out.println("Add district done");
 					}
-					System.out.println("District exist");
 					addressDAO.setDistrictId(districtID);
 					addressDAO.setName(newAddress);
 					addressDAO.setLatitude(latitude);
@@ -882,7 +591,7 @@ public class ForceParseManager implements IForceParseManager {
 					productDetails.setRate(rate);
 					productDetails.setRestaurantName(restaurantName);
 					productDetails.setThumbPath(thumbpath);
-					productDetails.setUrlRelate(str);
+					productDetails.setUrlRelate(pageDescriptionLink);
 					productDetails.setAddressId(addressID);
 					productDetails.setSource(url);
 
@@ -892,14 +601,14 @@ public class ForceParseManager implements IForceParseManager {
 						countAdded++;
 						System.out.println("Add to database success");
 					} else {
-						countExits++;
+						countExist++;
 						System.out.println("Cannot add to database");
 					}
 				}
 			}
 			driver.close();
 			System.out.println("Sucessfull Added Record: " + countAdded);
-			System.out.println("Exist Record: " + countExits);
+			System.out.println("Exist Record: " + countExist);
 			long estimatedTime = System.nanoTime() - startTime;
 			double seconds = (double) estimatedTime / 1000000000.0;
 			System.out.println("Elapsed time: " + seconds);

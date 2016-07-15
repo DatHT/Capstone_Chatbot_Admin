@@ -242,7 +242,7 @@ public class CommonUtils {
 		return district;
 	}
 
-	public String splitName(String stringname) throws ArrayIndexOutOfBoundsException, IndexOutOfBoundsException {
+	public static String splitName(String stringname) throws ArrayIndexOutOfBoundsException, IndexOutOfBoundsException {
 		if (stringname.length() > 250) {
 			stringname = stringname.substring(0, 250);
 			return stringname;
@@ -359,5 +359,15 @@ public class CommonUtils {
 			src = src.replaceAll("href=\"www", "href=\"//www");
 		}
 		return src;
+	}
+	public static String commonUrl(String link){
+		String url = "";
+		String[] str_array = link.split("/");
+		for (int i = 0; i < 3; i++) {
+			url = url + str_array[i] + "/";
+		}
+		url = url.substring(0, url.length() - 1);
+		
+		return url;
 	}
 }

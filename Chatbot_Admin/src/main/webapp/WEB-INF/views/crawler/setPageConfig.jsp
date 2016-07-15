@@ -25,67 +25,65 @@
 	<div class="c-header">
 		<h2>Configuration</h2>
 	</div>
-	<div class="card">
-		<form:form name="myForm" id="myForm" action="addPageDetails"
-			method="post">
-			<div class="scroller_anchor"></div>
-			<div class="card-header">
-				<h2>Please Select An Element And Get XPath</h2>
-			</div>
-			<div class="form-group card card-header scroller" style="">
-				<div class="progressRecipe">
-					<div class="circle done">
-						<span class="labelRecipe">0</span> <span class="title">Welcome</span>
-					</div>
-					<span class="bar half"></span> <span class="bar"></span>
-					<div class="circle active">
-						<span class="labelRecipe">1</span> <span class="title"
-							style="margin-left: -30px" s>RestaurantName</span>
-					</div>
-					<span class="bar"></span> <span class="bar"></span>
-					<div class="circle">
-						<span class="labelRecipe">2</span> <span class="title">Address</span>
-					</div>
-					<span class="bar"></span> <span class="bar"></span>
-					<div class="circle">
-						<span class="labelRecipe">3</span> <span class="title">UserRate</span>
-					</div>
+	<form:form name="myForm" id="myForm" action="addPageDetails"
+		method="post">
+		<div class="scroller_anchor"></div>
+		<div class="card-header">
+			<h2>Please Select An Element And Get XPath</h2>
+		</div>
+		<div class="form-group card card-header scroller" style="">
+			<div class="progressRecipe">
+				<div class="circle done">
+					<span class="labelRecipe">0</span> <span class="title">Welcome</span>
 				</div>
-				<button type="button" class="btn btn-primary" value="BACK"
-					onclick="back()">BACK</button>
-				<button type="button" class="btn btn-primary" id="btnNext"
-					value="NEXT" onclick="next()">NEXT</button>
-				<!--disable-->
-				<button type="button" class="btn btn-primary" id="btnPreview"
-					value="PREVIEW" onclick="openpopup('popup')" disabled>PREVIEW</button>
-				<button type="submit" class="btn btn-primary" id="btnAdd"
-					name="btnAction" value="AddNewConfiguration" onclick="addNew()"
-					disabled>AddNewPageDetails</button>
-				<button type="button" class="btn btn-primary" value="HOME"
-					onclick="window.location = 'crawler'">HOME</button>
-				<div class="table-responsive" style="min-height: 70px">
-					<table class="table" id="tbItems" border="1" width="619"
-						class="table">
-						<th width="97%">Content</th>
-					</table>
-					<br />
-					<div id="showXPath"></div>
-					<br />
+				<span class="bar half"></span> <span class="bar"></span>
+				<div class="circle active">
+					<span class="labelRecipe">1</span> <span class="title"
+						style="margin-left: -30px" s>RestaurantName</span>
+				</div>
+				<span class="bar"></span> <span class="bar"></span>
+				<div class="circle">
+					<span class="labelRecipe">2</span> <span class="title">Address</span>
+				</div>
+				<span class="bar"></span> <span class="bar"></span>
+				<div class="circle">
+					<span class="labelRecipe">3</span> <span class="title">UserRate</span>
 				</div>
 			</div>
-			<div id="popup" class="popup"></div>
-			<div id="bg" class="popup_bg"></div>
-			<div class="col-sm-12 scollchange">
-				<iframe width="100%" sandbox="allow-same-origin allow-form"
-					width="700" height="500" id="myframe" src="resources/tmp.html"
-					onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
-				</iframe>
+			<button type="button" class="btn btn-primary" value="BACK"
+				onclick="back()">BACK</button>
+			<button type="button" class="btn btn-primary" id="btnNext"
+				value="NEXT" onclick="next()">NEXT</button>
+			<!--disable-->
+			<button type="button" class="btn btn-primary" id="btnPreview"
+				value="PREVIEW" onclick="openpopup('popup')" disabled>PREVIEW</button>
+			<button type="submit" class="btn btn-primary" id="btnAdd"
+				name="btnAction" value="AddNewConfiguration" onclick="addNew()"
+				disabled>AddNewPageDetails</button>
+			<button type="button" class="btn btn-primary" value="HOME"
+				onclick="window.location = 'crawler'">HOME</button>
+			<div class="table-responsive" style="min-height: 70px">
+				<table class="table" id="tbItems" border="1" width="619"
+					class="table">
+					<th width="97%">Content</th>
+				</table>
+				<br />
+				<div id="showXPath"></div>
+				<br />
 			</div>
-			<table id="tbMain">
+		</div>
+		<div id="popup" class="popup"></div>
+		<div id="bg" class="popup_bg"></div>
+		<div class="col-sm-12 scollchange">
+			<iframe width="100%" sandbox="allow-same-origin allow-form"
+				width="700" height="500" id="myframe" src="resources/tmp.html"
+				onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+			</iframe>
+		</div>
+		<table id="tbMain">
 
-			</table>
-		</form:form>
-	</div>
+		</table>
+	</form:form>
 	<!-- Placed js at the end of the document so the pages load faster -->
 </body>
 <script>

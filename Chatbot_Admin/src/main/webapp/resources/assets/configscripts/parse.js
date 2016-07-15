@@ -682,20 +682,21 @@ function openpopup(id) {
 	// Get Div width and height from StyleSheet
 	var divWidth = computedStyle.width.replace('px', '');
 	var divHeight = computedStyle.height.replace('px', '');
-	var divLeft = (pageWidth - divWidth) / 3;
+	var divLeft = (pageWidth - divWidth) / 2;
 	var divTop = (pageHeight - divHeight) / 5;
 	// Set Left and top coordinates for the div tag
 	divobj.style.left = divLeft + "px";
 	divobj.style.top = divTop + "px";
 	// Put a Close button for closing the popped up Div tag
 	if (divobj.innerHTML.indexOf("closepopup('" + id + "')") < 0)
-		divobj.innerHTML = "<div class=\"panel panel-primary\" style=\"position:fixed\"><div class=\"panel-heading\" style=\"position:fixed;height:42px;width:510px;margin:-5px\">"
-				+ "<p style=\"font-size:18px;float:left;padding:8px\">Preview Your Selected Field</p>"
-				+ "<button style=\"margin:5px 0px\" type=\"submit\" class=\"btn btn-info m-b-10\" id=\"btnAdd\" name =\"btnAction\" value=\"AddNewConfiguration\" onclick=\"addNew()\" >AddNewPageDetails</button>"
-				+ "<a style=\"float:right;padding:5px;margin-right:70px\" href=\"#\" onclick=\"closepopup('"
-				+ id
-				+ "')\"><span class=\"btn btn-danger m-b-less\" style=\"float:right;position:fixed\">Close</span></a></div></div>"
-				+ divobj.innerHTML;
+		divobj.innerHTML = "<div class=\"panel panel-primary\" style=\"position:fixed\"><div class=\"panel-heading\" style=\"position:relative;height:42px;width:510px;margin:-5px\">"
+			+ "<p style=\"font-size:14px;float:left;padding:10px\">Preview Your Selected Field</p>"
+			+ "<a style=\"float:right;padding:5px;margin-right:20px\" href=\"#\" onclick=\"closepopup('"
+			+ id
+			+ "')\"><span class=\"btn btn-danger m-b-less\" style=\"float:right;position:relative\">Close</span></a>"
+			+ "<button style=\"float:right;margin:5px\" type=\"submit\" class=\"btn btn-info m-b-10\" id=\"btnAdd\" name =\"btnAction\" value=\"AddNewConfiguration\" onclick=\"addNew()\" >AddPageDetails</button>"
+			+"</div></div>"
+			+ divobj.innerHTML;
 }
 function closepopup(id) {
 	var divbg = document.getElementById('bg');
