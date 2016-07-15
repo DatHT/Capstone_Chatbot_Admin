@@ -38,6 +38,9 @@ public class ProductController {
                                     @ModelAttribute(value = "deleteResult") String deleteResult) {
         LOG.info("[loadProduct] Start");
 
+        // TODO remove
+        productManager.calcSynonymName();
+
         ModelAndView model = new ModelAndView("product");
 
         if (addResult.equals("")) {

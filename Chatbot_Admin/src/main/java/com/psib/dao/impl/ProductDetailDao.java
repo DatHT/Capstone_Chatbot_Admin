@@ -1,17 +1,15 @@
 package com.psib.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.transaction.Transactional;
-
+import com.psib.dao.IProductDetailDao;
+import com.psib.dto.ProductDetailDto;
+import com.psib.model.ProductDetail;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
-import com.psib.dao.IProductDetailDao;
-import com.psib.dto.ProductDetailDto;
-import com.psib.model.ProductDetail;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IProductDetailDao {
@@ -29,15 +27,7 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
     @Override
     @Transactional
     public ProductDetail getProductDetailById(long productId) {
-    	return getById(productId);
-    }
-    
-    @Override
-    @Transactional
-    public List<ProductDetail> getAllItem() {
-        LOG.info("[getAllItem] Start");
-        LOG.info("[getAllItem] End");
-        return getAll();
+        return getById(productId);
     }
 
     @Override
@@ -182,14 +172,6 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
 
     @Override
     @Transactional
-    public void deleteProductDetail(ProductDetail productDetail) {
-        LOG.info("[deleteProductDetail] Start: id = " + productDetail.getProductId());
-        delete(productDetail);
-        LOG.info("[deleteProductDetail] End");
-    }
-
-    @Override
-    @Transactional
     public void deleteById(ProductDetail productDetail) {
         LOG.info("[deleteById] Start: id = " + productDetail.getProductId());
         String sql = "DELETE FROM " + ProductDetail.class.getSimpleName() + " P WHERE P.productId = :productId";
@@ -217,5 +199,21 @@ public class ProductDetailDao extends BaseDao<ProductDetail, Long> implements IP
         }
         LOG.info("[checkProductExist] End");
         return null;
+    }
+
+    @Override
+    @Transactional
+    public List<ProductDetail> getProductSortById(int skip, int limit) {
+        LOG.info("[getProductSortById] Start");
+        LOG.info(new StringBuilder("[getProductName] Start: skip = ").append(skip)
+                .append(" limit = ").append(limit));
+        StringBuilder sql = new StringBuilder("FROM ").append(ProductDetail.class.getSimpleName())
+                .append(" P ORDER BY P.productId ASC");
+        Query query = getSession().createQuery(String.valueOf(sql));
+        query.setFirstResult(skip);
+        query.setMaxResults(limit);
+        List<ProductDetail> result = query.list();
+        LOG.info("[getProductSortById] End");
+        return result;
     }
 }

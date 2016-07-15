@@ -6,11 +6,9 @@ import com.psib.dto.ProductDetailDto;
 import com.psib.model.ProductDetail;
 
 public interface IProductDetailDao {
-	public ProductDetail getProductDetailById(long productId);
+    public ProductDetail getProductDetailById(long productId);
 
-	List<ProductDetail> getAllItem();
-
-	long countBySearchPhrase(String searchPhrase);
+    long countBySearchPhrase(String searchPhrase);
 
     List<ProductDetailDto> getBySearchPhraseAndSort(String searchPhrase, String sortProductName, String sortAddressName
             , String sortDistrictName, String sortRate, String sortRestaurantName
@@ -20,11 +18,11 @@ public interface IProductDetailDao {
 
     void insertProductDetail(ProductDetail productDetail);
 
-	void updateProductDetail(ProductDetail productDetail);
+    void updateProductDetail(ProductDetail productDetail);
 
-	void deleteProductDetail(ProductDetail productDetail);
-
-	void deleteById(ProductDetail productDetail);
+    void deleteById(ProductDetail productDetail);
 
     ProductDetail checkProductExist(ProductDetail productDetail);
+
+    List<ProductDetail> getProductSortById(int skip, int limit);
 }

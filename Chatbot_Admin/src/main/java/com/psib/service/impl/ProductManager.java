@@ -1,15 +1,19 @@
 package com.psib.service.impl;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.psib.common.DatabaseException;
 import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
 import com.psib.dao.IProductDetailDao;
+import com.psib.dao.ISynonymDao;
 import com.psib.dto.BootGirdDto;
 import com.psib.dto.ProductDetailDto;
 import com.psib.dto.ProductDetailJsonDto;
 import com.psib.model.Address;
 import com.psib.model.District;
 import com.psib.model.ProductDetail;
+import com.psib.model.Synonym;
 import com.psib.service.IProductManager;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
 import com.psib.util.SpringPropertiesUtil;
@@ -24,12 +28,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ProductManager implements IProductManager {
 
     private static final Logger LOG = Logger.getLogger(ProductManager.class);
+
+    private static final Integer LIMIT_RESULT_PRODUCT = 1000;
+    private static final Integer LIMIT_RESULT_SYNONYM = 1000;
 
     @Autowired
     private IProductDetailDao productDetailDao;
@@ -39,6 +48,9 @@ public class ProductManager implements IProductManager {
 
     @Autowired
     private IAddressDao addressDao;
+
+    @Autowired
+    private ISynonymDao synonymDao;
 
     @Override
     public BootGirdDto getAllForPaging(int current, int rowCount, String searchPhrase,
@@ -247,6 +259,89 @@ public class ProductManager implements IProductManager {
         productDetail.setProductId(Long.parseLong(productId));
         productDetailDao.deleteById(productDetail);
         LOG.info("[deleteProduct] End");
+    }
+
+    @Override
+    public void calcSynonymName() {
+        int skipResultProduct = 0;
+        int skipResultSynonym = 0;
+        int productListSize = -1;
+        int synonymListSize = -1;
+        int replaceSynonymListSize = -1;
+        List<ProductDetail> productList;
+        List<Synonym> synonymList;
+        List<String> replaceSynonymList = new ArrayList<>();
+        ProductDetail productDetail;
+        Synonym synonym;
+        String productName;
+        String synonymName;
+        String productSynonym;
+        String tmp;
+        int i;
+        int j;
+        int k;
+        List<String> list;
+        List<String> list2;
+        Set<String> lookup;
+        int lookupSize;
+
+        while (productListSize != 0) {
+            // get product name
+            productList = productDetailDao.getProductSortById(skipResultProduct, LIMIT_RESULT_PRODUCT);
+            productListSize = productList.size();
+
+            for (i = 0; i < productListSize; i++) {
+                productDetail = productList.get(i);
+                productName = productDetail.getProductName().toLowerCase();
+                productSynonym = productName + ";";
+                skipResultSynonym = 0;
+                synonymListSize = -1;
+
+                while (synonymListSize != 0) {
+                    // get synonym
+                    synonymList = synonymDao.getSynonymNameSortById(skipResultSynonym, LIMIT_RESULT_SYNONYM);
+                    synonymListSize = synonymList.size();
+
+                    for (j = 0; j < synonymListSize; j++) {
+                        synonym = synonymList.get(j);
+                        synonymName = synonym.getName().toLowerCase();
+                        if (productName.contains(synonymName)) {
+                            replaceSynonymList = synonymDao.getByIdAndSynonymId(synonym.getId(), synonym.getSynonymId());
+                            replaceSynonymListSize = replaceSynonymList.size();
+
+                            for (k = 0; k < replaceSynonymListSize; k++) {
+                                tmp = productSynonym.replace(synonymName, replaceSynonymList.get(k));
+                                productSynonym += tmp;
+                            }
+                        }
+                    }
+
+                    skipResultSynonym += LIMIT_RESULT_SYNONYM;
+                }
+
+                list = Lists.newArrayList(Splitter.on(";").split(productSynonym));
+                list2 = new ArrayList<>();
+                lookup = new HashSet<>();
+                for (String item : list) {
+                    if (lookup.add(item)) {
+                        // Set.add returns false if item is already in the set
+                        list2.add(item);
+                    }
+                }
+                list = list2;
+                productSynonym = "";
+
+                lookupSize = list.size() - 1;
+
+                for (j = 0; j < lookupSize; j++) {
+                    productSynonym += list.get(j) + ";";
+                }
+                productDetail.setSynonymName(productSynonym);
+                productDetailDao.updateProductDetail(productDetail);
+            }
+
+            skipResultProduct += LIMIT_RESULT_PRODUCT;
+        }
     }
 
     private long insertAddress(Address address, double latitude, double longitude, String restaurant, String district) {

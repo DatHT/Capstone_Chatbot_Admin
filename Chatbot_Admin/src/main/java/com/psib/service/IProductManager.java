@@ -26,4 +26,6 @@ public interface IProductManager {
                       String productId, MultipartFile file);
 
     void deleteProduct(String productId);
+
+    void calcSynonymName();
 }

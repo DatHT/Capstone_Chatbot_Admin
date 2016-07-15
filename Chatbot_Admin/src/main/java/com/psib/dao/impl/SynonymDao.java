@@ -192,4 +192,35 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
         LOG.info("[checkWordExist] End");
         return result;
     }
+
+    @Override
+    @Transactional
+    public List<Synonym> getSynonymNameSortById(int skip, int limit) {
+        LOG.info("[getSynonymNameSortById] Start");
+        LOG.info(new StringBuilder("[getProductName] Start: skip = ").append(skip)
+                .append(" limit = ").append(limit));
+        StringBuilder sql = new StringBuilder("FROM ").append(Synonym.class.getSimpleName())
+                .append(" S ORDER BY S.id ASC");
+        Query query = getSession().createQuery(String.valueOf(sql));
+        query.setFirstResult(skip);
+        query.setMaxResults(limit);
+        List<Synonym> result = query.list();
+        LOG.info("[getSynonymNameSortById] End");
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public List<String> getByIdAndSynonymId(int id, int synonymId) {
+        LOG.info("[Synonym] Start: id = " + id);
+        StringBuilder sql = new StringBuilder("SELECT S.name FROM ").append(Synonym.class.getSimpleName())
+                .append(" S WHERE (S.id = :synonymId OR S.synonymId = :id OR (S.synonymId = :synonymId AND S.synonymId != 0) OR S.id = :synonymId)")
+                .append(" AND S.id != :id");
+        Query query = getSession().createQuery(String.valueOf(sql));
+        query.setParameter("id", id);
+        query.setParameter("synonymId", synonymId);
+        List<String> result = query.list();
+        LOG.info("[Synonym] End");
+        return result;
+    }
 }

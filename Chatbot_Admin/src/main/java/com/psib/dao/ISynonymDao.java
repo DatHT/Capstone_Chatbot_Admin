@@ -22,4 +22,8 @@ public interface ISynonymDao {
     void deleteById(Synonym synonym);
 
     Synonym checkWordExist(Synonym synonym);
+
+    List<Synonym> getSynonymNameSortById(int skip, int limit);
+
+    List<String> getByIdAndSynonymId(int id, int synonymId);
 }
