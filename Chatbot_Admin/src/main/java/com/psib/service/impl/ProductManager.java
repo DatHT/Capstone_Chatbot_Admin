@@ -1,7 +1,5 @@
 package com.psib.service.impl;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import com.psib.common.DatabaseException;
 import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
@@ -28,7 +26,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -263,6 +260,7 @@ public class ProductManager implements IProductManager {
 
     @Override
     public void calcSynonymName() {
+        LOG.info("[calcSynonymName] Start");
         int skipResultProduct = 0;
         int skipResultSynonym = 0;
         int productListSize = -1;
@@ -292,7 +290,7 @@ public class ProductManager implements IProductManager {
 
             for (i = 0; i < productListSize; i++) {
                 productDetail = productList.get(i);
-                productName = productDetail.getProductName().toLowerCase();
+                productName = productDetail.getProductName().toLowerCase().trim();
                 productSynonym = productName + ";";
                 skipResultSynonym = 0;
                 synonymListSize = -1;
@@ -304,14 +302,14 @@ public class ProductManager implements IProductManager {
 
                     for (j = 0; j < synonymListSize; j++) {
                         synonym = synonymList.get(j);
-                        synonymName = synonym.getName().toLowerCase();
+                        synonymName = synonym.getName().toLowerCase().trim();
                         if (productName.contains(synonymName)) {
                             replaceSynonymList = synonymDao.getByIdAndSynonymId(synonym.getId(), synonym.getSynonymId());
                             replaceSynonymListSize = replaceSynonymList.size();
 
                             for (k = 0; k < replaceSynonymListSize; k++) {
-                                tmp = productSynonym.replace(synonymName, replaceSynonymList.get(k));
-                                productSynonym += tmp;
+                                tmp = productName.replace(synonymName, replaceSynonymList.get(k).trim());
+                                productSynonym += tmp + ";";
                             }
                         }
                     }
@@ -319,29 +317,13 @@ public class ProductManager implements IProductManager {
                     skipResultSynonym += LIMIT_RESULT_SYNONYM;
                 }
 
-                list = Lists.newArrayList(Splitter.on(";").split(productSynonym));
-                list2 = new ArrayList<>();
-                lookup = new HashSet<>();
-                for (String item : list) {
-                    if (lookup.add(item)) {
-                        // Set.add returns false if item is already in the set
-                        list2.add(item);
-                    }
-                }
-                list = list2;
-                productSynonym = "";
-
-                lookupSize = list.size() - 1;
-
-                for (j = 0; j < lookupSize; j++) {
-                    productSynonym += list.get(j) + ";";
-                }
                 productDetail.setSynonymName(productSynonym);
                 productDetailDao.updateProductDetail(productDetail);
             }
 
             skipResultProduct += LIMIT_RESULT_PRODUCT;
         }
+        LOG.info("[calcSynonymName] End");
     }
 
     private long insertAddress(Address address, double latitude, double longitude, String restaurant, String district) {
