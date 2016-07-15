@@ -83,8 +83,8 @@ public class LogManager implements ILogManager {
 			chatLogsFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl();
 		}
 		return chatLogsFolder + "/log";
-//		// for debug
-//		return "/Users/HuyTCM/Desktop/Logs/log";
+		// // for debug
+		// return "/Users/HuyTCM/Desktop/Logs/log";
 	}
 
 	private String getTrainingFilePath() {
@@ -260,7 +260,7 @@ public class LogManager implements ILogManager {
 					jsonObject.put(log_json, new JSONObject(log.toString()));
 					logs.add(jsonObject);
 				} catch (JSONException e) {
-					 LOG.error("Parsing JSON error!", e);
+					LOG.error("Parsing JSON error!", e);
 				}
 
 				continue;
@@ -510,7 +510,7 @@ public class LogManager implements ILogManager {
 					userSayObject.put(userSay, log.getJSONObject(result).getString(resolvedQuery));
 					userSayObject.put(status_code, statusCode);
 				} catch (JSONException e) {
-					 LOG.error("JSON format is wrong", e);
+					LOG.error("JSON format is wrong", e);
 				}
 
 				// if log json with wrong format, ignore it.
@@ -629,15 +629,28 @@ public class LogManager implements ILogManager {
 				JSONArray countArr = log.getJSONArray(count);
 				for (int j = 0; j < countArr.length(); j++) {
 					JSONObject countObj = countArr.getJSONObject(j);
-					JSONObject conversation = this.getConversationLog(countObj.getString(sessionId),
-							countObj.getString("filePath"));
-					if (conversation != null) {
-						conversations.put(conversation);
+
+					if (!checkExistConversation(conversations, countObj.getString(sessionId))) {
+						JSONObject conversation = this.getConversationLog(countObj.getString(sessionId),
+								countObj.getString("filePath"));
+						if (conversation != null) {
+							conversations.put(conversation);
+						}
 					}
 				}
 				break;
 			}
 		}
 		return conversations;
+	}
+
+	private boolean checkExistConversation(JSONArray conversations, String sessionStr) throws JSONException {
+		for (int i = 0; i < conversations.length(); i++) {
+			JSONObject jsonObject = conversations.getJSONObject(i);
+			if (jsonObject.getString(sessionId).equals(sessionStr)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

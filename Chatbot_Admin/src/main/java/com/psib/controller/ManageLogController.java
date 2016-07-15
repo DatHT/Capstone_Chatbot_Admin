@@ -6,6 +6,7 @@ package com.psib.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,6 +123,18 @@ public class ManageLogController {
 			return false;
 		}
 		return true;
+	}
+	
+	@RequestMapping(value = "/conversation", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+	public @ResponseBody String getFullConversation(@RequestParam("logId") String logId) {
+		try {
+			JSONArray jsonArray = logManager.getAllConversations(logId);
+			return jsonArray.toString();
+		} catch (IOException | JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "failed";
 	}
 
 }

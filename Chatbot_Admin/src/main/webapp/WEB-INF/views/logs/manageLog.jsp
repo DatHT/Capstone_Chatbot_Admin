@@ -74,7 +74,7 @@
 								<th data-column-id="status" data-formatter="statusIcon"></th>
 								<th data-column-id="usersay" data-formatter="unreadText"
 									data-identifier="true">User say</th>
-								<th data-column-id="count">Count</th>
+								<th data-column-id="count" data-visible="false"  data-order="desc">Count</th>
 								<th data-column-id="commands" data-formatter="commands"
 									data-sortable="false">Commands</th>
 							</tr>
@@ -190,14 +190,14 @@
 				<div class="modal-header">
 					<h4 class="modal-title">Modal title</h4>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body" style="max-height: 50vh;overflow-y: auto;">
 					<div id="panel-group" class="panel-group" role="tablist"
 						aria-multiselectable="true">
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-link">Save changes</button>
-					<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-info btn-add-training">Add this sentence to training pool </button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>

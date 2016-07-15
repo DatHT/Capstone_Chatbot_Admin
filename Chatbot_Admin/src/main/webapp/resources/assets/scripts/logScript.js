@@ -69,22 +69,23 @@ function reloadBootgridTable() {
         formatters: {
         	"unreadText": function (column, row) {
         		if(row.status == "UNREAD") {
-        			return "<strong>"+row.usersay+"</strong>";
+        			return "<strong>"+row.usersay+  " (" + row.count+")</strong>";
         		} else {
-        			return row.usersay;
+        			return row.usersay + " (" + row.count+")" ;
         		}
         	},
         	"statusIcon": function (column, row) {
         		if(row.status == "UNREAD") {
-        			return "<i class='zmdi zmdi-email zmdi-hc-fw'></i>";
+        			return "<i class='zmdi zmdi-email zmdi-hc-fw log-unread' data-row-id='" + row.logid + "'></i>";
         		} else {
         			return "<i class='zmdi zmdi-email-open zmdi-hc-fw'></i>";
         		}
         	},
             "commands": function (column, row) {
                 return "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add' style='margin: 5px;'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
-                "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete' style='margin: 5px;'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>"+
-                "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn btn-default btn-icon waves-effect waves-circle waves-float btn-full-conversation' style='margin: 5px;'><i class='zmdi zmdi-comments'></i></button>";
+                "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn btn-default btn-icon waves-effect waves-circle waves-float btn-full-conversation' style='margin: 5px;'><i class='zmdi zmdi-comments'></i></button>"+
+                "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete' style='margin: 5px;'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+                
             }
         }
     }).on("loaded.rs.jquery.bootgrid", function() {
@@ -140,9 +141,15 @@ function reloadBootgridTable() {
         }).end().find(".btn-full-conversation").on("click", function(e) {
 //            alert("You pressed delete on row: " + $(this).data("row-usersay"));
         	var logid = $(this).data("row-id");
+        	var usersay = $(this).data("row-usersay");
         	$("#conversationModal").modal();
-        	$("#conversationModal").find('.modal-title').text($(this).data("row-usersay"));
-        	
+        	$("#conversationModal").find('.modal-title').text(usersay);
+        	$("#conversationModal").find('.btn-add-training').attr("onclick", "addTrainingSentence('"+usersay+"')")
+        	loadFullConversation(logid, usersay);
+//        }).end().find(".log-unread").on("click", function(e) {
+//        	var logid = $(this).data("row-id");
+//        	updateLogStatus($(this).data("row-id"), "READ");
+//        	closeModalDialog();
         });
     });
 	
@@ -455,4 +462,108 @@ function checkSaveButtonState() {
 		}
 	}
 	saveButton.disabled = false;
+}
+
+function loadFullConversation(logId, usersay) {
+	$('#loadingModal').modal('show');
+	var panelGroup = document.getElementById('panel-group');
+	panelGroup.innerHTML = '';
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			if (xmlhttp.responseText != 'failed') {
+				var res = JSON.parse(xmlhttp.responseText);
+				for (var i = 0; i < res.length; i++) {
+					var obj = res[i];
+					
+					var panelGroup = document.getElementById('panel-group');
+					
+					var panelCollapse = document.createElement('div');
+					panelCollapse.className = "panel panel-collapse";
+					
+					var panelHeading = document.createElement('div');
+					panelHeading.setAttribute('id', "heading"+obj.sessionId);
+					panelHeading.className = "panel-heading";
+					panelHeading.setAttribute("role", "tab");
+					var panelTitle = document.createElement('h4');
+					panelTitle.className = "panel-title";
+					var ahref = document.createElement('a');
+					ahref.setAttribute('data-toggle', "collapse");
+					ahref.setAttribute('data-parent', "#accordion");
+					ahref.setAttribute('href', "#" + obj.sessionId);
+					ahref.setAttribute('aria-expanded', "true");
+					ahref.setAttribute('aria-controls', "heading"+obj.sessionId);
+					
+					var text = document.createTextNode(obj.contents[0].userSay);
+					ahref.appendChild(text);
+					
+					panelTitle.appendChild(ahref);
+					panelHeading.appendChild(panelTitle);
+					
+					panelCollapse.appendChild(panelHeading);
+					
+					var wrapperPanelBody = document.createElement('div');
+					wrapperPanelBody.className = "collapse";
+					wrapperPanelBody.setAttribute('id', obj.sessionId);
+					wrapperPanelBody.setAttribute('role', "tabpanel");
+					wrapperPanelBody.setAttribute('aria-labelledby', "heading"+obj.sessionId);
+					var panelBody = document.createElement('div');
+					panelBody.className = "panel-body";
+					
+					var table = document.createElement('table');
+					table.className="table";
+					var tableBody = document.createElement('tbody');
+					for(var j = 0; j < obj.contents.length; j++) {
+						var tr = document.createElement('tr');
+						var td = document.createElement('td');
+						var textNode = document.createTextNode(obj.contents[j].userSay);
+						td.appendChild(textNode);
+						if (obj.contents[j].userSay === usersay) {
+							tr.style.backgroundColor = "#ff5252";
+							tr.style.color = "#ffffff";
+ 						} 
+						tr.appendChild(td);
+						tableBody.appendChild(tr);
+					}
+					table.appendChild(tableBody);
+					panelBody.appendChild(table);
+					wrapperPanelBody.appendChild(panelBody);
+					panelCollapse.appendChild(wrapperPanelBody);
+					
+					panelGroup.appendChild(panelCollapse);
+					panelCollapse.removeAttribute('hidden');
+					$('#loadingModal').modal('hide');
+				}
+			} else {
+				swal('Error occurs. Please try again later!');
+			}
+		}
+	}
+
+	xmlhttp.open('GET', '/chatbot_admin/conversation?logId=' + logId, true);
+	xmlhttp.send(null);
+}
+function addTrainingSentence(sentence) {
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			if (xmlhttp.responseText == 'success') {
+				swal("Good job!", xmlhttp.responseText, "success");
+			} else {
+				swal('Error occurs. Please try again later!');
+			}
+			$("#conversationModal").modal('hide');
+		}
+	}
+
+	xmlhttp.open('GET', '/chatbot_admin/addTraining?usersay=' + sentence, true);
+	xmlhttp.send(null);
 }
