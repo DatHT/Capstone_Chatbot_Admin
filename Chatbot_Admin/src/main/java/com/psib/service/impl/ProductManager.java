@@ -1,5 +1,7 @@
 package com.psib.service.impl;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.psib.common.DatabaseException;
 import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
@@ -26,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -268,7 +271,7 @@ public class ProductManager implements IProductManager {
         int replaceSynonymListSize = -1;
         List<ProductDetail> productList;
         List<Synonym> synonymList;
-        List<String> replaceSynonymList = new ArrayList<>();
+        List<String> replaceSynonymList;
         ProductDetail productDetail;
         Synonym synonym;
         String productName;
@@ -302,14 +305,14 @@ public class ProductManager implements IProductManager {
 
                     for (j = 0; j < synonymListSize; j++) {
                         synonym = synonymList.get(j);
-                        synonymName = synonym.getName().toLowerCase().trim();
+                        synonymName = synonym.getName().toLowerCase();
                         if (productName.contains(synonymName)) {
                             replaceSynonymList = synonymDao.getByIdAndSynonymId(synonym.getId(), synonym.getSynonymId());
                             replaceSynonymListSize = replaceSynonymList.size();
 
                             for (k = 0; k < replaceSynonymListSize; k++) {
-                                tmp = productName.replace(synonymName, replaceSynonymList.get(k).trim());
-                                productSynonym += tmp + ";";
+                                tmp = productSynonym.replace(synonymName, replaceSynonymList.get(k).trim());
+                                productSynonym += tmp;
                             }
                         }
                     }
@@ -317,6 +320,23 @@ public class ProductManager implements IProductManager {
                     skipResultSynonym += LIMIT_RESULT_SYNONYM;
                 }
 
+                list = Lists.newArrayList(Splitter.on(";").split(productSynonym));
+                list2 = new ArrayList<>();
+                lookup = new HashSet<>();
+                for (String item : list) {
+                    if (lookup.add(item)) {
+                        // Set.add returns false if item is already in the set
+                        list2.add(item);
+                    }
+                }
+                list = list2;
+                productSynonym = "";
+
+                lookupSize = list.size() - 1;
+
+                for (j = 0; j < lookupSize; j++) {
+                    productSynonym += list.get(j) + ";";
+                }
                 productDetail.setSynonymName(productSynonym);
                 productDetailDao.updateProductDetail(productDetail);
             }
