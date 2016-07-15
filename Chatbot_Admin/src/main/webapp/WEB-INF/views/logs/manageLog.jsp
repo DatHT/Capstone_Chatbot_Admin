@@ -4,8 +4,8 @@
 <c:set var="intents" value="${INTENTS}" />
 <c:set var="lexicals" value="${LEXICAL}" />
 <script src="resources/assets/scripts/logScript.js"></script>
-<c:set var="paramName" value="${_csrf.parameterName}"/>
-<c:set var="token" value="${_csrf.token}"/>
+<c:set var="paramName" value="${_csrf.parameterName}" />
+<c:set var="token" value="${_csrf.token}" />
 <style>
 .remove {
 	color: #aaaaaa;
@@ -66,14 +66,17 @@
 			</div>
 			<div class="panel-body">
 				<div class="table-responsive">
-					<table id="no-entry-data-table" class="table table-striped table-bordered table-hover">
+					<table id="no-entry-data-table"
+						class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
 								<th data-column-id="logid" data-visible="false">ID</th>
 								<th data-column-id="status" data-formatter="statusIcon"></th>
-								<th data-column-id="usersay" data-formatter="unreadText" data-identifier="true">User say</th>
+								<th data-column-id="usersay" data-formatter="unreadText"
+									data-identifier="true">User say</th>
 								<th data-column-id="count">Count</th>
-								<th data-column-id="commands" data-formatter="commands" data-sortable="false">Commands</th>
+								<th data-column-id="commands" data-formatter="commands"
+									data-sortable="false">Commands</th>
 							</tr>
 						</thead>
 						<tbody id="no-entry-table-body">
@@ -92,12 +95,14 @@
 			</div>
 			<div class="panel-body">
 				<div class="table-responsive">
-					<table id="not-found-data-table" class="table table-striped table-bordered table-hover">
+					<table id="not-found-data-table"
+						class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
 								<th data-column-id="food">Food</th>
 								<th data-column-id="location">Location</th>
-								<th data-column-id="addProduct" data-formatter="addProduct" data-sortable="false">Add product</th>
+								<th data-column-id="addProduct" data-formatter="addProduct"
+									data-sortable="false">Add product</th>
 							</tr>
 						</thead>
 						<tbody id="not-found-table-body">
@@ -110,33 +115,38 @@
 	</div>
 </div>
 <div class="col-lg-12">
-<div class="card">
-			<div class="card-header">
-				<h2 id="tableReport">Reported product</h2>
-			</div>
-			<div class="panel-body">
-				<div class="table-responsive">
-					<table id="reported-data-table" class="table table-striped table-bordered table-hover">
-						<thead>
-							<tr>
-								<th data-column-id="productId" data-identifier="true">Product ID</th>
-								<th data-column-id="addressId" data-identifier="true">Address ID</th>
-								<th data-column-id="productName">Product</th>
-								<th data-column-id="districtName">District</th>
-								<th data-column-id="restaurantName">Restaurant</th>
-								<th data-column-id="updateProduct" data-formatter="updateProduct" data-sortable="false">Update product</th>
-							</tr>
-						</thead>
-						<tbody id="reported-product-table-body">
-						</tbody>
-					</table>
-				</div>
+	<div class="card">
+		<div class="card-header">
+			<h2 id="tableReport">Reported product</h2>
+		</div>
+		<div class="panel-body">
+			<div class="table-responsive">
+				<table id="reported-data-table"
+					class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th data-column-id="productId" data-identifier="true">Product
+								ID</th>
+							<th data-column-id="addressId" data-identifier="true">Address
+								ID</th>
+							<th data-column-id="productName">Product</th>
+							<th data-column-id="districtName">District</th>
+							<th data-column-id="restaurantName">Restaurant</th>
+							<th data-column-id="updateProduct" data-formatter="updateProduct"
+								data-sortable="false">Update product</th>
+						</tr>
+					</thead>
+					<tbody id="reported-product-table-body">
+					</tbody>
+				</table>
 			</div>
 		</div>
+	</div>
 </div>
 <div>
 	<!--  Modals-->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div id="user-say-container" class="modal-header">
@@ -153,7 +163,8 @@
 						<img src="resources/assets/img/select_phrase_guide.gif"
 							class="img-responsive m-b-15 w-100" alt="">
 					</div>
-					<button id="save-button" type="button" onclick="requestAddPhrase('${paramName}', '${token}')"
+					<button id="save-button" type="button"
+						onclick="requestAddPhrase('${paramName}', '${token}')"
 						class="btn btn-primary btn-icon-text waves-effect">
 						<i class="zmdi zmdi-check-all"></i> Save changes
 					</button>
@@ -171,4 +182,24 @@
 		</c:forEach>
 	</select>
 	<!-- End lexical list -->
+	<!-- Modal for full conversation -->
+	<div class="modal fade" id="conversationModal" tabindex="-1"
+		role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Modal title</h4>
+				</div>
+				<div class="modal-body">
+					<div id="panel-group" class="panel-group" role="tablist"
+						aria-multiselectable="true">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-link">Save changes</button>
+					<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

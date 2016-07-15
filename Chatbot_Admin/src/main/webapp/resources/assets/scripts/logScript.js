@@ -84,7 +84,7 @@ function reloadBootgridTable() {
             "commands": function (column, row) {
                 return "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add' style='margin: 5px;'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
                 "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete' style='margin: 5px;'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>"+
-                "<button class='btn btn-default btn-icon waves-effect waves-circle waves-float' style='margin: 5px;'><i class='zmdi zmdi-comments'></i></button>";
+                "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn btn-default btn-icon waves-effect waves-circle waves-float btn-full-conversation' style='margin: 5px;'><i class='zmdi zmdi-comments'></i></button>";
             }
         }
     }).on("loaded.rs.jquery.bootgrid", function() {
@@ -121,8 +121,7 @@ function reloadBootgridTable() {
     				closeModalDialog();
     			}
     		}
-        }).end().find(".action-delete").on("click", function(e)
-        {
+        }).end().find(".action-delete").on("click", function(e) {
 //            alert("You pressed delete on row: " + $(this).data("row-usersay"));
         	var logid = $(this).data("row-id");
         	swal({
@@ -138,6 +137,12 @@ function reloadBootgridTable() {
                 swal("Deleted!", "It has been deleted.", "success");
                 closeModalDialog();
             });
+        }).end().find(".btn-full-conversation").on("click", function(e) {
+//            alert("You pressed delete on row: " + $(this).data("row-usersay"));
+        	var logid = $(this).data("row-id");
+        	$("#conversationModal").modal();
+        	$("#conversationModal").find('.modal-title').text($(this).data("row-usersay"));
+        	
         });
     });
 	

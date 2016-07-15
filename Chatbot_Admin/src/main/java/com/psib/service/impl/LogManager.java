@@ -83,6 +83,8 @@ public class LogManager implements ILogManager {
 			chatLogsFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl();
 		}
 		return chatLogsFolder + "/log";
+//		// for debug
+//		return "/Users/HuyTCM/Desktop/Logs/log";
 	}
 
 	private String getTrainingFilePath() {
@@ -228,46 +230,49 @@ public class LogManager implements ILogManager {
 
 		if (fileList != null) {
 			for (String filePath : fileList) {
-				BufferedReader bufferedReader = FileUtils.readFile(filePath);
-				String line;
-				StringBuffer log = new StringBuffer();
-
-				while ((line = bufferedReader.readLine()) != null) {
-					if (line.length() < 5) {
-						log.append(line);
-						continue;
-					}
-					if (line.subSequence(0, 5).equals(START_LOG)) {
-						log = new StringBuffer();
-						continue;
-					}
-					if (line.subSequence(0, 5).equals(END_LOG)) {
-						int logCode = Integer.valueOf(line.substring(5, 8));
-
-						JSONObject jsonObject = new JSONObject();
-						try {
-							jsonObject.put(status_code, logCode);
-							jsonObject.put("filePath", filePath);
-							jsonObject.put(log_json, new JSONObject(log.toString()));
-							logs.add(jsonObject);
-						} catch (JSONException e) {
-							LOG.error("Parsing JSON error!", e);
-						}
-
-						continue;
-					}
-					log.append(line);
-				}
+				this.parseJSONObjectFromLogFile(filePath, logs);
 			}
 		}
-
 		return logs;
+	}
+
+	private void parseJSONObjectFromLogFile(String filePath, List<JSONObject> logs) throws IOException {
+		BufferedReader bufferedReader = FileUtils.readFile(filePath);
+		String line;
+		StringBuffer log = new StringBuffer();
+
+		while ((line = bufferedReader.readLine()) != null) {
+			if (line.length() < 5) {
+				log.append(line);
+				continue;
+			}
+			if (line.subSequence(0, 5).equals(START_LOG)) {
+				log = new StringBuffer();
+				continue;
+			}
+			if (line.subSequence(0, 5).equals(END_LOG)) {
+				int logCode = Integer.valueOf(line.substring(5, 8));
+
+				JSONObject jsonObject = new JSONObject();
+				try {
+					jsonObject.put(status_code, logCode);
+					jsonObject.put("filePath", filePath);
+					jsonObject.put(log_json, new JSONObject(log.toString()));
+					logs.add(jsonObject);
+				} catch (JSONException e) {
+					 LOG.error("Parsing JSON error!", e);
+				}
+
+				continue;
+			}
+			log.append(line);
+		}
 	}
 
 	private JSONObject getNoEntryLog(JSONObject log) throws IOException, JSONException {
 		String userSay = log.getJSONObject(result).getString(resolvedQuery);
 		String sessionIdStr = log.getString(sessionId);
-		
+
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(LogManager.userSay, userSay);
 
@@ -396,9 +401,6 @@ public class LogManager implements ILogManager {
 						}
 
 						if (isCount) {
-//							JSONObject idObj = new JSONObject();
-//							idObj.put(id, jsonObject.get(id));
-//							idObj.put(sessionId, jsonObject.getString(sessionId));
 							arrId.put(jsonObject.getJSONArray(count).get(0));
 						}
 						log.put("totalCount", arrId.length());
@@ -508,7 +510,7 @@ public class LogManager implements ILogManager {
 					userSayObject.put(userSay, log.getJSONObject(result).getString(resolvedQuery));
 					userSayObject.put(status_code, statusCode);
 				} catch (JSONException e) {
-					LOG.error("JSON format is wrong", e);
+					 LOG.error("JSON format is wrong", e);
 				}
 
 				// if log json with wrong format, ignore it.
@@ -578,5 +580,64 @@ public class LogManager implements ILogManager {
 		}
 		FileUtils.writleFile(this.getLogFilePath(), this.logJson.toString(4));
 		return this.getLogJson();
+	}
+
+	private JSONObject getConversationLog(String strSession, String filePath) throws IOException, JSONException {
+		List<JSONObject> logs = new ArrayList<>();
+		this.parseJSONObjectFromLogFile(filePath, logs);
+
+		JSONObject conversationLog = null;
+		JSONArray contents = new JSONArray();
+
+		for (JSONObject logJson : logs) {
+			JSONObject log = logJson.getJSONObject(log_json);
+			int statusCode = logJson.getInt(status_code);
+
+			if (statusCode == SUCCESS_CODE || statusCode == NO_ENTRY_CODE || statusCode == NOT_FOUND_CODE) {
+				if (log.getString(sessionId).equals(strSession)) {
+					JSONObject userSayObject = null;
+					try {
+						userSayObject = new JSONObject();
+						userSayObject.put(userSay, log.getJSONObject(result).getString(resolvedQuery));
+						userSayObject.put(status_code, statusCode);
+					} catch (JSONException e) {
+						LOG.error("JSON format is wrong", e);
+					}
+					if (userSayObject != null) {
+						contents.put(userSayObject);
+					}
+				}
+			}
+		}
+		if (contents.length() > 0) {
+			conversationLog = new JSONObject();
+			conversationLog.put(sessionId, strSession);
+			conversationLog.put("contents", contents);
+		}
+
+		return conversationLog;
+	}
+
+	@Override
+	public JSONArray getAllConversations(String logId) throws JSONException, IOException {
+		JSONArray logs = this.getLogJson().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
+
+		JSONArray conversations = new JSONArray();
+		for (int i = 0; i < logs.length(); i++) {
+			JSONObject log = logs.getJSONObject(i);
+			if (log.has(id) && log.getString(id).equals(logId)) {
+				JSONArray countArr = log.getJSONArray(count);
+				for (int j = 0; j < countArr.length(); j++) {
+					JSONObject countObj = countArr.getJSONObject(j);
+					JSONObject conversation = this.getConversationLog(countObj.getString(sessionId),
+							countObj.getString("filePath"));
+					if (conversation != null) {
+						conversations.put(conversation);
+					}
+				}
+				break;
+			}
+		}
+		return conversations;
 	}
 }

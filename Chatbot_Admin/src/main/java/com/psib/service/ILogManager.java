@@ -32,4 +32,6 @@ public interface ILogManager {
 	public List<DateDto> getListDateLog();
 	
 	public JSONObject setLogStatus(String logId, LogStatus logStatus) throws JSONException, IOException;
+	
+	public JSONArray getAllConversations(String logId) throws JSONException, IOException;
 }
