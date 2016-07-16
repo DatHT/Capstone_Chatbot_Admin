@@ -16,6 +16,8 @@ import com.psib.dto.jsonmapper.TrainDto;
 public interface ILogManager {
 
 	JSONObject getLogJson() throws JSONException, IOException;
+	
+	public JSONObject getLogByLogId(String logId) throws JSONException, IOException;
 
 	void updateLog() throws JSONException, IOException;
 

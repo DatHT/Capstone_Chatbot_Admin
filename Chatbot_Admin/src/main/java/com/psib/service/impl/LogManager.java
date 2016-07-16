@@ -378,7 +378,18 @@ public class LogManager implements ILogManager {
 		return fileLogPaths;
 	}
 
-	public boolean checkExistLog(JSONArray jsonArray, JSONObject jsonObject) throws JSONException {
+	@Override
+	public JSONObject getLogByLogId(String logId) throws JSONException, IOException {
+		JSONArray logs = this.getLogJson().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
+		for (int i = 0; i < logs.length(); i++) {
+			JSONObject log = logs.getJSONObject(i);
+			if (log.has(id) && log.getString(id).equals(logId)) {
+				return log;
+			}
+		}
+		return null;
+	}
+	private boolean checkExistLog(JSONArray jsonArray, JSONObject jsonObject) throws JSONException {
 		int statusCode = Integer.parseInt(jsonObject.get(errCode).toString());
 		boolean isExist = false;
 		int i = 0;

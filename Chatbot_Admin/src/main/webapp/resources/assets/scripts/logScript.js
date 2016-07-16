@@ -83,7 +83,7 @@ function reloadBootgridTable() {
         	},
             "commands": function (column, row) {
                 return "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add' style='margin: 5px;'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
-                "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn btn-default btn-icon waves-effect waves-circle waves-float btn-full-conversation' style='margin: 5px;'><i class='zmdi zmdi-comments'></i></button>"+
+                "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' data-row-status='" + row.status + "' class='btn btn-default btn-icon waves-effect waves-circle waves-float btn-full-conversation' style='margin: 5px;'><i class='zmdi zmdi-comments'></i></button>"+
                 "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete' style='margin: 5px;'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
                 
             }
@@ -139,13 +139,14 @@ function reloadBootgridTable() {
                 closeModalDialog();
             });
         }).end().find(".btn-full-conversation").on("click", function(e) {
-//            alert("You pressed delete on row: " + $(this).data("row-usersay"));
+        	updateLogStatus($(this).data("row-id"), "READ");
         	var logid = $(this).data("row-id");
         	var usersay = $(this).data("row-usersay");
+        	var status = $(this).data("row-status");
         	$("#conversationModal").modal();
         	$("#conversationModal").find('.modal-title').text(usersay);
-        	$("#conversationModal").find('.btn-add-training').attr("onclick", "addTrainingSentence('"+usersay+"')")
-        	loadFullConversation(logid, usersay);
+        	$("#conversationModal").find('.btn-add-training').attr("onclick", "addTrainingSentence('"+logid+"')")
+        	loadFullConversation(logid, usersay, status);
 //        }).end().find(".log-unread").on("click", function(e) {
 //        	var logid = $(this).data("row-id");
 //        	updateLogStatus($(this).data("row-id"), "READ");
@@ -282,6 +283,7 @@ function createRowNoEntry(id, data) {
 function closeModalDialog() {
 	listPhrase = {};
 	$('#myModal').modal('hide');
+	$("#conversationModal").modal('hide');
 	var listPhraseContent = document.getElementById('list-phrase');
 	while (listPhraseContent.firstChild) {
 		listPhraseContent.removeChild(listPhraseContent.firstChild);
@@ -464,7 +466,7 @@ function checkSaveButtonState() {
 	saveButton.disabled = false;
 }
 
-function loadFullConversation(logId, usersay) {
+function loadFullConversation(logId, usersay, status) {
 	$('#loadingModal').modal('show');
 	var panelGroup = document.getElementById('panel-group');
 	panelGroup.innerHTML = '';
@@ -519,12 +521,23 @@ function loadFullConversation(logId, usersay) {
 					var tableBody = document.createElement('tbody');
 					for(var j = 0; j < obj.contents.length; j++) {
 						var tr = document.createElement('tr');
+						tr.className = "f-15 f-500";
 						var td = document.createElement('td');
 						var textNode = document.createTextNode(obj.contents[j].userSay);
 						td.appendChild(textNode);
 						if (obj.contents[j].userSay === usersay) {
 							tr.style.backgroundColor = "#ff5252";
 							tr.style.color = "#ffffff";
+							if (status === "INTRAINING") {
+								var button = document.createElement('button');
+								button.className = "btn btn-primary btn-icon waves-effect waves-circle waves-float";
+								button.style.float = "right";
+								button.disabled = "disabled";
+								var iEl = document.createElement('i');
+								iEl.className = "zmdi zmdi-badge-check";
+								button.appendChild(iEl);
+								td.appendChild(button);
+							}
  						} 
 						tr.appendChild(td);
 						tableBody.appendChild(tr);
@@ -557,13 +570,13 @@ function addTrainingSentence(sentence) {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			if (xmlhttp.responseText == 'success') {
 				swal("Good job!", xmlhttp.responseText, "success");
+				closeModalDialog();
 			} else {
 				swal('Error occurs. Please try again later!');
 			}
-			$("#conversationModal").modal('hide');
 		}
 	}
 
-	xmlhttp.open('GET', '/chatbot_admin/addTraining?usersay=' + sentence, true);
+	xmlhttp.open('GET', '/chatbot_admin/addTraining?logId=' + sentence, true);
 	xmlhttp.send(null);
 }
