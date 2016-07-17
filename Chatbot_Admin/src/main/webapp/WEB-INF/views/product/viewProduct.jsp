@@ -5,6 +5,7 @@
     var tokenName = '${_csrf.parameterName}';
     var tokenValue = '${_csrf.token}';
     var addResult = '${addResult}';
+    var updateResult = '${updateResult}';
     var deleteResult = '${deleteResult}';
 </script>
 <script src="${pageContext.request.contextPath}/resources/assets/scripts/viewProduct.js"></script>

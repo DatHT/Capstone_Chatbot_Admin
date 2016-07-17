@@ -1,15 +1,19 @@
 package com.psib.service.impl;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.psib.common.DatabaseException;
 import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
 import com.psib.dao.IProductDetailDao;
+import com.psib.dao.ISynonymDao;
 import com.psib.dto.BootGirdDto;
 import com.psib.dto.ProductDetailDto;
 import com.psib.dto.ProductDetailJsonDto;
 import com.psib.model.Address;
 import com.psib.model.District;
 import com.psib.model.ProductDetail;
+import com.psib.model.Synonym;
 import com.psib.service.IProductManager;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
 import com.psib.util.SpringPropertiesUtil;
@@ -18,18 +22,23 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.condition.ParamsRequestCondition;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ProductManager implements IProductManager {
 
     private static final Logger LOG = Logger.getLogger(ProductManager.class);
+
+    private static final Integer LIMIT_RESULT_PRODUCT = 1000;
 
     @Autowired
     private IProductDetailDao productDetailDao;
@@ -39,6 +48,9 @@ public class ProductManager implements IProductManager {
 
     @Autowired
     private IAddressDao addressDao;
+
+    @Autowired
+    private SynonymManager synonymManager;
 
     @Override
     public BootGirdDto getAllForPaging(int current, int rowCount, String searchPhrase,
@@ -247,6 +259,36 @@ public class ProductManager implements IProductManager {
         productDetail.setProductId(Long.parseLong(productId));
         productDetailDao.deleteById(productDetail);
         LOG.info("[deleteProduct] End");
+    }
+
+    @Override
+    public void calcSynonymName() {
+        LOG.info("[calcSynonymName] Start");
+        int skipResultProduct = 0;
+        int productListSize = -1;
+        List<ProductDetail> productList;
+        ProductDetail productDetail;
+        String productName;
+        String productSynonym;
+        int i;
+
+        while (productListSize != 0) {
+            // get product name
+            productList = productDetailDao.getProductSortById(skipResultProduct, LIMIT_RESULT_PRODUCT);
+            productListSize = productList.size();
+
+            for (i = 0; i < productListSize; i++) {
+                productDetail = productList.get(i);
+                productName = productDetail.getProductName().toLowerCase().trim();
+                productSynonym = synonymManager.calcSynonym(productName);
+
+                productDetail.setSynonymName(productSynonym);
+                productDetailDao.updateProductDetail(productDetail);
+            }
+
+            skipResultProduct += LIMIT_RESULT_PRODUCT;
+        }
+        LOG.info("[calcSynonymName] End");
     }
 
     private long insertAddress(Address address, double latitude, double longitude, String restaurant, String district) {

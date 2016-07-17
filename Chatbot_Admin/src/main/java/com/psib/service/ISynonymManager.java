@@ -16,4 +16,6 @@ public interface ISynonymManager {
     int updateWord(int id, String name, int synonymId);
 
     void deleteWord(int deleteWordId);
+
+    String calcSynonym(String productName);
 }

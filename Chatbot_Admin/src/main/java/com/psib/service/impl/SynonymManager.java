@@ -1,5 +1,7 @@
 package com.psib.service.impl;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.psib.dao.ISynonymDao;
 import com.psib.dto.BootGirdDto;
 import com.psib.dto.SynonymJsonDto;
@@ -10,12 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class SynonymManager implements ISynonymManager {
 
     private static final Logger LOG = Logger.getLogger(SynonymManager.class);
+
+    private static final Integer LIMIT_RESULT_SYNONYM = 1000;
 
     @Autowired
     private ISynonymDao synonymDao;
@@ -145,5 +151,66 @@ public class SynonymManager implements ISynonymManager {
         synonym.setId(deleteWordId);
         synonymDao.deleteById(synonym);
         LOG.info("[deleteWordId] End");
+    }
+
+    @Override
+    public String calcSynonym(String productName) {
+        LOG.info("[calcSynonym] Start: productName = " + productName);
+        int skipResultSynonym = 0;
+        int synonymListSize = -1;
+        int replaceSynonymListSize;
+        List<Synonym> synonymList;
+        List<String> replaceSynonymList;
+        Synonym synonym;
+        String synonymName;
+        String productSynonym = productName + ";";
+        String tmp;
+        int j;
+        List<String> list;
+        List<String> list2;
+        Set<String> lookup;
+        int lookupSize;
+        while (synonymListSize != 0) {
+            // get synonym
+            synonymList = synonymDao.getSynonymNameSortById(skipResultSynonym, LIMIT_RESULT_SYNONYM);
+            synonymListSize = synonymList.size();
+
+            for (int i = 0; i < synonymListSize; i++) {
+                synonym = synonymList.get(i);
+                synonymName = synonym.getName().toLowerCase();
+                if (productName.contains(synonymName)) {
+                    replaceSynonymList = synonymDao.getByIdAndSynonymId(synonym.getId(), synonym.getSynonymId());
+                    replaceSynonymListSize = replaceSynonymList.size();
+
+                    for (j = 0; j < replaceSynonymListSize; j++) {
+                        tmp = productSynonym.replace(synonymName, replaceSynonymList.get(j).trim());
+                        productSynonym += tmp;
+                    }
+                }
+            }
+
+            skipResultSynonym += LIMIT_RESULT_SYNONYM;
+        }
+
+        list = Lists.newArrayList(Splitter.on(";").split(productSynonym));
+        list2 = new ArrayList<>();
+        lookup = new HashSet<>();
+        for (String item : list) {
+            if (lookup.add(item)) {
+                // Set.add returns false if item is already in the set
+                list2.add(item);
+            }
+        }
+        list = list2;
+        productSynonym = "";
+
+        lookupSize = list.size() - 1;
+
+        for (j = 0; j < lookupSize; j++) {
+            productSynonym += list.get(j) + ";";
+        }
+
+        LOG.info("[calcSynonym] End");
+        return productSynonym;
     }
 }

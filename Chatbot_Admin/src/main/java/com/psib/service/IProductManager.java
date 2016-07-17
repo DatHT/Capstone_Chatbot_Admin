@@ -28,5 +28,7 @@ public interface IProductManager {
     void deleteProduct(String productId);
 
     List<ProductDetail> getAllProductDetail();
+
+    void calcSynonymName();
 }
 

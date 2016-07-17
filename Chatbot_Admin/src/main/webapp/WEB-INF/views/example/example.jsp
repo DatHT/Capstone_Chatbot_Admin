@@ -108,7 +108,7 @@
 			
 			<div class="card">
 			<div class="card-body card-padding" id="containerDiv">
-				
+
 			</div>
 			</div>
 			<div class="card">
@@ -185,12 +185,21 @@
 }
 
 #droptarget {
-	padding: 10px;
-	margin-right:2px;
+	padding: 2px;
+	margin-right:6px;
 	cursor: default;
 	border: 1px solid #999;
 	display: inline-block;
 }
+
+.droptarget {
+	padding: 2px;
+	margin-right:6px;
+	cursor: default;
+	border: 1px solid #999;
+	display: inline-block;
+}
+
 
 .draggable {
 	cursor: move;
