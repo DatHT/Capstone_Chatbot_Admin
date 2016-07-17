@@ -20,7 +20,7 @@
 	href="<c:url value="/resources/assets/cssboostrap/slidebars.css"/>"
 	rel="stylesheet">
 </head>
-<body class="c-header">
+<body>
 	<c:set var="url" value="${sessionScope.URL}" />
 	<div class="c-header">
 		<h2>Configuration</h2>
@@ -28,11 +28,11 @@
 	<form:form name="myForm" id="myForm" action="addPageDetails"
 		method="post">
 		<div class="scroller_anchor"></div>
-		<div class="card-header">
-			<h2>Please Select An Element And Get XPath</h2>
-		</div>
-		<div class="form-group card card-header scroller" style="">
-			<div class="progressRecipe">
+		<div class="card scroller">
+			<div class="card-header">
+				<h2>Please Select An Element And Get XPath</h2>
+			</div>
+			<div class="progressRecipe card-body card-padding">
 				<div class="circle done">
 					<span class="labelRecipe">0</span> <span class="title">Welcome</span>
 				</div>
@@ -50,26 +50,26 @@
 					<span class="labelRecipe">3</span> <span class="title">UserRate</span>
 				</div>
 			</div>
-			<button type="button" class="btn btn-primary" value="BACK"
-				onclick="back()">BACK</button>
-			<button type="button" class="btn btn-primary" id="btnNext"
-				value="NEXT" onclick="next()">NEXT</button>
-			<!--disable-->
-			<button type="button" class="btn btn-primary" id="btnPreview"
-				value="PREVIEW" onclick="openpopup('popup')" disabled>PREVIEW</button>
-			<button type="submit" class="btn btn-primary" id="btnAdd"
-				name="btnAction" value="AddNewConfiguration" onclick="addNew()"
-				disabled>AddNewPageDetails</button>
-			<button type="button" class="btn btn-primary" value="HOME"
-				onclick="window.location = 'crawler'">HOME</button>
-			<div class="table-responsive" style="min-height: 70px">
-				<table class="table" id="tbItems" border="1" width="619"
-					class="table">
-					<th width="97%">Content</th>
-				</table>
-				<br />
-				<div id="showXPath"></div>
-				<br />
+			<div class="card-body card-padding">
+				<button type="button" class="btn btn-primary" value="BACK"
+					onclick="back()">BACK</button>
+				<button type="button" class="btn btn-primary" id="btnNext"
+					value="NEXT" onclick="next()">NEXT</button>
+				<!--disable-->
+				<button type="button" class="btn btn-primary" id="btnPreview"
+					value="PREVIEW" onclick="openpopup('popup')" disabled>PREVIEW</button>
+				<button type="submit" class="btn btn-primary" id="btnAdd"
+					name="btnAction" value="AddNewConfiguration" onclick="addNew()"
+					disabled>AddNewPageDetails</button>
+				<button type="button" class="btn btn-primary" value="HOME"
+					onclick="window.location = 'crawler'">HOME</button>
+				<div class="table-responsive" style="min-height: 70px">
+					<table class="table" id="tbItems" border="1" width="619"
+						class="table">
+						<th width="97%">Content</th>
+					</table>
+					<div id="showXPath"></div>
+				</div>
 			</div>
 		</div>
 		<div id="popup" class="popup"></div>
@@ -96,7 +96,7 @@
 				if ($(this).scrollTop() >= scroller_anchor
 						&& $('.scroller').css('position') != 'fixed') { // Change the CSS of the scroller to hilight it and fix it at the top of the screen.
 					$('.scroller').css({
-						'width' : '75.2%',
+						'width' : '77%',
 						'position' : 'fixed',
 						'z-index' : '100',
 						'top' : '0px'
@@ -104,7 +104,7 @@
 					// Changing the height of the scroller anchor to that of scroller so that there is no change in the overall height of the page.
 					$('.scroller_anchor').css('height', '50px');
 					$('.scollchange').css({
-						'margin-top' : '250px',
+						'margin-top' : '350px',
 						'positon' : 'absolute'
 					});
 					$('.popup').css({

@@ -29,7 +29,6 @@
 		<div class="card scroller" style="">
 			<div class="card-header">
 				<h2>Please Select An Element And Get XPath</h2>
-				<div></div>
 			</div>
 			<div class="progressRecipe card-body card-padding">
 				<div class="circle done">
