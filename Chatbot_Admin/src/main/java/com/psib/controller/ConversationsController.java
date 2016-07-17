@@ -75,9 +75,9 @@ public class ConversationsController {
 					
 					pool.add(trainDto);
 					logManager.updateTrainingLog(JsonParser.toJson(pool));
-					logManager.setLogStatus(logId, LogStatus.INTRAINING);
 				}
 			}
+			logManager.setLogStatus(logId, LogStatus.INTRAINING);
 			return "success";
 		} catch (IOException | JSONException e) {
 			logger.error("Add failed!", e);
