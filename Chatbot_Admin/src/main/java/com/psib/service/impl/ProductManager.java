@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.condition.ParamsRequestCondition;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -38,7 +39,6 @@ public class ProductManager implements IProductManager {
     private static final Logger LOG = Logger.getLogger(ProductManager.class);
 
     private static final Integer LIMIT_RESULT_PRODUCT = 1000;
-    private static final Integer LIMIT_RESULT_SYNONYM = 1000;
 
     @Autowired
     private IProductDetailDao productDetailDao;
@@ -50,7 +50,7 @@ public class ProductManager implements IProductManager {
     private IAddressDao addressDao;
 
     @Autowired
-    private ISynonymDao synonymDao;
+    private SynonymManager synonymManager;
 
     @Override
     public BootGirdDto getAllForPaging(int current, int rowCount, String searchPhrase,
@@ -265,26 +265,12 @@ public class ProductManager implements IProductManager {
     public void calcSynonymName() {
         LOG.info("[calcSynonymName] Start");
         int skipResultProduct = 0;
-        int skipResultSynonym = 0;
         int productListSize = -1;
-        int synonymListSize = -1;
-        int replaceSynonymListSize = -1;
         List<ProductDetail> productList;
-        List<Synonym> synonymList;
-        List<String> replaceSynonymList;
         ProductDetail productDetail;
-        Synonym synonym;
         String productName;
-        String synonymName;
         String productSynonym;
-        String tmp;
         int i;
-        int j;
-        int k;
-        List<String> list;
-        List<String> list2;
-        Set<String> lookup;
-        int lookupSize;
 
         while (productListSize != 0) {
             // get product name
@@ -294,49 +280,8 @@ public class ProductManager implements IProductManager {
             for (i = 0; i < productListSize; i++) {
                 productDetail = productList.get(i);
                 productName = productDetail.getProductName().toLowerCase().trim();
-                productSynonym = productName + ";";
-                skipResultSynonym = 0;
-                synonymListSize = -1;
+                productSynonym = synonymManager.calcSynonym(productName);
 
-                while (synonymListSize != 0) {
-                    // get synonym
-                    synonymList = synonymDao.getSynonymNameSortById(skipResultSynonym, LIMIT_RESULT_SYNONYM);
-                    synonymListSize = synonymList.size();
-
-                    for (j = 0; j < synonymListSize; j++) {
-                        synonym = synonymList.get(j);
-                        synonymName = synonym.getName().toLowerCase();
-                        if (productName.contains(synonymName)) {
-                            replaceSynonymList = synonymDao.getByIdAndSynonymId(synonym.getId(), synonym.getSynonymId());
-                            replaceSynonymListSize = replaceSynonymList.size();
-
-                            for (k = 0; k < replaceSynonymListSize; k++) {
-                                tmp = productSynonym.replace(synonymName, replaceSynonymList.get(k).trim());
-                                productSynonym += tmp;
-                            }
-                        }
-                    }
-
-                    skipResultSynonym += LIMIT_RESULT_SYNONYM;
-                }
-
-                list = Lists.newArrayList(Splitter.on(";").split(productSynonym));
-                list2 = new ArrayList<>();
-                lookup = new HashSet<>();
-                for (String item : list) {
-                    if (lookup.add(item)) {
-                        // Set.add returns false if item is already in the set
-                        list2.add(item);
-                    }
-                }
-                list = list2;
-                productSynonym = "";
-
-                lookupSize = list.size() - 1;
-
-                for (j = 0; j < lookupSize; j++) {
-                    productSynonym += list.get(j) + ";";
-                }
                 productDetail.setSynonymName(productSynonym);
                 productDetailDao.updateProductDetail(productDetail);
             }

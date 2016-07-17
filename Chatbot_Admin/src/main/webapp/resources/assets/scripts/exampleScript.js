@@ -229,6 +229,9 @@ function displayStep2() {
     }
 }
 function displayStep3() {
+
+    var d = new Date();
+
     var step1 = document.getElementById("exampleList");
     var selectId = step1.options[step1.selectedIndex].value;
     if (selectId == "empty") {
@@ -249,9 +252,9 @@ function displayStep3() {
         pContainer.addEventListener('mouseup', function () {
             var text = getTextSelection().trim();
             if (text && listPhrase[text] === undefined) {
-                
-                var divDrop = "<div id='droptarget' ondrop='drop(event)' ondragover='allowDrop(event)'>" +
-                    text + " <i class='zmdi zmdi-close-circle-o' style='vertical-align:top'></i>" +
+                var divId = guid();
+                var divDrop = "<div id='" + divId + "' class='droptarget' ondrop='drop(event)' ondragover='allowDrop(event)'>" +
+                    text + " <i class='zmdi zmdi-close-circle-o' style='vertical-align:top' onclick='deleteWord(" + "`#" + divId + "`" + ")'></i>" +
                     "</div>"
 
                 $("#containerDiv").append(divDrop);
@@ -260,6 +263,21 @@ function displayStep3() {
         });
 
     }
+}
+
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+
+function deleteWord(id) {
+    $(id).remove();
 }
 
 function showDeleteModal(name) {

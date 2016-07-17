@@ -192,6 +192,15 @@
 	display: inline-block;
 }
 
+.droptarget {
+	padding: 2px;
+	margin-right:6px;
+	cursor: default;
+	border: 1px solid #999;
+	display: inline-block;
+}
+
+
 .draggable {
 	cursor: move;
 	width: auto;
