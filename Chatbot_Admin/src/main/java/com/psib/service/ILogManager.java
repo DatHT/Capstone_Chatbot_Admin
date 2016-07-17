@@ -15,13 +15,13 @@ import com.psib.dto.jsonmapper.TrainDto;
 
 public interface ILogManager {
 
-	JSONObject getLogJson() throws JSONException, IOException;
+	JSONObject getLogs() throws JSONException, IOException;
 	
 	public JSONObject getLogByLogId(String logId) throws JSONException, IOException;
 
 	void updateLog() throws JSONException, IOException;
 
-	List<JSONObject> getLogs(String atDate) throws IOException, JSONException;
+	List<JSONObject> getAllLogsFromFile(String atDate) throws IOException, JSONException;
 
 	public StatusCode addPhrase(String listPhrase) throws JSONException, IOException, RestfulException;
 

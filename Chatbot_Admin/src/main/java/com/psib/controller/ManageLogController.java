@@ -64,7 +64,7 @@ public class ManageLogController {
 		String response = "";
 
 		try {
-			response = logManager.getLogJson().toString();
+			response = logManager.getLogs().toString();
 		} catch (JSONException | IOException e) {
 			model.addAttribute(ERROR, e.getMessage());
 			e.printStackTrace();

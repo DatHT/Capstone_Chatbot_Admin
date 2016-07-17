@@ -76,7 +76,7 @@ public class LogManager implements ILogManager {
 
 	private static String count = "count";
 
-	public JSONObject logJson;
+	public JSONObject logJSON;
 
 	private String getLogFilePath() {
 		if (chatLogsFolder == null) {
@@ -112,25 +112,25 @@ public class LogManager implements ILogManager {
 	}
 
 	@Override
-	public JSONObject getLogJson() throws JSONException, IOException {
-		if (logJson != null) {
-			return logJson;
+	public JSONObject getLogs() throws JSONException, IOException {
+		if (logJSON != null) {
+			return logJSON;
 		}
 
-		logJson = readJsonLogFile(this.getLogFilePath());
-		if (logJson == null) {
-			logJson = new JSONObject();
+		logJSON = readJSONLogFile(this.getLogFilePath());
+		if (logJSON == null) {
+			logJSON = new JSONObject();
 
 			Calendar calendar = Calendar.getInstance();
 			calendar.add(Calendar.DATE, 0);
 
-			logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(calendar.getTime()));
-			logJson.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
+			logJSON.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(calendar.getTime()));
+			logJSON.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
 		}
-		return logJson;
+		return logJSON;
 	}
 
-	private JSONObject readJsonLogFile(String logPath) throws IOException, JSONException {
+	private JSONObject readJSONLogFile(String logPath) throws IOException, JSONException {
 		BufferedReader bufferedReader = FileUtils.readFile(logPath);
 		StringBuilder stringBuilder = new StringBuilder();
 		String tempString = null;
@@ -158,8 +158,8 @@ public class LogManager implements ILogManager {
 
 	@Override
 	public void updateLog() throws JSONException, IOException {
-		JSONObject logJson = this.getLogJson();
-		List<JSONObject> logs = this.getLogs(null);
+		JSONObject logJson = this.getLogs();
+		List<JSONObject> logs = this.getAllLogsFromFile(null);
 		JSONArray trainArr = this.getTrainingList();
 
 		JSONArray jsonArray;
@@ -209,10 +209,10 @@ public class LogManager implements ILogManager {
 		logJson.put(LOG_JSON_FORMAT_CONTENTS, jsonArray);
 		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(new Date()));
 
-		this.logJson = logJson;
+		this.logJSON = logJson;
 
 		FileUtils.writleFile(this.getTrainingPoolPath(), trainArr.toString(4));
-		FileUtils.writleFile(this.getLogFilePath(), this.logJson.toString(4));
+		FileUtils.writleFile(this.getLogFilePath(), this.logJSON.toString(4));
 	}
 
 	/**
@@ -223,10 +223,10 @@ public class LogManager implements ILogManager {
 	 * @throws JSONException
 	 */
 	@Override
-	public List<JSONObject> getLogs(String atDate) throws IOException, JSONException {
+	public List<JSONObject> getAllLogsFromFile(String atDate) throws IOException, JSONException {
 		List<JSONObject> logs = new ArrayList<JSONObject>();
 
-		List<String> fileList = getFileLogPath(atDate);
+		List<String> fileList = getFileLogPaths(atDate);
 
 		if (fileList != null) {
 			for (String filePath : fileList) {
@@ -347,10 +347,10 @@ public class LogManager implements ILogManager {
 		return new JSONObject().put("feedback", feedback);
 	}
 
-	private List<String> getFileLogPath(String strDate) throws IOException, JSONException {
+	private List<String> getFileLogPaths(String strDate) throws IOException, JSONException {
 		List<String> fileLogPaths = new ArrayList<String>();
 
-		String lastModifiedDate = getLogJson().get(LOG_JSON_FORMAT_MODIFIED_DATE).toString();
+		String lastModifiedDate = getLogs().get(LOG_JSON_FORMAT_MODIFIED_DATE).toString();
 		File file = new File(chatLogsFolder);
 		if (!file.isDirectory()) {
 			return null;
@@ -380,7 +380,7 @@ public class LogManager implements ILogManager {
 
 	@Override
 	public JSONObject getLogByLogId(String logId) throws JSONException, IOException {
-		JSONArray logs = this.getLogJson().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
+		JSONArray logs = this.getLogs().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
 		for (int i = 0; i < logs.length(); i++) {
 			JSONObject log = logs.getJSONObject(i);
 			if (log.has(id) && log.getString(id).equals(logId)) {
@@ -443,7 +443,7 @@ public class LogManager implements ILogManager {
 	}
 
 	public void deleteLog(String logString) throws JSONException, IOException {
-		JSONObject logJson = this.getLogJson();
+		JSONObject logJson = this.getLogs();
 
 		JSONArray jsonArray = new JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
 		JSONArray newJson = new JSONArray();
@@ -459,8 +459,8 @@ public class LogManager implements ILogManager {
 		logJson.put(LOG_JSON_FORMAT_CONTENTS, jsonArray);
 		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(new Date()));
 
-		this.logJson = logJson;
-		FileUtils.writleFile(this.getLogFilePath(), this.logJson.toString());
+		this.logJSON = logJson;
+		FileUtils.writleFile(this.getLogFilePath(), this.logJSON.toString());
 	}
 
 	@Override
@@ -505,7 +505,7 @@ public class LogManager implements ILogManager {
 	 * Collect all conversation with BOT by sessionId.
 	 */
 	public JSONArray conversationCollector(String atDate) throws IOException, JSONException {
-		List<JSONObject> allLog = this.getLogs(atDate);
+		List<JSONObject> allLog = this.getAllLogsFromFile(atDate);
 		JSONArray jsonArray = new JSONArray();
 
 		String strSessionId = "";
@@ -578,7 +578,7 @@ public class LogManager implements ILogManager {
 
 	@Override
 	public JSONObject setLogStatus(String logId, LogStatus logStatus) throws JSONException, IOException {
-		JSONArray logs = this.getLogJson().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
+		JSONArray logs = this.getLogs().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
 		for (int i = 0; i < logs.length(); i++) {
 			JSONObject log = logs.getJSONObject(i);
 			int errorCode = log.getInt(errCode);
@@ -589,8 +589,8 @@ public class LogManager implements ILogManager {
 				}
 			}
 		}
-		FileUtils.writleFile(this.getLogFilePath(), this.logJson.toString(4));
-		return this.getLogJson();
+		FileUtils.writleFile(this.getLogFilePath(), this.logJSON.toString(4));
+		return this.getLogs();
 	}
 
 	private JSONObject getConversationLog(String strSession, String filePath) throws IOException, JSONException {
@@ -631,7 +631,7 @@ public class LogManager implements ILogManager {
 
 	@Override
 	public JSONArray getAllConversations(String logId) throws JSONException, IOException {
-		JSONArray logs = this.getLogJson().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
+		JSONArray logs = this.getLogs().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
 
 		JSONArray conversations = new JSONArray();
 		for (int i = 0; i < logs.length(); i++) {
