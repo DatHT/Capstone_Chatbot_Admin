@@ -63,4 +63,6 @@ public class LexicalCategoryDao extends BaseDao<LexicalCategory, Integer> implem
 		return -1;
 	}
 
+	
+
 }

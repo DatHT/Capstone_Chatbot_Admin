@@ -39,7 +39,6 @@ public class PhraseDao extends BaseDao<Phrase, Integer> implements IPhraseDao {
 	@Override
 	public int insertPhrase(Phrase phrase) {
 		LOG.info("[insertPhrase] Start: name = " + phrase.getName());
-		phrase.setAsynchronized(true);
         insert(phrase);
         LOG.info("[insertPhrase] End");
         return phrase.getId();
@@ -66,6 +65,12 @@ public class PhraseDao extends BaseDao<Phrase, Integer> implements IPhraseDao {
 	@Transactional
 	public List<Phrase> getAllPhrases() {
 		return getAll();
+	}
+
+	@Override
+	@Transactional
+	public void updatePhrase(Phrase phrase) {
+		update(phrase);
 	}
 
 }

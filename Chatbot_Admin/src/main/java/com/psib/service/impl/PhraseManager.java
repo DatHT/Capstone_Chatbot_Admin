@@ -54,4 +54,9 @@ public class PhraseManager implements IPhraseManager {
 		return dao.getAllPhrases();
 	}
 
+	@Override
+	public void updatePhrase(Phrase phrase) {
+		dao.updatePhrase(phrase);
+	}
+
 }

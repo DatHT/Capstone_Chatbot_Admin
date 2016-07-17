@@ -3,8 +3,11 @@ package com.psib.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -87,5 +90,51 @@ public class CommonUtils {
 			System.out.println("Wrong date format: " + strDate + "---" + e.getLocalizedMessage());
 		}
 		return null;
+	}
+
+	public static List<String> splitAddresses(List<String> addresses) {
+		List<String> splitAddresses = new ArrayList<>();
+		for (int i = 0; i < addresses.size(); i++) {
+			String temp = handleAddressNameFromDB(addresses.get(i)).trim();
+			if (!splitAddresses.contains(temp)) {
+				splitAddresses.add(temp);
+			}
+		}
+		return splitAddresses;
+	}
+
+	private static String handleAddressNameFromDB(String address) {
+		String result = "";
+		String patternNumber = "[0-9]";
+		int posOfFirstNum = indexOf(Pattern.compile(patternNumber), address);
+		int start = 0;
+		int end = 0;
+		if (address.indexOf("Đường") > 0) {
+			start = address.indexOf("Đường") + 5;
+		} else {
+			if (posOfFirstNum != -1) {
+				for (int i = posOfFirstNum; i < address.length(); i++) {
+					if (Character.isLetter(address.charAt(i))) {
+						if (address.charAt(i - 1) == ' ') {
+							start = i;
+							break;
+						}
+					}
+				}
+			}
+		}
+		for (int i = start; i < address.length(); i++) {
+			if (address.charAt(i) == ',' || address.charAt(i) == '(' || address.charAt(i) == '.') {
+				end = i;
+				break;
+			}
+		}
+		return (start < end) ? address.substring(start, end) : "";
+
+	}
+
+	private static int indexOf(Pattern pattern, String s) {
+		Matcher matcher = pattern.matcher(s);
+		return matcher.find() ? matcher.start() : -1;
 	}
 }
