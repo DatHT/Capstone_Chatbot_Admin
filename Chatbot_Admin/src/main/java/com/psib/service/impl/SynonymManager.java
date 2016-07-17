@@ -211,6 +211,6 @@ public class SynonymManager implements ISynonymManager {
         }
 
         LOG.info("[calcSynonym] End");
-        return productName;
+        return productSynonym;
     }
 }
