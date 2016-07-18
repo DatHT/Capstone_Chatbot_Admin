@@ -22,7 +22,7 @@ public class FileUtils {
 		return bufferedReader;
 	}
 
-	public static void writleFile(String filePath, String data) throws IOException {
+	public static void writeFile(String filePath, String data) throws IOException {
 		File file = new File(filePath);
 
 		FileWriter fileWriter = null;

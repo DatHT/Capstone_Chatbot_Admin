@@ -211,8 +211,8 @@ public class LogManager implements ILogManager {
 
 		this.logJSON = logJson;
 
-		FileUtils.writleFile(this.getTrainingPoolPath(), trainArr.toString(4));
-		FileUtils.writleFile(this.getLogFilePath(), this.logJSON.toString(4));
+		FileUtils.writeFile(this.getTrainingPoolPath(), trainArr.toString(4));
+		FileUtils.writeFile(this.getLogFilePath(), this.logJSON.toString(4));
 	}
 
 	/**
@@ -460,7 +460,7 @@ public class LogManager implements ILogManager {
 		logJson.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(new Date()));
 
 		this.logJSON = logJson;
-		FileUtils.writleFile(this.getLogFilePath(), this.logJSON.toString());
+		FileUtils.writeFile(this.getLogFilePath(), this.logJSON.toString());
 	}
 
 	@Override
@@ -498,7 +498,7 @@ public class LogManager implements ILogManager {
 
 	@Override
 	public void updateTrainingLog(String data) throws IOException {
-		FileUtils.writleFile(this.getTrainingFilePath(), data);
+		FileUtils.writeFile(this.getTrainingFilePath(), data);
 	}
 
 	/*
@@ -547,7 +547,7 @@ public class LogManager implements ILogManager {
 				}
 			}
 		}
-		FileUtils.writleFile(fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl() + "/"
+		FileUtils.writeFile(fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl() + "/"
 				+ atDate + "/collector" + atDate, jsonArray.toString(4));
 		return jsonArray;
 	}
@@ -589,7 +589,7 @@ public class LogManager implements ILogManager {
 				}
 			}
 		}
-		FileUtils.writleFile(this.getLogFilePath(), this.logJSON.toString(4));
+		FileUtils.writeFile(this.getLogFilePath(), this.logJSON.toString(4));
 		return this.getLogs();
 	}
 
