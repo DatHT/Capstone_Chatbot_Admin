@@ -170,6 +170,11 @@ public class SynonymManager implements ISynonymManager {
         List<String> list2;
         Set<String> lookup;
         int lookupSize;
+        int startChar;
+        int productLength = productName.length();
+        int synonymLength;
+        int lastPosition;
+        boolean isReplaceable;
         while (synonymListSize != 0) {
             // get synonym
             synonymList = synonymDao.getSynonymNameSortById(skipResultSynonym, LIMIT_RESULT_SYNONYM);
@@ -178,13 +183,30 @@ public class SynonymManager implements ISynonymManager {
             for (int i = 0; i < synonymListSize; i++) {
                 synonym = synonymList.get(i);
                 synonymName = synonym.getName().toLowerCase();
+                isReplaceable = true;
                 if (productName.contains(synonymName)) {
-                    replaceSynonymList = synonymDao.getByIdAndSynonymId(synonym.getId(), synonym.getSynonymId());
-                    replaceSynonymListSize = replaceSynonymList.size();
+                    startChar = productName.indexOf(synonymName);
+                    synonymLength = synonymName.length();
+                    lastPosition = startChar + synonymLength;
 
-                    for (j = 0; j < replaceSynonymListSize; j++) {
-                        tmp = productSynonym.replace(synonymName, replaceSynonymList.get(j).trim());
-                        productSynonym += tmp;
+                    if (lastPosition < productLength) {
+                        if (productName.charAt(startChar + synonymLength) != ' ') {
+                            isReplaceable = false;
+                        }
+                    } else if (startChar != 0) {
+                        if (productName.charAt(startChar - 1) != ' ') {
+                            isReplaceable = false;
+                        }
+                    }
+
+                    if (isReplaceable) {
+                        replaceSynonymList = synonymDao.getByIdAndSynonymId(synonym.getId(), synonym.getSynonymId());
+                        replaceSynonymListSize = replaceSynonymList.size();
+
+                        for (j = 0; j < replaceSynonymListSize; j++) {
+                            tmp = productSynonym.replace(synonymName, replaceSynonymList.get(j).trim());
+                            productSynonym += tmp;
+                        }
                     }
                 }
             }
