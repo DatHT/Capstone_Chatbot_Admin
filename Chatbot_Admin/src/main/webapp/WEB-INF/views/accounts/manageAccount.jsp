@@ -3,26 +3,28 @@
 
 <c:set var="STAFFS" value="${STAFFS}" />
 <script src="resources/assets/scripts/accountScript.js"></script>
-<div class="c-header">
-	<h2>Manage Account</h2>
 
-	<ul class="actions a-alt">
-		<li><a href="#"> <i class="zmdi zmdi-trending-up"></i>
-		</a></li>
-		<li><a href="#"> <i class="zmdi zmdi-check-all"></i>
-		</a></li>
-		<li class="dropdown"><a href="#" data-toggle="dropdown"> <i
-				class="zmdi zmdi-more-vert"></i>
-		</a>
-
-			<ul class="dropdown-menu dropdown-menu-right">
-				<li><a href="#">Refresh</a></li>
-				<li><a href="#">Manage Widgets</a></li>
-				<li><a href="#">Widgets Settings</a></li>
-			</ul></li>
-	</ul>
-</div>
 <div class="card">
+	<div class="my-c-header">
+		<h2>Manage Account</h2>
+
+		<ul class="actions a-alt">
+			<li><a href="#"> <i class="zmdi zmdi-trending-up"></i>
+			</a></li>
+			<li><a href="#"> <i class="zmdi zmdi-check-all"></i>
+			</a></li>
+			<li class="dropdown"><a href="#" data-toggle="dropdown"> <i
+					class="zmdi zmdi-more-vert"></i>
+			</a>
+
+				<ul class="dropdown-menu dropdown-menu-right">
+					<li><a href="#">Refresh</a></li>
+					<li><a href="#">Manage Widgets</a></li>
+					<li><a href="#">Widgets Settings</a></li>
+				</ul></li>
+		</ul>
+	</div>
+
 	<div class="card-header">
 		<h2>Manage Account</h2>
 	</div>

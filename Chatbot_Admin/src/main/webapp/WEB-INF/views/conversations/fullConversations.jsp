@@ -3,10 +3,12 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <script src="resources/assets/scripts/conversationScript.js"></script>
 <c:set var="dates" value="${DATES}" />
-<div class="c-header">
-	<h2>Conversations</h2>
-</div>
+
 <div class="card">
+	<div class="my-c-header">
+		<h2>Conversations</h2>
+	</div>
+
 	<div class="card-header">
 		<h2>
 			Conversations <small>Here shows the conversations with PISB.</small>
