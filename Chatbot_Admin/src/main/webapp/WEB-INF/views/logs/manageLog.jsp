@@ -30,17 +30,12 @@
 	margin: 11px 0px 0px 15px;
 }
 </style>
-<div class="c-header">
-	<h2>Logs Manager</h2>
 
-	<ul class="actions a-alt">
-		<li><a href="#"> <i class="zmdi zmdi-trending-up"></i>
-		</a></li>
-		<li><a href="#"> <i class="zmdi zmdi-check-all"></i>
-		</a></li>
-	</ul>
-</div>
 <div class="card">
+	<div class="my-c-header">
+		<h2>Logs Manager</h2>
+	</div>
+
 	<div class="card-header">
 		<h2>Logs Manager</h2>
 	</div>

@@ -10,13 +10,6 @@
 		<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
 		<input type="hidden" value="${_csrf.token}" id="token" />
 		<h2>Manage Lexical And Pharse</h2>
-
-		<ul class="actions a-alt">
-			<li><a href="#"> <i class="zmdi zmdi-trending-up"></i>
-			</a></li>
-			<li><a href="#"> <i class="zmdi zmdi-check-all"></i>
-			</a></li>
-		</ul>
 	</div>
 
 	<div class="card-header">
@@ -56,7 +49,7 @@
 	</div>
 
 	<div class="card-body card-padding">
-		
+
 		<button class="btn btn-primary btn-lg waves-effect"
 			onclick="insertRowToAddNewPhrase('lexicalTable')">Add New</button>
 		<div class="row m-t-20">
@@ -81,9 +74,9 @@
 			</div>
 		</div>
 		<!--End Advanced Tables -->
-		
+
 	</div>
-	</div>		
+	</div>
 </div>
 
 <!-- Modals-->
