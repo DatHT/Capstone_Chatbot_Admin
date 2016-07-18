@@ -11,10 +11,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
-<div class="c-header">
-    <h2 id="tableHeader"><spring:message code="product_header_manage"/></h2>
-</div>
-
 <div class="card" id="profile-main">
     <div class="pm-overview c-overflow">
         <div class="pmo-pic">
@@ -91,11 +87,11 @@
                                     <select id="district" name="district" class="form-control">
                                         <c:forEach items="${districtList}" var="district">
                                             <c:if test="${districtName == district.name}">
- 												<option value="${district.name}" selected>${district.name}</option>
- 											</c:if>
- 											<c:if test="${districtName != district.name}">
- 												<option value="${district.name}">${district.name}</option>
- 											</c:if>
+                                                <option value="${district.name}" selected>${district.name}</option>
+                                            </c:if>
+                                            <c:if test="${districtName != district.name}">
+                                                <option value="${district.name}">${district.name}</option>
+                                            </c:if>
                                         </c:forEach>
                                     </select>
                                 </div>

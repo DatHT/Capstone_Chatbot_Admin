@@ -3,20 +3,22 @@
 <script src="resources/assets/scripts/lexicalScript.js"></script>
 <script src="resources/assets/scripts/commonScript.js"></script>
 <c:set var="lexicals" value="${LEXICAL}" />
-<div class="c-header">
-	<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
-	<input type="hidden" value="${_csrf.token}" id="token" />
-	<h2>Manage Lexical And Pharse</h2>
 
-	<ul class="actions a-alt">
-		<li><a href="#"> <i class="zmdi zmdi-trending-up"></i>
-		</a></li>
-		<li><a href="#"> <i class="zmdi zmdi-check-all"></i>
-		</a></li>
-	</ul>
-</div>
 
 <div class="card">
+	<div class="my-c-header">
+		<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
+		<input type="hidden" value="${_csrf.token}" id="token" />
+		<h2>Manage Lexical And Pharse</h2>
+
+		<ul class="actions a-alt">
+			<li><a href="#"> <i class="zmdi zmdi-trending-up"></i>
+			</a></li>
+			<li><a href="#"> <i class="zmdi zmdi-check-all"></i>
+			</a></li>
+		</ul>
+	</div>
+
 	<div class="card-header">
 		<h2>Lexical Category</h2>
 	</div>

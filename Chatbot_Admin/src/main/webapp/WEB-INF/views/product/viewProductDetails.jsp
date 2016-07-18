@@ -5,10 +5,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
-<div class="c-header">
-    <h2 id="tableHeader"><spring:message code="product_header_manage"/></h2>
-</div>
-
 <div class="card" id="profile-main">
     <div class="pm-overview c-overflow">
         <div class="pmo-pic">
