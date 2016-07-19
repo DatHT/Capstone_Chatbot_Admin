@@ -126,9 +126,9 @@
 							href="synonym">Synonym</a></li>
 					</ul>
 				</li>
-				<li class="${current == 'conversations' ? 'selected' : ''}">
+				<%-- <li class="${current == 'conversations' ? 'selected' : ''}">
 					<a href="conversations"> <i class="zmdi zmdi-comments"></i> Conversations</a>
-				</li>
+				</li> --%>
 			</ul>
 		</aside>
 		<!-- end navbar side -->

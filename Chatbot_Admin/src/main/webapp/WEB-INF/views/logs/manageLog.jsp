@@ -3,6 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <c:set var="intents" value="${INTENTS}" />
 <c:set var="lexicals" value="${LEXICAL}" />
+<script src="resources/assets/scripts/commonScript.js"></script>
 <script src="resources/assets/scripts/logScript.js"></script>
 <c:set var="paramName" value="${_csrf.parameterName}" />
 <c:set var="token" value="${_csrf.token}" />
@@ -62,16 +63,16 @@
 		<!--    Hover Rows  -->
 		<div class="card">
 			<div class="card-header">
-				<h2 id="tableHeader">Misunderstand</h2>
+				<h2 id="tableHeader">Misunderstand<small>Contains the sentence that BOT does not understand what user say </small></h2>
 			</div>
 			<div class="panel-body">
 				<div class="table-responsive">
 					<table id="no-entry-data-table"
-						class="table table-striped table-bordered table-hover">
+						class="table table-striped table-bordered">
 						<thead>
 							<tr>
 								<th data-column-id="logid" data-visible="false">ID</th>
-								<th data-column-id="status" data-formatter="statusIcon"></th>
+								<th data-column-id="status" data-formatter="statusIcon" data-visible="false"></th>
 								<th data-column-id="usersay" data-formatter="unreadText"
 									data-identifier="true">User say</th>
 								<th data-column-id="count" data-visible="false"  data-order="desc">Count</th>
@@ -91,12 +92,12 @@
 		<!--    Hover Rows  -->
 		<div class="card">
 			<div class="card-header">
-				<h2 id="tableHeader">No entry found</h2>
+				<h2 id="tableHeader">No entry found<small>Contains what user request but we have no result. </small></h2>
 			</div>
 			<div class="panel-body">
 				<div class="table-responsive">
 					<table id="not-found-data-table"
-						class="table table-striped table-bordered table-hover">
+						class="table table-striped table-bordered">
 						<thead>
 							<tr>
 								<th data-column-id="food">Food</th>
@@ -117,12 +118,12 @@
 <div class="col-lg-12">
 	<div class="card">
 		<div class="card-header">
-			<h2 id="tableReport">Reported product</h2>
+			<h2 id="tableReport">Reported product<small>Contains the product which reported by user. It can be wrong name or address... </small></h2>
 		</div>
 		<div class="panel-body">
 			<div class="table-responsive">
 				<table id="reported-data-table"
-					class="table table-striped table-bordered table-hover">
+					class="table table-striped table-bordered">
 					<thead>
 						<tr>
 							<th data-column-id="productId" data-identifier="true">Product

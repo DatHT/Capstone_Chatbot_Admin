@@ -62,7 +62,7 @@
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<div class="table-responsive">
-					<table class="table table-striped table-bordered table-hover" id="phraseTable">
+					<table class="table table-striped table-bordered" id="phraseTable">
 						<thead>
 							<tr>
 								<th data-column-id="id" data-type="numeric" data-identifier="true">No.</th>
