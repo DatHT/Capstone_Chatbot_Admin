@@ -317,8 +317,6 @@ function requestAddPhrase(param, token) {
 				notify("Successfull!", "success");
 				closeModalDialog();
 			}
-		} else {
-			swal('Error occurs. Please try again later!');
 		}
 	}
 
