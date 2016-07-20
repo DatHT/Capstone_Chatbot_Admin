@@ -13,7 +13,7 @@
 	<div class="form-horizontal">
 		<div class="card-header">
 			<h2>
-				Create new account <small>Use to create new account for
+				Create new account <small>Used to create new account for
 					staff to login into the system</small>
 			</h2>
 		</div>
@@ -50,9 +50,7 @@
 <div class="card">
 	<div class="card-header">
 		<h2>
-			Basic Example <small>It's just that simple. Turn your simple
-				table into a sophisticated data table and offer your users a nice
-				experience and great features without any effort.</small>
+			Accounts
 		</h2>
 	</div>
 
