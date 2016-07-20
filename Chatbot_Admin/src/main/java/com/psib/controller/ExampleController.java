@@ -4,7 +4,9 @@
 package com.psib.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +25,10 @@ import com.psib.constant.CodeManager;
 import com.psib.constant.StatusCode;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.TrainDto;
+import com.psib.dto.jsonmapper.intent.DataDto;
+import com.psib.dto.jsonmapper.intent.IntentDto;
 import com.psib.dto.jsonmapper.intent.IntentsDto;
+import com.psib.dto.jsonmapper.intent.UserSayDto;
 import com.psib.service.IIntentManager;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
@@ -93,7 +98,8 @@ public class ExampleController {
 
 	@RequestMapping(path = "/add", method = RequestMethod.POST)
 	public @ResponseBody String insertPattern(@RequestParam("pattern") String pattern, @RequestParam("id") String id,
-			@RequestParam("trainingSentence") String trainingSentence, Model model) {
+			@RequestParam("trainingSentence") String trainingSentence,
+			Model model) {
 		String responseText = "";
 
 		try {
@@ -112,7 +118,8 @@ public class ExampleController {
 					logManager.updateTrainingLog(JsonParser.toJson(pool));
 				}
 			}
-
+			
+	        
 			StatusCode status = manager.addPattern(pattern, id);
 			switch (status) {
 			case SUCCESS:

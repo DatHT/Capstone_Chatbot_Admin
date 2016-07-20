@@ -95,7 +95,7 @@ Array.prototype.remove = function() {
 $(function () {
     function reposition() {
         var modal = $(this),
-            dialog = modal.find('.modal-dialog');
+            dialog = modal.find('#loadingModal');
         modal.css('display', 'block');
 
         // Dividing by two centers the modal exactly, but dividing by three

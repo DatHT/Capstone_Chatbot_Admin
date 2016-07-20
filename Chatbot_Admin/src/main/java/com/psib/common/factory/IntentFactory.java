@@ -47,6 +47,14 @@ public class IntentFactory extends AbstractFactory {
 		return responseString(result);
 	}
 	
+	public IntentDto getIntentByIdWithJsonFormat(String id) throws IOException, RestfulException {
+		RestResult result = client.createInvoker(RequestMethod.GET)
+				.addHeader(AUTH_KEY, AUTH_VALUE)
+				.addRoute(id)
+				.invoke();
+		return response(result, IntentDto.class);
+	}
+	
 	public StatusDto insertPattern(String pattern, String id) throws IOException, RestfulException {
 		Object obj = JsonParser.toObject(pattern, Object.class);
 		

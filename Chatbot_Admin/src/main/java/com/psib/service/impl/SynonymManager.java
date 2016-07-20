@@ -156,6 +156,7 @@ public class SynonymManager implements ISynonymManager {
     @Override
     public String calcSynonym(String productName) {
         LOG.info("[calcSynonym] Start: productName = " + productName);
+        productName = productName.toLowerCase();
         int skipResultSynonym = 0;
         int synonymListSize = -1;
         int replaceSynonymListSize;

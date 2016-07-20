@@ -65,4 +65,9 @@ public class IntentManager implements IIntentManager {
 		}
 	}
 
+	@Override
+	public IntentDto getIntentWithFormat(String id) throws IOException, RestfulException {
+		return factory.getIntentByIdWithJsonFormat(id);
+	}
+
 }

@@ -26,20 +26,12 @@ public class IntentDto implements Serializable {
 	@JsonProperty("name")
 	private String name;
 	
-	@JsonProperty("contexts")
-	private List<String> contexts;
-	
 	@JsonProperty("templates")
 	private List<String> templates;
 	
-	@JsonProperty("responses")
-	private List<ResponseIntent> responses;
+	@JsonProperty("userSays")
+	private List<UserSayDto> userSays;
 	
-	@JsonProperty("state")
-	private String state;
-	/**
-	 * 
-	 */
 	public IntentDto() {
 		// TODO Auto-generated constructor stub
 	}
@@ -69,30 +61,17 @@ public class IntentDto implements Serializable {
 		this.templates = templates;
 	}
 
-	public List<String> getContexts() {
-		return contexts;
+	public List<UserSayDto> getUserSays() {
+		return userSays;
 	}
 
-	public void setContexts(List<String> contexts) {
-		this.contexts = contexts;
+	public void setUserSays(List<UserSayDto> userSays) {
+		this.userSays = userSays;
 	}
 
-	public String getState() {
-		return state;
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
-	public void setState(String state) {
-		this.state = state;
-	}
-
-	public List<ResponseIntent> getResponses() {
-		return responses;
-	}
-
-	public void setResponses(List<ResponseIntent> responses) {
-		this.responses = responses;
-	}
-	
-	
 	
 }

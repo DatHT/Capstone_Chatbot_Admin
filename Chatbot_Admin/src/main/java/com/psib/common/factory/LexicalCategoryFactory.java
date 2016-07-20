@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.psib.common.restclient.RequestMethod;
 import com.psib.common.restclient.RestResult;
 import com.psib.common.restclient.RestfulException;
+import com.psib.dto.jsonmapper.Entity;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
@@ -71,5 +72,16 @@ public class LexicalCategoryFactory extends AbstractFactory {
 		
 		return response(result, ResultDto.class);
 	}
+	
+	public ResultDto updatePhrase(LexicalDto entity, String id) throws IOException, RestfulException{
+		RestResult result = client.createInvoker(RequestMethod.PUT)
+				.addHeader(AUTH_KEY, AUTH_VALUE)
+				.addRoute(id)
+				.invoke(entity);
+		
+		return response(result, ResultDto.class);
+	}
+	
+	
 	
 }
