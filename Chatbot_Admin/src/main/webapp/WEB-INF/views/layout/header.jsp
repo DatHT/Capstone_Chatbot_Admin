@@ -22,7 +22,7 @@
 			data-ma-action="sidebar-open" data-ma-target="user-alerts"><a
 			href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a></li>
 		<li class="dropdown hm-profile"><a data-toggle="dropdown"
-			href="#"> <img src="resources/assets/img/profile-pics/1.jpg"
+			href="#"> <img src="resources/assets/img/profile-pics/default-ava.png"
 				alt="">
 		</a>
 
