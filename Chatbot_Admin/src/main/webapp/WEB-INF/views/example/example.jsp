@@ -11,13 +11,6 @@
 	<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
 	<input type="hidden" value="${_csrf.token}" id="token" />
 	<h2>Training Bot By Example</h2>
-
-	<ul class="actions a-alt">
-		<li><a href="#"> <i class="zmdi zmdi-trending-up"></i>
-		</a></li>
-		<li><a href="#"> <i class="zmdi zmdi-check-all"></i>
-		</a></li>
-	</ul>
 </div>
 
 <div class="row">
