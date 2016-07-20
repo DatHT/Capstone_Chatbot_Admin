@@ -200,6 +200,11 @@ public class CrawlerController extends HttpServlet {
 			System.out.println("File deleted");
 		}
 		if (add) {
+			String result = configurationManager.loadConfig();
+			String[] config = result.split(",");
+			System.out.println(result);
+			session.setAttribute("INFOCONFIG", config[0]);
+			session.setAttribute("INFOPAGE", config[1]);
 			session.setAttribute("MESSAGE", "New page configuration has been inserted to storage!");
 			return "successParse";
 		} else {

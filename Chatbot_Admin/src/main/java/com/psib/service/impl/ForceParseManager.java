@@ -47,6 +47,8 @@ public class ForceParseManager implements IForceParseManager {
 	@Autowired
 	private IFileServerDao fileServerDao;
 
+	private String num_of_exits = SpringPropertiesUtil.getProperty("num_exist");
+
 	public String getPageConfigFilePath() throws IOException {
 		if (xmlFilePathFolder == null) {
 			xmlFilePathFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("xml_file_path")).getUrl();
@@ -245,6 +247,12 @@ public class ForceParseManager implements IForceParseManager {
 					} else {
 						countExits++;
 						System.out.println("Cannot add to database");
+						int exist = Integer.parseInt(num_of_exits);
+						if (countExits == exist) {
+							System.out.println("more than " + exist + " exist record, closing your parser");
+							driver.close();
+							return "done";
+						}
 					}
 				}
 			}
@@ -256,10 +264,9 @@ public class ForceParseManager implements IForceParseManager {
 			System.out.println("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
-			driver.close();
 			System.out.println("STOP PARSE");
-			return "fail";
 		}
+		return "done";
 	}
 
 	@Override
@@ -458,6 +465,12 @@ public class ForceParseManager implements IForceParseManager {
 						} else {
 							countExist++;
 							System.out.println("Cannot add to database");
+							int exist = Integer.parseInt(num_of_exits);
+							if (countExist == exist) {
+								System.out.println("more than " + exist + " exist record, closing your parser");
+								driver.close();
+								return "done";
+							}
 						}
 					}
 				}
@@ -603,6 +616,12 @@ public class ForceParseManager implements IForceParseManager {
 					} else {
 						countExist++;
 						System.out.println("Cannot add to database");
+						int exist = Integer.parseInt(num_of_exits);
+						if (countExist == exist) {
+							System.out.println("more than " + exist + " exist record, closing your parser");
+							driver.close();
+							return "done";
+						}
 					}
 				}
 			}
@@ -613,12 +632,9 @@ public class ForceParseManager implements IForceParseManager {
 			double seconds = (double) estimatedTime / 1000000000.0;
 			System.out.println("Elapsed time: " + seconds);
 			return "done";
-		} catch (
-
-		Exception ex) {
-			driver.close();
+		} catch (Exception ex) {
 			System.out.println("STOP PARSING");
-			return "fail";
 		}
+		return "done";
 	}
 }

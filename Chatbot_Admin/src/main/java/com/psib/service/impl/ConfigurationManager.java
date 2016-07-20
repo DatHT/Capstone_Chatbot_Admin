@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.psib.constant.CodeManager;
+import com.psib.dao.IFileServerDao;
 import com.psib.dto.configuration.ConfigDTO;
 import com.psib.dto.configuration.ConfigDTOList;
 import com.psib.dto.configuration.PageDTO;
@@ -33,17 +34,37 @@ import com.psib.dto.configuration.PageDTOList;
 import com.psib.service.IConfigurationManager;
 import com.psib.service.IForceParseManager;
 import com.psib.util.CommonUtils;
+import com.psib.util.SpringPropertiesUtil;
 import com.psib.util.XMLUtils;
 
 @Service
 public class ConfigurationManager implements IConfigurationManager {
 	@Autowired
 	private IForceParseManager forceParseManager;
+	@Autowired
+	private IFileServerDao fileServerDao;
+	private String xmlFilePathFolder;
+	
+	public String getPageConfigFilePath() throws IOException {
+		if (xmlFilePathFolder == null) {
+			xmlFilePathFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("xml_file_path")).getUrl();
+		}
+		return xmlFilePathFolder + "/pageconfig.xml";
+	}
+
+	public String getParserConfigFilePath() throws IOException {
+		if (xmlFilePathFolder == null) {
+			xmlFilePathFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("xml_file_path")).getUrl();
+		}
+		return xmlFilePathFolder + "/parserconfig.xml";
+	}
 
 	@Override
 	public String loadConfig() throws IOException {
-		String pageConfigXML = forceParseManager.getPageConfigFilePath();
-		String parserConfigXML = forceParseManager.getParserConfigFilePath();
+		String pageConfigXML = getPageConfigFilePath();
+		System.out.println("Page config: "+pageConfigXML);
+		String parserConfigXML = getParserConfigFilePath();
+		System.out.println("Paser config: "+parserConfigXML);
 		String xmlFilePath = parserConfigXML;
 		if (!new File(xmlFilePath).exists()) {
 			File file = new File(xmlFilePath);
