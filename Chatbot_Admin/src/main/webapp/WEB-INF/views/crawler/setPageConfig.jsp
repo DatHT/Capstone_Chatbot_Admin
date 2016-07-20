@@ -28,7 +28,7 @@
 	<form:form name="myForm" id="myForm" action="addPageDetails"
 		method="post">
 		<div class="scroller_anchor"></div>
-		<div class="card scroller">
+		<div class="card scroller"id="scr">
 			<div class="card-header">
 				<h2>Please Select An Element And Get XPath</h2>
 			</div>
@@ -96,7 +96,7 @@
 				if ($(this).scrollTop() >= scroller_anchor
 						&& $('.scroller').css('position') != 'fixed') { // Change the CSS of the scroller to hilight it and fix it at the top of the screen.
 					$('.scroller').css({
-						'width' : '77%',
+						'width' : document.getElementById("scr").offsetWidth,
 						'position' : 'fixed',
 						'z-index' : '100',
 						'top' : '0px'

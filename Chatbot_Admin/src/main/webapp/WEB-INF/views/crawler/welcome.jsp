@@ -8,7 +8,7 @@
 <script src="resources/assets/configscripts/loadConfigs.js"
 	type="text/javascript"></script>
 </head>
-<body  onload="return loadPage()">
+<body onload="return loadPage()">
 	<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
 	<input type="hidden" value="${_csrf.token}" id="token" />
 	<script>
@@ -24,8 +24,7 @@
 				<h2>Configuration</h2>
 			</div>
 			<div class="card-body card-padding">
-				<form:form action="setListPage" method="post" id="form"
-					onsubmit="return checkInputConfig(this)">
+				<form:form action="setListPage" method="post" id="form" onsubmit="return checkInputConfig(this)">
 					<div class="card-body card-padding">
 						<div class="form-group">
 							<label for="input-01">URL of input page (required):</label> <input
@@ -34,17 +33,17 @@
 						</div>
 						<div class="form-group">
 							<button type="submit" id="confirmation" class="btn btn-primary"
-								value="Set List Page" name="btnAction" onclick="getVal(this.value)">Set
-								List Page</button>
+								value="Set List Page" name="btnAction"
+								onclick="">Set List Page</button>
 						</div>
 					</div>
-					
+
 				</form:form>
 			</div>
 		</div>
 		<!-- End  Hover Rows  -->
 	</div>
-		<div class="card" id="viewForce">
+	<div class="card" id="viewForce">
 		<div class="card-header">
 			<h2>Force Parser</h2>
 		</div>

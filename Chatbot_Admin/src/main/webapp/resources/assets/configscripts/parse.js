@@ -218,7 +218,14 @@ function next() {
 			}
 			currentPosition++;
 			if (currentPosition == 2) {
-				alert("If this page has rating, please choose rating. If not, please click Next");
+				swal({
+					title : "Warning",
+					text : "If this page has rating, please choose rating. If not, please click Next",
+					type : "warning",
+					confirmButtonColor : "#DD6B55",
+					confirmButtonText : "Ok!",
+					closeOnConfirm : false
+				})
 			}
 			$("#myframe").contents().find(oldWrap).removeAttr("style",
 					"background-color: #69c2fe;");
@@ -257,7 +264,13 @@ function next() {
 				document.getElementById("btnAdd").disabled = false;
 			}
 		} else {
-			alert("PLEASE CHOOSE ONE ELEMENT");
+			swal({
+				title : "PLEASE CHOOSE ONE ELEMENT",
+				type : "warning",
+				confirmButtonColor : "#DD6B55",
+				confirmButtonText : "Ok!",
+				closeOnConfirm : false
+			});
 		}
 	}
 }

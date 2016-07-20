@@ -10,8 +10,6 @@
 <link href='<c:url value="/resources/assets/cssCode/popup.css"/>'
 	rel="stylesheet">
 <script
-	src="<c:url value ="/resources/assets/configscripts/jquery-2.2.0.js"/>"></script>
-<script
 	src='<c:url value="/resources/assets/configscripts/parseList.js" />'></script>
 
 <!--right slidebar-->
@@ -26,7 +24,7 @@
 	</div>
 	<form:form name="myForm" id="myForm" action="addPageList" method="post">
 		<div class="scroller_anchor"></div>
-		<div class="card scroller" style="">
+		<div class="card scroller" id="scr" style="">
 			<div class="card-header">
 				<h2>Please Select An Element And Get XPath</h2>
 			</div>
@@ -78,7 +76,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="popup" class="popup" draggable="true"></div>
+		<div id="popup" class="popup modal" role ="dialog" data-toggle="modal"></div>
 		<div id="bg" class="popup_bg"></div>
 		<div class="col-sm-12 scollchange" style="">
 			<iframe style="width: 100%;" sandbox="allow-same-origin" width="800"
@@ -89,21 +87,6 @@
 		</table>
 	</form:form>
 </body>
-<style>
-#popup {
-	-webkit-user-drag: element;
-}
-</style>
-<script>
-	$(document).ready(function() {
-		$(function() {
-			$('#tbMain').draggable();
-		});
-		$(function() {
-			$('.popup').draggable();
-		});
-	});
-</script>
 <script>
 	$(window).scroll(
 			function(e) {
@@ -114,7 +97,7 @@
 				if ($(this).scrollTop() >= scroller_anchor
 						&& $('.scroller').css('position') != 'fixed') { // Change the CSS of the scroller to hilight it and fix it at the top of the screen.
 					$('.scroller').css({
-						'width' : '77%',
+						'width' : document.getElementById("scr").offsetWidth,
 						'position' : 'fixed',
 						'z-index' : '10',
 						'top' : '0px',

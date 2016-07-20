@@ -3,8 +3,9 @@ var xmlDOMCfg, xmlDOMPage;
 parser = new DOMParser();
 var valueButton;
 
-function getVal(value) {
-    valueButton = value;
+function getVal() {
+	valueButton = document.getElementById("confirmation").value;
+	return valueButton;
 }
 function checkUrl() {
 	var url = document.getElementById("input-01").value;
@@ -31,7 +32,7 @@ function checkUrl() {
 				if (getVal() == "Set List Page") {
 					if (regObjPage.search(rst) != -1) {
 						if (confirm("This configuration existed. Do you want to config again?") == true) {
-							x==3;
+							x == 3;
 						} else {
 							return false;
 						}
@@ -101,28 +102,32 @@ function loadNode(nodeCfg, nodePage, selectName) {
 
 function checkInputConfig(form) {
 	var flagRedirect = 0;
-    var str = form.txtURL.value;
-    var result = "";
-    var x;
-    var str_array = str.split("/");
-    for (var i = 0; i < 3; i++) {
-        result = result + str_array[i] + "/";
-    }
-    if (valueButton == "Set Parser Config") {
-        if (regObjCfg.search(result) != -1) {
-            if (confirm("This configuration existed. Do you want to config again?") == true) {
-            } else {
-                return false;
-            }
-        }
-    } else if (valueButton == "Set List Page") {
-        if (regObjPage.search(result) != -1) {
-            if (confirm("This configuration existed. Do you want to config again?") == true) {
-            } else {
-                return false;
-            }
-        }
-    }
-    return true;
+	var str = document.getElementById("input-01").value;
+	var result = "";
+	var x;
+	var str_array = str.split("/");
+	for (var i = 0; i < 3; i++) {
+		result = result + str_array[i] + "/";
+	}
+	if (getVal() == "Set List Page") {
+		if (regObjPage.search(result) != -1) {
+			swal(	
+					{
+						title : "EXISTED CONFIG",
+						text : "Config for this page is existed! Do you want to update?",
+						type : "success",
+						showCancelButton : true,
+						confirmButtonColor : "#DD6B55",
+						confirmButtonText : "Ok!",
+						closeOnConfirm : false
+					},
+					  function(){
+						form.submit();
+					});
+		}else {
+			return false;
+		}
+	}
+	return false;
 
 }

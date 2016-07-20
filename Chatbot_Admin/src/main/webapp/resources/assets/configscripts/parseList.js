@@ -229,8 +229,15 @@ function next() {
 				indexComplete[count] = "";
 			}
 			currentPosition++;
-			if(currentPosition==3){
-				alert("If this page has next page, please choose next page. If not, please click Next")
+			if (currentPosition == 3) {
+				swal({
+					title : "Warning",
+					text : "If this page has next page, please choose next page. If not, please click Next",
+					type : "warning",
+					confirmButtonColor : "#DD6B55",
+					confirmButtonText : "Ok!",
+					closeOnConfirm : false
+				})
 			}
 			$("#myframe").contents().find(oldWrap).removeAttr("style",
 					"background-color: #69c2fe;");
@@ -269,7 +276,13 @@ function next() {
 				document.getElementById("btnAdd").disabled = false;
 			}
 		} else {
-			alert("PLEASE CHOOSE ONE ELEMENT");
+			swal({
+				title : "PLEASE CHOOSE ONE ELEMENT",
+				type : "warning",
+				confirmButtonColor : "#DD6B55",
+				confirmButtonText : "Ok!",
+				closeOnConfirm : false
+			});
 		}
 	}
 }
@@ -525,7 +538,7 @@ function addToCart(selectedItem) {
 		sessionStorage.cart = sessionStorage.cart + selectedItem + "'\'"
 		// sessionStorage.cart = selectedItem + "'\'";
 	} else {
-		alert("browser is not supported storage!!!");
+		swal("browser is not supported storage!!!");
 	}
 }
 
@@ -598,7 +611,8 @@ function addRow(tableId, cells, type) {
 			switch (count) {
 			case 1:
 				newCell.innerHTML = '<input type="hidden" name="PAGE" value="'
-						+ cells[i] + '" size="78"/><input type="hidden" name="txtPageContent" value="'
+						+ cells[i]
+						+ '" size="78"/><input type="hidden" name="txtPageContent" value="'
 						+ preview[0] + '"/>';
 				break;
 			case 2:
@@ -715,8 +729,7 @@ function openpopup(id) {
 				+ id
 				+ "')\"><span class=\"btn btn-danger m-b-less\" style=\"float:right;position:relative\">Close</span></a>"
 				+ "<button style=\"float:right;margin:5px\" type=\"submit\" class=\"btn btn-info m-b-10\" id=\"btnAdd\" name =\"btnAction\" value=\"AddNewPageList\" onclick=\"addNew()\" >AddNewPageList</button>"
-				+"</div></div>"
-				+ divobj.innerHTML;
+				+ "</div></div>" + divobj.innerHTML;
 }
 function closepopup(id) {
 	var divbg = document.getElementById('bg');
@@ -763,7 +776,8 @@ function appendcontents(item) {
 	// }
 	// b = a.iterateNext();
 	// }
-	content = content + alertText
+	content = content
+			+ alertText
 			+ '</td></tr><tr><td><strong>Image</strong></td><td style="width: '
 			+ '150px;  vertical-align: top"><img style="width:150px;height:150px" src =';
 
