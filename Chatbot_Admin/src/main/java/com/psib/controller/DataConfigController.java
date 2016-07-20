@@ -43,6 +43,7 @@ public class DataConfigController {
 
 	private static final String API = "api_sync";
 	private static final String LOG = "log_sync";
+	private static final String SYNONYM = "synonym_sync";
 
 	@Autowired
 	private ISchedulerManager manager;
@@ -59,12 +60,14 @@ public class DataConfigController {
 
 		model.addAttribute(API, manager.getSchedularByName("api"));
 		model.addAttribute(LOG, manager.getSchedularByName("log"));
+		model.addAttribute(SYNONYM, manager.getSchedularByName("synonym"));
 		return "dataConfig";
 	}
 
 	@RequestMapping(value = "/sync", method = RequestMethod.POST)
 	public @ResponseBody String synchronize(Model model, @RequestParam("api") String api,
-			@RequestParam("log") String log, @RequestParam("day") String day, @RequestParam("hour") String hour,
+			@RequestParam("log") String log, @RequestParam("synonym") String synonym,
+			@RequestParam("day") String day, @RequestParam("hour") String hour,
 			@RequestParam("minute") String minute) {
 
 		String responseText = "";
@@ -83,6 +86,14 @@ public class DataConfigController {
 			logScheduler.setStatus(false);
 		}
 		manager.updateShedulerStatus(logScheduler);
+		//sync to synonym
+		Scheduler synonymScheduler = manager.getSchedularByName("synonym");
+		if (synonym.equals("yes")) {
+			synonymScheduler.setStatus(true);
+		} else {
+			synonymScheduler.setStatus(false);
+		}
+		manager.updateShedulerStatus(synonymScheduler);
 		logger.info("[Start Change Scheduler]");
 		String cron = convertToCron(day, hour, minute);
 		logger.info("[CRON_] " + cron);

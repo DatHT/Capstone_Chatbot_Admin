@@ -124,7 +124,7 @@ public class ManageLogController {
 		}
 		return true;
 	}
-	
+
 	@RequestMapping(value = "/conversation", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public @ResponseBody String getFullConversation(@RequestParam("logId") String logId) {
 		try {

@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="api" value="${api_sync}" />
 <c:set var="log" value="${log_sync}" />
+<c:set var="synonym" value="${synonym_sync}" />
 <div class="c-header">
 	<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
 	<input type="hidden" value="${_csrf.token}" id="token" />
@@ -60,6 +61,20 @@
 						<input id="ts2" type="checkbox" hidden="hidden"
 							<c:if test="${log.status}">checked</c:if>> <label
 							for="ts2" class="ts-helper"></label>
+					</div>
+				</div>
+			</div>
+			<div class="row" style="margin-top: 15px;">
+				<div class="toggle-switch col-lg-5"
+					style="min-width: 800px !important;">
+					<div class="col-md-5">
+						<label for="ts3" class="ts-label">Synchronize Synonym</label>
+
+					</div>
+					<div class="col-md-3">
+						<input id="ts3" type="checkbox" hidden="hidden"
+							<c:if test="${synonym.status}">checked</c:if>> <label
+							for="ts3" class="ts-helper"></label>
 					</div>
 				</div>
 			</div>

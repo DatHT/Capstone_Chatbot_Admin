@@ -8,9 +8,12 @@ import java.util.List;
 
 import com.psib.common.restclient.RestfulException;
 import com.psib.constant.StatusCode;
+import com.psib.dto.jsonmapper.Entity;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
+import com.psib.dto.jsonmapper.ResultDto;
+import com.psib.dto.jsonmapper.StatusDto;
 import com.psib.model.LexicalCategory;
 import com.psib.model.Phrase;
 
@@ -32,4 +35,6 @@ public interface ILexicalCategoryManager {
 	long insertLexicalToDatabase(LexicalCategory lexicalCategory);
 	
 	int checkExistLexical(String name);
+	
+	StatusCode updatePhrase(LexicalDto entity, String id) throws IOException, RestfulException;
 }

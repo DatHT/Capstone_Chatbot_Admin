@@ -7,10 +7,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.util.ajax.JSON;
 import org.json.JSONException;
+import org.seleniumhq.jetty7.util.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.psib.common.JsonParser;
 import com.psib.common.restclient.RestfulException;
 import com.psib.constant.StatusCode;
 import com.psib.dao.IFileServerDao;
@@ -28,6 +31,7 @@ import com.psib.service.ILogManager;
 import com.psib.service.IPhraseManager;
 import com.psib.service.IProductManager;
 import com.psib.service.ISchedulerManager;
+import com.psib.service.ISynonymManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.FileUtils;
 import com.psib.util.SpringPropertiesUtil;
@@ -56,14 +60,63 @@ public class TimerTask {
 
 	@Autowired
 	private IProductManager productManager;
+	
+	@Autowired
+	private ISynonymManager synonymManager;
 
 	public void startTimerForApiAndLog() {
+		//sync phrase from api to db
 		synchronizePhraseFromAPItoDB();
+		
+		//sync intent to file
 		synchronizeIntentToBD();
+		
+		//sync log
 		synchronizeLog();
-		insertStreetToPhrase();
-		synchronizeFromDBToAPI();
+		//insertStreetToPhrase();
+		//synchronizeFromDBToAPI();
+		
+		//sync synonym to API and DB
+		productManager.calcSynonymName();
+		synchronizeSynonymToAPI();
+		
 
+	}
+	
+	private List<String> generateSynonym(String name) {
+		String temp = synonymManager.calcSynonym(name);
+		return new ArrayList<String>(Arrays.asList(temp.split(";")));
+	}
+	
+	private void synchronizeSynonymToAPI() {
+		Scheduler synonymScheduler = manager.getSchedularByName("synonym");
+		if (synonymScheduler.isStatus()) {
+			try {
+				LOG.info("[doTimer] start update Phrase Food");
+				String id = "";
+				List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
+				for(LexicalCategoryDto lexical : lexicals) {
+					if (lexical.getName().equalsIgnoreCase("Food")) {
+						id = lexical.getId();
+						break;
+					}
+				}
+				LexicalDto apiLexicalFood = lexicalManager.getApiLexicalById(id);
+				for(Entry entry : apiLexicalFood.getEntries()) {
+					String entryName = entry.getValue();
+					
+					List<String> synonyms = generateSynonym(entryName);
+					entry.setSynonyms(synonyms);
+				}
+				StatusCode status = lexicalManager.updatePhrase(apiLexicalFood, id);
+				LOG.info("[doTimer] end update Phrase Food-" + status.name());
+			} catch (IOException e) {
+				LOG.info("[doTimer] getAll Lexicals-" + e.getMessage());
+			} catch (RestfulException e) {
+				LOG.info("[doTimer] getAll Lexicals-" + e.getMessage());
+			}
+		}
+		
 	}
 
 	private void insertStreetToPhrase() {

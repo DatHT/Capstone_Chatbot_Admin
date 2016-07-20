@@ -26,10 +26,12 @@ function addIntentRows(tableId, data) {
     var jsonData = JSON.parse(data);
     var tableElem = document.getElementById(tableId);
     deleteRows(tableElem);
-    for (var i = 0; i < jsonData.templates.length; i++) {
+    for (var i = 0; i < jsonData.userSays.length; i++) {
         var cells = [];
         cells[0] = i + 1;
-        cells[1] = jsonData.templates[i];
+        var listDisplay = [jsonData.userSays[i].data[0].text, jsonData.userSays[i].data[0].alias];
+        
+        cells[1] = listDisplay;
         cells[2] = "<button id='"
             + jsonData.templates[i]
             + "' onclick='showDeleteModal(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
@@ -42,13 +44,22 @@ function addIntentRows(tableId, data) {
 function deletePattern() {
     $('#deleteModal').modal('hide');
     var id = document.getElementById("deletePatternName").innerHTML;
+    var deleteId = id.split(",");
     var jsonData = JSON.parse(resultIntents);
     delete jsonData.userSays;
     delete jsonData.priority;
     delete jsonData.webhookUsed;
     delete jsonData.lastUpdate;
     delete jsonData.auto;
-    jsonData.templates.remove(id);
+    jsonData.templates.remove(deleteId[0]);
+    //remove userSay
+    for(var i = 0; i < jsonData.userSays; i++) {
+    	if(jsonData.userSays[i].data[0].text == deleteId[0]) {
+    		delete jsonData.userSays[i];
+    	}
+    }
+    
+    
     var cate = document.getElementById("selectIntent");
     var intentId = cate.options[cate.selectedIndex].value;
     // action here
@@ -123,8 +134,13 @@ function loadIntent(id) {
                                 return "<button id='"
                                     + row.name
                                     + "' onclick='showDeleteModal(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+                            },
+                            "commands-name": function (column, row) {
+                            	var data = row.name.split(",");
+                                return data[0] + "<br/>" + data[1];
                             }
                         }
+                        
                     });
             $('#loadingModal').modal('hide');
         }
@@ -158,15 +174,32 @@ function insertPattern() {
 
         }
         if (newPattern != "") {
-
+        	var chosenExample = $("#chosenExample p").text();
+        	
+        	newPattern = newPattern.trim();
             var jsonData = JSON.parse(resultIntents);
 
-            delete jsonData.userSays;
             delete jsonData.priority;
             delete jsonData.webhookUsed;
             delete jsonData.lastUpdate;
             delete jsonData.auto;
             jsonData.templates.push(newPattern);
+            
+            //add example to userSay
+            var data = [];
+            var example = {
+            		"text": newPattern, 
+            		"alias" : chosenExample
+            		};
+            data.push(example);
+            
+            var userSay = {
+            		"id" : generateUUID(),
+            		"data" : data,
+            		"isTemplate": true,
+            	    "count": 0
+            };
+            jsonData.userSays.push(userSay);
 
             var cate = document.getElementById("selectIntent");
             var intentId = cate.options[cate.selectedIndex].value;
@@ -195,14 +228,15 @@ function insertPattern() {
                 }
 
             }
-            var chosenExample = $("#chosenExample p").text();
+            
             var param = document.getElementById("paramName").value;
             var token = document.getElementById("token").value;
             xmlhttp.open("POST", "/chatbot_admin/example/add", true);
             xmlhttp.setRequestHeader("Content-type",
                 "application/x-www-form-urlencoded;charset=utf-8");
             xmlhttp.send("pattern=" + JSON.stringify(jsonData) + "&id="
-                + intentId + "&" + param + "=" + token + "&trainingSentence=" + chosenExample);
+                + intentId + "&" + param + "=" + token +
+                "&trainingSentence=" + chosenExample);
             // action here
 
         } else {
@@ -284,3 +318,13 @@ function showDeleteModal(name) {
     $('#deletePatternName').text(name);
     $('#deleteModal').modal('show');
 }
+
+function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};

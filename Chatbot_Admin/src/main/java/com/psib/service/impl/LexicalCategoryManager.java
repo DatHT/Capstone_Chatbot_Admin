@@ -15,6 +15,7 @@ import com.psib.common.restclient.RestfulException;
 import com.psib.constant.StatusCode;
 import com.psib.dao.ILexicalCategoryDao;
 import com.psib.dao.IPhraseDao;
+import com.psib.dto.jsonmapper.Entity;
 import com.psib.dto.jsonmapper.Entry;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.LexicalDto;
@@ -114,6 +115,21 @@ public class LexicalCategoryManager implements ILexicalCategoryManager {
 	@Override
 	public StatusCode deletePhrase(List<String> values, String name) throws IOException, RestfulException {
 		ResultDto status = factory.deletePhrase(name, values);
+		switch (status.getStatus().getCode()) {
+		case 200:
+			return StatusCode.SUCCESS;
+		case 409:
+			return StatusCode.CONFLICT;
+		default:
+			return StatusCode.ERROR;
+		}
+	}
+
+	@Override
+	public StatusCode updatePhrase(LexicalDto entity, String id) throws IOException, RestfulException {
+		
+		
+		ResultDto status = factory.updatePhrase(entity, id);
 		switch (status.getStatus().getCode()) {
 		case 200:
 			return StatusCode.SUCCESS;
