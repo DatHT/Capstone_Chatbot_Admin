@@ -39,9 +39,8 @@ function addIntentRows(tableId, data) {
 
 }
 
-function deletePattern() {
+function deletePattern(id) {
     $('#deleteModal').modal('hide');
-    var id = document.getElementById("deletePatternName").innerHTML;
     var jsonData = JSON.parse(resultIntents);
     delete jsonData.userSays;
     delete jsonData.priority;
@@ -120,11 +119,27 @@ function loadIntent(id) {
                         },
                         formatters: {
                             "commands": function (column, row) {
-                                return "<button id='"
+                                return "<button data-row-id='"+row.id+"' id='"
                                     + row.name
-                                    + "' onclick='showDeleteModal(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+                                    + " class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float btn-delete-example'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
                             }
                         }
+                    }).on("loaded.rs.jquery.bootgrid", function() {
+                    	/* Executes after data is loaded and rendered */
+                        $('#tableIntent').find(".btn-delete-synonym").on("click", function(e) {
+                        	var wordId = $(this).data("row-id");
+                        	swal({
+                                title: "Are you sure?",
+                                text: "You will not be able to recover it!",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Yes, delete it!",
+                                closeOnConfirm: false
+                            }, function(){
+                            	deletePattern(wordId);
+                            });
+                        });
                     });
             $('#loadingModal').modal('hide');
         }
