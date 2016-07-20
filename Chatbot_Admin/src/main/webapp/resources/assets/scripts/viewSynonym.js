@@ -39,10 +39,7 @@ $(document).ready(function () {
                     + "</a>";
             },
             "commandsDelete": function (column, row) {
-                return "<button class='btn btn-danger btn-icon waves-effect waves-circle waves-float' onclick='showDeleteModal("
-                    + "`" + row.id + "`"
-                    + ",0"
-                    + ")'>" +
+                return "<button data-row-id='" + row.id + "' class='btn btn-danger btn-icon waves-effect waves-circle waves-float btn-delete' >" +
                     "<i class='zmdi zmdi-close'>" +
                     "</i>" +
                     "</button>";
@@ -55,6 +52,22 @@ $(document).ready(function () {
             iconRefresh: 'zmdi-refresh',
             iconUp: 'zmdi-expand-less'
         },
+    }).on("loaded.rs.jquery.bootgrid", function() {
+    	/* Executes after data is loaded and rendered */
+        $('#data-table-origin').find(".btn-delete").on("click", function(e) {
+        	var wordId = $(this).data("row-id");
+        	swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover it!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function(){
+            	deleteWord(wordId, 0);
+            });
+        });
     });
 
     $("#data-table-origin-footer .infoBar").removeClass("col-sm-6");
@@ -84,10 +97,7 @@ $(document).ready(function () {
                     + "</a>";
             },
             "commandsDelete": function (column, row) {
-                return "<button class='btn btn-danger btn-icon waves-effect waves-circle waves-float' onclick='showDeleteModal("
-                    + "`" + row.id + "`"
-                    + ",1"
-                    + ")'>" +
+                return "<button data-row-id='" + row.id + "' class='btn btn-danger btn-icon waves-effect waves-circle waves-float btn-delete-synonym'>" +
                     "<i class='zmdi zmdi-close'>" +
                     "</i>" +
                     "</button>";
@@ -100,6 +110,22 @@ $(document).ready(function () {
             iconRefresh: 'zmdi-refresh',
             iconUp: 'zmdi-expand-less'
         },
+    }).on("loaded.rs.jquery.bootgrid", function() {
+    	/* Executes after data is loaded and rendered */
+        $('#data-table-synonym').find(".btn-delete-synonym").on("click", function(e) {
+        	var wordId = $(this).data("row-id");
+        	swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover it!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function(){
+            	deleteWord(wordId, 1);
+            });
+        });
     });
 
     $("#data-table-synonym-footer .infoBar").removeClass("col-sm-6");
@@ -287,8 +313,7 @@ function addUpdateSynonym() {
     }
 }
 
-function deleteWord() {
-    var wordId = $('#deleteWordId').val();
+function deleteWord(wordId, wordType) {
     var data = {
         "deleteWordId": wordId,
     };
@@ -300,12 +325,12 @@ function deleteWord() {
         success: function (data) {
             $('#deleteModal').modal('hide');
             if (data.result == true) {
-                notify("Delete Successfully!", "info");
+            	swal("Deleted!", "It has been deleted.", "success");
             }
-            if ($('#wordType').val() == 0) {
+            if (wordType == 0) {
                 reloadTable("#data-table-origin");
                 $("#div-synonyms").hide();
-            } else if ($('#wordType').val() == 1) {
+            } else if (wordType == 1) {
                 reloadTable("#data-table-synonym");
             }
         }

@@ -41,19 +41,17 @@ function addIntentRows(tableId, data) {
 
 }
 
-function deletePattern() {
+function deletePattern(deleteId) {
     $('#deleteModal').modal('hide');
-    var id = document.getElementById("deletePatternName").innerHTML;
-    var deleteId = id.split(",");
     var jsonData = JSON.parse(resultIntents);
     delete jsonData.priority;
     delete jsonData.webhookUsed;
     delete jsonData.lastUpdate;
     delete jsonData.auto;
-    jsonData.templates.remove(deleteId[0]);
+    jsonData.templates.remove(deleteId);
     //remove userSay
     for(var i = 0; i < jsonData.userSays.length; i++) {
-    	if(jsonData.userSays[i].data[0].text === deleteId[0]) {
+    	if(jsonData.userSays[i].data[0].text === deleteId) {
     		jsonData.userSays.splice(i,1);;
     	}
     }
@@ -130,16 +128,32 @@ function loadIntent(id) {
                         },
                         formatters: {
                             "commands": function (column, row) {
-                                return "<button id='"
+                                return "<button data-row-name='"+row.name+"' id='"
                                     + row.name
-                                    + "' onclick='showDeleteModal(this.id)' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+                                    + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float btn-delete-example'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
                             },
                             "commands-name": function (column, row) {
                             	var data = row.name.split(",");
                                 return data[0] + "<br/>" + data[1];
                             }
                         }
-                        
+                    }).on("loaded.rs.jquery.bootgrid", function() {
+                    	/* Executes after data is loaded and rendered */
+                        $('#tableIntent').find(".btn-delete-example").on("click", function(e) {
+                        	var rowname = $(this).data("row-name");
+                        	var data = rowname.split(",")[0];
+                        	swal({
+                                title: "Are you sure to delete this pattern " +  data + "?",
+                                text: "You will not be able to recover it!",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "Yes, delete it!",
+                                closeOnConfirm: false
+                            }, function(){
+                            	deletePattern(data);
+                            });
+                        });
                     });
             $('#loadingModal').modal('hide');
         }
