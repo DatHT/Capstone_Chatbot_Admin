@@ -3,10 +3,11 @@
 
 <c:set var="STAFFS" value="${STAFFS}" />
 <script src="resources/assets/scripts/accountScript.js"></script>
-<div class="c-header">
-	<h2>Manage Account</h2>
-</div>
 <div class="card">
+	<div class="my-c-header">
+		<h2>Manage Account</h2>
+	</div>
+
 	<div class="card-header">
 		<h2>Manage Account</h2>
 	</div>

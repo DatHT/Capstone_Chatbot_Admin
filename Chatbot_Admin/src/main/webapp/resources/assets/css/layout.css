@@ -1,0 +1,63 @@
+.my-c-header > h2 {
+    font-size: 20px;
+    color: black;
+    padding-left: 10px;
+    padding-top: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.main-menu {
+    margin-top: 60px !important;
+}
+
+.header-center-text {
+    padding-top: 24px;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 100%;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.header-height {
+    height: 67px !important;
+}
+
+.header-left-text {
+    padding-top: 18px;
+}
+
+.body-padding {
+    padding-top: 50px;
+}
+
+.header-color {
+    background-color: #009688;
+}
+
+.menu-fixed {
+    position: fixed;
+}
+
+@media (min-width: 767px) {
+    .my-h-logo {
+
+    }
+}
+
+@media (min-width: 1280px) {
+    .my-h-logo .menu-collapse {
+        display: none;
+    }
+}
+
+@media (max-width: 1279px) {
+    .my-h-logo .menu-collapse {
+        margin-top: 8px;
+        float: left;
+    }
+}
+
+.main-menu li.check-active > a {
+    color: #009688;
+}

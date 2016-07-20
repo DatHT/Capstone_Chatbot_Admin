@@ -7,10 +7,6 @@
 
 <section id="content">
 	<div class="container">
-		<div class="c-header">
-			<h2>${user.username}</h2>
-		</div>
-
 		<div class="card" id="profile-main">
 			<div class="pm-overview c-overflow">
 				<div class="pmo-pic">
@@ -40,6 +36,10 @@
 			</div>
 
 			<div class="pm-body clearfix">
+				<div class="my-c-header">
+					<h2>${user.username}</h2>
+				</div>
+
 				<ul class="tab-nav tn-justified">
 					<li class="active waves-effect"><a href="#">About</a></li>
 				</ul>

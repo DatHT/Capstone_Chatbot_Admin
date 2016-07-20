@@ -1,64 +1,74 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<sec:authorize access="isAuthenticated()">
+    <sec:authentication var="principal" property="principal"/>
+</sec:authorize>
 
-<c:set var="active" value="${ACTIVE}" />
-        <!-- navbar side -->
-        <nav class="navbar-default navbar-static-side" role="navigation">
-            <!-- sidebar-collapse -->
-            <div class="sidebar-collapse">
-                <!-- side-menu -->
-                <ul class="nav" id="side-menu">
-                    <li class="nav-inner">
-                        <!-- user image section-->
-                        <div class="user-section">
-                            <div class="user-section-inner">
-                                <img src="resources/assets/img/user.jpg" alt="">
-                            </div>
-                            <div class="user-info">
-                                <div>Huynh <strong>Dat</strong> adasda ${current}</div>
-                                <div class="user-text-online">
-                                    <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
-                                </div>
-                            </div>
-                        </div>
-                        <!--end user image section-->
-                    </li>
-                   
-                    <li class="${current == 'dataConfig' ? 'selected' : ''}">
-                        <a href="dataConfig"><i class="fa fa-dashboard fa-fw"></i>Data Config</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>Training Bot<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li class="${current == 'lexicalCategory' ? 'selected' : ''}">
-                                <a href="lexical">Lexical Category</a>
-                            </li>
-                            <li>
-                                <a href="example">Example</a>
-                            </li>
-                        </ul>
-                        <!-- second-level-items -->
-                    </li>
-                     <li>
-                        <a href="manageLog"><i class="fa fa-flask fa-fw"></i>Manage log</a>
-                    </li>
-                    
-                    
-                    <li>
-                        <a href="#"><i class="fa fa-files-o fa-fw"></i>Manage Information<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="product">Product</a>
-                            </li>
-                            <li>
-                                <a href="synonym">Synonym</a>
-                            </li>
-                        </ul>
-                        <!-- second-level-items -->
-                    </li>
-                </ul>
-                <!-- end side-menu -->
-            </div>
-            <!-- end sidebar-collapse -->
-        </nav>
-        <!-- end navbar side -->
+<aside id="s-main-menu" class="sidebar menu-fixed">
+    <div class="smm-header">
+        <i class="zmdi zmdi-long-arrow-left" data-ma-action="sidebar-close"></i>
+    </div>
+    <ul class="main-menu">
+        <c:if test="${principal.authorities == '[ADMIN]'}">
+            <li class="${cur == 'dataConfig' ? 'check-active' : ''}">
+                <a href="config">
+                    <i class="zmdi zmdi-home"></i>
+                    Data Config
+                </a>
+            </li>
+        </c:if>
+
+        <c:if test="${principal.authorities == '[ADMIN]'}">
+            <li class="${cur == 'manageAccount' ? 'check-active' : ''}">
+                <a href="manageAccount">
+                    <i class="zmdi zmdi-assignment-account"></i>
+                    Manage Account
+                </a>
+            </li>
+        </c:if>
+
+        <li class="sub-menu ${(cur == 'lexicalCategory') || (cur == 'example') ? 'check-active' : ''}">
+            <a href="#" data-ma-action="submenu-toggle">
+                <i class="zmdi zmdi-view-compact"></i>
+                Training Bot
+            </a>
+            <ul style="display:${(cur == 'lexicalCategory') || (cur == 'example') ? 'block' : 'none'}">
+                <li class="${cur == 'lexicalCategory' ? 'check-active' : ''}">
+                    <a href="lexical">Lexical Category</a>
+                </li>
+                <li class="${cur == 'example' ? 'check-active' : ''}">
+                    <a href="example">Example</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="${cur == 'log' ? 'check-active' : ''}">
+            <a href="manageLog">
+                <i class="zmdi zmdi-format-underlined"></i>
+                Manage Log
+            </a>
+        </li>
+
+        <li class="sub-menu ${(cur == 'product') || (cur == 'synonym') ? 'check-active' : ''}">
+            <a href="#" data-ma-action="submenu-toggle">
+                <i class="zmdi zmdi-collection-text"></i>
+                Manage Information
+            </a>
+            <ul style="display:${(cur == 'product') || (cur == 'synonym') ? 'block' : 'none'}">
+                <li class="${cur == 'product' ? 'check-active' : ''}">
+                    <a href="product">Product</a>
+                </li>
+                <li class="${cur == 'synonym' ? 'check-active' : ''}">
+                    <a href="synonym">Synonym</a>
+                </li>
+            </ul>
+        </li>
+        <%-- <li class="${cur == 'conversations' ? 'check-active' : ''}">
+            <a href="conversations">
+                <i class="zmdi zmdi-comments"></i>
+                Conversations
+            </a>
+        </li> --%>
+    </ul>
+</aside>

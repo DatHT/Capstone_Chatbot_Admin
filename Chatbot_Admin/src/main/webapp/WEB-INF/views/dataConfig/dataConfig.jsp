@@ -3,14 +3,15 @@
 <c:set var="api" value="${api_sync}" />
 <c:set var="log" value="${log_sync}" />
 <c:set var="synonym" value="${synonym_sync}" />
-<div class="c-header">
-	<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
-	<input type="hidden" value="${_csrf.token}" id="token" />
-	<h2>Typography</h2>
-</div>
 
 <div class="row">
 	<div class="card">
+		<div class="my-c-header">
+			<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
+			<input type="hidden" value="${_csrf.token}" id="token" />
+			<h2>Typography</h2>
+		</div>
+
 		<div class="card-header">
 			<h2>Config Data</h2>
 		</div>

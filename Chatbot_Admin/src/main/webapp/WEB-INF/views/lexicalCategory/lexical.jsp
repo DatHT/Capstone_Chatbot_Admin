@@ -3,13 +3,14 @@
 <script src="resources/assets/scripts/lexicalScript.js"></script>
 <script src="resources/assets/scripts/commonScript.js"></script>
 <c:set var="lexicals" value="${LEXICAL}" />
-<div class="c-header">
-	<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
-	<input type="hidden" value="${_csrf.token}" id="token" />
-	<h2>Manage Lexical And Pharse</h2>
-</div>
 
 <div class="card">
+	<div class="my-c-header">
+		<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
+		<input type="hidden" value="${_csrf.token}" id="token" />
+		<h2>Manage Lexical And Phrase</h2>
+	</div>
+
 	<div class="card-header">
 		<h2>Lexical Category</h2>
 	</div>
@@ -47,7 +48,7 @@
 	</div>
 
 	<div class="card-body card-padding">
-		
+
 		<button class="btn btn-primary btn-lg waves-effect"
 			onclick="insertRowToAddNewPhrase('lexicalTable')">Add New</button>
 		<div class="row m-t-20">
@@ -72,9 +73,9 @@
 			</div>
 		</div>
 		<!--End Advanced Tables -->
-		
+
 	</div>
-	</div>		
+	</div>
 </div>
 
 <!-- Modals-->

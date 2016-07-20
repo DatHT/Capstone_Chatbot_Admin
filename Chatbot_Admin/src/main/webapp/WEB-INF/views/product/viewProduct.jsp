@@ -14,11 +14,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
-<div class="c-header">
-    <h2 id="tableHeader"><spring:message code="product_header_manage"/></h2>
-</div>
-
 <div class="card">
+    <div class="my-c-header">
+        <h2 id="tableHeader"><spring:message code="product_header_manage"/></h2>
+    </div>
+
     <div class="card-body card-padding">
         <a class="btn btn-primary btn-lg waves-effect" href="viewAddProduct">
             <spring:message code="btn_add"/>

@@ -31,10 +31,11 @@
 	margin: 11px 0px 0px 15px;
 }
 </style>
-<div class="c-header">
-	<h2>Logs Manager</h2>
-</div>
 <div class="card">
+	<div class="my-c-header">
+		<h2>Logs Manager</h2>
+	</div>
+
 	<div class="card-header">
 		<h2>Logs Manager</h2>
 	</div>

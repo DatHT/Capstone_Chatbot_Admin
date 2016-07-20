@@ -12,14 +12,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
-<div class="c-header">
-    <h2 id="tableHeader"><spring:message code="synonym_header_manage"/></h2>
-</div>
-
 <%--Origin--%>
 <div id="div-origin" class="row">
     <div class="col-sm-8">
         <div class="card">
+            <div class="my-c-header">
+                <h2 id="tableHeader"><spring:message code="synonym_header_manage"/></h2>
+            </div>
+
             <div class="card-header">
                 <h2><spring:message code="synonym_header_origin"/></h2>
             </div>
