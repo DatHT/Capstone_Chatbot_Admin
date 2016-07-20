@@ -62,8 +62,11 @@
 				<!--disable-->
 				<button type="button" class="btn btn-primary" id="btnPreview"
 					value="PREVIEW" onclick="openpopup('popup')" disabled>PREVIEW</button>
+				<button type="submit" class="btn btn-primary" id="btnAdd"
+					name="btnAction" value="AddNewPageList" onclick="addNew()"
+					disabled>AddNewPageList</button>
 				<button type="button" class="btn btn-primary" value="HOME"
-					onclick="window.location = 'crawler'">HOME</button>
+					onclick="window.location = 'configuration'">HOME</button>
 				<div class="table-responsive" style="min-height: 70px">
 					<table class="table" id="tbItems" border="1" width="619"
 						class="table">
@@ -115,7 +118,7 @@
 						'position' : 'fixed',
 						'z-index' : '10',
 						'top' : '0px',
-						'right':'40px',
+						'right' : '40px',
 					});
 					// Changing the height of the scroller anchor to that of scroller so that there is no change in the overall height of the page.
 					$('.scroller_anchor').css('height', '50px');
@@ -140,7 +143,7 @@
 						'z-index' : '0',
 						'width' : '100%',
 						'right' : '0px',
-						
+
 					});
 					$('.scollchange').css({
 						'margin-top' : '0px'

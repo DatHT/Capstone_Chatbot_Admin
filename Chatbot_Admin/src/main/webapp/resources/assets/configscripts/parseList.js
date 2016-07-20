@@ -266,7 +266,7 @@ function next() {
 				// openpopup('popup');
 				document.getElementById("btnNext").disabled = true;
 				document.getElementById("btnPreview").disabled = false;
-				// document.getElementById("btnAdd").disabled = false;
+				document.getElementById("btnAdd").disabled = false;
 			}
 		} else {
 			alert("PLEASE CHOOSE ONE ELEMENT");
@@ -598,7 +598,8 @@ function addRow(tableId, cells, type) {
 			switch (count) {
 			case 1:
 				newCell.innerHTML = '<input type="hidden" name="PAGE" value="'
-						+ cells[i] + '" size="78"/>';
+						+ cells[i] + '" size="78"/><input type="hidden" name="txtPageContent" value="'
+						+ preview[0] + '"/>';
 				break;
 			case 2:
 				newCell.innerHTML = '<input type="hidden" name="FOODNAME" value="'

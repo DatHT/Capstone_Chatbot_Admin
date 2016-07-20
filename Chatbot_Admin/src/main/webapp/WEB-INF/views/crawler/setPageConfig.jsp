@@ -62,7 +62,7 @@
 					name="btnAction" value="AddNewConfiguration" onclick="addNew()"
 					disabled>AddNewPageDetails</button>
 				<button type="button" class="btn btn-primary" value="HOME"
-					onclick="window.location = 'crawler'">HOME</button>
+					onclick="window.location = 'configuration'">HOME</button>
 				<div class="table-responsive" style="min-height: 70px">
 					<table class="table" id="tbItems" border="1" width="619"
 						class="table">
