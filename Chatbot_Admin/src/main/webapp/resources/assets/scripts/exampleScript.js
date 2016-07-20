@@ -133,8 +133,8 @@ function loadIntent(id) {
                                     + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float btn-delete-example'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
                             },
                             "commands-name": function (column, row) {
-                            	var data = row.name.split(",");
-                                return data[0] + "<br/>" + data[1];
+                            	var n = row.name.indexOf(",");
+                                return row.name.substring(0, n) + "<br/>" + row.name.substring(n + 1);
                             }
                         }
                     }).on("loaded.rs.jquery.bootgrid", function() {
