@@ -46,16 +46,15 @@ function deletePattern() {
     var id = document.getElementById("deletePatternName").innerHTML;
     var deleteId = id.split(",");
     var jsonData = JSON.parse(resultIntents);
-    delete jsonData.userSays;
     delete jsonData.priority;
     delete jsonData.webhookUsed;
     delete jsonData.lastUpdate;
     delete jsonData.auto;
     jsonData.templates.remove(deleteId[0]);
     //remove userSay
-    for(var i = 0; i < jsonData.userSays; i++) {
-    	if(jsonData.userSays[i].data[0].text == deleteId[0]) {
-    		delete jsonData.userSays[i];
+    for(var i = 0; i < jsonData.userSays.length; i++) {
+    	if(jsonData.userSays[i].data[0].text === deleteId[0]) {
+    		jsonData.userSays.splice(i,1);;
     	}
     }
     
