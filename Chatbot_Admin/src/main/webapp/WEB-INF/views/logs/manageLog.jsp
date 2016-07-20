@@ -52,7 +52,6 @@
 	</div>
 </div>
 
-<div class="card">
 	<div class="col-lg-7">
 		<!--    Hover Rows  -->
 		<div class="card">
@@ -108,7 +107,6 @@
 		</div>
 		<!-- End  Hover Rows  -->
 	</div>
-</div>
 <div class="col-lg-12">
 	<div class="card">
 		<div class="card-header">

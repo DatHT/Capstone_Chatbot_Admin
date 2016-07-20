@@ -89,11 +89,10 @@
 
 <nav class="navbar navbar-default navbar-fixed-top header-color">
     <tiles:insertAttribute name="header"/>
-    
-    <tiles:insertAttribute name="menu"/>
 </nav>
 
 <section id="main">
+	<tiles:insertAttribute name="menu"/>
     <div class="container">
         <tiles:insertAttribute name="body"/>
     </div>
