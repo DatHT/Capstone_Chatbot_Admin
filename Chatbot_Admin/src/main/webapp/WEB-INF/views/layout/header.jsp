@@ -1,4 +1,4 @@
-<div class="container-fluid media header-height">
+<div id="page-header" class="container-fluid media header-height">
 
     <div class="pull-left h-logo">
         <a href="index.html" class="hidden-xs header-left-text"> PSIB</a>

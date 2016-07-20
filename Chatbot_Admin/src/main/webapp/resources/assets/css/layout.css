@@ -61,3 +61,38 @@
 .main-menu li.check-active > a {
     color: #009688;
 }
+
+.my-smm-header {
+    display: none;
+}
+
+@media (max-width: 1279px) {
+    .my-smm-header {
+        display: block;
+        height: 80px;
+        background-repeat: no-repeat;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-position: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        z-index: 10;
+    }
+
+    .my-smm-header i {
+        font-size: 21px;
+        color: #009688;
+        background: #fff;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 41px;
+        margin: 3px 10px 0;
+        cursor: pointer;
+    }
+}

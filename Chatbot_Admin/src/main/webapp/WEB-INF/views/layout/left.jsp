@@ -6,10 +6,9 @@
 </sec:authorize>
 
 <aside id="s-main-menu" class="sidebar menu-fixed">
-    <div class="smm-header">
-        <i class="zmdi zmdi-long-arrow-left" data-ma-action="sidebar-close"></i>
-    </div>
+
     <ul class="main-menu">
+
         <c:if test="${principal.authorities == '[ADMIN]'}">
             <li class="${cur == 'dataConfig' ? 'check-active' : ''}">
                 <a href="config">
