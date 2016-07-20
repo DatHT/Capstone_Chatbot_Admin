@@ -90,6 +90,7 @@ public class CommonUtils {
 		}
 		return null;
 	}
+
 	public static double splitLong(String url) throws ArrayIndexOutOfBoundsException {
 		String[] list = url.split("_");
 		String splitLong = null;
@@ -105,10 +106,10 @@ public class CommonUtils {
 			splitLong = list[list.length - 1];
 			longitude = Double.parseDouble(splitLong);
 		}
-		if(list.length==1){
+		if (list.length == 1) {
 			int index = list[0].indexOf(",");
-	        splitLong = list[0].substring(index+1, list[0].length());
-	        longitude = Double.parseDouble(splitLong);
+			splitLong = list[0].substring(index + 1, list[0].length());
+			longitude = Double.parseDouble(splitLong);
 		}
 
 		return longitude;
@@ -130,10 +131,10 @@ public class CommonUtils {
 			splitLat = splitLat.replace("7C", "");
 			latitude = Double.parseDouble(splitLat);
 		}
-		if(list.length==1){
+		if (list.length == 1) {
 			int index = list[0].indexOf(",");
-	        splitLat = list[0].substring(0,index);
-	        latitude = Double.parseDouble(splitLat);
+			splitLat = list[0].substring(0, index);
+			latitude = Double.parseDouble(splitLat);
 		}
 		return latitude;
 	}
@@ -152,27 +153,38 @@ public class CommonUtils {
 		}
 		if (listAddress.length == 3) {
 			address = listAddress[listAddress.length - 3];
-//			if (listAddress[listAddress.length - 2].toLowerCase().contains("phÆ°á»�ng")
-//					|| listAddress[listAddress.length - 2].toLowerCase().contains("p.")) {
-//				address = listAddress[listAddress.length - 3] + "," + listAddress[listAddress.length - 2];
-//			}
-//			if (listAddress[listAddress.length - 2].toLowerCase().contains("quáº­n")
-//					|| listAddress[listAddress.length - 2].toLowerCase().contains("q.")) {
-//				address = listAddress[listAddress.length - 3];
-//			}
+			// if (listAddress[listAddress.length -
+			// 2].toLowerCase().contains("phÆ°á»�ng")
+			// || listAddress[listAddress.length -
+			// 2].toLowerCase().contains("p.")) {
+			// address = listAddress[listAddress.length - 3] + "," +
+			// listAddress[listAddress.length - 2];
+			// }
+			// if (listAddress[listAddress.length -
+			// 2].toLowerCase().contains("quáº­n")
+			// || listAddress[listAddress.length -
+			// 2].toLowerCase().contains("q.")) {
+			// address = listAddress[listAddress.length - 3];
+			// }
 		}
 		if (listAddress.length == 4) {
 			address = listAddress[listAddress.length - 4];
-			if(listAddress[listAddress.length - 3].contains("P.")){
-				address = listAddress[listAddress.length - 4]+" "+listAddress[listAddress.length - 3];
+			if (listAddress[listAddress.length - 3].contains("P.")) {
+				address = listAddress[listAddress.length - 4] + " " + listAddress[listAddress.length - 3];
 			}
 		}
 		if (listAddress.length == 6) {
-			address = listAddress[listAddress.length - 6]+ " " +listAddress[listAddress.length - 5]+ " " +listAddress[listAddress.length - 4];
+			address = listAddress[listAddress.length - 6] + " " + listAddress[listAddress.length - 5] + " "
+					+ listAddress[listAddress.length - 4];
 		}
-//		else {
-//			address = listAddress[listAddress.length - 4] + "," + listAddress[listAddress.length - 3];
-//		}
+		if (listAddress.length == 7) {
+			address = listAddress[listAddress.length - 5] + " "
+					+ listAddress[listAddress.length - 4];
+		}
+		// else {
+		// address = listAddress[listAddress.length - 4] + "," +
+		// listAddress[listAddress.length - 3];
+		// }
 
 		return address;
 	}
@@ -180,6 +192,7 @@ public class CommonUtils {
 	public static String splitDistrict(String addressname) throws IndexOutOfBoundsException {
 		String[] listAddress = addressname.split(",");
 		String district = "";
+
 		if (listAddress.length == 5) {
 			district = listAddress[listAddress.length - 3];
 			if (district.length() > 15) {
@@ -187,6 +200,8 @@ public class CommonUtils {
 			}
 			if (district.contains("Q.")) {
 				district = district.replace("Q.", "Quận ");
+				district = district.replace(" Quận", "Quận");
+				district = district.replace("Quận  ", "Quận ");
 			}
 			if (district.contains("Q.") || district.contains("Qu") || district.contains("q.")
 					|| district.contains("qu")) {
@@ -199,45 +214,48 @@ public class CommonUtils {
 			district = listAddress[listAddress.length - 1];
 			if (district.contains("Q.")) {
 				district = district.replace("Q.", "Quận ");
+				district = district.replace(" Quận", "Quận");
+				district = district.replace("Quận  ", "Quận ");
 			}
 		}
 		if (listAddress.length == 3) {
 			district = listAddress[listAddress.length - 2];
-			if(district.contains("P.")||district.toLowerCase().contains("phường")){
+			if (district.contains("P.") || district.toLowerCase().contains("phường")) {
 				district = listAddress[listAddress.length - 1];
+				district = district.replace("Q", "Quận ");
+				district = district.replace(" Quận", "Quận");
+				district = district.replace("Quận  ", "Quận ");
 			}
 			if (district.contains("Q.")) {
 				district = district.replace("Q.", "Quận ");
+				district = district.replace(" Quận", "Quận");
+				district = district.replace("Quận  ", "Quận ");
 			}
 		}
 		if (listAddress.length == 4) {
 			district = listAddress[listAddress.length - 2];
 			if (district.contains("Q.")) {
 				district = district.replace("Q.", "Quận ");
+				district = district.replace(" Quận", "Quận");
+				district = district.replace("Quận  ", "Quận ");
 			}
 		}
 		if (listAddress.length == 6) {
 			district = listAddress[listAddress.length - 3];
 			if (district.contains("Q.")) {
 				district = district.replace("Q.", "Quận ");
+				district = district.replace(" Quận", "Quận");
+				district = district.replace("Quận  ", "Quận ");
 			}
 		}
-//		else {
-//			district = listAddress[listAddress.length - 2];
-//			if (district.contains("P.") || district.contains("F.") || district.contains("p.") || district.contains("f.")
-//					|| (district.contains("phÆ°á»�ng"))) {
-//				district = listAddress[listAddress.length - 1];
-//			}
-//			if (district.contains("Q.")) {
-//				district = district.replace("Q.", "Quáº­n ");
-//			}
-//			if (district.contains("Q.") || district.contains("Qu") || district.contains("q.")
-//					|| district.contains("qu")) {
-//				return district;
-//			} else {
-//				district = "Quáº­n" + district;
-//			}
-//		}
+		if (listAddress.length == 7) {
+			district = listAddress[listAddress.length - 3];
+			if (district.contains("Q.")) {
+				district = district.replace("Q.", "Quận ");
+				district = district.replace(" Quận", "Quận");
+				district = district.replace("Quận  ", "Quận ");
+			}
+		}
 
 		return district;
 	}
@@ -306,7 +324,7 @@ public class CommonUtils {
 			src = src;
 		}
 		if (src.contains("src=\"\"")) {
-			src = src.replaceAll("src=\"\"", "src=\""+url+"/Content/css/images/image_defaul_128.jpg"+"\"");
+			src = src.replaceAll("src=\"\"", "src=\"" + url + "/Content/css/images/image_defaul_128.jpg" + "\"");
 		}
 		if (src.contains("src=\"/")) {
 			src = src.replaceAll("src=\"" + "/", "src=\"" + url + "/");
@@ -340,7 +358,7 @@ public class CommonUtils {
 		if (src.contains("href=\"css")) {
 			src = url + "/" + src;
 		}
-		if (src.contains("href=\"/")||src.contains("href=\"/")) {
+		if (src.contains("href=\"/") || src.contains("href=\"/")) {
 			src = src.replaceAll("href=\"" + "/", "href=\"" + url + "/");
 		}
 		if (src.contains("href=\"" + url + "//")) {
@@ -360,14 +378,15 @@ public class CommonUtils {
 		}
 		return src;
 	}
-	public static String commonUrl(String link){
+
+	public static String commonUrl(String link) {
 		String url = "";
 		String[] str_array = link.split("/");
 		for (int i = 0; i < 3; i++) {
 			url = url + str_array[i] + "/";
 		}
 		url = url.substring(0, url.length() - 1);
-		
+
 		return url;
 	}
 }
