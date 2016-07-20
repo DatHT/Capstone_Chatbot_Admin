@@ -17,8 +17,11 @@ $(document).ready(function () {
                 var target = $(this).data('ma-target');
 
                 $this.addClass('toggled');
-                $('#main').append('<div data-ma-action="sidebar-close" class="sidebar-backdrop animated fadeIn" />')
-                
+                $('#main').append('<div data-ma-action="sidebar-close" class="sidebar-backdrop animated fadeIn" />');
+
+                // self define
+                $('#page-header').append('<div id="back-button" class="my-smm-header"> <i class="zmdi zmdi-long-arrow-left" data-ma-action="sidebar-close" style="opacity: 0"></i> </div>');
+
                 if (target == 'main-menu') {
                     $('#s-main-menu').addClass('toggled');
                 }
@@ -32,7 +35,10 @@ $(document).ready(function () {
             
             /* Close Sidebar */
             case 'sidebar-close':
-                
+
+                // self define
+                $('#back-button').remove();
+
                 $('[data-ma-action="sidebar-open"]').removeClass('toggled');
                 $('.sidebar').removeClass('toggled');
                 $('.sidebar-backdrop').remove();
