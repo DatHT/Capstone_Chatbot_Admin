@@ -119,7 +119,7 @@ public class ProductManager implements IProductManager {
         try {
             ProductDetail productDetail = new ProductDetail();
             productDetail.setProductName(name);
-            productDetail.setAddressName(address);
+            productDetail.setAddressName(address + ", " + district);
 
             if (productDetailDao.checkProductExist(productDetail) == null) {
                 String latLongs[] = LatitudeAndLongitudeWithPincode.getLatLongPositions(address);
@@ -150,7 +150,7 @@ public class ProductManager implements IProductManager {
                 productDetail.setAddressId(addressId);
                 productDetail.setUrlRelate(relatedUrl);
                 productDetail.setSource(getSourceFromUrl(relatedUrl));
-                productDetail.setThumbPath(thumbUrl);
+                productDetail.setThumbPath(SpringPropertiesUtil.getProperty("host_name") + thumbUrl.replace('\\', '/'));
                 productDetailDao.insertProductDetail(productDetail);
 
                 LOG.info("[insertProduct] End");
