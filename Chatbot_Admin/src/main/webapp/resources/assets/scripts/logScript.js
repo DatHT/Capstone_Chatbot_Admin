@@ -312,10 +312,12 @@ function requestAddPhrase(param, token) {
 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			if (xmlhttp.responseText) {
+			if (xmlhttp.responseText.indexOf("success") > -1) {
 				$('#loadingModal').modal('hide');
 				notify("Successfull!", "success");
 				closeModalDialog();
+			} else {
+				swal('Error occurs. Please try again later!');
 			}
 		}
 	}
