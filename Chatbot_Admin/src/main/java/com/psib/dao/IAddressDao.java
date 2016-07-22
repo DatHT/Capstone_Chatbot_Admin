@@ -7,4 +7,6 @@ public interface IAddressDao {
 	long inserAddress(Address address);
 	
 	long checkAddressExist(Address address);
+	
+	long getAddressIDByAddressName(String address);
 }

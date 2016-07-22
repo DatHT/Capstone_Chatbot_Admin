@@ -13,4 +13,6 @@ public class CodeManager {
 	public static final String EXISTED = "Sorry!, the phrase that you added has already existed.";
 	public static final String SUCCESS = "Add phrase success";
 	public static final String ERROR = "Sorry something wrong here";
+	public static final String DONE = "Valid URL";
+	public static final String FAIL = "This url is not available";
 }
