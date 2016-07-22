@@ -39,7 +39,7 @@
 
 .menu-fixed {
     position: fixed;
-    width: 100%;
+    width: 270px;
 }
 
 @media (min-width: 767px) {
