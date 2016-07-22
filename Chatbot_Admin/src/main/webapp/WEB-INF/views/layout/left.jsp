@@ -5,9 +5,9 @@
     <sec:authentication var="principal" property="principal"/>
 </sec:authorize>
 
-<aside id="s-main-menu" class="sidebar menu-fixed">
+<div id="s-main-menu" class="sidebar">
 
-    <ul class="main-menu">
+    <ul class="main-menu menu-fixed">
 
         <c:if test="${principal.authorities == '[ADMIN]'}">
             <li class="${cur == 'dataConfig' ? 'check-active' : ''}">
@@ -70,4 +70,5 @@
             </a>
         </li> --%>
     </ul>
-</aside>
+</div>
+

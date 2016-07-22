@@ -9,6 +9,7 @@
 
 .main-menu {
     margin-top: 60px !important;
+    padding-bottom: 190px;
 }
 
 .header-center-text {
@@ -29,6 +30,7 @@
 
 .body-padding {
     padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .header-color {
@@ -37,6 +39,7 @@
 
 .menu-fixed {
     position: fixed;
+    width: 100%;
 }
 
 @media (min-width: 767px) {

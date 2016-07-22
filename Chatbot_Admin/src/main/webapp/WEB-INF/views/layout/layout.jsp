@@ -96,11 +96,11 @@
     <div class="container">
         <tiles:insertAttribute name="body"/>
     </div>
-
-    <nav class="navbar navbar-default navbar-fixed-bottom">
-        <tiles:insertAttribute name="footer"/>
-    </nav>
 </section>
+
+<nav class="navbar navbar-default navbar-fixed-bottom">
+    <tiles:insertAttribute name="footer"/>
+</nav>
 ​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
 <!-- Page Loader -->
 <div class="page-loader palette-Teal bg">
