@@ -18,14 +18,12 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.psib.constant.CodeManager;
 import com.psib.dao.IFileServerDao;
 import com.psib.dto.configuration.ConfigDTO;
 import com.psib.dto.configuration.ConfigDTOList;

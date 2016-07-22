@@ -71,7 +71,7 @@ public class CrawlerController extends HttpServlet {
 		int numOfPage = Integer.parseInt(numPage);
 		String url = request.getParameter("txtLinkPage");
 		System.out.println("url =" + url);
-		String result = forceParseManager.dynamicParse(numPage, numOfPage, url);
+		String result = forceParseManager.dynamicParse(numOfPage, url);
 		if (result == "done") {
 			session.setAttribute("MESSAGE", "Force parse success! New data has been inserted to storage!");
 			return "success";

@@ -1,5 +1,6 @@
 package com.psib.service.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.psib.dto.configuration.PageDataDTO;
 import com.psib.model.Address;
 import com.psib.model.District;
 import com.psib.model.ProductDetail;
+import com.psib.service.IConfigurationManager;
 import com.psib.service.IForceParseManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
@@ -48,7 +50,41 @@ public class ForceParseManager implements IForceParseManager {
 	private IFileServerDao fileServerDao;
 
 	private String num_of_exits = SpringPropertiesUtil.getProperty("num_exist");
+	private String num_of_page = SpringPropertiesUtil.getProperty("num_page");
+	private String num_of_scroll = SpringPropertiesUtil.getProperty("num_scroll");
 
+	@Override
+	public String timerAutomaticParse() throws IOException {
+		int numOfScroll = Integer.parseInt(num_of_scroll);
+		String numOfPage = num_of_page;
+		String pageConfigXML = getPageConfigFilePath();
+		System.out.println("Page config: " + pageConfigXML);
+
+		String xmlFilePath = pageConfigXML;
+		if (!new File(xmlFilePath).exists()) {
+			File file = new File(xmlFilePath);
+			file.createNewFile();
+			xmlFilePath = file.getPath();
+		}
+		PageDTOList pages = XMLUtils.unmarshallPage(xmlFilePath);
+		if (pages == null) {
+			pages = new PageDTOList();
+			PageDTO page = new PageDTO();
+			page.getPages();
+			
+		}
+		List<PageDTO> pageCfig = pages.getConfig();
+		for(int i =0;i<pageCfig.size();i++){
+			if(pageCfig.get(i).getNextPage().equals("N/A")){
+				dynamicParse(numOfScroll, pageCfig.get(i).getSite());
+			}
+			else{
+				String noPage = "";
+				staticParse(numOfPage, noPage, pageCfig.get(i).getSite());
+			}
+		}
+		return "done";
+	}
 	public String getPageConfigFilePath() throws IOException {
 		if (xmlFilePathFolder == null) {
 			xmlFilePathFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("xml_file_path")).getUrl();
@@ -64,7 +100,7 @@ public class ForceParseManager implements IForceParseManager {
 	}
 
 	@Override
-	public String dynamicParse(String numPage, int numOfPage, String url) {
+	public String dynamicParse(int numOfPage, String url) {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
 		WebDriver driver = new FirefoxDriver();
@@ -273,7 +309,7 @@ public class ForceParseManager implements IForceParseManager {
 	public String staticParse(String numPage, String noPage, String url) {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
-		WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
+		WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38,false);
 		try {
 			int numOfPage = 0;
 			int noOfPage = 0;
@@ -637,4 +673,5 @@ public class ForceParseManager implements IForceParseManager {
 		}
 		return "done";
 	}
+
 }
