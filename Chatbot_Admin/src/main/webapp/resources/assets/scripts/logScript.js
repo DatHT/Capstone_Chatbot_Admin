@@ -132,10 +132,10 @@ function reloadBootgridTable() {
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "Yes, delete it!",
-                closeOnConfirm: false
+                closeOnConfirm: true
             }, function(){
             	updateLogStatus(logid, "DELETED");
-                swal("Deleted!", "It has been deleted.", "success");
+                notify("It has been deleted!", "info");
                 closeModalDialog();
             });
         }).end().find(".btn-full-conversation").on("click", function(e) {

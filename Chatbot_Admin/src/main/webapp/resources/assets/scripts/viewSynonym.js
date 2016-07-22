@@ -63,7 +63,7 @@ $(document).ready(function () {
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "Yes, delete it!",
-                closeOnConfirm: false
+                closeOnConfirm: true
             }, function(){
             	deleteWord(wordId, 0);
             });
@@ -121,7 +121,7 @@ $(document).ready(function () {
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "Yes, delete it!",
-                closeOnConfirm: false
+                closeOnConfirm: true
             }, function(){
             	deleteWord(wordId, 1);
             });
@@ -325,7 +325,7 @@ function deleteWord(wordId, wordType) {
         success: function (data) {
             $('#deleteModal').modal('hide');
             if (data.result == true) {
-            	swal("Deleted!", "It has been deleted.", "success");
+            	notify("It has been deleted!", "info");
             }
             if (wordType == 0) {
                 reloadTable("#data-table-origin");

@@ -83,7 +83,7 @@ function loadPharse(id) {
 						                showCancelButton: true,
 						                confirmButtonColor: "#DD6B55",
 						                confirmButtonText: "Yes, delete it!",
-						                closeOnConfirm: false
+						                closeOnConfirm: true
 						            }, function(){
 						            	deletePharse(name);
 						            });
@@ -115,7 +115,7 @@ function deletePharse(name) {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 				var result = xmlhttp.responseText;
 				if (result.indexOf("success") > -1) {
-					swal("Good job!", xmlhttp.responseText, "success");
+					notify("It has been deleted!", "info");
 				}
 				if (result.indexOf("wrong") > -1) {
 					swal("Error!", xmlhttp.responseText, "error");
@@ -159,7 +159,7 @@ function addNewPhrase() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					var result = xmlhttp.responseText;
 					if (result.indexOf("success") > -1) {
-						swal("Good job!", xmlhttp.responseText, "success");
+						notify(xmlhttp.responseText, "success");
 					}
 					if (result.indexOf("wrong") > -1) {
 						swal("Error!", xmlhttp.responseText, "error");
