@@ -199,11 +199,11 @@ public class CrawlerController extends HttpServlet {
 			System.out.println("File deleted");
 		}
 		if (add) {
-			String result = configurationManager.loadConfig();
-			String[] config = result.split(",");
-			System.out.println(result);
-			session.setAttribute("INFOCONFIG", config[0]);
-			session.setAttribute("INFOPAGE", config[1]);
+			PageDTO page = (PageDTO) session.getAttribute("PAGECONFIG");
+			session.setAttribute("CFS", newConfig);
+			System.out.println(""+page.getSite() +": "+ page.getNextPage());
+			session.setAttribute("PGS", page);
+			System.out.println(""+newConfig.getSite() + ": " + newConfig.getName());
 			session.setAttribute("MESSAGE", "New page configuration has been inserted to storage!");
 			return "successParse";
 		} else {

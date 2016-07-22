@@ -1,18 +1,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Get element Xpath of Selected Items</title>
 <link href="<c:url value = "/resources/assets/cssCode/runnable.css"/>"
 	rel="stylesheet">
-<link href='<c:url value="resources/assets/cssCode/popup.css"/>'
+<link href='<c:url value="/resources/assets/cssCode/popup.css"/>'
 	rel="stylesheet">
-<script
-	src="<c:url value ="/resources/assets/configscripts/jquery-2.2.0.js"/>"></script>
 <script src='<c:url value="/resources/assets/configscripts/parse.js" />'></script>
 
 <!--right slidebar-->
@@ -22,35 +18,33 @@
 </head>
 <body>
 	<c:set var="url" value="${sessionScope.URL}" />
-	<div class="c-header">
-		<h2>Configuration</h2>
-	</div>
 	<form:form name="myForm" id="myForm" action="addPageDetails"
 		method="post">
 		<div class="scroller_anchor"></div>
-		<div class="card scroller"id="scr">
+		<div class="card scroller" id="scr">
 			<div class="card-header">
 				<h2>Please Select An Element And Get XPath</h2>
 			</div>
-			<div class="progressRecipe card-body card-padding">
+			<div class="progressRecipe card-body card-padding" style="padding-bottom: 0px">
 				<div class="circle done">
 					<span class="labelRecipe">0</span> <span class="title">Welcome</span>
 				</div>
-				<span class="bar half"></span> <span class="bar"></span>
+				<span class="bar half"></span>
 				<div class="circle active">
 					<span class="labelRecipe">1</span> <span class="title"
 						style="margin-left: -30px" s>RestaurantName</span>
 				</div>
-				<span class="bar"></span> <span class="bar"></span>
+				<span class="bar"></span>
 				<div class="circle">
 					<span class="labelRecipe">2</span> <span class="title">Address</span>
 				</div>
-				<span class="bar"></span> <span class="bar"></span>
+				<span class="bar"></span>
 				<div class="circle">
 					<span class="labelRecipe">3</span> <span class="title">UserRate</span>
 				</div>
 			</div>
-			<div class="card-body card-padding">
+			<div class="card-body card-padding"
+				style="padding-bottom: 0px; padding-top: 0px">
 				<button type="button" class="btn btn-primary" value="BACK"
 					onclick="back()">BACK</button>
 				<button type="button" class="btn btn-primary" id="btnNext"
@@ -68,7 +62,9 @@
 						class="table">
 						<th width="97%">Content</th>
 					</table>
+					<br />
 					<div id="showXPath"></div>
+					<br />
 				</div>
 			</div>
 		</div>

@@ -20,37 +20,40 @@
 <body>
 	<c:set var="url" value="${sessionScope.URL}" />
 
-	<form:form name="myForm" id="myForm" action="addPageList" method="post">
+	<form:form name="myForm" id="myForm" action="addPageList" method="post"
+		style="padding-top:20px">
 		<div class="scroller_anchor"></div>
 		<div class="card scroller" id="scr" style="">
 			<div class="card-header">
 				<h2>Please Select An Element And Get XPath</h2>
 			</div>
-			<div class="progressRecipe card-body card-padding">
+			<div class="progressRecipe card-body card-padding"
+				style="padding-top: 0px">
 				<div class="circle done">
 					<span class="labelRecipe">0</span> <span class="title">Welcome</span>
 				</div>
-				<span class="bar half"></span> <span class="bar"></span>
+				<span class="bar half"></span>
 				<div class="circle active">
 					<span class="labelRecipe">1</span> <span class="title"
-						style="margin-left: -20px">DescriptionLink</span>
+						style="margin-left: -50px">PageDescriptionLink</span>
 				</div>
-				<span class="bar"></span> <span class="bar"></span>
+				<span class="bar"></span>
 				<div class="circle">
 					<span class="labelRecipe">2</span> <span class="title"
 						style="margin-left: -20px">ProductName</span>
 				</div>
-				<span class="bar"></span> <span class="bar"></span>
+				<span class="bar"></span>
 				<div class="circle">
 					<span class="labelRecipe">3</span> <span class="title"
 						style="margin-left: -20px">ProductImage</span>
 				</div>
-				<span class="bar"></span> <span class="bar"></span>
+				<span class="bar"></span>
 				<div class="circle">
 					<span class="labelRecipe">4</span> <span class="title">NextPage</span>
 				</div>
 			</div>
-			<div class="card-body card-padding">
+			<div class="card-body card-padding"
+				style="padding-top: 0px; padding-bottom: 0px">
 				<button type="button" class="btn btn-primary" value="BACK"
 					onclick="back()">BACK</button>
 				<button type="button" class="btn btn-primary" id="btnNext"
@@ -108,7 +111,7 @@
 					});
 					$('.popup').css({
 						'position' : 'fixed',
-						'top':'40px',
+						'top' : '85px',
 						'z-index' : '100',
 
 					});

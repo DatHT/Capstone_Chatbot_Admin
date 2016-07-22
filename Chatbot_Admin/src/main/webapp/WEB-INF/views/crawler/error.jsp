@@ -21,22 +21,9 @@ and open the template in the editor.
 		String message = (String) session.getAttribute("MESSAGE");
 	%>
 	<section>
-		<!-- sidebar left start-->
-		<div class="sidebar-left">
-			<!--responsive view logo start-->
-			<div class="logo dark-logo-bg"></div>
-			<!--responsive view logo end-->
-
-			<div class="sidebar-left-info"></div>
-		</div>
-		<!-- sidebar left end-->
-
 		<div class="card">
-			<!-- header section start-->
-
-			<!-- page head start-->
 			<div class="card-header">
-				<h3>ERROR OCCURRED!!!</h3>
+				<h3>ERROR OCCURRED!!!!</h3>
 			</div>
 			<div class="card-body card-padding">
 				<div class="row">

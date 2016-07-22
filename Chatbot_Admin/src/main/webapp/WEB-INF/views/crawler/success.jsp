@@ -1,4 +1,3 @@
-F
 <!--
 To change this template, choose Tools | Templates
 and open the template in the editor.
@@ -22,36 +21,7 @@ and open the template in the editor.
 		String message = (String) session.getAttribute("MESSAGE");
 	%>
 	<section>
-		<!-- sidebar left start-->
-		<div class="sidebar-left">
-			<!--responsive view logo start-->
-			<div class="logo dark-logo-bg"></div>
-			<!--responsive view logo end-->
-
-			<div class="sidebar-left-info"></div>
-		</div>
-		<!-- sidebar left end-->
-
 		<div class="card">
-			<!-- header section start-->
-			<div class="header-section">
-
-				<!--logo and logo icon start-->
-				<div class="logo dark-logo-bg hidden-xs hidden-sm"></div>
-
-				<div class="icon-logo dark-logo-bg hidden-xs hidden-sm"></div>
-				<!--logo and logo icon end-->
-
-				<!--toggle button start-->
-				<a class="toggle-btn"><i class="fa fa-outdent"></i></a>
-				<!--toggle button end-->
-
-				<div class="notification-wrap"></div>
-
-			</div>
-			<!-- header section end-->
-
-			<!-- page head start-->
 			<div class="card-header">
 				<h3>SUCCESS! CONGRATULATION</h3>
 			</div>

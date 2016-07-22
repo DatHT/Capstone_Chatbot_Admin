@@ -717,7 +717,7 @@ function openpopup(id) {
 	var divWidth = computedStyle.width.replace('px', '');
 	var divHeight = computedStyle.height.replace('px', '');
 	var divLeft = (pageWidth - divWidth) / 2;
-	var divTop = (pageHeight - divHeight) / 5;
+	var divTop = (pageHeight - divHeight) / 2;
 	// Set Left and top coordinates for the div tag
 	divobj.style.left = divLeft + "px";
 	divobj.style.top = divTop + "px";
