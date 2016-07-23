@@ -23,37 +23,37 @@
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/manualAddFood.jsp" />
-		<put-attribute name="current" value="manualAddFood"/>
+		<put-attribute name="current" value="crawler"/>
 	</definition>
 	<definition name="configuration" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/welcome.jsp" />
-		<put-attribute name="current" value="configuration"/>
+		<put-attribute name="current" value="crawler"/>
 	</definition>
 	<definition name="success" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/success.jsp" />
-		<put-attribute name="current" value="success"/>
+		<put-attribute name="current" value="crawler"/>
 	</definition>
 	<definition name="successParse" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/successParse.jsp" />
-		<put-attribute name="current" value="successParse"/>
+		<put-attribute name="current" value="crawler"/>
 	</definition>
 	<definition name="errorPage" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/error.jsp" />
-		<put-attribute name="current" value="Configuration"/>
+		<put-attribute name="current" value="crawler"/>
 	</definition>
 	<definition name="setListPage" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/setPageList.jsp" />
-		<put-attribute name="current" value="setListPage"/>
+		<put-attribute name="current" value="crawler"/>
 	</definition>
 	<definition name="setParserConfig" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
@@ -65,7 +65,7 @@
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/parseManually.jsp" />
-		<put-attribute name="current" value="parseManually"/>
+		<put-attribute name="current" value="crawler"/>
 	</definition>
 
     <!-- Begin Auth Page -->

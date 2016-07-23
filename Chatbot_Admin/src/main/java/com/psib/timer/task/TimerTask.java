@@ -77,7 +77,7 @@ public class TimerTask {
 		//synchronizeFromDBToAPI();
 		
 		//sync synonym to API and DB
-		productManager.calcSynonymName();
+		
 		synchronizeSynonymToAPI();
 		
 
@@ -92,6 +92,10 @@ public class TimerTask {
 		Scheduler synonymScheduler = manager.getSchedularByName("synonym");
 		if (synonymScheduler.isStatus()) {
 			try {
+				LOG.info("[doTimer] start update Synonym in table Productdetal");
+				productManager.calcSynonymName();
+				LOG.info("[doTimer] End update Synonym in table Productdetal");
+				
 				LOG.info("[doTimer] start update Phrase Food");
 				String id = "";
 				List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();

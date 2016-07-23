@@ -48,7 +48,7 @@
                 Manage Log
             </a>
         </li>
-		<li class="${current == 'crawler' ? 'check-active' : ''}">
+		<li class="${cur == 'crawler' ? 'check-active' : ''}">
 					<a href="configuration"> <i class="zmdi zmdi-cloud-download"></i> Crawler Manager</a>
 				</li>
         <li class="sub-menu ${(cur == 'product') || (cur == 'synonym') ? 'check-active' : ''}">
