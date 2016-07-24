@@ -1,3 +1,13 @@
+var flagStep1 = true;
+var flagStep2 = false;
+var flagStep3 = false;
+var flagStep4 = false;
+var flagSave = false;
+
+var xmlhttp;
+var count = 0;
+var resultIntents = "";
+
 function allowDrop(ev) {
 	ev.preventDefault();
 }
@@ -18,9 +28,6 @@ function drop(ev) {
 	// document.getElementById("box-dragable").appendChild(node);
 }
 
-var xmlhttp;
-var count = 0;
-var resultIntents = "";
 
 function addIntentRows(tableId, data) {
 	var jsonData = JSON.parse(data);
@@ -105,6 +112,7 @@ function moveDiv(divFromId, divToId) {
 	}
 }
 
+
 function loadIntent(id) {
 	$('#loadingModal').modal('show');
 	if (window.XMLHttpRequest) {
@@ -115,71 +123,81 @@ function loadIntent(id) {
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			resultIntents = xmlhttp.responseText;
-			$('#tableIntent').bootgrid("destroy");
-			addIntentRows("intentTable", resultIntents);
-			$('#tableIntent')
-					.bootgrid(
-							{
-								css : {
-									icon : 'zmdi icon',
-									iconColumns : 'zmdi-view-module',
-									iconDown : 'zmdi-expand-more',
-									iconRefresh : 'zmdi-refresh',
-									iconUp : 'zmdi-expand-less'
-								},
-								formatters : {
-									"commands" : function(column, row) {
-										return "<button data-row-name='"
-												+ row.name
-												+ "' id='"
-												+ row.name
-												+ "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float btn-delete-example'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+			
+			if(flagStep2) {
+				insertPattern(id);
+			}
+			
+			if (flagSave) {
+
+				$('#tableIntent').bootgrid("destroy");
+				addIntentRows("intentTable", resultIntents);
+				$('#tableIntent')
+						.bootgrid(
+								{
+									css : {
+										icon : 'zmdi icon',
+										iconColumns : 'zmdi-view-module',
+										iconDown : 'zmdi-expand-more',
+										iconRefresh : 'zmdi-refresh',
+										iconUp : 'zmdi-expand-less'
 									},
-									"commands-name" : function(column, row) {
-										var data = row.name.split(",");
-										return data[0] + "<br/>" + data[1];
+									formatters : {
+										"commands" : function(column, row) {
+											return "<button data-row-name='"
+													+ row.name
+													+ "' id='"
+													+ row.name
+													+ "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float btn-delete-example'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+										},
+										"commands-name" : function(column, row) {
+											var data = row.name.split(",");
+											return data[0] + "<br/>" + data[1];
+										}
 									}
-								}
-							})
-					.on(
-							"loaded.rs.jquery.bootgrid",
-							function() {
-								/* Executes after data is loaded and rendered */
-								$('#tableIntent')
-										.find(".btn-delete-example")
-										.on(
-												"click",
-												function(e) {
-													var rowname = $(this).data(
-															"row-name");
-													var data = rowname
-															.split(",")[0];
-													swal(
-															{
-																title : "Are you sure to delete this pattern "
-																		+ data
-																		+ "?",
-																text : "You will not be able to recover it!",
-																type : "warning",
-																showCancelButton : true,
-																confirmButtonColor : "#DD6B55",
-																confirmButtonText : "Yes, delete it!",
-																closeOnConfirm : false
-															},
-															function() {
-																deletePattern(data);
-															});
-												});
-							});
+								})
+						.on(
+								"loaded.rs.jquery.bootgrid",
+								function() {
+									/* Executes after data is loaded and rendered */
+									$('#tableIntent')
+											.find(".btn-delete-example")
+											.on(
+													"click",
+													function(e) {
+														var rowname = $(this).data(
+																"row-name");
+														var data = rowname
+																.split(",")[0];
+														swal(
+																{
+																	title : "Are you sure to delete this pattern "
+																			+ data
+																			+ "?",
+																	text : "You will not be able to recover it!",
+																	type : "warning",
+																	showCancelButton : true,
+																	confirmButtonColor : "#DD6B55",
+																	confirmButtonText : "Yes, delete it!",
+																	closeOnConfirm : false
+																},
+																function() {
+																	deletePattern(data);
+																});
+													});
+								});
+			}
+			
 			$('#loadingModal').modal('hide');
 		}
 
 	}
-	xmlhttp.open("GET", "/chatbot_admin/example/" + id.value, true);
+	xmlhttp.open("GET", "/chatbot_admin/example/" + id, true);
 	xmlhttp.send();
 }
 
-function insertPattern() {
+function insertPattern(intentId) {
+	$('#loadingModal').modal('show');
 	if (resultIntents != "") {
 		var div = document.getElementById("containerDiv");
 		var divs = div.getElementsByClassName("draggable");
@@ -230,8 +248,8 @@ function insertPattern() {
 			};
 			jsonData.userSays.push(userSay);
 
-			var cate = document.getElementById("selectIntent");
-			var intentId = cate.options[cate.selectedIndex].value;
+//			var cate = document.getElementById("selectIntent");
+//			var intentId = cate.options[cate.selectedIndex].value;
 			// action here
 			if (window.XMLHttpRequest) {
 				xmlhttp = new XMLHttpRequest();
@@ -242,16 +260,15 @@ function insertPattern() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					var result = xmlhttp.responseText;
 					if (xmlhttp.responseText.indexOf('success') > 0) {
-						swal({
-							title : "Good job!",
-							text : xmlhttp.responseText,
-							type : "success"
-						}, function() {
-							setTimeout(function() {
-								location.reload();
-							}, 500);
-
-						});
+						flagSave = true;
+						if (flagStep2) {
+							showCard3();
+							flagSave = false;
+						}
+						$('#loadingModal').modal('hide');
+						notify("Your pattern was saved",
+						"info");
+						
 					} else {
 						swal("Sorry!", xmlhttp.responseText, "error");
 					}
@@ -284,47 +301,73 @@ function insertPattern() {
 function displayStep2() {
 	var step1Example = document.getElementById("exampleList");
 	var selectId = step1Example.options[step1Example.selectedIndex].value;
-
 	var ownExample = document.getElementById("own-example").value;
-
 	if (selectId == "empty") {
-		
 		if (ownExample === undefined || ownExample == "") {
-			notify("Please Choose example or type your own example first", "info");
+			notify("Please Choose example or type your own example first",
+					"info");
 		} else {
 			document.getElementById("your-example").innerHTML = ownExample;
-			
+			showCard2();
+			showTextInStep2(ownExample);
 		}
 	} else {
-
 		if (ownExample === undefined || ownExample == "") {
 			document.getElementById("your-example").innerHTML = selectId;
+			showCard2();
+			showTextInStep2(selectId);
 		} else {
 			notify("You just choose example or input the text", "info");
 		}
-
-		document.getElementById("step1").className = "col-lg-2";
-		var step2 = document.getElementById("step2");
-		step2.style.display = "block";
-
 	}
 }
+
+function showCard2() {
+	document.getElementById("card-step1").style.display = "none";
+	document.getElementById("card-step2").style.display = "block";
+	$('#progress-status').css('width', 25 + '%').attr('aria-valuenow',
+			25);
+	flagStep1 = false;
+	flagStep2 = true;
+}
+
 function displayStep3() {
+	var cate = document.getElementById("selectIntent");
+	var intentId = "";
+	var testName = "User_Test";
+	for(var i = 0; i < cate.options.length; i++) {
+		if ((cate.options[i].text).localeCompare(testName) == 0) {
+			intentId = cate.options[i].value;
+		}
+	}
+	if(intentId != "") {
+		loadIntent(intentId);
+		
+		
+	}
+	
+	
+}
+
+function showCard3() {
+	document.getElementById("card-step2").style.display = "none";
+	document.getElementById("card-step3").style.display = "block";
+	$('#progress-status').css('width', 50 + '%').attr('aria-valuenow',
+			50);
+	flagStep2 = false;
+	flagStep3 = true;
+}
+
+
+
+function showTextInStep2(example) {
 
 	var d = new Date();
 
-	var step1 = document.getElementById("exampleList");
-	var selectId = step1.options[step1.selectedIndex].value;
-	if (selectId == "empty") {
-		notify("Please Choose Example first!", "info");
-	} else {
-		document.getElementById("step2").className = "col-lg-2";
-		var step3 = document.getElementById("step3");
-		step3.style.display = "block";
 		// display example
 		var chosenExample = document.getElementById("chosenExample");
 		var para = document.createElement("p");
-		var node = document.createTextNode(selectId);
+		var node = document.createTextNode(example);
 		para.appendChild(node);
 		chosenExample.appendChild(para);
 
@@ -350,7 +393,6 @@ function displayStep3() {
 							}
 						});
 
-	}
 }
 
 function guid() {
@@ -382,3 +424,99 @@ function generateUUID() {
 			});
 	return uuid;
 };
+
+function handleShowBags() {
+	// delete type own example
+	document.getElementById("own-example").value = "";
+	document.getElementById("train-own-example").style.display = "none";
+	document.getElementById("train-bag").style.display = "block";
+}
+
+function handleShowType() {
+	// delete select in bags
+	document.getElementById("exampleList").value = "empty";
+	document.getElementById("train-bag").style.display = "none";
+	document.getElementById("train-own-example").style.display = "block";
+}
+
+function processTraining() {
+	if (flagStep1) {
+		displayStep2();
+
+	} else if (flagStep2) {
+		displayStep3();
+
+	} else if (flagStep3) {
+
+	} else if (flagStep4) {
+
+	}
+}
+
+function sendTestQuery() {
+	var userQuery = document.getElementById("user-query").value;
+	if (userQuery != "" && userQuery !== undefined) {
+		createDivChat("pull-right", userQuery);
+		sendQueryToServer(userQuery);
+		document.getElementById("user-query").innerHTML = "";
+		
+	}
+}
+
+function sendQueryToServer(query) {
+	// action here
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			var result = xmlhttp.responseText;
+			createDivChat("pull-left", result);
+		}
+
+	}
+	var param = document.getElementById("paramName").value;
+	var token = document.getElementById("token").value;
+	xmlhttp.open("POST", "/chatbot_admin/example/testQuery", true);
+	xmlhttp.setRequestHeader("Content-type",
+			"application/x-www-form-urlencoded;charset=utf-8");
+	xmlhttp.send(param + "=" + token + "&trainingSentence=" + query);
+	// action here
+}
+
+function createDivChat(pullPosition, textNode) {
+	var chatFlow = document.getElementById("chat-flow");
+	var wrapper = document.createElement("div");
+	wrapper.className = "list-group-item media";
+	
+	var position = document.createElement("div");
+	position.className = pullPosition;
+	
+	var img = document.createElement("img");
+	img.className = "avatar-img";
+	if (pullPosition == "pull-right") {
+		img.src = "resources/assets/img/profile-pics/2.jpg";
+	}else
+		img.src = "resources/assets/img/profile-pics/4.jpg";
+	position.appendChild(img);
+	
+	var bodyText = document.createElement("div");
+	bodyText.className = "media-body";
+	
+	var userText = document.createElement("div");
+	userText.className = "msb-item";
+	
+	var node = document.createTextNode(textNode);
+	userText.appendChild(node);
+	
+	bodyText.appendChild(userText);
+	
+	wrapper.appendChild(position);
+	wrapper.appendChild(bodyText);
+	
+	chatFlow.appendChild(wrapper);
+	
+	
+}

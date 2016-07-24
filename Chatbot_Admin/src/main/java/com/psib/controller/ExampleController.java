@@ -6,6 +6,7 @@ package com.psib.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.psib.common.JsonParser;
 import com.psib.common.restclient.RestfulException;
 import com.psib.constant.CodeManager;
+import com.psib.constant.QueryConstant;
 import com.psib.constant.StatusCode;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.TrainDto;
@@ -140,5 +142,40 @@ public class ExampleController {
 
 		return responseText;
 
+	}
+	
+	@RequestMapping(path = "/testQuery", method = RequestMethod.POST)
+	public @ResponseBody String testPatternQuery(
+			@RequestParam("trainingSentence") String trainingSentence,
+			Model model) {
+		String responseText = "";
+		try {
+			boolean result = manager.checkUserPattern(trainingSentence);
+			Random random = new Random();
+			int index = random.nextInt(10);
+			if (result) {
+				if((index % 2) == 0) {
+					responseText = QueryConstant.ANSWER_OK_1;
+				}else if((index % 3) == 0) {
+					responseText = QueryConstant.ANSWER_OK_2;
+				}else if((index % 5) == 0) {
+					responseText = QueryConstant.ANSWER_OK_3;
+				}
+			}else {
+				if((index % 2) == 0) {
+					responseText = QueryConstant.ANSWER_FAIL_1;
+				}else if((index % 3) == 0) {
+					responseText = QueryConstant.ANSWER_FAIL_2;
+				}
+			}
+		
+		}catch (IOException e) {
+			responseText = e.getMessage();
+		} catch (RestfulException e) {
+			responseText = e.getMessage();
+		}
+
+		
+		return responseText;
 	}
 }
