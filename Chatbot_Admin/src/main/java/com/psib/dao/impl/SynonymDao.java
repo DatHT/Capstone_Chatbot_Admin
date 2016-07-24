@@ -31,7 +31,7 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
         StringBuilder sql = new StringBuilder("SELECT COUNT(S.Id) FROM ")
                 .append(Synonym.class.getSimpleName())
                 .append(" S WHERE S.name LIKE :searchPhrase")
-                .append(" AND S.synonymId IS NULL")
+                .append(" AND S.synonymId = 0")
                 .append(" ORDER BY S.Id DESC");
 
         Query query = getSession().createQuery(String.valueOf(sql));
