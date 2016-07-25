@@ -180,8 +180,12 @@
 		role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Modal title</h4>
+				<div class="modal-header" style="background-color:#eeeeee">
+					<p style="font-size:17px;margin-bottom: 5px;">
+						<small>USER SAYS:</small>
+						<span class="modal-title" style="font-weight:700;">Modal title</span>
+					</p>
+					<small style="padding-left:20px;font-size:12px;">Contains all user request in session that have misunderstand sentence what user say.</small>
 				</div>
 				<div class="modal-body" style="max-height: 50vh;overflow-y: auto;">
 					<div id="panel-group" class="panel-group" role="tablist"
