@@ -165,8 +165,13 @@
 								</div>
 							</div>
 							<div class="form-group">
+								<label class="col-sm-3 control-label" style="text-align: left"></label>
+								<div class="col-sm-9">
+								</div>
+							</div>
+							<div class="form-group" style="">
 								<button type="submit" data-toggle="modal" href="#parsing"
-									class="btn btn-primary" style=""
+									class="btn btn-primary" style="margin-top:20px"
 									value="DynamicParse" name="btnAction" onclick="showModal()">DynamicParse</button>
 							</div>
 							<div class="" style="display: none" id="loading_image2">
@@ -231,8 +236,8 @@
 </script>
 <script>
 	function loadPage() {
-		var a = document.getElementById("viewStatic").offsetHeight;
-		document.getElementById("viewDynamic").style.height = ''+a+'px';
+		var a = document.getElementById("viewStatic").clientHeight;
+		document.getElementById("viewDynamic").style.height = a+'px';
 		loadProcess('selectSite');
 		checkSelect();
 	}
