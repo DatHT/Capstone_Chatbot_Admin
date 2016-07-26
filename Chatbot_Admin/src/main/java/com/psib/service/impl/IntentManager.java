@@ -98,7 +98,7 @@ public class IntentManager implements IIntentManager {
 		QueryDto query = new QueryDto();
 		query.setLang("en");
 		List<String> list = new ArrayList<>();
-		list.add(pattern);
+		list.add(pattern.trim());
 		query.setQuery(list);
 
 		List<ContextDto> ctx = new ArrayList<>();
@@ -108,11 +108,11 @@ public class IntentManager implements IIntentManager {
 		query.setContexts(ctx);
 		QueryResult result = queryFactory.testUserQuery(query);
 		if (result.getResult().getAction().equalsIgnoreCase(QueryConstant.QUERY_ACTION)) {
-			LOG.info("[checkUserPattern] end");
+			LOG.info("[checkUserPattern] end-true");
 			return true;
 		}
 
-		LOG.info("[checkUserPattern] end");
+		LOG.info("[checkUserPattern] end-false");
 		return false;
 	}
 
