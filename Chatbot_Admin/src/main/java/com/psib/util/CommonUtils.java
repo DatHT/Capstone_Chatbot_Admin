@@ -4,8 +4,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -136,5 +139,29 @@ public class CommonUtils {
 	private static int indexOf(Pattern pattern, String s) {
 		Matcher matcher = pattern.matcher(s);
 		return matcher.find() ? matcher.start() : -1;
+	}
+
+	public static Set<String> findDuplicatePhrase(String first, String second) {
+		Set<String> result = new LinkedHashSet();
+		first = first.toLowerCase();
+	    second = second.toLowerCase();
+	    //split the second string into words
+	    List<String> wordsOfSecond = new ArrayList<>(Arrays.asList(second.split(" ")));
+	    
+	    //remove unrelate worrd
+	    String unhandleWord = "thèm lắm lun ngon ngất ngây nè chưa có";
+	    for (String word : unhandleWord.split(" ")) {
+	        if(wordsOfSecond.contains(word))
+	        	wordsOfSecond.remove(word);
+	    }
+	    
+	    
+	    //split and compare each word of the first string           
+	    for (String word : first.split(" ")) {
+	        if(wordsOfSecond.contains(word))
+	            result.add(word);
+	    }
+	    
+	    return result;
 	}
 }

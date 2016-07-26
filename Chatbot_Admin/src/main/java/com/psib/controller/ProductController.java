@@ -16,8 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author DatHT Jun 4, 2016
@@ -59,6 +61,7 @@ public class ProductController {
         }
 
         LOG.info("[loadProduct] End");
+        
         return model;
     }
 

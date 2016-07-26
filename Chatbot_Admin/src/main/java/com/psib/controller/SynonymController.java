@@ -146,8 +146,8 @@ public class SynonymController {
     public String loadOrigin(@RequestParam(name = "current") int current,
                              @RequestParam(name = "rowCount") int rowCount,
                              @RequestParam(name = "searchPhrase") String searchPhrase,
-                             @RequestParam(name = "sort[name]", required = false) String sortProductName) {
-        return JsonParser.toJson(synonymManager.getAllOriginForPaging(current, rowCount, searchPhrase, sortProductName));
+                             @RequestParam(name = "sort[name]", required = false) String sortColumName) {
+        return JsonParser.toJson(synonymManager.getAllOriginForPaging(current, rowCount, searchPhrase, sortColumName));
     }
 
     @RequestMapping(value = "/loadSynonyms", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
