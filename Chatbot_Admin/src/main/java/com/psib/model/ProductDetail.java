@@ -17,196 +17,198 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductDetail implements Serializable {
 
-    @Id
-    @Column(name = "productId", nullable = false)
-    @JsonProperty("productId")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long productId;
+	private static final long serialVersionUID = -1876394640321425792L;
 
-    @Column(name = "productName", nullable = false, length = 4000)
-    @JsonProperty("productName")
-    private String productName;
+	@Id
+	@Column(name = "productId", nullable = false)
+	@JsonProperty("productId")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long productId;
 
-    @Column(name = "addressName", nullable = false, length = 4000)
-    @JsonProperty("addressName")
-    private String addressName;
+	@Column(name = "productName", nullable = false, length = 4000)
+	@JsonProperty("productName")
+	private String productName;
 
-    @Column(name = "districtName", nullable = false, length = 128)
-    @JsonProperty("districtName")
-    private String districtName;
+	@Column(name = "addressName", nullable = false, length = 4000)
+	@JsonProperty("addressName")
+	private String addressName;
 
-    @Column(name = "latitude", nullable = false)
-    @JsonProperty("latitude")
-    private double latitude;
+	@Column(name = "districtName", nullable = false, length = 128)
+	@JsonProperty("districtName")
+	private String districtName;
 
-    @Column(name = "longitude", nullable = false)
-    @JsonProperty("longitude")
-    private double longitude;
+	@Column(name = "latitude", nullable = false)
+	@JsonProperty("latitude")
+	private double latitude;
 
-    @Column(name = "numOfSearch", columnDefinition = "Integer default '0'")
-    @JsonProperty("numOfSearch")
-    private int numOfSearch;
+	@Column(name = "longitude", nullable = false)
+	@JsonProperty("longitude")
+	private double longitude;
 
-    @Column(name = "rate")
-    private double rate;
+	@Column(name = "numOfSearch", columnDefinition = "Integer default '0'")
+	@JsonProperty("numOfSearch")
+	private int numOfSearch;
 
-    @Column(name = "restaurantName")
-    @JsonProperty("restaurantName")
-    private String restaurantName;
+	@Column(name = "rate")
+	private double rate;
 
-    @Column(name = "thumbpath")
-    @JsonProperty("thumbPath")
-    private String thumbPath;
+	@Column(name = "restaurantName")
+	@JsonProperty("restaurantName")
+	private String restaurantName;
 
-    @Column(name = "urlrelate", nullable = false, length = 500)
-    @JsonProperty("urlRelate")
-    private String urlRelate;
+	@Column(name = "thumbpath")
+	@JsonProperty("thumbPath")
+	private String thumbPath;
 
-    @Column(name = "addressId", nullable = false)
-    @JsonProperty("addressId")
-    private long addressId;
+	@Column(name = "urlrelate", nullable = false, length = 500)
+	@JsonProperty("urlRelate")
+	private String urlRelate;
 
-    @Column(name = "source")
-    @JsonProperty("source")
-    private String source;
+	@Column(name = "addressId", nullable = false)
+	@JsonProperty("addressId")
+	private long addressId;
 
-    @Column(name = "synonymName")
-    @JsonProperty("synonymName")
-    private String synonymName;
+	@Column(name = "source")
+	@JsonProperty("source")
+	private String source;
 
-    public ProductDetail() {
-        // TODO Auto-generated constructor stub
-    }
+	@Column(name = "synonymName")
+	@JsonProperty("synonymName")
+	private String synonymName;
 
-    public ProductDetail(long productId, long addressId, String productName, String addressName, String urlRelate,
-                         String thumbPath, double rate, int numOfSearch, double longitude, double latitude, String restaurantName,
-                         String districtName, String source, String synonymName) {
-        super();
-        this.productId = productId;
-        this.addressId = addressId;
-        this.productName = productName;
-        this.addressName = addressName;
-        this.urlRelate = urlRelate;
-        this.thumbPath = thumbPath;
-        this.rate = rate;
-        this.numOfSearch = numOfSearch;
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.restaurantName = restaurantName;
-        this.districtName = districtName;
-        this.source = source;
-        this.synonymName = synonymName;
-    }
+	public ProductDetail() {
+		// TODO Auto-generated constructor stub
+	}
 
-    public long getProductId() {
-        return productId;
-    }
+	public ProductDetail(long productId, long addressId, String productName, String addressName, String urlRelate,
+			String thumbPath, double rate, int numOfSearch, double longitude, double latitude, String restaurantName,
+			String districtName, String source, String synonymName) {
+		super();
+		this.productId = productId;
+		this.addressId = addressId;
+		this.productName = productName;
+		this.addressName = addressName;
+		this.urlRelate = urlRelate;
+		this.thumbPath = thumbPath;
+		this.rate = rate;
+		this.numOfSearch = numOfSearch;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.restaurantName = restaurantName;
+		this.districtName = districtName;
+		this.source = source;
+		this.synonymName = synonymName;
+	}
 
-    public void setProductId(long productId) {
-        this.productId = productId;
-    }
+	public long getProductId() {
+		return productId;
+	}
 
-    public long getAddressId() {
-        return addressId;
-    }
+	public void setProductId(long productId) {
+		this.productId = productId;
+	}
 
-    public void setAddressId(long addressId) {
-        this.addressId = addressId;
-    }
+	public long getAddressId() {
+		return addressId;
+	}
 
-    public String getAddressName() {
-        return addressName;
-    }
+	public void setAddressId(long addressId) {
+		this.addressId = addressId;
+	}
 
-    public void setAddressName(String addressName) {
-        this.addressName = addressName;
-    }
+	public String getAddressName() {
+		return addressName;
+	}
 
-    public String getProductName() {
-        return productName;
-    }
+	public void setAddressName(String addressName) {
+		this.addressName = addressName;
+	}
 
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
+	public String getProductName() {
+		return productName;
+	}
 
-    public String getUrlRelate() {
-        return urlRelate;
-    }
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
 
-    public void setUrlRelate(String urlRelate) {
-        this.urlRelate = urlRelate;
-    }
+	public String getUrlRelate() {
+		return urlRelate;
+	}
 
-    public String getThumbPath() {
-        return thumbPath;
-    }
+	public void setUrlRelate(String urlRelate) {
+		this.urlRelate = urlRelate;
+	}
 
-    public void setThumbPath(String thumbPath) {
-        this.thumbPath = thumbPath;
-    }
+	public String getThumbPath() {
+		return thumbPath;
+	}
 
-    public double getRate() {
-        return rate;
-    }
+	public void setThumbPath(String thumbPath) {
+		this.thumbPath = thumbPath;
+	}
 
-    public void setRate(double rate) {
-        this.rate = rate;
-    }
+	public double getRate() {
+		return rate;
+	}
 
-    public int getNumOfSearch() {
-        return numOfSearch;
-    }
+	public void setRate(double rate) {
+		this.rate = rate;
+	}
 
-    public void setNumOfSearch(int numOfSearch) {
-        this.numOfSearch = numOfSearch;
-    }
+	public int getNumOfSearch() {
+		return numOfSearch;
+	}
 
-    public double getLongitude() {
-        return longitude;
-    }
+	public void setNumOfSearch(int numOfSearch) {
+		this.numOfSearch = numOfSearch;
+	}
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
+	public double getLongitude() {
+		return longitude;
+	}
 
-    public double getLatitude() {
-        return latitude;
-    }
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
+	public double getLatitude() {
+		return latitude;
+	}
 
-    public String getRestaurantName() {
-        return restaurantName;
-    }
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
 
-    public void setRestaurantName(String restaurantName) {
-        this.restaurantName = restaurantName;
-    }
+	public String getRestaurantName() {
+		return restaurantName;
+	}
 
-    public String getDistrictName() {
-        return districtName;
-    }
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
+	}
 
-    public void setDistrictName(String districtName) {
-        this.districtName = districtName;
-    }
+	public String getDistrictName() {
+		return districtName;
+	}
 
-    public String getSource() {
-        return source;
-    }
+	public void setDistrictName(String districtName) {
+		this.districtName = districtName;
+	}
 
-    public void setSource(String source) {
-        this.source = source;
-    }
+	public String getSource() {
+		return source;
+	}
 
-    public String getSynonymName() {
-        return synonymName;
-    }
+	public void setSource(String source) {
+		this.source = source;
+	}
 
-    public void setSynonymName(String synonymName) {
-        this.synonymName = synonymName;
-    }
+	public String getSynonymName() {
+		return synonymName;
+	}
+
+	public void setSynonymName(String synonymName) {
+		this.synonymName = synonymName;
+	}
 }
