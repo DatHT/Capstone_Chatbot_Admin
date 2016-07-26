@@ -134,7 +134,9 @@
 				<div class="list-group lg-alt m-t-10">
 					<a class="list-group-item media" href="#">
 						<div class="pull-left">
-							<img src="${pageContext.request.contextPath}/resources/assets/img/profile-pics/4.jpg" alt="" class="avatar-img">
+							<img
+								src="${pageContext.request.contextPath}/resources/assets/img/profile-pics/4.jpg"
+								alt="" class="avatar-img">
 						</div>
 						<div class="media-body">
 							<div class="lgi-heading">PSIB Bot</div>
@@ -160,14 +162,17 @@
 				</div>
 
 				<div id="chat-flow" class="list-group lg-alt"
-					style="overflow: scroll; height: 400px;">
+					style="overflow: scroll; height: 300px;">
 					<div class="list-group-item media">
 						<div class="pull-left">
-							<img class="avatar-img" src="${pageContext.request.contextPath}/resources/assets/img/profile-pics/4.jpg" alt="">
+							<img class="avatar-img"
+								src="${pageContext.request.contextPath}/resources/assets/img/profile-pics/4.jpg"
+								alt="">
 						</div>
 
 						<div class="media-body">
-								<div class="msb-item">Hello! Type your example to test your pattern</div>
+							<div class="msb-item">Hello! Type your example to test your
+								pattern</div>
 						</div>
 					</div>
 
@@ -187,6 +192,32 @@
 	</div>
 
 </div>
+
+<!-- Step 4 -->
+<div class="card" id="card-step4" style="display: none">
+	<div class="card-header">
+		<strong>Choose suitable intent for pattern</strong>
+	</div>
+	<div class="card-body card-padding">
+		<div class="row">
+			<select class="chosen" data-placeholder="Choose a Intent..."
+				 class="form-control" id="selectIntent">
+				<option value="empty"></option>
+
+				<c:if test="${not empty intents}">
+					<c:forEach var="intent" items="${intents}">
+						<option value="${intent.id}">${intent.name}</option>
+					</c:forEach>
+				</c:if>
+
+			</select>
+		</div>
+	</div>
+
+
+</div>
+
+
 <div id="ab" class="clearfix" data-columns="2">
 
 	<div class="column size-1of2">

@@ -124,9 +124,10 @@ function loadIntent(id) {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			resultIntents = xmlhttp.responseText;
 			
-			if(flagStep2) {
+			if(flagStep2 || flagStep4) {
 				insertPattern(id);
 			}
+			
 			
 			if (flagSave) {
 
@@ -268,6 +269,9 @@ function insertPattern(intentId) {
 						$('#loadingModal').modal('hide');
 						notify("Your pattern was saved",
 						"info");
+						if (flagStep4) {
+							location.reload();
+						}
 						
 					} else {
 						swal("Sorry!", xmlhttp.responseText, "error");
@@ -356,6 +360,22 @@ function showCard3() {
 			50);
 	flagStep2 = false;
 	flagStep3 = true;
+}
+
+function displaStep4() {
+	document.getElementById("card-step3").style.display = "none";
+	document.getElementById("card-step4").style.display = "block";
+	$('#progress-status').css('width', 75 + '%').attr('aria-valuenow',
+			75);
+	flagStep3 = false;
+	flagStep4 = true;
+}
+
+function finalStep() {
+	var cate = document.getElementById("selectIntent");
+	var intentId = cate.options[cate.selectedIndex].value;
+	loadIntent(intentId);
+	
 }
 
 
@@ -447,18 +467,19 @@ function processTraining() {
 		displayStep3();
 
 	} else if (flagStep3) {
-
+		displaStep4();
 	} else if (flagStep4) {
-
+		finalStep();
 	}
 }
 
 function sendTestQuery() {
 	var userQuery = document.getElementById("user-query").value;
 	if (userQuery != "" && userQuery !== undefined) {
+		document.getElementById("user-query").value  = '';
 		createDivChat("pull-right", userQuery);
 		sendQueryToServer(userQuery);
-		document.getElementById("user-query").innerHTML = "";
+		
 		
 	}
 }
