@@ -138,7 +138,7 @@
 </div>
 <div>
 	<!--  Modals-->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	<div class="modal fade" id="myModal" data-modal-color="teal" tabindex="-1" role="dialog"
 		aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -147,11 +147,11 @@
 						aria-hidden="true">&times;</button>
 					<h4 class="modal-title" id="user-say-in-modal">Modal title</h4>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body" style="background: #FFFFFF; color:#212121;">
 					<div id="list-phrase"></div>
 				</div>
-				<div class="modal-footer">
-					<div id="select_phrase_guide" style="display: none;"
+				<div class="modal-footer"  style="background: #FFFFFF; color:#212121;">
+					<div id="select_phrase_guide" style="display: none; margin-bottom: 0px !important"
 						class="col-sm-8 m-b-25">
 						<img src="resources/assets/img/select_phrase_guide.gif"
 							class="img-responsive m-b-15 w-100" alt="">
@@ -177,19 +177,19 @@
 	<!-- End lexical list -->
 	<!-- Modal for full conversation -->
 	<div class="modal fade" id="conversationModal" tabindex="-1"
-		role="dialog" aria-hidden="true">
+		role="dialog" aria-hidden="true" data-modal-color="teal">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header" style="background-color:#eeeeee">
+				<div class="modal-header">
 					<p style="font-size:17px;margin-bottom: 5px;">
 						<small>USER SAYS:</small>
 						<span class="modal-title" style="font-weight:700;">Modal title</span>
 					</p>
 					<small style="padding-left:20px;font-size:12px;">Contains all user request in session that have misunderstand sentence what user say.</small>
 				</div>
-				<div class="modal-body" style="max-height: 50vh;overflow-y: auto;">
+				<div class="modal-body" style="max-height: 50vh;overflow-y: auto; background: #FFFFFF; color:#212121;">
 					<div id="panel-group" class="panel-group" role="tablist"
-						aria-multiselectable="true">
+						aria-multiselectable="true" style="margin-bottom: 0;">
 					</div>
 				</div>
 				<div class="modal-footer">
