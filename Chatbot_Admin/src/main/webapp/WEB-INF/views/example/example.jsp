@@ -11,26 +11,23 @@
 		<input type="hidden" value="${_csrf.parameterName}" id="paramName" />
 		<input type="hidden" value="${_csrf.token}" id="token" />
 		<h2>Training Bot By Example</h2>
-		<h2></h2>
 	</div>
-</div>
-
-<div class="row">
-	<div class="card" id="step2" style="padding-top: 0%">
-		<div class="card-header ch-dark palette-Purple-300 bg">
-			<h2>Training your bot step by step</h2>
-			<h3 id="your-example"></h3>
+	<div class="card-header cw-header palette-Teal-400 bg" style="margin: 2%;">
+		<div class="cwh-year">Training your bot step by step</div>
+		<div class="cwh-day" id="your-example"></div>
+			<!-- <h2>Training your bot step by step</h2>
+			<h3 ></h3> -->
 			<button onclick="processTraining()"
 				class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float">
 				<i class="zmdi zmdi-arrow-right zmdi-hc-fw"></i>
 			</button>
-		</div>
-		<div class="card-body card-padding" style="padding-top: 40px">
-			<div class="col-lg-3">Step1</div>
-			<div class="col-lg-3">Step2</div>
-			<div class="col-lg-3">Step3</div>
-			<div class="col-lg-3">Step4</div>
-			<div class="col-lg-12">
+	</div>
+	<div class="card-body card-padding">
+			<div class="col-sm-3">Step1</div>
+			<div class="col-sm-3">Step2</div>
+			<div class="col-sm-3">Step3</div>
+			<div class="col-sm-3">Step4</div>
+			<div class="col-sm-12">
 				<div class="progress progress-striped active">
 					<div class="progress-bar" role="progressbar" aria-valuenow="0"
 						aria-valuemin="0" aria-valuemax="100" style="width: 0%"
@@ -38,7 +35,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
 </div>
 
 <!-- Step 2 -->
