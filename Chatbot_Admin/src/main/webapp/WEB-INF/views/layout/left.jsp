@@ -12,7 +12,7 @@
         <c:if test="${principal.authorities == '[ADMIN]'}">
             <li class="${cur == 'dataConfig' ? 'check-active' : ''}">
                 <a href="config">
-                    <i class="zmdi zmdi-home"></i>
+                    <i class="zmdi zmdi-wrench"></i>
                     Data Config
                 </a>
             </li>
@@ -29,7 +29,7 @@
 
         <li class="sub-menu ${(cur == 'lexicalCategory') || (cur == 'example') ? 'check-active' : ''}">
             <a href="#" data-ma-action="submenu-toggle">
-                <i class="zmdi zmdi-view-compact"></i>
+                <i class="zmdi zmdi-graduation-cap"></i>
                 Training Bot
             </a>
             <ul style="display:${(cur == 'lexicalCategory') || (cur == 'example') ? 'block' : 'none'}">
@@ -44,16 +44,16 @@
 
         <li class="${cur == 'log' ? 'check-active' : ''}">
             <a href="manageLog">
-                <i class="zmdi zmdi-format-underlined"></i>
+                <i class="zmdi zmdi-archive"></i>
                 Manage Log
             </a>
         </li>
 		<li class="${cur == 'crawler' ? 'check-active' : ''}">
-					<a href="configuration"> <i class="zmdi zmdi-cloud-download"></i> Crawler Manager</a>
+					<a href="configuration"> <i class="zmdi zmdi-refresh-alt"></i> Crawler Manager</a>
 				</li>
         <li class="sub-menu ${(cur == 'product') || (cur == 'synonym') ? 'check-active' : ''}">
             <a href="#" data-ma-action="submenu-toggle">
-                <i class="zmdi zmdi-collection-text"></i>
+                <i class="zmdi zmdi-collection-item"></i>
                 Manage Information
             </a>
             <ul style="display:${(cur == 'product') || (cur == 'synonym') ? 'block' : 'none'}">
