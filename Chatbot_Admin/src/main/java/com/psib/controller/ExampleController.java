@@ -100,8 +100,7 @@ public class ExampleController {
 
 	@RequestMapping(path = "/add", method = RequestMethod.POST)
 	public @ResponseBody String insertPattern(@RequestParam("pattern") String pattern, @RequestParam("id") String id,
-			@RequestParam("trainingSentence") String trainingSentence,
-			Model model) {
+			@RequestParam("trainingSentence") String trainingSentence, Model model) {
 		String responseText = "";
 
 		try {
@@ -120,8 +119,7 @@ public class ExampleController {
 					logManager.updateTrainingLog(JsonParser.toJson(pool));
 				}
 			}
-			
-	        
+
 			StatusCode status = manager.addPattern(pattern, id);
 			switch (status) {
 			case SUCCESS:
@@ -143,10 +141,9 @@ public class ExampleController {
 		return responseText;
 
 	}
-	
+
 	@RequestMapping(path = "/testQuery", method = RequestMethod.POST)
-	public @ResponseBody String testPatternQuery(
-			@RequestParam("trainingSentence") String trainingSentence,
+	public @ResponseBody String testPatternQuery(@RequestParam("trainingSentence") String trainingSentence,
 			Model model) {
 		String responseText = "";
 		try {
@@ -154,28 +151,29 @@ public class ExampleController {
 			Random random = new Random();
 			int index = random.nextInt(10);
 			if (result) {
-				if((index % 2) == 0) {
+				responseText = QueryConstant.ANSWER_OK_1;
+				if ((index % 2) == 0) {
 					responseText = QueryConstant.ANSWER_OK_1;
-				}else if((index % 3) == 0) {
+				} else if ((index % 3) == 0) {
 					responseText = QueryConstant.ANSWER_OK_2;
-				}else if((index % 5) == 0) {
+				} else if ((index % 5) == 0) {
 					responseText = QueryConstant.ANSWER_OK_3;
 				}
-			}else {
-				if((index % 2) == 0) {
+			} else {
+				responseText = QueryConstant.ANSWER_FAIL_1;
+				if ((index % 2) == 0) {
 					responseText = QueryConstant.ANSWER_FAIL_1;
-				}else if((index % 3) == 0) {
+				} else if ((index % 3) == 0) {
 					responseText = QueryConstant.ANSWER_FAIL_2;
 				}
 			}
-		
-		}catch (IOException e) {
+
+		} catch (IOException e) {
 			responseText = e.getMessage();
 		} catch (RestfulException e) {
 			responseText = e.getMessage();
 		}
 
-		
 		return responseText;
 	}
 }
