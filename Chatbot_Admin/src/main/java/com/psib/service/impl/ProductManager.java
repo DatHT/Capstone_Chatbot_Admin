@@ -1,13 +1,25 @@
 package com.psib.service.impl;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.psib.common.DatabaseException;
 import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
 import com.psib.dao.IPhraseDao;
 import com.psib.dao.IProductDetailDao;
-import com.psib.dao.ISynonymDao;
 import com.psib.dto.BootGirdDto;
 import com.psib.dto.ProductDetailDto;
 import com.psib.dto.ProductDetailJsonDto;
@@ -15,28 +27,11 @@ import com.psib.model.Address;
 import com.psib.model.District;
 import com.psib.model.Phrase;
 import com.psib.model.ProductDetail;
-import com.psib.model.Synonym;
 import com.psib.service.IProductManager;
 import com.psib.service.ISynonymManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
 import com.psib.util.SpringPropertiesUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.condition.ParamsRequestCondition;
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class ProductManager implements IProductManager {
