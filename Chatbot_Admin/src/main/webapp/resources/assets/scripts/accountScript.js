@@ -14,6 +14,10 @@ $(document).ready(function(){
 });
 
 function createNewAccount() {
+	if ($("#inputAccount").val().length < 6) {
+		swal("Sorry!", "Username must be at least 6 characters!", "error");
+		return;
+	}
 	var xmlhttp;
 	if (window.XMLHttpRequest) {
 		xmlhttp = new XMLHttpRequest();
