@@ -457,8 +457,9 @@ public class CommonUtils {
 
 		// split and compare each word of the first string
 		for (String word : first.split(" ")) {
-			if (wordsOfSecond.contains(word))
+			if (wordsOfSecond.contains(word)) {
 				result.add(word);
+			}
 		}
 
 		return result;

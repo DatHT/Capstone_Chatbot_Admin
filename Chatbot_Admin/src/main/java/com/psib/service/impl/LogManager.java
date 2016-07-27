@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -280,7 +281,11 @@ public class LogManager implements ILogManager {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(LogManager.userSay, userSay);
 
-		List<String> productNames = new ArrayList<>(productManager.findNewProductName(userSay));
+		List<String> productNames = new ArrayList<>();
+		Set<String> productSet = productManager.findNewProductName(userSay);
+		if (productSet != null) {
+			productNames = new ArrayList<>(productSet);
+		}
 
 		JSONArray productNameArr = new JSONArray();
 		for (String productName : productNames) {
@@ -592,15 +597,17 @@ public class LogManager implements ILogManager {
 
 	@Override
 	public JSONObject setLogStatus(String logId, LogStatus logStatus) throws JSONException, IOException {
+		LOG.info("[setLogStatus] Start");
 		JSONArray logs = this.getLogs().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
 		for (int i = 0; i < logs.length(); i++) {
 			JSONObject log = logs.getJSONObject(i);
-			if (log.getString(id).equals(logId)) {
+			if (log.has(id) && log.getString(id).equals(logId)) {
 				log.put(status_of_log, logStatus);
 				break;
 			}
 		}
 		FileUtils.writeFile(this.getLogFilePath(), this.logJSON.toString(4));
+		LOG.info("[setLogStatus] End");
 		return this.getLogs();
 	}
 

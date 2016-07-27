@@ -388,14 +388,14 @@ public class ProductManager implements IProductManager {
 	@Override
 	public Set<String> findNewProductName(String sentence) {
 		//check word in Phrase.
-		List<Phrase> listPhrase = phraseDao.getAllPhrases();
-		for(Phrase phrase: listPhrase) {
-			if (phrase.getLexicalId() == 1) {
-				if (sentence.toLowerCase().contains(phrase.getName().toLowerCase())) {
-					return null;
-				}
-			}
-		}
+//		List<Phrase> listPhrase = phraseDao.getAllPhrases();
+//		for(Phrase phrase: listPhrase) {
+//			if (phrase.getLexicalId() == 1) {
+//				if (sentence.toLowerCase().contains(phrase.getName().toLowerCase())) {
+//					return null;
+//				}
+//			}
+//		}
 		//find new food in table food
 		LOG.info("[findNewProductName] Start");
         int skipResultProduct = 0;
