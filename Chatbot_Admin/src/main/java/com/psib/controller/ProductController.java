@@ -94,12 +94,12 @@ public class ProductController {
         Collections.sort(districtList);
         model.addObject("districtList", districtList);
 
-        if (txtDistrict != null && txtFood != null) {
+        if (txtDistrict != null && !txtFood.equals("Undefined")) {
             District districtObj = productManager.getDistrict(txtDistrict);
             if (districtObj != null) {
-                model.addObject("name", txtFood);
                 model.addObject("districtName", districtObj.getName());
             }
+            model.addObject("name", txtFood);
         }
         if (!addResult.equals("")) {
             model.addObject(name);

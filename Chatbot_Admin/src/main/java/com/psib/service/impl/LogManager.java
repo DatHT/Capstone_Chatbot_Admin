@@ -43,7 +43,7 @@ public class LogManager implements ILogManager {
 
 	@Autowired
 	private ILexicalCategoryManager lexicalCategoryManager;
-	
+
 	@Autowired
 	private IProductManager productManager;
 
@@ -279,9 +279,9 @@ public class LogManager implements ILogManager {
 
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(LogManager.userSay, userSay);
-		
+
 		List<String> productNames = new ArrayList<>(productManager.findNewProductName(userSay));
-		
+
 		JSONArray productNameArr = new JSONArray();
 		for (String productName : productNames) {
 			productNameArr.put(productName);
@@ -323,6 +323,7 @@ public class LogManager implements ILogManager {
 			String stringJsonProductAddress = JsonParser.toJson(productDetail);
 			jsonObject = new JSONObject(stringJsonProductAddress);
 		}
+		jsonObject.put(id, productId);
 
 		return jsonObject;
 	}
@@ -401,6 +402,7 @@ public class LogManager implements ILogManager {
 		}
 		return null;
 	}
+
 	private boolean checkExistLog(JSONArray jsonArray, JSONObject jsonObject) throws JSONException {
 		int statusCode = Integer.parseInt(jsonObject.get(errCode).toString());
 		boolean isExist = false;
@@ -593,12 +595,9 @@ public class LogManager implements ILogManager {
 		JSONArray logs = this.getLogs().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
 		for (int i = 0; i < logs.length(); i++) {
 			JSONObject log = logs.getJSONObject(i);
-			int errorCode = log.getInt(errCode);
-			if (errorCode == NO_ENTRY_CODE || errorCode == NOT_FOUND_CODE) {
-				if (log.getString(id).equals(logId)) {
-					log.put(status_of_log, logStatus);
-					break;
-				}
+			if (log.getString(id).equals(logId)) {
+				log.put(status_of_log, logStatus);
+				break;
 			}
 		}
 		FileUtils.writeFile(this.getLogFilePath(), this.logJSON.toString(4));

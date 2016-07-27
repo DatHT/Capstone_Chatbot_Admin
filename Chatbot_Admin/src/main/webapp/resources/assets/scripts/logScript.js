@@ -164,14 +164,30 @@ function reloadBootgridTable() {
             iconUp: 'zmdi-expand-less'
         },
         formatters: {
-            "addProduct": function (column, row) {
-                return "<button data-row-food='" + row.food + "' data-row-location='" + row.location + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add-product'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>";
+            "notfound-commands": function (column, row) {
+                return "<button data-row-food='" + row.food + "' data-row-location='" + row.location + "' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add-product'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
+                "<button data-row-id='" + row.logid + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete'style='margin: 5px;'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
             }
         }
     }).on("loaded.rs.jquery.bootgrid", function() {
     	/* Executes after data is loaded and rendered */
         $('#not-found-data-table').find(".action-add-product").on("click", function(e) {
         	window.location.href= 'viewAddProduct?txtDistrict=' + $(this).data("row-location") + "&txtFood=" + $(this).data("row-food");
+        }).end().find(".action-delete").on("click", function(e) {
+        	var logid = $(this).data("row-id");
+        	swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover it!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            }, function(){
+            	updateLogStatus(logid, "DELETED");
+                notify("It has been deleted!", "info");
+                closeModalDialog();
+            });
         });
     });
 	
@@ -185,14 +201,30 @@ function reloadBootgridTable() {
             iconUp: 'zmdi-expand-less'
         },
         formatters: {
-            "updateProduct": function (column, row) {
-                return "<button data-row-product-id='" + row.productId + "' class='btn btn-warning btn-icon waves-effect waves-circle waves-float update-product'><i class='zmdi zmdi-edit zmdi-hc-fw'></i></button>";
+            "reported-commands": function (column, row) {
+                return "<button data-row-product-id='" + row.productId + "' class='btn btn-warning btn-icon waves-effect waves-circle waves-float update-product'><i class='zmdi zmdi-edit zmdi-hc-fw'></i></button>"+
+                "<button data-row-id='" + row.logid + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete'style='margin: 5px;'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
             }
         }
     }).on("loaded.rs.jquery.bootgrid", function() {
     	/* Executes after data is loaded and rendered */
         $('#reported-data-table').find(".update-product").on("click", function(e) {
         	window.location.href= 'viewUpdateProduct?productId=' + $(this).data("row-product-id");
+        }).end().find(".action-delete").on("click", function(e) {
+        	var logid = $(this).data("row-id");
+        	swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover it!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            }, function(){
+            	updateLogStatus(logid, "DELETED");
+                notify("It has been deleted!", "info");
+                closeModalDialog();
+            });
         });
     });
 }
@@ -340,13 +372,25 @@ function requestAddPhrase(param, token) {
 }
 
 function createRowNotFound(id, data) {
+	var status = data.status;
+	if (status == "DELETED") {
+		return;
+	}
 	var tableBody = document.getElementById(id);
 	var tr = document.createElement('tr');
 	var tdFood = document.createElement('td');
-	var tdFoodText = document.createTextNode(data.contexts.Food);
+	
+	var tdId = document.createElement('td');
+	var pEl = document.createElement('p');
+	var idText = document.createTextNode(data.id);
+	pEl.appendChild(idText);
+	tdId.appendChild(pEl);
+	tr.appendChild(tdId);
+	
+	var tdFoodText = document.createTextNode(data.contexts.Food ? data.contexts.Food : "Undefined");
 	tdFood.appendChild(tdFoodText);
 	var tdLocation = document.createElement('td');
-	var tdLocationText = document.createTextNode(data.contexts.Location);
+	var tdLocationText = document.createTextNode(data.contexts.Location ? data.contexts.Food :"Undefined");
 	
 	var tdAction = document.createElement('td');
 	var textAction = document.createTextNode(data.action);
@@ -363,8 +407,19 @@ function createRowNotFound(id, data) {
 }
 
 function createReportedProduct(id, data) {
+	var status = data.status;
+	if (status == "DELETED") {
+		return;
+	}
 	var tableBody = document.getElementById(id);
 	var tr = document.createElement('tr');
+	
+	var tdId = document.createElement('td');
+	var pEl = document.createElement('p');
+	var idText = document.createTextNode(data.id);
+	pEl.appendChild(idText);
+	tdId.appendChild(pEl);
+	tr.appendChild(tdId);
 	
 	var tdProductId = document.createElement('td');
 	var txtProductId = document.createTextNode(data.productId);

@@ -94,10 +94,11 @@
 						class="table table-striped table-bordered">
 						<thead>
 							<tr>
+								<th data-column-id="logid" data-visible="false">ID</th>
 								<th data-column-id="food">Food</th>
 								<th data-column-id="location">Location</th>
-								<th data-column-id="addProduct" data-formatter="addProduct"
-									data-sortable="false">Add product</th>
+								<th data-column-id="notfound-commands" data-formatter="notfound-commands"
+									data-sortable="false">Commands</th>
 							</tr>
 						</thead>
 						<tbody id="not-found-table-body">
@@ -119,6 +120,7 @@
 					class="table table-striped table-bordered">
 					<thead>
 						<tr>
+							<th data-column-id="logid" data-visible="false">ID</th>
 							<th data-column-id="productId" data-identifier="true">Product
 								ID</th>
 							<th data-column-id="addressId" data-identifier="true">Address
@@ -126,8 +128,8 @@
 							<th data-column-id="productName">Product</th>
 							<th data-column-id="districtName">District</th>
 							<th data-column-id="restaurantName">Restaurant</th>
-							<th data-column-id="updateProduct" data-formatter="updateProduct"
-								data-sortable="false">Update product</th>
+							<th data-column-id="reported-commands" data-formatter="reported-commands"
+								data-sortable="false">Commands</th>
 						</tr>
 					</thead>
 					<tbody id="reported-product-table-body">

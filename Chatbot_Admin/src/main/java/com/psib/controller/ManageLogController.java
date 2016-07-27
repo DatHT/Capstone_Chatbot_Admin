@@ -54,6 +54,7 @@ public class ManageLogController {
 			model.addAttribute(LexicalCategoryController.LEXICALS, lexicals);
 		} catch (IOException | RestfulException e) {
 			model.addAttribute(ERROR, e.getMessage());
+			logger.error(e.toString());
 			return "error";
 		}
 		return "log";
@@ -67,7 +68,6 @@ public class ManageLogController {
 			response = logManager.getLogs().toString();
 		} catch (JSONException | IOException e) {
 			model.addAttribute(ERROR, e.getMessage());
-			e.printStackTrace();
 			logger.error(e.toString());
 		}
 
@@ -84,7 +84,6 @@ public class ManageLogController {
 			response = "success";
 		} catch (JSONException | IOException e) {
 			model.addAttribute(ERROR, e.getMessage());
-			e.printStackTrace();
 			logger.error(e.toString());
 		}
 
@@ -108,8 +107,8 @@ public class ManageLogController {
 				break;
 			}
 		} catch (JSONException | IOException | RestfulException e) {
-			e.printStackTrace();
 			model.addAttribute(ERROR, e.getMessage());
+			logger.error(e.toString());
 		}
 		return responseText;
 	}
@@ -118,8 +117,8 @@ public class ManageLogController {
 	public @ResponseBody boolean updateLog() {
 		try {
 			logManager.updateLog();
-		} catch (JSONException | IOException e1) {
-			e1.printStackTrace();
+		} catch (JSONException | IOException e) {
+			logger.error(e.toString());
 			return false;
 		}
 		return true;
@@ -131,8 +130,7 @@ public class ManageLogController {
 			JSONArray jsonArray = logManager.getAllConversations(logId);
 			return jsonArray.toString();
 		} catch (IOException | JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 		}
 		return "failed";
 	}
