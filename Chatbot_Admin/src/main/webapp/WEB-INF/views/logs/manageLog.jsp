@@ -66,8 +66,9 @@
 							<tr>
 								<th data-column-id="logid" data-visible="false">ID</th>
 								<th data-column-id="status" data-formatter="statusIcon" data-visible="false"></th>
-								<th data-column-id="usersay" data-formatter="unreadText"
+								<th data-column-id="custom" data-formatter="unreadText"
 									data-identifier="true">User say</th>
+								<th data-column-id="usersay" data-visible="false">main user say</th>
 								<th data-column-id="count" data-visible="false"  data-order="desc">Count</th>
 								<th data-column-id="commands" data-formatter="commands"
 									data-sortable="false">Commands</th>

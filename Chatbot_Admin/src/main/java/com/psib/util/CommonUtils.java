@@ -449,7 +449,7 @@ public class CommonUtils {
 		List<String> wordsOfSecond = new ArrayList<>(Arrays.asList(second.split(" ")));
 
 		// remove unrelate worrd
-		String unhandleWord = "thèm lắm lun ngon ngất ngây nè chưa có";
+		String unhandleWord = "thèm lắm lun ngon ngất ngây nè chưa có bạn thì ở đâu để chọn món của sao làm gì đó muốn ăn nha còn khác không";
 		for (String word : unhandleWord.split(" ")) {
 			if (wordsOfSecond.contains(word))
 				wordsOfSecond.remove(word);
