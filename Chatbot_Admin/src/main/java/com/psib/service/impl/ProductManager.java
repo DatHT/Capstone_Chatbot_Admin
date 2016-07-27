@@ -391,7 +391,7 @@ public class ProductManager implements IProductManager {
 		List<Phrase> listPhrase = phraseDao.getAllPhrases();
 		for(Phrase phrase: listPhrase) {
 			if (phrase.getLexicalId() == 1) {
-				if (phrase.getName().equalsIgnoreCase(sentence)) {
+				if (sentence.toLowerCase().contains(phrase.getName().toLowerCase())) {
 					return null;
 				}
 			}
