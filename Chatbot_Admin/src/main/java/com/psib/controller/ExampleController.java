@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.psib.controller;
 
@@ -43,137 +43,148 @@ import com.psib.service.ILogManager;
 @RequestMapping("/example")
 public class ExampleController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ExampleController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExampleController.class);
 
-	@Autowired
-	private IIntentManager manager;
+    @Autowired
+    private IIntentManager manager;
 
-	@Autowired
-	private ILexicalCategoryManager lexicalManager;
+    @Autowired
+    private ILexicalCategoryManager lexicalManager;
 
-	@Autowired
-	private ILogManager logManager;
+    @Autowired
+    private ILogManager logManager;
 
-	public static final String INTENTS = "INTENTS";
-	public static final String ERROR = "ERROR";
-	public static final String LOGS = "LOGS";
+    public static final String INTENTS = "INTENTS";
+    public static final String ERROR = "ERROR";
+    public static final String LOGS = "LOGS";
 
-	@RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public @ResponseBody String getIntent(@PathVariable("id") String id, Model model) {
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    public
+    @ResponseBody
+    String getIntent(@PathVariable("id") String id, Model model) {
 
-		String responseText = "";
-		try {
-			responseText = manager.getIntentById(id);
+        String responseText = "";
+        try {
+            responseText = manager.getIntentById(id);
 
-		} catch (IOException | RestfulException e) {
-			// TODO Auto-generated catch block
-			model.addAttribute(ERROR, e.getMessage());
+        } catch (IOException | RestfulException e) {
+            // TODO Auto-generated catch block
+            model.addAttribute(ERROR, e.getMessage());
 
-		}
-		return responseText;
-	}
+        }
+        return responseText;
+    }
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String loadExample(Model model) {
-		try {
-			List<IntentsDto> list = manager.getIntents();
-			model.addAttribute(INTENTS, list);
-			List<LexicalCategoryDto> lexicals = lexicalManager.getApiLexicals();
-			model.addAttribute(LexicalCategoryController.LEXICALS, lexicals);
+    @RequestMapping(method = RequestMethod.GET)
+    public String loadExample(Model model) {
+        try {
+            List<IntentsDto> list = manager.getIntents();
+            model.addAttribute(INTENTS, list);
+            List<LexicalCategoryDto> lexicals = new ArrayList<>();
+            LexicalCategoryDto dto = new LexicalCategoryDto();
+            dto.setName("any");
+            lexicals.add(dto);
+            lexicals.addAll(lexicalManager.getApiLexicals());
+            model.addAttribute(LexicalCategoryController.LEXICALS, lexicals);
+            model.addAttribute("jsonLexical", JsonParser.toJson(lexicals));
 
-			// get example from pool
-			List<TrainDto> pool = logManager.getTraingPool();
+            // get example from pool
+            List<TrainDto> pool = logManager.getTraingPool();
 
-			model.addAttribute(ExampleController.LOGS, pool);
+            model.addAttribute(ExampleController.LOGS, pool);
 
-			return "example";
-		} catch (IOException e) {
-			model.addAttribute(ERROR, e.getMessage());
-			return "error";
+            return "example";
+        } catch (IOException e) {
+            model.addAttribute(ERROR, e.getMessage());
+            return "error";
 
-		} catch (RestfulException e) {
-			model.addAttribute(ERROR, e.getMessage());
-			return "error";
-		}
+        } catch (RestfulException e) {
+            model.addAttribute(ERROR, e.getMessage());
+            return "error";
+        }
 
-	}
+    }
 
-	@RequestMapping(path = "/add", method = RequestMethod.POST)
-	public @ResponseBody String insertPattern(@RequestParam("pattern") String pattern, @RequestParam("id") String id,
-			@RequestParam("trainingSentence") String trainingSentence, Model model) {
-		String responseText = "";
+    @RequestMapping(path = "/add", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    String insertPattern(@RequestParam("pattern") String pattern, @RequestParam("id") String id,
+                         @RequestParam("trainingSentence") String trainingSentence, Model model) {
+        String responseText = "";
 
-		try {
-			// set example is true-delete;
-			// get example from pool
-			List<TrainDto> pool = logManager.getTraingPool();
-			boolean flag = false;
-			if (!trainingSentence.isEmpty()) {
-				for (TrainDto dto : pool) {
-					if (dto.getTrain().equalsIgnoreCase(trainingSentence)) {
-						dto.setDelete(true);
-						flag = true;
-					}
-				}
-				if (flag) {
-					logManager.updateTrainingLog(JsonParser.toJson(pool));
-				}
-			}
+        try {
+            // set example is true-delete;
+            // get example from pool
+            List<TrainDto> pool = logManager.getTraingPool();
+            boolean flag = false;
+            if (!trainingSentence.isEmpty()) {
+                for (TrainDto dto : pool) {
+                    if (dto.getTrain().equalsIgnoreCase(trainingSentence)) {
+                        dto.setDelete(true);
+                        flag = true;
+                    }
+                }
+                if (flag) {
+                    logManager.updateTrainingLog(JsonParser.toJson(pool));
+                }
+            }
 
-			StatusCode status = manager.addPattern(pattern, id);
-			switch (status) {
-			case SUCCESS:
-				responseText = CodeManager.SUCCESS;
-				break;
-			case ERROR:
-				responseText = CodeManager.ERROR;
-				break;
-			case CONFLICT:
-				responseText = CodeManager.EXISTED;
-				break;
-			}
-		} catch (IOException e) {
-			responseText = e.getMessage();
-		} catch (RestfulException e) {
-			responseText = e.getMessage();
-		}
+            StatusCode status = manager.addPattern(pattern, id);
+            switch (status) {
+                case SUCCESS:
+                    responseText = CodeManager.SUCCESS;
+                    break;
+                case ERROR:
+                    responseText = CodeManager.ERROR;
+                    break;
+                case CONFLICT:
+                    responseText = CodeManager.EXISTED;
+                    break;
+            }
+        } catch (IOException e) {
+            responseText = e.getMessage();
+        } catch (RestfulException e) {
+            responseText = e.getMessage();
+        }
 
-		return responseText;
+        return responseText;
 
-	}
+    }
 
-	@RequestMapping(path = "/testQuery", method = RequestMethod.POST)
-	public @ResponseBody String testPatternQuery(@RequestParam("trainingSentence") String trainingSentence,
-			Model model) {
-		String responseText = "";
-		try {
-			boolean result = manager.checkUserPattern(trainingSentence);
-			Random random = new Random();
-			int index = random.nextInt(10);
-			if (result) {
-				responseText = QueryConstant.ANSWER_OK_1;
-				if ((index % 2) == 0) {
-					responseText = QueryConstant.ANSWER_OK_1;
-				} else if ((index % 3) == 0) {
-					responseText = QueryConstant.ANSWER_OK_2;
-				} else if ((index % 5) == 0) {
-					responseText = QueryConstant.ANSWER_OK_3;
-				}
-			} else {
-				responseText = QueryConstant.ANSWER_FAIL_1;
-				if ((index % 2) == 0) {
-					responseText = QueryConstant.ANSWER_FAIL_1;
-				} else if ((index % 3) == 0) {
-					responseText = QueryConstant.ANSWER_FAIL_2;
-				}
-			}
+    @RequestMapping(path = "/testQuery", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    String testPatternQuery(@RequestParam("trainingSentence") String trainingSentence,
+                            Model model) {
+        String responseText = "";
+        try {
+            boolean result = manager.checkUserPattern(trainingSentence);
+            Random random = new Random();
+            int index = random.nextInt(10);
+            if (result) {
+                responseText = QueryConstant.ANSWER_OK_1;
+                if ((index % 2) == 0) {
+                    responseText = QueryConstant.ANSWER_OK_1;
+                } else if ((index % 3) == 0) {
+                    responseText = QueryConstant.ANSWER_OK_2;
+                } else if ((index % 5) == 0) {
+                    responseText = QueryConstant.ANSWER_OK_3;
+                }
+            } else {
+                responseText = QueryConstant.ANSWER_FAIL_1;
+                if ((index % 2) == 0) {
+                    responseText = QueryConstant.ANSWER_FAIL_1;
+                } else if ((index % 3) == 0) {
+                    responseText = QueryConstant.ANSWER_FAIL_2;
+                }
+            }
 
-		} catch (IOException e) {
-			responseText = e.getMessage();
-		} catch (RestfulException e) {
-			responseText = e.getMessage();
-		}
+        } catch (IOException e) {
+            responseText = e.getMessage();
+        } catch (RestfulException e) {
+            responseText = e.getMessage();
+        }
 
-		return responseText;
-	}
+        return responseText;
+    }
 }
