@@ -6,6 +6,7 @@ import com.psib.model.ProductDetail;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IProductManager {
 
@@ -30,5 +31,7 @@ public interface IProductManager {
     List<ProductDetail> getAllProductDetail();
 
     void calcSynonymName();
+    
+    Set<String> findNewProductName(String sentence);
 }
 

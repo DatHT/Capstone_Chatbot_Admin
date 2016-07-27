@@ -28,6 +28,7 @@ import com.psib.dto.jsonmapper.TrainDto;
 import com.psib.model.ProductDetail;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
+import com.psib.service.IProductManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.FileUtils;
 import com.psib.util.SpringPropertiesUtil;
@@ -42,6 +43,9 @@ public class LogManager implements ILogManager {
 
 	@Autowired
 	private ILexicalCategoryManager lexicalCategoryManager;
+	
+	@Autowired
+	private IProductManager productManager;
 
 	private static final Logger LOG = Logger.getLogger(LogManager.class);
 
@@ -275,6 +279,14 @@ public class LogManager implements ILogManager {
 
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(LogManager.userSay, userSay);
+		
+		List<String> productNames = new ArrayList<>(productManager.findNewProductName(userSay));
+		
+		JSONArray productNameArr = new JSONArray();
+		for (String productName : productNames) {
+			productNameArr.put(productName);
+		}
+		jsonObject.put("productName", productNameArr);
 
 		JSONArray arrId = new JSONArray();
 

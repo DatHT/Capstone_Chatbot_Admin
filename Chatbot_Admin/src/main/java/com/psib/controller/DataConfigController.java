@@ -72,6 +72,9 @@ public class DataConfigController {
 
 		String responseText = "";
 		Scheduler apiScheduler = manager.getSchedularByName("api");
+		apiScheduler.setFrequency(day);
+		apiScheduler.setHour(Integer.valueOf(hour));
+		apiScheduler.setMinute(Integer.valueOf(minute));
 		if (api.equals("yes")) {
 			apiScheduler.setStatus(true);
 		} else {
@@ -80,6 +83,9 @@ public class DataConfigController {
 		manager.updateShedulerStatus(apiScheduler);
 		// sync to api
 		Scheduler logScheduler = manager.getSchedularByName("log");
+		logScheduler.setFrequency(day);
+		logScheduler.setHour(Integer.valueOf(hour));
+		logScheduler.setMinute(Integer.valueOf(minute));
 		if (log.equals("yes")) {
 			logScheduler.setStatus(true);
 		} else {
@@ -88,6 +94,9 @@ public class DataConfigController {
 		manager.updateShedulerStatus(logScheduler);
 		//sync to synonym
 		Scheduler synonymScheduler = manager.getSchedularByName("synonym");
+		synonymScheduler.setFrequency(day);
+		synonymScheduler.setHour(Integer.valueOf(hour));
+		synonymScheduler.setMinute(Integer.valueOf(minute));
 		if (synonym.equals("yes")) {
 			synonymScheduler.setStatus(true);
 		} else {

@@ -69,9 +69,9 @@ function reloadBootgridTable() {
         formatters: {
         	"unreadText": function (column, row) {
         		if(row.status == "UNREAD") {
-        			return "<strong>"+row.usersay+  " (" + row.count+")</strong>";
+        			return "<strong>"+row.custom+" (" + row.count+")</strong>";
         		} else {
-        			return row.usersay + " (" + row.count+")" ;
+        			return row.custom + " (" + row.count+")" ;
         		}
         	},
         	"statusIcon": function (column, row) {
@@ -265,6 +265,17 @@ function createRowNoEntry(id, data) {
 	pstatus.appendChild(statusText);
 	tdIcon.appendChild(pstatus);
 	tr.appendChild(tdIcon);
+	
+	var productNames = data.productName;
+	var custom = userSay;
+	for(var i = 0; i < productNames.length; i++) {
+		custom = custom.replace(productNames[i], "<span style='color : red;'>"+productNames[i]+"</span>");
+	}
+	var tdCustom = document.createElement('td');
+	var textCustom = document.createTextNode(custom);
+	
+	tdCustom.appendChild(textCustom);
+	tr.appendChild(tdCustom);
 	
 	var tdUserSay = document.createElement('td');
 	var textUserSay = document.createTextNode(userSay);

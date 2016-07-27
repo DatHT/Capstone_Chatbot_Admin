@@ -1,37 +1,37 @@
 package com.psib.service.impl;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-import com.psib.common.DatabaseException;
-import com.psib.dao.IAddressDao;
-import com.psib.dao.IDistrictDao;
-import com.psib.dao.IProductDetailDao;
-import com.psib.dao.ISynonymDao;
-import com.psib.dto.BootGirdDto;
-import com.psib.dto.ProductDetailDto;
-import com.psib.dto.ProductDetailJsonDto;
-import com.psib.model.Address;
-import com.psib.model.District;
-import com.psib.model.ProductDetail;
-import com.psib.model.Synonym;
-import com.psib.service.IProductManager;
-import com.psib.util.LatitudeAndLongitudeWithPincode;
-import com.psib.util.SpringPropertiesUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.condition.ParamsRequestCondition;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.psib.common.DatabaseException;
+import com.psib.dao.IAddressDao;
+import com.psib.dao.IDistrictDao;
+import com.psib.dao.IPhraseDao;
+import com.psib.dao.IProductDetailDao;
+import com.psib.dto.BootGirdDto;
+import com.psib.dto.ProductDetailDto;
+import com.psib.dto.ProductDetailJsonDto;
+import com.psib.model.Address;
+import com.psib.model.District;
+import com.psib.model.Phrase;
+import com.psib.model.ProductDetail;
+import com.psib.service.IProductManager;
+import com.psib.service.ISynonymManager;
+import com.psib.util.CommonUtils;
+import com.psib.util.LatitudeAndLongitudeWithPincode;
+import com.psib.util.SpringPropertiesUtil;
 
 @Service
 public class ProductManager implements IProductManager {
@@ -50,7 +50,11 @@ public class ProductManager implements IProductManager {
     private IAddressDao addressDao;
 
     @Autowired
-    private SynonymManager synonymManager;
+    private ISynonymManager synonymManager;
+    
+    
+    @Autowired
+    private IPhraseDao phraseDao;
 
     @Override
     public BootGirdDto getAllForPaging(int current, int rowCount, String searchPhrase,
@@ -260,6 +264,8 @@ public class ProductManager implements IProductManager {
         productDetailDao.deleteById(productDetail);
         LOG.info("[deleteProduct] End");
     }
+    
+   
 
     @Override
     public void calcSynonymName() {
@@ -374,5 +380,47 @@ public class ProductManager implements IProductManager {
 		LOG.info("[getAllProductDetail] start");
 		LOG.info("[getAllProductDetail] end");
 		return productDetailDao.getAllItem();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.psib.service.IProductManager#findNewProductName()
+	 */
+	@Override
+	public Set<String> findNewProductName(String sentence) {
+		//check word in Phrase.
+		List<Phrase> listPhrase = phraseDao.getAllPhrases();
+		for(Phrase phrase: listPhrase) {
+			if (phrase.getLexicalId() == 1) {
+				if (phrase.getName().equalsIgnoreCase(sentence)) {
+					return null;
+				}
+			}
+		}
+		//find new food in table food
+		LOG.info("[findNewProductName] Start");
+        int skipResultProduct = 0;
+        int productListSize = -1;
+        List<ProductDetail> productList;
+        ProductDetail productDetail;
+        String productName;
+        int i;
+        Set<String> result = new LinkedHashSet<>();
+        while (productListSize != 0) {
+            // get product name
+            productList = productDetailDao.getProductSortById(skipResultProduct, LIMIT_RESULT_PRODUCT);
+            productListSize = productList.size();
+
+            for (i = 0; i < productListSize; i++) {
+                productDetail = productList.get(i);
+                productName = productDetail.getProductName().toLowerCase().trim();
+                result.addAll(CommonUtils.findDuplicatePhrase(productName, sentence));
+            }
+
+            skipResultProduct += LIMIT_RESULT_PRODUCT;
+        }
+        
+        LOG.info("[findNewProductName] End");
+		
+		return result;
 	}
 }

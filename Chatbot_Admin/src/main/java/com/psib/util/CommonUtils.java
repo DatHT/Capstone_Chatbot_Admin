@@ -5,8 +5,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -139,7 +142,7 @@ public class CommonUtils {
 		Matcher matcher = pattern.matcher(s);
 		return matcher.find() ? matcher.start() : -1;
 	}
-	
+
 	public static double splitLong(String url) throws ArrayIndexOutOfBoundsException {
 		String[] list = url.split("_");
 		String splitLong = null;
@@ -227,8 +230,7 @@ public class CommonUtils {
 					+ listAddress[listAddress.length - 4];
 		}
 		if (listAddress.length == 7) {
-			address = listAddress[listAddress.length - 5] + " "
-					+ listAddress[listAddress.length - 4];
+			address = listAddress[listAddress.length - 5] + " " + listAddress[listAddress.length - 4];
 		}
 		// else {
 		// address = listAddress[listAddress.length - 4] + "," +
@@ -437,5 +439,28 @@ public class CommonUtils {
 		url = url.substring(0, url.length() - 1);
 
 		return url;
+	}
+
+	public static Set<String> findDuplicatePhrase(String first, String second) {
+		Set<String> result = new LinkedHashSet<String>();
+		first = first.toLowerCase();
+		second = second.toLowerCase();
+		// split the second string into words
+		List<String> wordsOfSecond = new ArrayList<>(Arrays.asList(second.split(" ")));
+
+		// remove unrelate worrd
+		String unhandleWord = "thèm lắm lun ngon ngất ngây nè chưa có bạn thì ở đâu để chọn món của sao làm gì đó muốn ăn nha còn khác không";
+		for (String word : unhandleWord.split(" ")) {
+			if (wordsOfSecond.contains(word))
+				wordsOfSecond.remove(word);
+		}
+
+		// split and compare each word of the first string
+		for (String word : first.split(" ")) {
+			if (wordsOfSecond.contains(word))
+				result.add(word);
+		}
+
+		return result;
 	}
 }

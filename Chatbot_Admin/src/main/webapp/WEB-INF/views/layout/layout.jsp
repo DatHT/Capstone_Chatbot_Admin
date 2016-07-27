@@ -93,9 +93,12 @@
 
 <section id="main">
 	<tiles:insertAttribute name="menu"/>
-    <div class="container">
+	<section id="content">
+		<div class="container">
         <tiles:insertAttribute name="body"/>
     </div>
+	</section>
+    
 </section>
 
 <nav class="navbar navbar-default navbar-fixed-bottom">

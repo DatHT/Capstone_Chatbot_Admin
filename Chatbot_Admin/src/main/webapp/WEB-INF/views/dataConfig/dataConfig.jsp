@@ -4,6 +4,19 @@
 <c:set var="log" value="${log_sync}" />
 <c:set var="synonym" value="${synonym_sync}" />
 
+<script>
+$(document).ready(function() {
+	var frequency = '${api.frequency}';
+    var hour = '${api.hour}';
+    var minute = '${api.minute}';
+    if(frequency && hour && minute) {
+    	$("#select-day").val(frequency).attr("selected", "selected");
+        $("#select-hour").val(hour).attr("selected", "selected");
+        $("#select-minute").val(minute).attr("selected", "selected");
+    }
+});
+</script>
+
 <div class="row">
 	<div class="card">
 		<div class="my-c-header">
@@ -115,7 +128,7 @@
 						<div class="fg-line">
 							<div class="select">
 								<select class="form-control"  id="select-minute">
-									<option selected="selected" value="0">00</option>
+									<option value="0" selected="selected">00</option>
 									<option value="1">01</option>
 									<option value="2">02</option>
 									<option value="3">03</option>
