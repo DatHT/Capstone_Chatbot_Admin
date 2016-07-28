@@ -47,6 +47,7 @@ public class ManageLogController {
 
 	@RequestMapping(value = "/manageLog", method = RequestMethod.GET)
 	public String loadLog(Model model) {
+		logger.info("[loadLog] : Start");
 		try {
 			List<IntentsDto> list = intentManager.getIntents();
 			model.addAttribute(ExampleController.INTENTS, list);
@@ -57,11 +58,13 @@ public class ManageLogController {
 			logger.error(e.toString());
 			return "error";
 		}
+		logger.info("[loadLog] : End");
 		return "log";
 	}
 
 	@RequestMapping(value = "/getLog", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public @ResponseBody String getLog(Model model) {
+		logger.info("[getLog] : Start");
 		String response = "";
 
 		try {
@@ -71,12 +74,14 @@ public class ManageLogController {
 			logger.error(e.toString());
 		}
 
+		logger.info("[getLog] : End");
 		return response;
 	}
 
 	@RequestMapping(value = "/updateLogStatus", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public @ResponseBody String updateLogStatus(@RequestParam("logId") String logId,
 			@RequestParam("status") String status, Model model) {
+		logger.info("[updateLogStatus] : Start");
 		String response = "";
 
 		try {
@@ -87,11 +92,13 @@ public class ManageLogController {
 			logger.error(e.toString());
 		}
 
+		logger.info("[updateLogStatus] : End");
 		return response;
 	}
 
 	@RequestMapping(value = "/addPhrase", method = RequestMethod.POST)
 	public @ResponseBody String addPhrase(@RequestParam("listPhrase") String listPhrase, Model model) {
+		logger.info("[addPhrase] : Start");
 		String responseText = "";
 		try {
 			StatusCode code = logManager.addPhrase(listPhrase);
@@ -110,24 +117,29 @@ public class ManageLogController {
 			model.addAttribute(ERROR, e.getMessage());
 			logger.error(e.toString());
 		}
+		logger.info("[addPhrase] : End");
 		return responseText;
 	}
 
 	@RequestMapping(value = "/updateLog", method = RequestMethod.GET)
 	public @ResponseBody boolean updateLog() {
+		logger.info("[updateLog] : Start");
 		try {
 			logManager.updateLog();
 		} catch (JSONException | IOException e) {
 			logger.error(e.toString());
 			return false;
 		}
+		logger.info("[updateLog] : End");
 		return true;
 	}
 
 	@RequestMapping(value = "/conversation", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public @ResponseBody String getFullConversation(@RequestParam("logId") String logId) {
+		logger.info("[getFullConversation] : Start");
 		try {
 			JSONArray jsonArray = logManager.getAllConversations(logId);
+			logger.info("[getFullConversation] : End");
 			return jsonArray.toString();
 		} catch (IOException | JSONException e) {
 			logger.error(e.toString());

@@ -95,8 +95,9 @@
 						<thead>
 							<tr>
 								<th data-column-id="logid" data-visible="false">ID</th>
-								<th data-column-id="food">Food</th>
+								<th data-column-id="food" data-formatter="show-food-count">Food</th>
 								<th data-column-id="location">Location</th>
+								<th data-column-id="count" data-visible="false"  data-order="desc">Count</th>
 								<th data-column-id="notfound-commands" data-formatter="notfound-commands"
 									data-sortable="false">Commands</th>
 							</tr>
