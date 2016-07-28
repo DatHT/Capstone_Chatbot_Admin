@@ -48,7 +48,7 @@ public class LogManager implements ILogManager {
 	@Autowired
 	private IProductManager productManager;
 
-	private static final Logger LOG = Logger.getLogger(LogManager.class);
+	private static final Logger logger = Logger.getLogger(LogManager.class);
 
 	private static String START_LOG = ">>>>>";
 	private static String END_LOG = "<<<<<";
@@ -104,12 +104,14 @@ public class LogManager implements ILogManager {
 	}
 
 	private JSONArray getTrainingList() throws IOException, JSONException {
+		logger.info("[getTrainingList] : Start");
 		BufferedReader bufferedReader = FileUtils.readFile(this.getTrainingPoolPath());
 		StringBuilder stringBuilder = new StringBuilder();
 		String tempString = null;
 		while ((tempString = bufferedReader.readLine()) != null) {
 			stringBuilder.append(tempString);
 		}
+		logger.info("[getTrainingList] : End");
 		if (stringBuilder.length() != 0) {
 			return new JSONArray(stringBuilder.toString());
 		}
@@ -118,6 +120,7 @@ public class LogManager implements ILogManager {
 
 	@Override
 	public JSONObject getLogs() throws JSONException, IOException {
+		logger.info("[getLogs] : Start");
 		if (logJSON != null) {
 			return logJSON;
 		}
@@ -132,16 +135,19 @@ public class LogManager implements ILogManager {
 			logJSON.put(LOG_JSON_FORMAT_MODIFIED_DATE, CommonUtils.getDateStringFormat(calendar.getTime()));
 			logJSON.put(LOG_JSON_FORMAT_CONTENTS, new JSONArray());
 		}
+		logger.info("[getLogs] : End");
 		return logJSON;
 	}
 
 	private JSONObject readJSONLogFile(String logPath) throws IOException, JSONException {
+		logger.info("[readJSONLogFile] : Start");
 		BufferedReader bufferedReader = FileUtils.readFile(logPath);
 		StringBuilder stringBuilder = new StringBuilder();
 		String tempString = null;
 		while ((tempString = bufferedReader.readLine()) != null) {
 			stringBuilder.append(tempString);
 		}
+		logger.info("[readJSONLogFile] : End");
 		if (stringBuilder.length() != 0) {
 			return new JSONObject(stringBuilder.toString());
 		}
@@ -149,12 +155,14 @@ public class LogManager implements ILogManager {
 	}
 
 	private String readJsonTrainingFile(String logPath) throws IOException {
+		logger.info("[readJsonTrainingFile] : Start");
 		BufferedReader bufferedReader = FileUtils.readFile(logPath);
 		StringBuilder stringBuilder = new StringBuilder();
 		String tempString = null;
 		while ((tempString = bufferedReader.readLine()) != null) {
 			stringBuilder.append(tempString);
 		}
+		logger.info("[readJsonTrainingFile] : End");
 		if (stringBuilder.length() != 0) {
 			return stringBuilder.toString();
 		}
@@ -163,6 +171,7 @@ public class LogManager implements ILogManager {
 
 	@Override
 	public void updateLog() throws JSONException, IOException {
+		logger.info("[updateLog] : Start");
 		JSONObject logJson = this.getLogs();
 		List<JSONObject> logs = this.getAllLogsFromFile(null);
 		JSONArray trainArr = this.getTrainingList();
@@ -218,6 +227,7 @@ public class LogManager implements ILogManager {
 
 		FileUtils.writeFile(this.getTrainingPoolPath(), trainArr.toString(4));
 		FileUtils.writeFile(this.getLogFilePath(), this.logJSON.toString(4));
+		logger.info("[updateLog] : End");
 	}
 
 	/**
@@ -229,6 +239,7 @@ public class LogManager implements ILogManager {
 	 */
 	@Override
 	public List<JSONObject> getAllLogsFromFile(String atDate) throws IOException, JSONException {
+		logger.info("[getAllLogsFromFile] : Start");
 		List<JSONObject> logs = new ArrayList<JSONObject>();
 
 		List<String> fileList = getFileLogPaths(atDate);
@@ -238,10 +249,12 @@ public class LogManager implements ILogManager {
 				this.parseJSONObjectFromLogFile(filePath, logs);
 			}
 		}
+		logger.info("[getAllLogsFromFile] : End");
 		return logs;
 	}
 
 	private void parseJSONObjectFromLogFile(String filePath, List<JSONObject> logs) throws IOException {
+		logger.info("[parseJSONObjectFromLogFile] : Start");
 		BufferedReader bufferedReader = FileUtils.readFile(filePath);
 		String line;
 		StringBuffer log = new StringBuffer();
@@ -265,16 +278,18 @@ public class LogManager implements ILogManager {
 					jsonObject.put(log_json, new JSONObject(log.toString()));
 					logs.add(jsonObject);
 				} catch (JSONException e) {
-					LOG.error("Parsing JSON error!", e);
+					logger.error("Parsing JSON error!", e);
 				}
 
 				continue;
 			}
 			log.append(line);
 		}
+		logger.info("[parseJSONObjectFromLogFile] : End");
 	}
 
 	private JSONObject getNoEntryLog(JSONObject log) throws IOException, JSONException {
+		logger.info("[getNoEntryLog] : Start");
 		String userSay = log.getJSONObject(result).getString(resolvedQuery);
 		String sessionIdStr = log.getString(sessionId);
 
@@ -304,10 +319,12 @@ public class LogManager implements ILogManager {
 		jsonObject.put(count, arrId);
 		jsonObject.put("totalCount", arrId.length());
 
+		logger.info("[getNoEntryLog] : End");
 		return jsonObject;
 	}
 
 	private JSONObject getNotFoundLog(JSONObject log) throws IOException, JSONException {
+		logger.info("[getNotFoundLog] : Start");
 		JSONObject contextJson = log.getJSONObject(result).getJSONArray("contexts").getJSONObject(0)
 				.getJSONObject("parameters");
 
@@ -323,10 +340,12 @@ public class LogManager implements ILogManager {
 		jsonObject.put(count, arrId);
 		jsonObject.put("totalCount", arrId.length());
 
+		logger.info("[getNotFoundLog] : End");
 		return jsonObject;
 	}
 
 	private JSONObject getReportLog(JSONObject log) throws JSONException {
+		logger.info("[getReportLog] : Start");
 
 		long productId = log.getLong("itemId");
 
@@ -339,19 +358,23 @@ public class LogManager implements ILogManager {
 		}
 		jsonObject.put(id, productId);
 
+		logger.info("[getReportLog] : End");
 		return jsonObject;
 	}
 
 	private JSONObject getTrainingLog(JSONObject log) throws JSONException, IOException {
+		logger.info("[getTrainingLog] : Start");
 		String userSay = log.getJSONObject("result").getString("resolvedQuery");
 		String patternStr = "train:";
 
 		String train = userSay.substring(patternStr.length());
 
+		logger.info("[getTrainingLog] : End");
 		return new JSONObject().put("train", train).put("isDeleted", false);
 	}
 
 	private boolean checkTrainingExist(JSONArray jsonArray, JSONObject log) throws JSONException {
+		logger.info("[checkTrainingExist] : Start");
 		boolean isExist = false;
 		int i = 0;
 		if (jsonArray.length() == 0) {
@@ -362,19 +385,23 @@ public class LogManager implements ILogManager {
 			isExist = log.get("train").equals(jsonObject.get("train"));
 			i++;
 		}
+		logger.info("[checkTrainingExist] : End");
 		return isExist;
 	}
 
 	private JSONObject getFeedbackLog(JSONObject log) throws JSONException {
+		logger.info("[getFeedbackLog] : Start");
 		String userSay = log.getJSONObject("result").getString("resolvedQuery");
 		String patternStr = "feedback:";
 
 		String feedback = userSay.substring(patternStr.length());
 
+		logger.info("[getFeedbackLog] : End");
 		return new JSONObject().put("feedback", feedback);
 	}
 
 	private List<String> getFileLogPaths(String strDate) throws IOException, JSONException {
+		logger.info("[getFileLogPaths] : Start");
 		List<String> fileLogPaths = new ArrayList<String>();
 
 		String lastModifiedDate = getLogs().get(LOG_JSON_FORMAT_MODIFIED_DATE).toString();
@@ -402,22 +429,27 @@ public class LogManager implements ILogManager {
 				}
 			}
 		}
+		logger.info("[getFileLogPaths] : End");
 		return fileLogPaths;
 	}
 
 	@Override
 	public JSONObject getLogByLogId(String logId) throws JSONException, IOException {
+		logger.info("[getFileLogPaths] : Start");
 		JSONArray logs = this.getLogs().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
+		JSONObject log = null;
 		for (int i = 0; i < logs.length(); i++) {
-			JSONObject log = logs.getJSONObject(i);
+			log = logs.getJSONObject(i);
 			if (log.has(id) && log.getString(id).equals(logId)) {
-				return log;
+				break;
 			}
 		}
-		return null;
+		logger.info("[getFileLogPaths] : End");
+		return log;
 	}
 
 	private boolean checkExistLog(JSONArray jsonArray, JSONObject jsonObject) throws JSONException {
+		logger.info("[checkExistLog] : Start");
 		int statusCode = Integer.parseInt(jsonObject.get(errCode).toString());
 		boolean isExist = false;
 		int i = 0;
@@ -482,10 +514,12 @@ public class LogManager implements ILogManager {
 			i++;
 		}
 
+		logger.info("[checkExistLog] : End");
 		return isExist;
 	}
 
 	public void deleteLog(String logString) throws JSONException, IOException {
+		logger.info("[deleteLog] : Start");
 		JSONObject logJson = this.getLogs();
 
 		JSONArray jsonArray = new JSONArray(logJson.get(LOG_JSON_FORMAT_CONTENTS).toString());
@@ -504,10 +538,12 @@ public class LogManager implements ILogManager {
 
 		this.logJSON = logJson;
 		FileUtils.writeFile(this.getLogFilePath(), this.logJSON.toString());
+		logger.info("[deleteLog] : End");
 	}
 
 	@Override
 	public StatusCode addPhrase(String listPhrase) throws JSONException, IOException, RestfulException {
+		logger.info("[addPhrase] : Start");
 		JSONObject jsonObject = new JSONObject(listPhrase);
 
 		@SuppressWarnings("unchecked")
@@ -525,29 +561,35 @@ public class LogManager implements ILogManager {
 
 			code = lexicalCategoryManager.addPhrase(entry, value);
 		}
+		logger.info("[addPhrase] : End");
 		return code;
 	}
 
 	@Override
 	public List<TrainDto> getTraingPool() throws IOException {
+		logger.info("[getTraingPool] : Start");
 		String trainJson = "";
 		trainJson = readJsonTrainingFile(this.getTrainingFilePath());
+		List<TrainDto> list = null;
 		if (!trainJson.isEmpty()) {
-			List<TrainDto> list = JsonParser.toList(trainJson, TrainDto.class);
-			return list;
+			list = JsonParser.toList(trainJson, TrainDto.class);
 		}
-		return null;
+		logger.info("[getTraingPool] : End");
+		return list;
 	}
 
 	@Override
 	public void updateTrainingLog(String data) throws IOException {
+		logger.info("[updateTrainingLog] : Start");
 		FileUtils.writeFile(this.getTrainingFilePath(), data);
+		logger.info("[updateTrainingLog] : End");
 	}
 
 	/*
 	 * Collect all conversation with BOT by sessionId.
 	 */
 	public JSONArray conversationCollector(String atDate) throws IOException, JSONException {
+		logger.info("[conversationCollector] : Start");
 		List<JSONObject> allLog = this.getAllLogsFromFile(atDate);
 		JSONArray jsonArray = new JSONArray();
 
@@ -564,7 +606,7 @@ public class LogManager implements ILogManager {
 					userSayObject.put(userSay, log.getJSONObject(result).getString(resolvedQuery));
 					userSayObject.put(status_code, statusCode);
 				} catch (JSONException e) {
-					LOG.error("JSON format is wrong", e);
+					logger.error("JSON format is wrong", e);
 				}
 
 				// if log json with wrong format, ignore it.
@@ -592,11 +634,13 @@ public class LogManager implements ILogManager {
 		}
 		FileUtils.writeFile(fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl() + "/"
 				+ atDate + "/collector" + atDate, jsonArray.toString(4));
+		logger.info("[conversationCollector] : Start");
 		return jsonArray;
 	}
 
 	@Override
 	public List<DateDto> getListDateLog() {
+		logger.info("[getListDateLog] : Start");
 		if (chatLogsFolder == null) {
 			chatLogsFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("log_folder_path")).getUrl();
 		}
@@ -616,12 +660,13 @@ public class LogManager implements ILogManager {
 				listDateFolderName.add(date);
 			}
 		}
+		logger.info("[getListDateLog] : End");
 		return listDateFolderName;
 	}
 
 	@Override
 	public JSONObject setLogStatus(String logId, LogStatus logStatus) throws JSONException, IOException {
-		LOG.info("[setLogStatus] Start");
+		logger.info("[setLogStatus] Start");
 		JSONArray logs = this.getLogs().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
 		for (int i = 0; i < logs.length(); i++) {
 			JSONObject log = logs.getJSONObject(i);
@@ -631,11 +676,12 @@ public class LogManager implements ILogManager {
 			}
 		}
 		FileUtils.writeFile(this.getLogFilePath(), this.logJSON.toString(4));
-		LOG.info("[setLogStatus] End");
+		logger.info("[setLogStatus] End");
 		return this.getLogs();
 	}
 
 	private JSONObject getConversationLog(String strSession, String filePath) throws IOException, JSONException {
+		logger.info("[getConversationLog] : Start");
 		List<JSONObject> logs = new ArrayList<>();
 		this.parseJSONObjectFromLogFile(filePath, logs);
 
@@ -654,7 +700,7 @@ public class LogManager implements ILogManager {
 						userSayObject.put(userSay, log.getJSONObject(result).getString(resolvedQuery));
 						userSayObject.put(status_code, statusCode);
 					} catch (JSONException e) {
-						LOG.error("JSON format is wrong", e);
+						logger.error("JSON format is wrong", e);
 					}
 					if (userSayObject != null) {
 						contents.put(userSayObject);
@@ -668,11 +714,13 @@ public class LogManager implements ILogManager {
 			conversationLog.put("contents", contents);
 		}
 
+		logger.info("[getConversationLog] : End");
 		return conversationLog;
 	}
 
 	@Override
 	public JSONArray getAllConversations(String logId) throws JSONException, IOException {
+		logger.info("[getAllConversations] : Start");
 		JSONArray logs = this.getLogs().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
 
 		JSONArray conversations = new JSONArray();
@@ -694,13 +742,14 @@ public class LogManager implements ILogManager {
 				break;
 			}
 		}
+		logger.info("[getAllConversations] : End");
 		return conversations;
 	}
 
 	private boolean checkExistConversation(JSONArray conversations, String sessionStr) throws JSONException {
 		for (int i = 0; i < conversations.length(); i++) {
 			JSONObject jsonObject = conversations.getJSONObject(i);
-			if (jsonObject.getString(sessionId).equals(sessionStr)) {
+			if (jsonObject.has(sessionId) && jsonObject.getString(sessionId).equals(sessionStr)) {
 				return true;
 			}
 		}
