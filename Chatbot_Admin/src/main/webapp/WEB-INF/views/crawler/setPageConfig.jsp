@@ -44,7 +44,7 @@
 			</div>
 			<div class="card-body card-padding"
 				style="padding-bottom: 0px; padding-top: 0px">
-				<button type="button" class="btn btn-primary" value="BACK"
+				<button type="button" class="btn btn-primary" id ="btnBack" value="BACK"
 					onclick="back()">BACK</button>
 				<button type="button" class="btn btn-primary" id="btnNext"
 					value="NEXT" onclick="next()">NEXT</button>

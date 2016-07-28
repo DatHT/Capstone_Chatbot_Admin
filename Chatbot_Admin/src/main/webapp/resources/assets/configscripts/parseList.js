@@ -1,4 +1,6 @@
 var urlXPath = null;
+var childXPath = null;
+var valueOfXpath = null;
 var col = 0, count = 0, flagBack = 0, flagDeleteName = 0, flagClick = 0, flagEditXPath = 0, flagWrap = 0, flagClickNew = 0;
 var currentPosition = 0;
 var step = 3;
@@ -12,11 +14,12 @@ $(document).ready(function() {
 	document.getElementById("btnNext").disabled = true;
 	$(iframeDoc).click(function(event) {
 		event.preventDefault();
-		if (count < 4) {
-			urlXPath = createXPathFromElement(event.target);
+		if (count < 4) {		
 			content = event.target;
+			urlXPath = createXPathFromElement(content);
+			childXPath = getChildXpath(content);
+			valueOfXpath = lookupElementByXPath(childXPath,count);
 			document.getElementById("btnNext").disabled = false;
-
 			if (flagClick == 1) {
 				deleteRow('tbItems', 1);
 			}
@@ -27,7 +30,7 @@ $(document).ready(function() {
 			}
 			
 			flagClick = 1;
-			value = urlXPath;
+			value = childXPath;
 			if (count >= 4) {
 				value = commonXpath(urlXPath);
 			} else {
@@ -35,21 +38,11 @@ $(document).ready(function() {
 					value = imgXPath(event.target);
 				}
 			}
-			if(count==0){
-				showCart(content.href + "'\'", 'tbItems', 1);
-				content = content.href;
-			}
-			if(count==1){
-				showCart(content.innerText + "'\'", 'tbItems', 1);
-				content = content.innerText;
-			}
 			if(count==2){
-				showCart(content.src + "'\'", 'tbItems', 3);
-				content = content.src;
+				showCart(valueOfXpath + "'\'", 'tbItems', 3);
 			}
-			if(count==3){
-				showCart(content.innerText + "'\'", 'tbItems', 1);
-				content = content.innerText;
+			else{
+				showCart(valueOfXpath + "'\'", 'tbItems', 1);
 			}
 			flagClickNew = 1;
 			try {
@@ -70,6 +63,86 @@ $(document).ready(function() {
 		}
 	});
 });
+function getChildXpath(elm) { 
+    var allNodes = document.getElementsByTagName('*'); 
+    for (var segs = []; elm && elm.nodeType == 1; elm = elm.parentNode) {
+		if (elm.hasAttribute('id')) {
+			var uniqueIdCount = 0;
+			for (var n = 0; n < allNodes.length; n++) {
+				if (allNodes[n].hasAttribute('id') && allNodes[n].id == elm.id)
+					uniqueIdCount++;
+				if (uniqueIdCount > 1)
+					break;
+			}
+			;
+			if (uniqueIdCount == 1) {
+				segs.unshift("id('" + elm.getAttribute('id') + "')");
+				return segs.join('/');
+			} else {
+				segs.unshift(elm.localName.toLowerCase() + "[@id='"
+						+ elm.getAttribute('id') + "']");
+			}
+		} else {
+			for (i = 1, sib = elm.previousSibling; sib; sib = sib.previousSibling) {
+				if (sib.localName == elm.localName)
+					i++;
+			}
+			;
+			segs.unshift(elm.localName.toLowerCase() + '[' + i + ']');
+		}
+		;
+	};
+    var pos = 0;
+	var string = segs.length ? '/' + segs.join('/') : null;
+	string = string.replace("")
+	var str_array = string.split("/");
+	var l = str_array.length;
+	for (i = l - 1; i > 0; i--) {
+		if (str_array[i].search("id") != -1) {
+			pos = i;
+			break
+		}
+	}
+	var rs = "/";
+	for (i = pos; i < l; i++) {
+		rs = rs + '/' +str_array[i];
+	}
+	return rs;
+}; 
+
+function lookupElementByXPath(path,count) { 
+	
+	if(count==0){
+	a = window.frames[0].document.evaluate(path+'/@href'
+            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+	try{
+		b = a.iterateNext();
+		alertText = b.textContent;
+		}catch(e){
+			swal("Please select product description link, text is not accept");
+		}
+	}
+	if(count==1){
+		a = window.frames[0].document.evaluate(path
+	            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+		b = a.iterateNext();
+		alertText = b.textContent;
+		if(alertText==""){
+			swal("Please select product name")
+		}
+	}
+	if(count==2){
+		a = window.frames[0].document.evaluate(path+'/@src'
+	            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+		try{
+			b = a.iterateNext();
+			alertText = b.textContent;
+			}catch(e){
+				swal("Please select image, other is not accept");
+			}
+	}
+	return alertText;
+} 
 
 function getEleCss(value) {
 	var str_array = value.split("/");
@@ -197,8 +270,8 @@ function next() {
 				|| (count == 3)) {
 
 			if (flagClick == 1) {
-				indexComplete[count] = value;
-				preview[currentPosition]=content;
+				indexComplete[count] = urlXPath;
+				preview[currentPosition]=childXPath;
 			}
 			if (flagClick == 0 && count == 3) {
 				indexComplete[count] = "";
@@ -224,6 +297,13 @@ function next() {
 			}
 			document.getElementById("showXPath").innerHTML = "";
 			count++;
+			if (4 > count > 1) {
+				if (flagBack != 1) {
+					deleteRow('tbItems', 1);
+				} else {
+					flagBack = 0;
+				}
+			}
 			if ((count == 4) && (flagDeleteName == 1)) {
 				//deleteRow('tbItems', 1);
 				//flagDeleteName = 0;
@@ -231,13 +311,7 @@ function next() {
 			progressBar();
 			showCart(indexComplete[currentPosition - 1] + "'\'", 'tbMain', 2);
 			addToCart(indexComplete[currentPosition - 1]);
-			if (count > 1) {
-				if (flagBack != 1) {
-					deleteRow('tbItems', 1);
-				} else {
-					flagBack = 0;
-				}
-			}
+			
 			if (count == 4) {
 				document.getElementById("btnNext").disabled = true;
 				document.getElementById("btnPreview").disabled = false;
@@ -271,34 +345,25 @@ function back() {
 		if (flagBack != 1) {
 			deleteRow('tbItems', 1);
 		}
-		var newX = indexComplete[currentPosition];
+		var newX = preview[currentPosition];
 		flagClick = 1;
 		value = newX;
 		var a;
 		var b;
 		var alertText;
 		if(currentPosition==0){
-			content = preview[currentPosition];
-			a = window.frames[0].document.evaluate(newX+'/@href'
-	                , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-			b = a.iterateNext();
-			alertText = b.textContent;
+			alertText = lookupElementByXPath(preview[currentPosition], currentPosition)
+			childXPath = preview[currentPosition];
 			showCart(alertText + "'\'", 'tbItems', 1);
 		}
 		if(currentPosition==1){
-			content = preview[currentPosition];
-			a = window.frames[0].document.evaluate(newX
-	                , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-			b = a.iterateNext();
-			alertText = b.textContent;
+			alertText = lookupElementByXPath(preview[currentPosition], currentPosition)
+			childXPath = preview[currentPosition];
 			showCart(alertText + "'\'", 'tbItems', 1);
 		}
 		if(currentPosition==2){
-			content = preview[currentPosition];
-			a = window.frames[0].document.evaluate(newX+'/@src'
-	                , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-			b = a.iterateNext();
-			alertText = b.textContent;
+			alertText = lookupElementByXPath(preview[currentPosition], currentPosition)
+			childXPath = preview[currentPosition];
 			showCart(alertText + "'\'", 'tbItems', 3);
 		}
         
@@ -514,33 +579,59 @@ function removeFromCart() {
 		sessionStorage.cart = sessionStorage.cart + item[i] + "'\'";
 	}
 }
-
+function getElementByXPath(path) { 
+    var evaluator = new XPathEvaluator(); 
+    var result = evaluator.evaluate(path, window.frames[0].document.documentElement, null,XPathResult.FIRST_ORDERED_NODE_TYPE, null); 
+    return  result.singleNodeValue; 
+}
 function editXPath() {
 	flagEditXPath = 1;
 	deleteRow('tbItems', 1);
+	
 	var newX = document.getElementsByName('txtXPath')[0].value;
 	value = newX;
+	var a;
+	var b;
+	var alertText;
 	try {
-		var a = window.frames[0].document.evaluate(newX,
-				window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-		var b = a.iterateNext();
+		if(currentPosition==0){
+			a = window.frames[0].document.evaluate(newX+'/@href',
+					window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+			b = a.iterateNext();
+			childXPath = newX;
+		}
+		if(currentPosition==1){
+			a = window.frames[0].document.evaluate(newX,
+					window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+			b = a.iterateNext();
+			childXPath = newX;
+		}
+		if(currentPosition==2){
+			a = window.frames[0].document.evaluate(newX+'/@src',
+					window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+			b = a.iterateNext();
+			childXPath = newX;
+		}
+		if(b==null){
+			flagClick = 0;
+			showCart("XPATH NOT FOUND" + "'\'", 'tbItems', 4);
+			document.getElementById("btnNext").disabled = true;
+		}
+		if(b!=null){
+			alertText = b.textContent;			
+			// alert(alertText);
+			showCart(alertText + "'\'", 'tbItems', 1);
+			document.getElementById("btnNext").disabled = false;
+		}
 		flagClick = 1;
 	} catch (e) {
 		flagClick = 0;
 		showCart("INVALID XPATH" + "'\'", 'tbItems', 4);
 		document.getElementById("btnNext").disabled = true;
 	}
-	if(b==null){
-		flagClick = 0;
-		showCart("INVALID XPATH" + "'\'", 'tbItems', 4);
-		document.getElementById("btnNext").disabled = true;
-	}
-	if(b!=null){
-		var alertText = b.textContent;
-		// alert(alertText);
-		showCart(alertText + "'\'", 'tbItems', 1);
-		document.getElementById("btnNext").disabled = false;
-	}
+	var result = getElementByXPath(newX);
+	urlXPath = createXPathFromElement(result);
+	
 	$("#myframe").contents().find(oldWrap).removeAttr("style",
 			"background-color: #69c2fe;");
 
@@ -568,7 +659,7 @@ function addRow(tableId, cells, type) {
 				newCell.innerHTML = '<input type="hidden" name="PAGE" value="'
 						+ cells[i]
 						+ '" size="78"/><input type="hidden" name="txtDescriptionLink" value="'
-						+ preview[0] + '"/>';
+						+ lookupElementByXPath(preview[0], 0) + '"/>';
 				break;
 			case 2:
 				newCell.innerHTML = '<input type="hidden" name="PRODUCTNAME" value="'
@@ -631,7 +722,7 @@ function addNew() {
 	while (currentPosition < 4) {
 		count++;
 		progressBar();
-		showCart(indexComplete[currentPosition] + "'\'", 'tbMain', 4);
+		showCart(indexComplete[currentPosition] + "'\'", 'tbMain', 1);
 		addToCart(indexComplete[currentPosition]);
 		currentPosition++;
 	}
@@ -687,51 +778,33 @@ function closepopup(id) {
 function appendcontents(item) {
 	// var item = items.split("'\'");
 	var content = '</br></br></br><table border="1" style="width: 485px" class="table"><thead></thead><tr><th style="width: 10%">Type</th><th style="width: 90%">Content</th></tr><tbody>';
-
 	content = content
 			+ '<tr><td><strong>Product Description Link</strong></td><td>';
-	// var a = window.frames[0].document.evaluate(item[0] + '/@href',
-	// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-	// var b = a.iterateNext();
-	var alertText = "" + preview[0]
-	// while (b) {
-	// alertText += b.textContent + "<br/>"
-	// //b = a.iterateNext();
-	// }
+	 var a = window.frames[0].document.evaluate(preview[0] + '/@href',
+	 window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+	 var b = a.iterateNext();
+	 alertText = b.textContent;
 	content = content + '<input type="hidden" name="txtDescriptionLink" value="'
 			+ alertText + '"/>'
 	content = content + alertText
 			+ '</td></tr><tr><td><strong>Product Name</strong></td><td>';
 
-	// get Address
-	// a = window.frames[0].document.evaluate(item[1],
-	// window.frames[0].document,
-	// null, XPathResult.ANY_TYPE, null);
-	// b = a.iterateNext();
-	alertText = "" + preview[1]
-	// while (b) {
-	// if (b.textContent.length < 150) {
-	// alertText += b.textContent + "<br/>";
-	// } else {
-	// alertText += b.textContent.substring(0, 220) + "...<br/>";
-	// }
-	// b = a.iterateNext();
-	// }
+	 //get Address
+	 a = window.frames[0].document.evaluate(preview[1],
+	 window.frames[0].document,
+	 null, XPathResult.ANY_TYPE, null);
+	 b = a.iterateNext();
+	 alertText = b.textContent;
 	content = content
 			+ alertText
 			+ '</td></tr><tr><td><strong>Image</strong></td><td style="width: '
 			+ '150px;  vertical-align: top"><img style="width:150px;height:150px" src =';
-
-	// getImage
-	// a = window.frames[0].document.evaluate(item[2] + '/@src',
-	// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-	// b = a.iterateNext();
-	alertText = "" + preview[2]
-	// while (b) {
-	// alertText += b.textContent+"</br>";
-	// b = a.iterateNext();
-	// }
-	content = content + alertText + '></td></tr></tbody></table>';
+	 //getImage
+	 a = window.frames[0].document.evaluate(preview[2] + '/@src',
+	 window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+	 b = a.iterateNext();
+	 alertText = b.textContent;
+	content = content + alertText + '/></td></tr></tbody></table>';
 	appendto = document.getElementById('popup');
 	appendto.innerHTML = content;
 	// sessionStorage.cart = '';

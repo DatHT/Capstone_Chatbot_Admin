@@ -34,21 +34,25 @@
 				<span class="bar half"></span>
 				<div class="circle active">
 					<span class="labelRecipe">1</span> <span class="title"
-						style="margin-left: -30px"><a href="#" style="text-decoration: none">DescriptionLink</a></span>
+						style="margin-left: -30px"><a href="#"
+						style="text-decoration: none">DescriptionLink</a></span>
 				</div>
 				<span class="bar"></span>
 				<div class="circle">
 					<span class="labelRecipe">2</span> <span class="title"
-						style="margin-left: -20px"><a href="#" style="text-decoration: none">ProductName</a></span>
+						style="margin-left: -20px"><a href="#"
+						style="text-decoration: none">ProductName</a></span>
 				</div>
 				<span class="bar"></span>
 				<div class="circle">
 					<span class="labelRecipe">3</span> <span class="title"
-						style="margin-left: -20px"><a href="#" style="text-decoration: none">ProductImage</a></span>
+						style="margin-left: -20px"><a href="#"
+						style="text-decoration: none">ProductImage</a></span>
 				</div>
 				<span class="bar"></span>
 				<div class="circle">
-					<span class="labelRecipe">4</span> <span class="title"><a href="#" style="text-decoration: none">NextPage</a></span>
+					<span class="labelRecipe">4</span> <span class="title"><a
+						href="#" style="text-decoration: none">NextPage</a></span>
 				</div>
 			</div>
 			<div class="card-body card-padding"
@@ -76,14 +80,15 @@
 			</div>
 		</div>
 		<div id="popup" class="popup modal" role="dialog" data-toggle="modal">
-			<table id="tbMain">
-			</table>
+
 		</div>
 		<div id="bg" class="popup_bg"></div>
 		<div class="col-sm-12 scollchange" style="">
 			<iframe style="width: 100%;" sandbox="allow-same-origin" width="800"
 				height="1200" id="myframe" src="resources/tmp.html"> </iframe>
 		</div>
+		<table id="tbMain">
+		</table>
 
 	</form:form>
 </body>
