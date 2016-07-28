@@ -167,6 +167,9 @@ function reloadBootgridTable() {
             "notfound-commands": function (column, row) {
                 return "<button data-row-food='" + row.food + "' data-row-location='" + row.location + "' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add-product'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
                 "<button data-row-id='" + row.logid + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete'style='margin: 5px;'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
+            },
+            "show-food-count": function (column, row) {
+            	return row.food + " (" + row.count+")";
             }
         }
     }).on("loaded.rs.jquery.bootgrid", function() {
@@ -251,26 +254,28 @@ function updateLogStatus(id, status) {
 
 function updateLog(param, token) {
 	$('#loadingModal').modal('show');
-	var xmlhttp;
-	if (window.XMLHttpRequest) {
-		xmlhttp = new XMLHttpRequest();
-	} else
-		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			if (xmlhttp.responseText == 'true') {
-				setTimeout(function() {
-					location.reload();
-					$('#loadingModal').modal('hide');
-				}, 500);
-			} else {
-				swal('Error occurs. Please try again later!');
+	setTimeout(function() {
+		var xmlhttp;
+		if (window.XMLHttpRequest) {
+			xmlhttp = new XMLHttpRequest();
+		} else
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == 'true') {
+					setTimeout(function() {
+						location.reload();
+						$('#loadingModal').modal('hide');
+					}, 500);
+				} else {
+					swal('Error occurs. Please try again later!');
+				}
 			}
 		}
-	}
 
-	xmlhttp.open('GET', '/chatbot_admin/updateLog', false);
-	xmlhttp.send(param + "=" + token);
+		xmlhttp.open('GET', '/chatbot_admin/updateLog', false);
+		xmlhttp.send(param + "=" + token);
+	}, 100);
 }
 
 function createRowNoEntry(id, data) {
@@ -392,7 +397,7 @@ function createRowNotFound(id, data) {
 	var tdFoodText = document.createTextNode(data.contexts.Food ? data.contexts.Food : "Undefined");
 	tdFood.appendChild(tdFoodText);
 	var tdLocation = document.createElement('td');
-	var tdLocationText = document.createTextNode(data.contexts.Location ? data.contexts.Food :"Undefined");
+	var tdLocationText = document.createTextNode(data.contexts.Location ? data.contexts.Location :"Undefined");
 	
 	var tdAction = document.createElement('td');
 	var textAction = document.createTextNode(data.action);
@@ -404,6 +409,12 @@ function createRowNotFound(id, data) {
 
 	tr.appendChild(tdFood);
 	tr.appendChild(tdLocation);
+	
+	var totalCount = data.totalCount;
+	var tdCount = document.createElement('td');
+	var numcount = document.createTextNode(totalCount);
+	tdCount.appendChild(numcount);
+	tr.appendChild(tdCount);
 
 	tableBody.appendChild(tr);
 }

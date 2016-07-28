@@ -313,6 +313,15 @@ public class LogManager implements ILogManager {
 
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(contexts, contextJson);
+		
+		JSONArray arrId = new JSONArray();
+
+		JSONObject idObj = new JSONObject();
+		idObj.put(id, log.get(id));
+		arrId.put(idObj);
+
+		jsonObject.put(count, arrId);
+		jsonObject.put("totalCount", arrId.length());
 
 		return jsonObject;
 	}
@@ -442,6 +451,21 @@ public class LogManager implements ILogManager {
 								.equals(log.getJSONObject(contexts).get("Food"))
 								&& jsonObject.getJSONObject(contexts).get("Location")
 										.equals(log.getJSONObject(contexts).get("Location"));
+						if (isExist) {
+							JSONArray arrId = log.getJSONArray(count);
+							boolean isCount = true;
+							for (int j = 0; j < arrId.length(); j++) {
+								JSONObject jsonId = arrId.getJSONObject(j);
+								if (jsonId.get(id).equals(jsonObject.get(id))) {
+									isCount = false;
+								}
+							}
+
+							if (isCount) {
+								arrId.put(jsonObject.getJSONArray(count).get(0));
+							}
+							log.put("totalCount", arrId.length());
+						}
 					} catch (Exception e) {
 						isExist = true;
 					}
