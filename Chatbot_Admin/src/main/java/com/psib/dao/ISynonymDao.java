@@ -26,4 +26,8 @@ public interface ISynonymDao {
     List<Synonym> getSynonymNameSortById(int skip, int limit);
 
     List<String> getByIdAndSynonymId(int id, int synonymId);
+    
+    public List<Synonym> getSynonyms(String phrase);
+    
+    public Synonym getSynonymById(int id);
 }

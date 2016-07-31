@@ -1,6 +1,9 @@
 package com.psib.service;
 
+import java.util.List;
+
 import com.psib.dto.BootGirdDto;
+import com.psib.model.Synonym;
 
 public interface ISynonymManager {
 
@@ -18,4 +21,8 @@ public interface ISynonymManager {
     void deleteWord(int deleteWordId);
 
     String calcSynonym(String productName);
+    
+    List<Synonym> searchSynonym(String phrase);
+    
+    public String replaceSentenceBySynonym(String sentence);
 }

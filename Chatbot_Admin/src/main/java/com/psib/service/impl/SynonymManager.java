@@ -236,4 +236,98 @@ public class SynonymManager implements ISynonymManager {
         LOG.info("[calcSynonym] End");
         return productSynonym;
     }
+
+	@Override
+	public List<Synonym> searchSynonym(String phrase) {
+		return synonymDao.getSynonyms(phrase);
+	}
+	
+	@Override
+	public String replaceSentenceBySynonym(String sentence) {
+		String[] words = sentence.split(" ");
+		String result = "";
+		
+		int currIndex = 0;
+		int lastIndex = currIndex;
+		String currPhrase = words[currIndex];
+		String lastPhrase = currPhrase;
+		boolean flag = true;
+		
+		boolean isAdded = true;
+		
+		List<Synonym> synonyms = searchSynonym(currPhrase);
+		
+		while(flag) {
+			if (!synonyms.isEmpty()) {
+				int maxAcceptableResults = currPhrase.split(" ").length == 1 ? 5 : currPhrase.split(" ").length * 5;
+				isAdded = false;
+				if (synonyms.size() == 1) {
+					if (currPhrase.equalsIgnoreCase(synonyms.get(0).getName().trim())) {
+						Synonym synonym = synonymDao.getSynonymById(synonyms.get(0).getSynonymId());
+						result += " " + synonym.getName();
+						isAdded = true;
+						if ((currIndex + 1) == words.length) {
+							flag = false;
+							continue;
+						}
+						currPhrase = words[currIndex = currIndex + 1];
+						lastIndex = currIndex;
+						lastPhrase = currPhrase;
+					} else {
+						lastPhrase = currPhrase;
+						currPhrase = currPhrase + " " + words[currIndex = currIndex + 1];
+					}
+					
+					synonyms = searchSynonym(currPhrase);
+				} else if (synonyms.size() < maxAcceptableResults) {
+					for (Synonym synonym : synonyms) {
+						if (currPhrase.equals(synonym.getName().trim())) {
+							result += " " + synonymDao.getSynonymById(synonym.getSynonymId()).getName();
+							isAdded = true;
+							if ((currIndex + 1) == words.length) {
+								flag = false;
+								continue;
+							}
+							currPhrase = words[currIndex = currIndex + 1];
+							lastIndex = currIndex;
+							lastPhrase = currPhrase;
+							break;
+						}
+					}
+					if (!isAdded) {
+						lastPhrase = currPhrase;
+						currPhrase = currPhrase + " " + words[currIndex = currIndex + 1];
+					}
+					synonyms = searchSynonym(currPhrase);
+				} else {
+					if ((currIndex + 1) == words.length) {
+						flag = false;
+						continue;
+					}
+					lastPhrase = currPhrase;
+					currPhrase = currPhrase + " " + words[currIndex = currIndex + 1];
+					synonyms = searchSynonym(currPhrase);
+				}
+			} else {
+				if (!isAdded) {
+					result += " " + words[lastIndex];
+					currIndex = lastIndex;
+				} else {
+					result += " " + lastPhrase;
+				}
+				if ((currIndex + 1) == words.length) {
+					flag = false;
+					continue;
+				}
+				isAdded = true;
+				currPhrase = words[currIndex = currIndex + 1];
+				lastIndex = currIndex;
+				lastPhrase = currPhrase;
+				synonyms = searchSynonym(currPhrase);
+			}
+			result = result.trim();
+		}
+		
+		return result;
+	}
 }

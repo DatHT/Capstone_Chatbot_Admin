@@ -3,7 +3,9 @@ package com.psib.dao.impl;
 import com.psib.dao.ISynonymDao;
 import com.psib.model.Synonym;
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -222,5 +224,27 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
         List<String> result = query.list();
         LOG.info("[Synonym] End");
         return result;
+    }
+    
+    @Override
+    @Transactional
+    @SuppressWarnings("unchecked")
+	public List<Synonym> getSynonyms(String phrase) {
+    	LOG.info("[getSynonyms] Start: phrase=" + phrase );
+    	Criteria criteria = getSession().createCriteria(Synonym.class);
+    	criteria.add(Restrictions.ilike("name",phrase+"%"));
+    	
+    	LOG.info("[getSynonyms] End");
+    	return (List<Synonym>)criteria.list();
+    }
+    
+    @Override
+    @Transactional
+    public Synonym getSynonymById(int id) {
+    	LOG.info("getSynonymById[] Start: id =" + id);
+    	Criteria criteria = getSession().createCriteria(Synonym.class);
+    	criteria.add(Restrictions.eq("Id",id));
+    	LOG.info("getSynonymById[] End: id =" + id);
+    	return (Synonym)criteria.list().get(0);
     }
 }
