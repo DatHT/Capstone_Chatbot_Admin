@@ -12,10 +12,15 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.psib.dto.geolocation.GoogleResponse;
+import com.psib.dto.geolocation.Result;
 import com.psib.dto.jsonmapper.Entry;
 
 public class CommonUtils {
+	private static final Logger logger = LoggerFactory.getLogger(CommonUtils.class);
 
 	public static String[] generateSynonym(String tempString) {
 		Integer count = 0;
@@ -139,7 +144,7 @@ public class CommonUtils {
 		Matcher matcher = pattern.matcher(s);
 		return matcher.find() ? matcher.start() : -1;
 	}
-	
+
 	public static double splitLong(String url) throws ArrayIndexOutOfBoundsException {
 		String[] list = url.split("_");
 		String splitLong = null;
@@ -188,124 +193,32 @@ public class CommonUtils {
 		return latitude;
 	}
 
-	public static String splitAddress(String addressname) throws IndexOutOfBoundsException {
-		String[] listAddress = addressname.split(",");
-		String address = "";
-		if (listAddress.length == 5) {
-			address = listAddress[listAddress.length - 5] + " " + listAddress[listAddress.length - 4];
-			if (listAddress[listAddress.length - 3].length() > 15) {
-				address = listAddress[listAddress.length - 3] + " " + listAddress[listAddress.length - 2];
+	public static String splitAddress(String district, String address) throws IOException {
+		if (address.toLowerCase().contains(district.toLowerCase())) {
+			address = address.substring(0, address.indexOf(district));
+			int last = address.lastIndexOf(",");
+			if (last != -1) {
+				address = address.substring(0, last);
 			}
 		}
-		if (listAddress.length == 2) {
-			address = listAddress[listAddress.length - 2];
-		}
-		if (listAddress.length == 3) {
-			address = listAddress[listAddress.length - 3];
-			// if (listAddress[listAddress.length -
-			// 2].toLowerCase().contains("phÃ†Â°Ã¡Â»ï¿½ng")
-			// || listAddress[listAddress.length -
-			// 2].toLowerCase().contains("p.")) {
-			// address = listAddress[listAddress.length - 3] + "," +
-			// listAddress[listAddress.length - 2];
-			// }
-			// if (listAddress[listAddress.length -
-			// 2].toLowerCase().contains("quÃ¡ÂºÂ­n")
-			// || listAddress[listAddress.length -
-			// 2].toLowerCase().contains("q.")) {
-			// address = listAddress[listAddress.length - 3];
-			// }
-		}
-		if (listAddress.length == 4) {
-			address = listAddress[listAddress.length - 4];
-			if (listAddress[listAddress.length - 3].contains("P.")) {
-				address = listAddress[listAddress.length - 4] + " " + listAddress[listAddress.length - 3];
-			}
-		}
-		if (listAddress.length == 6) {
-			address = listAddress[listAddress.length - 6] + " " + listAddress[listAddress.length - 5] + " "
-					+ listAddress[listAddress.length - 4];
-		}
-		if (listAddress.length == 7) {
-			address = listAddress[listAddress.length - 5] + " "
-					+ listAddress[listAddress.length - 4];
-		}
-		// else {
-		// address = listAddress[listAddress.length - 4] + "," +
-		// listAddress[listAddress.length - 3];
-		// }
-
 		return address;
 	}
 
-	public static String splitDistrict(String addressname) throws IndexOutOfBoundsException {
-		String[] listAddress = addressname.split(",");
+	public static String splitDistrict(String latlong) throws IOException {
 		String district = "";
+		String address = "";
+		GoogleResponse result = new AddressConverter().convertFromLatLong(latlong);
+		if (result.getStatus().equals("OK")) {
+			for (Result r : result.getResults()) {
+				if (r.getTypes().toString().contains("administrative_area_level_2")) {
+					address = r.getFormatted_address();
+				}
+			}
+			district = address.split(",")[0];
 
-		if (listAddress.length == 5) {
-			district = listAddress[listAddress.length - 3];
-			if (district.length() > 15) {
-				district = listAddress[listAddress.length - 1];
-			}
-			if (district.contains("Q.")) {
-				district = district.replace("Q.", "Quáº­n ");
-				district = district.replace(" Quáº­n", "Quáº­n");
-				district = district.replace("Quáº­n  ", "Quáº­n ");
-			}
-			if (district.contains("Q.") || district.contains("Qu") || district.contains("q.")
-					|| district.contains("qu")) {
-				return district;
-			} else {
-				district = "Quáº­n" + district;
-			}
+		} else {
+			logger.info(result.getStatus());
 		}
-		if (listAddress.length == 2) {
-			district = listAddress[listAddress.length - 1];
-			if (district.contains("Q.")) {
-				district = district.replace("Q.", "Quáº­n ");
-				district = district.replace(" Quáº­n", "Quáº­n");
-				district = district.replace("Quáº­n  ", "Quáº­n ");
-			}
-		}
-		if (listAddress.length == 3) {
-			district = listAddress[listAddress.length - 2];
-			if (district.contains("P.") || district.toLowerCase().contains("phÆ°á»�ng")) {
-				district = listAddress[listAddress.length - 1];
-				district = district.replace("Q", "Quáº­n ");
-				district = district.replace(" Quáº­n", "Quáº­n");
-				district = district.replace("Quáº­n  ", "Quáº­n ");
-			}
-			if (district.contains("Q.")) {
-				district = district.replace("Q.", "Quáº­n ");
-				district = district.replace(" Quáº­n", "Quáº­n");
-				district = district.replace("Quáº­n  ", "Quáº­n ");
-			}
-		}
-		if (listAddress.length == 4) {
-			district = listAddress[listAddress.length - 2];
-			if (district.contains("Q.")) {
-				district = district.replace("Q.", "Quáº­n ");
-				district = district.replace(" Quáº­n", "Quáº­n");
-				district = district.replace("Quáº­n  ", "Quáº­n ");
-			}
-		}
-		if (listAddress.length == 6) {
-			district = listAddress[listAddress.length - 3];
-			if (district.contains("Q.")) {
-				district = district.replace("Q.", "Quáº­n ");
-				district = district.replace(" Quáº­n", "Quáº­n");
-				district = district.replace("Quáº­n  ", "Quáº­n ");
-			}
-		}
-		if (listAddress.length == 7) {
-			district = listAddress[listAddress.length - 3];
-			if (district.contains("Q.")) {
-				district = district.replace("Q.", "Quáº­n ");
-				district = district.replace(" Quáº­n", "Quáº­n");
-				district = district.replace("Quáº­n  ", "Quáº­n ");
-			}
-		}
-
 		return district;
 	}
 

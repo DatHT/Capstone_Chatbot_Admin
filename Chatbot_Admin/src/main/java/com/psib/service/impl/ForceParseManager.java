@@ -73,20 +73,20 @@ public class ForceParseManager implements IForceParseManager {
 			pages = new PageDTOList();
 			PageDTO page = new PageDTO();
 			page.getPages();
-			
+
 		}
 		List<PageDTO> pageCfig = pages.getConfig();
-		for(int i =0;i<pageCfig.size();i++){
-			if(pageCfig.get(i).getNextPage().equals("N/A")){
+		for (int i = 0; i < pageCfig.size(); i++) {
+			if (pageCfig.get(i).getNextPage().equals("N/A")) {
 				dynamicParse(numOfScroll, pageCfig.get(i).getSite());
-			}
-			else{
+			} else {
 				String noPage = "";
 				staticParse(numOfPage, noPage, pageCfig.get(i).getSite());
 			}
 		}
 		return "done";
 	}
+
 	public String getPageConfigFilePath() throws IOException {
 		if (xmlFilePathFolder == null) {
 			xmlFilePathFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("xml_file_path")).getUrl();
@@ -169,7 +169,7 @@ public class ForceParseManager implements IForceParseManager {
 			logger.info("--Number of record: " + pageList.size());
 
 			int countAdded = 0;
-			int countExits = 0;
+			int countExist = 0;
 			for (int i = 0; i < pageList.size(); i++) {
 				String pageDescriptionLink = pageList.get(i).getNextPageUrl();
 				productName = pageList.get(i).getProductName();
@@ -230,8 +230,10 @@ public class ForceParseManager implements IForceParseManager {
 					latitude = CommonUtils.splitLat(map);
 					longitude = CommonUtils.splitLong(map);
 				}
-				String district = CommonUtils.splitDistrict(address);
-				String newAddress = CommonUtils.splitAddress(address);
+				String latlong = "" + latitude + "," + longitude;
+				String district = CommonUtils.splitDistrict(latlong);
+				String newAddress = CommonUtils.splitAddress(district, address);
+				logger.info("bac: "+district+newAddress);
 
 				double rate = 0;
 				if (!userRate.equals("")) {
@@ -242,51 +244,46 @@ public class ForceParseManager implements IForceParseManager {
 				}
 				District districtDAO = new District();
 				Address addressDAO = new Address();
-				ProductDetail productDAO = new ProductDetail();
+				ProductDetail productDetails = new ProductDetail();
 
-				long districtID = districtManager.checkExitDistrict(district);
-				if (districtID == 0) {
-
-					districtDAO.setName(district);
-					districtID = districtManager.inserDistrict(districtDAO);
-
-					logger.info("Add district done");
-				}
-				if (districtID != 0) {
+				if (!district.isEmpty() && !address.isEmpty() && !newAddress.isEmpty()) {
+					long districtID = districtManager.checkExitDistrict(district);
+					if (districtID == 0) {
+						districtDAO.setName(district);
+						districtID = districtManager.inserDistrict(districtDAO);
+					}
 					addressDAO.setDistrictId(districtID);
 					addressDAO.setName(newAddress);
 					addressDAO.setLatitude(latitude);
 					addressDAO.setLongitude(longitude);
 					addressDAO.setRestaurantName(restaurantName);
-				}
-				long addressID = addressManager.checkAddressExist(addressDAO);
-				if (addressID == 0) {
-					addressID = addressManager.inserAddress(addressDAO);
-					logger.info("Add address done");
-				}
-				if (addressID != 0) {
-					productDAO.setProductName(newProductName);
-					productDAO.setAddressName(address);
-					productDAO.setDistrictName(district);
-					productDAO.setLatitude(latitude);
-					productDAO.setLongitude(longitude);
-					productDAO.setRate(rate);
-					productDAO.setRestaurantName(restaurantName);
-					productDAO.setThumbPath(thumbpath);
-					productDAO.setUrlRelate(pageDescriptionLink);
-					productDAO.setAddressId(addressID);
-					productDAO.setSource(url);
 
-					ProductDetail product = productManager.checkProductExist(productDAO);
-					if (product == null) {
-						productManager.insertProductDetail(productDAO);
+					long addressID = addressManager.checkAddressExist(addressDAO);
+					if (addressID == 0) {
+						addressID = addressManager.inserAddress(addressDAO);
+					}
+					productDetails.setProductName(newProductName);
+					productDetails.setAddressName(address);
+					productDetails.setDistrictName(district);
+					productDetails.setLatitude(latitude);
+					productDetails.setLongitude(longitude);
+					productDetails.setRate(rate);
+					productDetails.setRestaurantName(restaurantName);
+					productDetails.setThumbPath(thumbpath);
+					productDetails.setUrlRelate(pageDescriptionLink);
+					productDetails.setAddressId(addressID);
+					productDetails.setSource(url);
+
+					ProductDetail productDAO = productManager.checkProductExist(productDetails);
+					if (productDAO == null) {
+						productManager.insertProductDetail(productDetails);
 						countAdded++;
 						logger.info("Add to database success");
 					} else {
-						countExits++;
+						countExist++;
 						logger.info("Cannot add to database");
 						int exist = Integer.parseInt(num_of_exits);
-						if (countExits == exist) {
+						if (countExist == exist) {
 							logger.info("more than " + exist + " exist record, closing your parser");
 							driver.close();
 							return "done";
@@ -296,7 +293,7 @@ public class ForceParseManager implements IForceParseManager {
 			}
 			driver.close();
 			logger.info("Sucessfull Added Record: " + countAdded);
-			logger.info("Exist Record: " + countExits);
+			logger.info("Exist Record: " + countExist);
 			long estimatedTime = System.nanoTime() - startTime;
 			double seconds = (double) estimatedTime / 1000000000.0;
 			logger.info("Elapsed time: " + seconds);
@@ -311,7 +308,7 @@ public class ForceParseManager implements IForceParseManager {
 	public String staticParse(String numPage, String noPage, String url) {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
-		WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38,false);
+		WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
 		try {
 			int numOfPage = 0;
 			int noOfPage = 0;
@@ -322,8 +319,8 @@ public class ForceParseManager implements IForceParseManager {
 			} else {
 				noOfPage = Integer.parseInt(noPage);
 			}
-			logger.info(""+numOfPage);
-			logger.info(""+noOfPage);
+			logger.info("" + numOfPage);
+			logger.info("" + noOfPage);
 
 			// lay url page
 			String xmlFilePath = getPageConfigFilePath();
@@ -454,9 +451,9 @@ public class ForceParseManager implements IForceParseManager {
 							latitude = CommonUtils.splitLat(map);
 							longitude = CommonUtils.splitLong(map);
 						}
-						String district = CommonUtils.splitDistrict(address);
-						String newAddress = CommonUtils.splitAddress(address);
-
+						String latlong = "" + latitude + "," + longitude;
+						String district = CommonUtils.splitDistrict(latlong);
+						String newAddress = CommonUtils.splitAddress(district, address);
 						double rate = 0;
 						if (!userRate.equals("")) {
 							rate = Double.parseDouble(userRate);
@@ -467,47 +464,48 @@ public class ForceParseManager implements IForceParseManager {
 						District districtDAO = new District();
 						Address addressDAO = new Address();
 						ProductDetail productDetails = new ProductDetail();
+						if (!district.isEmpty() && !address.isEmpty() && !newAddress.isEmpty()) {
+							long districtID = districtManager.checkExitDistrict(district);
+							if (districtID == 0) {
+								districtDAO.setName(district);
+								districtID = districtManager.inserDistrict(districtDAO);
+							}
+							addressDAO.setDistrictId(districtID);
+							addressDAO.setName(newAddress);
+							addressDAO.setLatitude(latitude);
+							addressDAO.setLongitude(longitude);
+							addressDAO.setRestaurantName(restaurantName);
 
-						long districtID = districtManager.checkExitDistrict(district);
-						if (districtID == 0) {
+							long addressID = addressManager.checkAddressExist(addressDAO);
+							if (addressID == 0) {
+								addressID = addressManager.inserAddress(addressDAO);
+							}
+							productDetails.setProductName(newProductName);
+							productDetails.setAddressName(address);
+							productDetails.setDistrictName(district);
+							productDetails.setLatitude(latitude);
+							productDetails.setLongitude(longitude);
+							productDetails.setRate(rate);
+							productDetails.setRestaurantName(restaurantName);
+							productDetails.setThumbPath(thumbpath);
+							productDetails.setUrlRelate(pageDescriptionLink);
+							productDetails.setAddressId(addressID);
+							productDetails.setSource(url);
 
-							districtDAO.setName(district);
-							districtID = districtManager.inserDistrict(districtDAO);
-						}
-						addressDAO.setDistrictId(districtID);
-						addressDAO.setName(newAddress);
-						addressDAO.setLatitude(latitude);
-						addressDAO.setLongitude(longitude);
-						addressDAO.setRestaurantName(restaurantName);
-						long addressID = addressManager.checkAddressExist(addressDAO);
-						if (addressID == 0) {
-							addressID = addressManager.inserAddress(addressDAO);
-						}
-						productDetails.setProductName(newProductName);
-						productDetails.setAddressName(address);
-						productDetails.setDistrictName(district);
-						productDetails.setLatitude(latitude);
-						productDetails.setLongitude(longitude);
-						productDetails.setRate(rate);
-						productDetails.setRestaurantName(restaurantName);
-						productDetails.setThumbPath(thumbpath);
-						productDetails.setUrlRelate(pageDescriptionLink);
-						productDetails.setAddressId(addressID);
-						productDetails.setSource(url);
-
-						ProductDetail productDAO = productManager.checkProductExist(productDetails);
-						if (productDAO == null) {
-							productManager.insertProductDetail(productDetails);
-							countAdded++;
-							logger.info("Add to database success");
-						} else {
-							countExist++;
-							logger.info("Cannot add to database");
-							int exist = Integer.parseInt(num_of_exits);
-							if (countExist == exist) {
-								logger.info("more than " + exist + " exist record, closing your parser");
-								driver.close();
-								return "done";
+							ProductDetail productDAO = productManager.checkProductExist(productDetails);
+							if (productDAO == null) {
+								productManager.insertProductDetail(productDetails);
+								countAdded++;
+								logger.info("Add to database success");
+							} else {
+								countExist++;
+								logger.info("Cannot add to database");
+								int exist = Integer.parseInt(num_of_exits);
+								if (countExist == exist) {
+									logger.info("more than " + exist + " exist record, closing your parser");
+									driver.close();
+									return "done";
+								}
 							}
 						}
 					}
@@ -602,8 +600,9 @@ public class ForceParseManager implements IForceParseManager {
 						latitude = CommonUtils.splitLat(map);
 						longitude = CommonUtils.splitLong(map);
 					}
-					String district = CommonUtils.splitDistrict(address);
-					String newAddress = CommonUtils.splitAddress(address);
+					String latlong = "" + latitude + "," + longitude;
+					String district = CommonUtils.splitDistrict(latlong);
+					String newAddress = CommonUtils.splitAddress(latlong, address);
 
 					double rate = 0;
 					if (!userRate.equals("")) {
@@ -616,49 +615,48 @@ public class ForceParseManager implements IForceParseManager {
 					Address addressDAO = new Address();
 					ProductDetail productDetails = new ProductDetail();
 
-					long districtID = districtManager.checkExitDistrict(district);
-					if (districtID == 0) {
+					if (!district.isEmpty() && !address.isEmpty() && !newAddress.isEmpty()) {
+						long districtID = districtManager.checkExitDistrict(district);
+						if (districtID == 0) {
+							districtDAO.setName(district);
+							districtID = districtManager.inserDistrict(districtDAO);
+						}
+						addressDAO.setDistrictId(districtID);
+						addressDAO.setName(newAddress);
+						addressDAO.setLatitude(latitude);
+						addressDAO.setLongitude(longitude);
+						addressDAO.setRestaurantName(restaurantName);
 
-						districtDAO.setName(district);
-						districtID = districtManager.inserDistrict(districtDAO);
+						long addressID = addressManager.checkAddressExist(addressDAO);
+						if (addressID == 0) {
+							addressID = addressManager.inserAddress(addressDAO);
+						}
+						productDetails.setProductName(newProductName);
+						productDetails.setAddressName(address);
+						productDetails.setDistrictName(district);
+						productDetails.setLatitude(latitude);
+						productDetails.setLongitude(longitude);
+						productDetails.setRate(rate);
+						productDetails.setRestaurantName(restaurantName);
+						productDetails.setThumbPath(thumbpath);
+						productDetails.setUrlRelate(pageDescriptionLink);
+						productDetails.setAddressId(addressID);
+						productDetails.setSource(url);
 
-						logger.info("Add district done");
-					}
-					addressDAO.setDistrictId(districtID);
-					addressDAO.setName(newAddress);
-					addressDAO.setLatitude(latitude);
-					addressDAO.setLongitude(longitude);
-					addressDAO.setRestaurantName(restaurantName);
-					long addressID = addressManager.checkAddressExist(addressDAO);
-					if (addressID == 0) {
-						addressID = addressManager.inserAddress(addressDAO);
-						logger.info("Add address done");
-					}
-					productDetails.setProductName(newProductName);
-					productDetails.setAddressName(address);
-					productDetails.setDistrictName(district);
-					productDetails.setLatitude(latitude);
-					productDetails.setLongitude(longitude);
-					productDetails.setRate(rate);
-					productDetails.setRestaurantName(restaurantName);
-					productDetails.setThumbPath(thumbpath);
-					productDetails.setUrlRelate(pageDescriptionLink);
-					productDetails.setAddressId(addressID);
-					productDetails.setSource(url);
-
-					ProductDetail productDAO = productManager.checkProductExist(productDetails);
-					if (productDAO == null) {
-						productManager.insertProductDetail(productDetails);
-						countAdded++;
-						logger.info("Add to database success");
-					} else {
-						countExist++;
-						logger.info("Cannot add to database");
-						int exist = Integer.parseInt(num_of_exits);
-						if (countExist == exist) {
-							logger.info("more than " + exist + " exist record, closing your parser");
-							driver.close();
-							return "done";
+						ProductDetail productDAO = productManager.checkProductExist(productDetails);
+						if (productDAO == null) {
+							productManager.insertProductDetail(productDetails);
+							countAdded++;
+							logger.info("Add to database success");
+						} else {
+							countExist++;
+							logger.info("Cannot add to database");
+							int exist = Integer.parseInt(num_of_exits);
+							if (countExist == exist) {
+								logger.info("more than " + exist + " exist record, closing your parser");
+								driver.close();
+								return "done";
+							}
 						}
 					}
 				}
