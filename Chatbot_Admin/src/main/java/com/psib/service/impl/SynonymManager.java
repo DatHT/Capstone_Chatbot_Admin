@@ -251,80 +251,76 @@ public class SynonymManager implements ISynonymManager {
 		int lastIndex = currIndex;
 		String currPhrase = words[currIndex];
 		String lastPhrase = currPhrase;
-		boolean flag = true;
 		
-		boolean isAdded = true;
+		boolean isNext = true;
+		
+		boolean flag = true;
 		
 		List<Synonym> synonyms = searchSynonym(currPhrase);
 		
 		while(flag) {
+			isNext = false;
 			if (!synonyms.isEmpty()) {
 				int maxAcceptableResults = currPhrase.split(" ").length == 1 ? 5 : currPhrase.split(" ").length * 5;
-				isAdded = false;
+				
 				if (synonyms.size() == 1) {
 					if (currPhrase.equalsIgnoreCase(synonyms.get(0).getName().trim())) {
-						Synonym synonym = synonymDao.getSynonymById(synonyms.get(0).getSynonymId());
-						result += " " + synonym.getName();
-						isAdded = true;
-						if ((currIndex + 1) == words.length) {
-							flag = false;
-							continue;
+						if (synonyms.get(0).getSynonymId() == 0) {
+							result += " " + synonyms.get(0).getName();
+						} else {
+							Synonym synonym = synonymDao.getSynonymById(synonyms.get(0).getSynonymId());
+							result += " " + synonym.getName();
 						}
-						currPhrase = words[currIndex = currIndex + 1];
-						lastIndex = currIndex;
-						lastPhrase = currPhrase;
-					} else {
-						lastPhrase = currPhrase;
-						currPhrase = currPhrase + " " + words[currIndex = currIndex + 1];
+						isNext = true;
 					}
-					
-					synonyms = searchSynonym(currPhrase);
 				} else if (synonyms.size() < maxAcceptableResults) {
 					for (Synonym synonym : synonyms) {
 						if (currPhrase.equals(synonym.getName().trim())) {
-							result += " " + synonymDao.getSynonymById(synonym.getSynonymId()).getName();
-							isAdded = true;
-							if ((currIndex + 1) == words.length) {
-								flag = false;
-								continue;
+							if (synonym.getSynonymId() == 0) {
+								result += " " + synonym.getName();
+							} else {
+								Synonym synonymtmp = synonymDao.getSynonymById(synonym.getSynonymId());
+								result += " " + synonymtmp.getName();
 							}
-							currPhrase = words[currIndex = currIndex + 1];
-							lastIndex = currIndex;
-							lastPhrase = currPhrase;
+							isNext = true;
 							break;
 						}
 					}
-					if (!isAdded) {
-						lastPhrase = currPhrase;
-						currPhrase = currPhrase + " " + words[currIndex = currIndex + 1];
-					}
-					synonyms = searchSynonym(currPhrase);
-				} else {
-					if ((currIndex + 1) == words.length) {
-						flag = false;
-						continue;
-					}
-					lastPhrase = currPhrase;
-					currPhrase = currPhrase + " " + words[currIndex = currIndex + 1];
-					synonyms = searchSynonym(currPhrase);
 				}
 			} else {
-				if (!isAdded) {
+				if (!isNext) {
 					result += " " + words[lastIndex];
 					currIndex = lastIndex;
 				} else {
 					result += " " + lastPhrase;
 				}
-				if ((currIndex + 1) == words.length) {
+				isNext = true;
+			}
+			
+			if ((currIndex + 1) >= words.length) {
+				if (currIndex == lastIndex) {
+					if (!isNext) {
+						result += " " + words[lastIndex];
+					}
 					flag = false;
-					continue;
+				} else {
+					// to make the list is empty
+					synonyms = new ArrayList<>();
 				}
-				isAdded = true;
+				continue;
+			}
+			if (isNext) {
+				// search new word
 				currPhrase = words[currIndex = currIndex + 1];
 				lastIndex = currIndex;
+			} else {
+				// add more word to current phrase
 				lastPhrase = currPhrase;
-				synonyms = searchSynonym(currPhrase);
+				currPhrase = currPhrase + " " + words[currIndex = currIndex + 1];
 			}
+			synonyms = searchSynonym(currPhrase);
+			
+			// trim result
 			result = result.trim();
 		}
 		

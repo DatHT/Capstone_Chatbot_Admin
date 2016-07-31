@@ -30,8 +30,10 @@ import com.psib.model.ProductDetail;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
 import com.psib.service.IProductManager;
+import com.psib.service.ISynonymManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.FileUtils;
+import com.psib.util.SentenceUtils;
 import com.psib.util.SpringPropertiesUtil;
 
 @Service
@@ -47,6 +49,9 @@ public class LogManager implements ILogManager {
 
 	@Autowired
 	private IProductManager productManager;
+	
+	@Autowired
+	private ISynonymManager synonymManager;
 
 	private static final Logger logger = Logger.getLogger(LogManager.class);
 
@@ -461,7 +466,9 @@ public class LogManager implements ILogManager {
 			int logStatusCode = Integer.parseInt(log.get(errCode).toString());
 			if (statusCode == logStatusCode) {
 				if (statusCode == NO_ENTRY_CODE) {
-					if (jsonObject.get(userSay).equals(log.get(userSay))) {
+					String sentence = checkSentence(jsonObject.get(userSay).toString(), log.get(userSay).toString()); 
+					if (sentence != null) {
+//					if (jsonObject.get(userSay).equals(log.get(userSay))) {
 						JSONArray arrId = log.getJSONArray(count);
 						boolean isCount = true;
 						for (int j = 0; j < arrId.length(); j++) {
@@ -474,6 +481,8 @@ public class LogManager implements ILogManager {
 						if (isCount) {
 							arrId.put(jsonObject.getJSONArray(count).get(0));
 						}
+						log.put(id, jsonObject.get(id));
+						log.put(userSay, sentence);
 						log.put("totalCount", arrId.length());
 						return true;
 					}
@@ -516,6 +525,17 @@ public class LogManager implements ILogManager {
 
 		logger.info("[checkExistLog] : End");
 		return isExist;
+	}
+	
+	private String checkSentence(String sentence1, String sentence2) {
+		String repSen1 = synonymManager.replaceSentenceBySynonym(sentence1);
+		String repSen2 = synonymManager.replaceSentenceBySynonym(sentence2);
+		
+		if(SentenceUtils.checkContainSentencePercent(repSen1, repSen2) >= 0.7f) {
+			
+			return sentence1.trim().length() > sentence2.trim().length() ? sentence1 : sentence2;
+		}
+		return null;
 	}
 
 	public void deleteLog(String logString) throws JSONException, IOException {

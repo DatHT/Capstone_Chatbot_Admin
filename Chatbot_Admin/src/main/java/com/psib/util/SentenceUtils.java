@@ -10,8 +10,14 @@ public class SentenceUtils {
 			return 1.0f;
 		}
 		String longSentence = sentence1.length() > sentence2.length() ? sentence1 : sentence2;
-		String[] wordsOfLongSen = longSentence.split(" ");
+		
 		String shortSentence = sentence1.length() < sentence2.length() ? sentence1 : sentence2;
+		
+		if (sentence1.length() == sentence2.length()) {
+			longSentence = sentence1;
+			shortSentence = sentence2;
+		}
+		String[] wordsOfLongSen = longSentence.split(" ");
 		String[] wordsOfShortSen = shortSentence.split(" ");
 		
 		if(longSentence.contains(shortSentence)) {
