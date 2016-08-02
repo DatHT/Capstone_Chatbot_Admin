@@ -82,7 +82,7 @@ public class ConfigurationManager implements IConfigurationManager {
 		String quote = "'";
 		char c = quote.charAt(0);
 		configString = configString.replace('"', c);
-		logger.info(configString);
+		logger.info("Config String"+configString);
 
 		// get Page
 		xmlFilePath = pageConfigXML;
@@ -100,7 +100,7 @@ public class ConfigurationManager implements IConfigurationManager {
 		String pageString = XMLUtils.marshallPageToString(pages);
 		pageString = pageString.replace('"', c);
 
-		logger.info(pageString);
+		logger.info("Page String: "+pageString);
 		return configString + "," + pageString;
 	}
 

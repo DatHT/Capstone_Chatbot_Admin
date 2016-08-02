@@ -26,7 +26,7 @@ function checkUrl() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var result = xmlhttp.responseText;
 			if (result.indexOf("not available") > -1) {
-				alert("Inputted Url is not available, please check your input or try with another url");
+				swal("Inputted Url is not available, please check your input or try with another url");
 			}
 			if (result.indexOf("Valid") > -1) {
 				if (getVal() == "Set List Page") {

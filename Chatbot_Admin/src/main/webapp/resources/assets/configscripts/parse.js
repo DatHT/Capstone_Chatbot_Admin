@@ -17,11 +17,8 @@ $(document)
 										event.preventDefault();
 										if (count < 3) {
 											urlXPath = createXPathFromElement(event.target);
-											alert(urlXPath);
 											content = event.target.innerText
 											document.getElementById("btnNext").disabled = false;
-											// content =
-											// standardContent(content);
 											if (flagClick == 1) {
 												deleteRow('tbItems', 1);
 

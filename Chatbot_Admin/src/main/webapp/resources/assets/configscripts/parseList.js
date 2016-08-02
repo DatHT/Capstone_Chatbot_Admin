@@ -141,6 +141,15 @@ function lookupElementByXPath(path,count) {
 				swal("Please select image, other is not accept");
 			}
 	}
+	if(count==3){
+		a = window.frames[0].document.evaluate(path
+	            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+		b = a.iterateNext();
+		alertText = b.textContent;
+		if(alertText==""){
+			swal("Please select NextPage");
+		}
+	}
 	return alertText;
 } 
 

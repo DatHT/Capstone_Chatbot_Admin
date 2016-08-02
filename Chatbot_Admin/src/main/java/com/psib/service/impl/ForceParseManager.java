@@ -233,7 +233,6 @@ public class ForceParseManager implements IForceParseManager {
 				String latlong = "" + latitude + "," + longitude;
 				String district = CommonUtils.splitDistrict(latlong);
 				String newAddress = CommonUtils.splitAddress(district, address);
-				logger.info("bac: "+district+newAddress);
 
 				double rate = 0;
 				if (!userRate.equals("")) {

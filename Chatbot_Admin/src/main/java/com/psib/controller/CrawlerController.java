@@ -42,8 +42,7 @@ public class CrawlerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@RequestMapping(value = "/staticParse", method = RequestMethod.POST)
-	public String staticParse(Model model, HttpServletRequest request, HttpServletResponse response)
-			throws InterruptedException {
+	public String staticParse(Model model, HttpServletRequest request, HttpServletResponse response){
 
 		HttpSession session = request.getSession();
 		String numPage = request.getParameter("txtPage");
@@ -61,8 +60,7 @@ public class CrawlerController extends HttpServlet {
 	}
 
 	@RequestMapping(value = "/dynamicParse", method = RequestMethod.POST)
-	public String dynamicParse(Model model, HttpServletRequest request, HttpServletResponse response)
-			throws InterruptedException {
+	public String dynamicParse(Model model, HttpServletRequest request, HttpServletResponse response){
 
 		HttpSession session = request.getSession();
 		String numPage = request.getParameter("txtPage");
@@ -82,8 +80,6 @@ public class CrawlerController extends HttpServlet {
 
 	@RequestMapping(value = "/configuration", method = RequestMethod.GET)
 	public String configData(Model model, HttpServletRequest request, HttpServletResponse respone) {
-		// String realPath = CommonUtils.getPath();
-		// get Config
 
 		String result;
 		try {
@@ -184,7 +180,7 @@ public class CrawlerController extends HttpServlet {
 	@RequestMapping(value = "/addPageDetails", method = RequestMethod.POST)
 	public String addPageDetails(@RequestParam("USER_RATE") String userRate, @RequestParam("ADDRESS") String address,
 			@RequestParam("NAME") String restaurantName, Model model, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+			HttpServletResponse response){
 
 		HttpSession session = request.getSession();
 		String url = (String) session.getAttribute("URL");

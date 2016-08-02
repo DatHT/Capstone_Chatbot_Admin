@@ -31,7 +31,7 @@
 						type="url" class="form-control" size="45" name="txtURL"
 						id="input-01" required />
 				</div>
-				</br>
+				<br>
 				<div class="card-padding">
 					<button type="submit" id="confirmation" class="btn btn-primary"
 						value="Set List Page" name="btnAction" onclick="">Set
@@ -218,8 +218,6 @@
 </script>
 <script>
 	function loadPage() {
-		var a = document.getElementById("viewStatic").clientHeight;
-		//document.getElementById("viewDynamic").style.height = a + 'px';
 		loadProcess('selectSite');
 		checkSelect();
 	}
