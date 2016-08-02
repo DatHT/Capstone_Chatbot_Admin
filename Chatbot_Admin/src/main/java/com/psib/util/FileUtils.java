@@ -2,9 +2,11 @@ package com.psib.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,8 +18,8 @@ public class FileUtils {
 		if (!file.exists()) {
 			file.createNewFile();
 		}
-		FileReader fileReader = new FileReader(file);
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		FileInputStream fileInputStream = new FileInputStream(file);
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream, "UTF-8"));
 
 		return bufferedReader;
 	}

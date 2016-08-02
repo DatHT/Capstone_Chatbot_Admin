@@ -147,7 +147,7 @@ public class RestResult {
 	public String toString(String charset) {
 		if (this.resultStr == null) {
 			try {
-				this.resultStr = IOUtils.toString(inputStream);
+				this.resultStr = IOUtils.toString(inputStream, charset);
 			} catch (Exception e) {
 				throw new ReadException("Unnable to read string content of response stream!", e);
 			} finally {
