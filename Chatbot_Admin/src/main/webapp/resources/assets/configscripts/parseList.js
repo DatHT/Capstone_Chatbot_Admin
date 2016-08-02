@@ -1,97 +1,148 @@
 var urlXPath = null;
+var childXPath = null;
+var valueOfXpath = null;
 var col = 0, count = 0, flagBack = 0, flagDeleteName = 0, flagClick = 0, flagEditXPath = 0, flagWrap = 0, flagClickNew = 0;
 var currentPosition = 0;
 var step = 3;
 var str1, str2, content, value, oldWrap;
-var preview = [];
+var preview = ["","","",""];
+var xpath =["","","",""];
 var indexComplete = [ "", "", "", "" ];
-$(document)
-		.ready(
-				function() {
-					var iframeDoc = document.getElementById('myframe').contentWindow;
-					$(iframeDoc)
-							.click(
-									function(event) {
-										event.preventDefault();
-										if (count < 4) {
-											urlXPath = createXPathFromElement(event.target);
-											content = event.target.innerHTML;
-											// alert(standardContent(content));
-											// content =
-											// standardContent(content);
+$(document).ready(function() {
+	var iframeDoc = document.getElementById('myframe').contentWindow;
+	document.getElementById("btnBack").disabled = true;
+	document.getElementById("btnNext").disabled = true;
+	$(iframeDoc).click(function(event) {
+		event.preventDefault();
+		if (count < 4) {		
+			content = event.target;
+			urlXPath = createXPathFromElement(content);
+			childXPath = getChildXpath(content);
+			valueOfXpath = lookupElementByXPath(childXPath,count);
+			document.getElementById("btnNext").disabled = false;
+			if (flagClick == 1) {
+				deleteRow('tbItems', 1);
+			}
+			if (flagEditXPath == 1) {
+				document.getElementById("showXPath").innerHTML = "";
+				flagEditXPath = 0;
+				deleteRow('tbItems', 1);
+			}
+			
+			flagClick = 1;
+			value = childXPath;
+			if (count >= 4) {
+				value = commonXpath(urlXPath);
+			} else {
+				if (count == 2) {
+					value = imgXPath(event.target);
+				}
+			}
+			if(count==2){
+				showCart(valueOfXpath + "'\'", 'tbItems', 3);
+			}
+			else{
+				showCart(valueOfXpath + "'\'", 'tbItems', 1);
+			}
+			flagClickNew = 1;
+			try {
+				$("#myframe")
+						.contents()
+						.find(oldWrap)
+						.removeAttr("style",
+								"background-color: #69c2fe;");
 
-											if (flagClick == 1) {
-												deleteRow('tbItems', 1);
+				$("#myframe")
+						.contents()
+						.find(getEleCss(value))
+						.attr("style",
+								"background-color: #69c2fe;");
+				oldWrap = getEleCss(value);
+			} catch (e) {
+			}
+		}
+	});
+});
+function getChildXpath(elm) { 
+    var allNodes = document.getElementsByTagName('*'); 
+    for (var segs = []; elm && elm.nodeType == 1; elm = elm.parentNode) {
+		if (elm.hasAttribute('id')) {
+			var uniqueIdCount = 0;
+			for (var n = 0; n < allNodes.length; n++) {
+				if (allNodes[n].hasAttribute('id') && allNodes[n].id == elm.id)
+					uniqueIdCount++;
+				if (uniqueIdCount > 1)
+					break;
+			}
+			;
+			if (uniqueIdCount == 1) {
+				segs.unshift("id('" + elm.getAttribute('id') + "')");
+				return segs.join('/');
+			} else {
+				segs.unshift(elm.localName.toLowerCase() + "[@id='"
+						+ elm.getAttribute('id') + "']");
+			}
+		} else {
+			for (i = 1, sib = elm.previousSibling; sib; sib = sib.previousSibling) {
+				if (sib.localName == elm.localName)
+					i++;
+			}
+			;
+			segs.unshift(elm.localName.toLowerCase() + '[' + i + ']');
+		}
+		;
+	};
+    var pos = 0;
+	var string = segs.length ? '/' + segs.join('/') : null;
+	string = string.replace("")
+	var str_array = string.split("/");
+	var l = str_array.length;
+	for (i = l - 1; i > 0; i--) {
+		if (str_array[i].search("id") != -1) {
+			pos = i;
+			break
+		}
+	}
+	var rs = "/";
+	for (i = pos; i < l; i++) {
+		rs = rs + '/' +str_array[i];
+	}
+	return rs;
+}; 
 
-											}
-											if (flagEditXPath == 1) {
-												document
-														.getElementById("showXPath").innerHTML = "";
-												flagEditXPath = 0;
-												deleteRow('tbItems', 1);
-											}
-											flagClick = 1;
-											value = urlXPath;
-											if (count >= 4) {
-												value = commonXpath(urlXPath);
-											} else {
-												if (count == 2) {
-													value = imgXPath(event.target);
-												}
-											}
-											if (value.indexOf('img') > -1) {
-												var n = event.target.src;
-												preview.push(n);
-												showCart(n + "'\'", 'tbItems',
-														3);
-											}
-											if (count == 0) {
-												var no1 = event.target.href;
-												preview.push(no1);
-												showCart(no1 + "'\'",
-														'tbItems', 1);
-											}
-											if (count == 1) {
-												var no2 = event.target.innerText;
-												preview.push(no2);
-												showCart(no2 + "'\'",
-														'tbItems', 1);
-											}
-											if (count == 3) {
-												var no3 = event.target.innerHTML;
-												preview.push(no3);
-												showCart(no3 + "'\'",
-														'tbItems', 1);
-											}
-											// alert("CONTENT: " +
-											// event.target.innerHTML +
-											// "\nXPATH: " + urlXPath);
-
-											// Apply highlight div
-											// alert(getEleCss(value));
-											flagClickNew = 1;
-											try {
-												$("#myframe")
-														.contents()
-														.find(oldWrap)
-														.removeAttr("style",
-																"background-color: #69c2fe;");
-
-												$("#myframe")
-														.contents()
-														.find(getEleCss(value))
-														.attr("style",
-																"background-color: #69c2fe;");
-												oldWrap = getEleCss(value);
-											} catch (e) {
-											}
-										}
-									});
-				});
-
-function disableClick() {
-
-}
+function lookupElementByXPath(path,count) { 
+	
+	if(count==0){
+	a = window.frames[0].document.evaluate(path+'/@href'
+            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+	try{
+		b = a.iterateNext();
+		alertText = b.textContent;
+		}catch(e){
+			swal("Please select product description link, text is not accept");
+		}
+	}
+	if(count==1){
+		a = window.frames[0].document.evaluate(path
+	            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+		b = a.iterateNext();
+		alertText = b.textContent;
+		if(alertText==""){
+			swal("Please select product name")
+		}
+	}
+	if(count==2){
+		a = window.frames[0].document.evaluate(path+'/@src'
+	            , window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+		try{
+			b = a.iterateNext();
+			alertText = b.textContent;
+			}catch(e){
+				swal("Please select image, other is not accept");
+			}
+	}
+	return alertText;
+} 
 
 function getEleCss(value) {
 	var str_array = value.split("/");
@@ -124,12 +175,6 @@ function getEleCss(value) {
 			nthResult[j] = rs_arr[j].substring(start + 1, end);
 			rs_arr[j] = rs_arr[j].replace(portion, '');
 		}
-		// var start = result.indexOf('[');
-		// var end = result.indexOf(']');
-		// var portion = result.substring(start, end + 1);
-		// var nthResult = result.substring(start + 1, end);
-		// alert(portion);
-		// result = result.replace(portion, '');
 		var pos, i;
 		for (i = l - 1; i > 0; i--) {
 			if (str_array[i].search("class") != -1) {
@@ -220,10 +265,13 @@ function standardContent(content) {
 function next() {
 	var haveData = 0;
 	if ((count <= 4)) {
+		document.getElementById("btnBack").disabled = false;
 		if ((flagClick != 0) || (indexComplete[currentPosition] != "")
 				|| (count == 3)) {
+
 			if (flagClick == 1) {
-				indexComplete[count] = value;
+				indexComplete[count] = urlXPath;
+				preview[currentPosition]=childXPath;
 			}
 			if (flagClick == 0 && count == 3) {
 				indexComplete[count] = "";
@@ -248,29 +296,23 @@ function next() {
 				flagEditXPath = 0;
 			}
 			document.getElementById("showXPath").innerHTML = "";
-
 			count++;
-			// if ((count == 1)||(count == 2)||(count == 3)) {
-			if ((count == 4) && (flagDeleteName == 1)) {
-				// deleteRow('tbItems', 1);
-				deleteRow('tbItems', 1);
-				flagDeleteName = 0;
-			}
-			progressBar();
-			showCart(indexComplete[currentPosition - 1] + "'\'", 'tbMain', 2);
-			addToCart(indexComplete[currentPosition - 1]);
-			if (count > 1) {
+			if (4 > count > 1) {
 				if (flagBack != 1) {
-					// deleteRow('tbItems', 1);
 					deleteRow('tbItems', 1);
 				} else {
 					flagBack = 0;
 				}
 			}
+			if ((count == 4) && (flagDeleteName == 1)) {
+				//deleteRow('tbItems', 1);
+				//flagDeleteName = 0;
+			}
+			progressBar();
+			showCart(indexComplete[currentPosition - 1] + "'\'", 'tbMain', 2);
+			addToCart(indexComplete[currentPosition - 1]);
+			
 			if (count == 4) {
-				// alert("FINISHED");
-				// document.myForm.submit();
-				// openpopup('popup');
 				document.getElementById("btnNext").disabled = true;
 				document.getElementById("btnPreview").disabled = false;
 				document.getElementById("btnAdd").disabled = false;
@@ -293,40 +335,39 @@ function back() {
 			deleteRow('tbItems', 1);
 			flagClick = 0;
 		}
+		if(count==1){
+			document.getElementById("btnBack").disabled = true;
+		}
 		currentPosition--;
 		document.getElementById("showXPath").innerHTML = "";
 		col--;
 		deleteRow('tbMain', col);
 		if (flagBack != 1) {
-			// deleteRow('tbItems',1);
 			deleteRow('tbItems', 1);
 		}
-		// show current content
 		var newX = preview[currentPosition];
-		// value = newX;
-		// var a = window.frames[0].document.evaluate(newX,
-		// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-		// var b = a.iterateNext();
-		// // ???
 		flagClick = 1;
-		// // Apply highlight div
-		// // alert(getEleCss(newX));
-		// var alertText = ""
-		// while (b) {
-		// alertText += b.textContent + " "
-		// b = a.iterateNext();
-		// }
-		// alert(alertText);
-		if (currentPosition == 0) {
-			showCart(preview[0] + "'\'", 'tbItems', 1);
+		value = newX;
+		var a;
+		var b;
+		var alertText;
+		if(currentPosition==0){
+			alertText = lookupElementByXPath(preview[currentPosition], currentPosition)
+			childXPath = preview[currentPosition];
+			showCart(alertText + "'\'", 'tbItems', 1);
 		}
-		if (currentPosition == 1) {
-			showCart(preview[1] + "'\'", 'tbItems', 1);
+		if(currentPosition==1){
+			alertText = lookupElementByXPath(preview[currentPosition], currentPosition)
+			childXPath = preview[currentPosition];
+			showCart(alertText + "'\'", 'tbItems', 1);
 		}
-
-		if (currentPosition == 2) {
-			showCart(preview[2] + "'\'", 'tbItems', 3);
+		if(currentPosition==2){
+			alertText = lookupElementByXPath(preview[currentPosition], currentPosition)
+			childXPath = preview[currentPosition];
+			showCart(alertText + "'\'", 'tbItems', 3);
 		}
+        
+        flagClick = 1;
 		try {
 			$("#myframe").contents().find(oldWrap).removeAttr("style",
 					"background-color: #69c2fe;");
@@ -340,14 +381,11 @@ function back() {
 
 		if (count == 4) {
 			document.getElementById("btnNext").disabled = false;
-			// document.getElementById("btnPreview").disabled = true;
-			// document.getElementById("btnAdd").disabled = true;
 		}
-		flagBack = 1;// danh dau dang back
+		flagBack = 1;
 		backProgressBar();
 		count--;
 		removeFromCart();
-		// sessionStorage.cart = null;
 		showCart("", 'tbItems');
 		showCart("", 'tbMain');
 	}
@@ -392,15 +430,6 @@ function backProgressBar() {
 	if (indexComplete[step - 2] != "") {
 		$('.progressRecipe .circle:nth-of-type(' + step + ')').addClass('done');
 	}
-	// if(indexComplete[step-3]==1)
-	// $('.progressRecipe .circle:nth-of-type(' + (step - 1) +
-	// ')').addClass('active').removeClass('done');
-	// $('.progressRecipe .circle:nth-of-type(' + (step - 1) + ')
-	// .labelRecipe').html(step - 2);
-	// $('.progressRecipe .bar:nth-of-type(' + (step - 1) +
-	// ')').removeClass('active');
-	// $('.progressRecipe .bar:nth-of-type(' + (step - 2) +
-	// ')').addClass('active').removeClass('done');
 }
 
 function progressBar() {
@@ -536,7 +565,6 @@ function addToCart(selectedItem) {
 			sessionStorage.cart = '';
 		}
 		sessionStorage.cart = sessionStorage.cart + selectedItem + "'\'"
-		// sessionStorage.cart = selectedItem + "'\'";
 	} else {
 		swal("browser is not supported storage!!!");
 	}
@@ -544,9 +572,6 @@ function addToCart(selectedItem) {
 
 // remove last element of cart
 function removeFromCart() {
-	// if (sessionStorage.cart == null) {
-	// sessionStorage.cart = '';
-	// }
 	var item = sessionStorage.cart.split("'\'");
 	sessionStorage.cart = '';
 
@@ -554,35 +579,59 @@ function removeFromCart() {
 		sessionStorage.cart = sessionStorage.cart + item[i] + "'\'";
 	}
 }
-
+function getElementByXPath(path) { 
+    var evaluator = new XPathEvaluator(); 
+    var result = evaluator.evaluate(path, window.frames[0].document.documentElement, null,XPathResult.FIRST_ORDERED_NODE_TYPE, null); 
+    return  result.singleNodeValue; 
+}
 function editXPath() {
 	flagEditXPath = 1;
-	// alert(document.getElementsByName('txtXPath')[0].value);
-	// get newXpath
 	deleteRow('tbItems', 1);
+	
 	var newX = document.getElementsByName('txtXPath')[0].value;
 	value = newX;
+	var a;
+	var b;
+	var alertText;
 	try {
-		var a = window.frames[0].document.evaluate(newX,
-				window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-		var b = a.iterateNext();
-		// ???
+		if(currentPosition==0){
+			a = window.frames[0].document.evaluate(newX+'/@href',
+					window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+			b = a.iterateNext();
+			childXPath = newX;
+		}
+		if(currentPosition==1){
+			a = window.frames[0].document.evaluate(newX,
+					window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+			b = a.iterateNext();
+			childXPath = newX;
+		}
+		if(currentPosition==2){
+			a = window.frames[0].document.evaluate(newX+'/@src',
+					window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+			b = a.iterateNext();
+			childXPath = newX;
+		}
+		if(b==null){
+			flagClick = 0;
+			showCart("XPATH NOT FOUND" + "'\'", 'tbItems', 4);
+			document.getElementById("btnNext").disabled = true;
+		}
+		if(b!=null){
+			alertText = b.textContent;			
+			// alert(alertText);
+			showCart(alertText + "'\'", 'tbItems', 1);
+			document.getElementById("btnNext").disabled = false;
+		}
 		flagClick = 1;
-		// Apply highlight div
-		// alert(getEleCss(newX));
 	} catch (e) {
 		flagClick = 0;
 		showCart("INVALID XPATH" + "'\'", 'tbItems', 4);
-		return;
+		document.getElementById("btnNext").disabled = true;
 	}
-	// var b = a.iterateNext();
-	var alertText = ""
-	while (b) {
-		alertText += b.textContent + "    "
-		b = a.iterateNext();
-	}
-	// alert(alertText);
-	showCart(alertText + "'\'", 'tbItems', 1);
+	var result = getElementByXPath(newX);
+	urlXPath = createXPathFromElement(result);
+	
 	$("#myframe").contents().find(oldWrap).removeAttr("style",
 			"background-color: #69c2fe;");
 
@@ -597,9 +646,6 @@ function addRow(tableId, cells, type) {
 	var newRow;
 	for (var i = 0; i < cells.length - 1; i++) {
 		newRow = tableElem.insertRow(tableElem.rows.length);
-
-		// newCell = newRow.insertCell(newRow.cells.length);
-		// newCell.innerHTML = ++col;
 		newCell = newRow.insertCell(newRow.cells.length);
 		if (type == 1) {
 			newCell.innerHTML = '<input type="text" class="form-control" name="txtTemp" value="'
@@ -612,11 +658,11 @@ function addRow(tableId, cells, type) {
 			case 1:
 				newCell.innerHTML = '<input type="hidden" name="PAGE" value="'
 						+ cells[i]
-						+ '" size="78"/><input type="hidden" name="txtPageContent" value="'
-						+ preview[0] + '"/>';
+						+ '" size="78"/><input type="hidden" name="txtDescriptionLink" value="'
+						+ lookupElementByXPath(preview[0], 0) + '"/>';
 				break;
 			case 2:
-				newCell.innerHTML = '<input type="hidden" name="FOODNAME" value="'
+				newCell.innerHTML = '<input type="hidden" name="PRODUCTNAME" value="'
 						+ cells[i] + '" size="78"/>';
 				break;
 			case 3:
@@ -653,10 +699,6 @@ function deleteRow(tableId, rowNumber) {
 			&& tableId != 'tbMain') {
 		tableElem.deleteRow(rowNumber);
 	}
-	// else {
-	// if(tableId!='tbMain'){
-	// alert("Failed");}
-	// }
 	if (tableId == 'tbMain') {
 		tableElem.deleteRow(rowNumber);
 		flagDeleteName = 1;
@@ -680,7 +722,7 @@ function addNew() {
 	while (currentPosition < 4) {
 		count++;
 		progressBar();
-		showCart(indexComplete[currentPosition] + "'\'", 'tbMain', 4);
+		showCart(indexComplete[currentPosition] + "'\'", 'tbMain', 1);
 		addToCart(indexComplete[currentPosition]);
 		currentPosition++;
 	}
@@ -702,7 +744,6 @@ function openpopup(id) {
 			pageHeight = document.body.clientHeight;
 		}
 	}
-	// Make the background div tag visible, overlap everything on screen
 	var divbg = document.getElementById('bg');
 	divbg.style.visibility = "visible";
 	divbg.style.height = document.documentElement.scrollHeight + 'px';
@@ -713,15 +754,12 @@ function openpopup(id) {
 		computedStyle = divobj.currentStyle;
 	else
 		computedStyle = document.defaultView.getComputedStyle(divobj, null);
-	// Get Div width and height from StyleSheet
 	var divWidth = computedStyle.width.replace('px', '');
 	var divHeight = computedStyle.height.replace('px', '');
 	var divLeft = (pageWidth - divWidth) / 2;
 	var divTop = (pageHeight - divHeight) / 2;
-	// Set Left and top coordinates for the div tag
 	divobj.style.left = divLeft + "px";
 	divobj.style.top = divTop + "px";
-	// Put a Close button for closing the popped up Div tag
 	if (divobj.innerHTML.indexOf("closepopup('" + id + "')") < 0)
 		divobj.innerHTML = "<div class=\"panel panel-primary\" style=\"position:fixed\"><div class=\"panel-heading\" style=\"position:relative;height:42px;width:510px;margin:-5px\">"
 				+ "<p style=\"font-size:14px;float:left;padding:10px\">Preview Your Selected Field</p>"
@@ -736,61 +774,37 @@ function closepopup(id) {
 	divbg.style.visibility = "hidden";
 	var divobj = document.getElementById(id);
 	divobj.style.visibility = "hidden";
-
-	// count=0;
-	// for(var i=0; i<5; i++){
-	// // backProgressBar();
-	// back();
-	// }
 }
 function appendcontents(item) {
 	// var item = items.split("'\'");
 	var content = '</br></br></br><table border="1" style="width: 485px" class="table"><thead></thead><tr><th style="width: 10%">Type</th><th style="width: 90%">Content</th></tr><tbody>';
-
 	content = content
 			+ '<tr><td><strong>Product Description Link</strong></td><td>';
-	// var a = window.frames[0].document.evaluate(item[0] + '/@href',
-	// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-	// var b = a.iterateNext();
-	var alertText = "" + preview[0]
-	// while (b) {
-	// alertText += b.textContent + "<br/>"
-	// //b = a.iterateNext();
-	// }
-	content = content + '<input type="hidden" name="txtPageContent" value="'
+	 var a = window.frames[0].document.evaluate(preview[0] + '/@href',
+	 window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+	 var b = a.iterateNext();
+	 alertText = b.textContent;
+	content = content + '<input type="hidden" name="txtDescriptionLink" value="'
 			+ alertText + '"/>'
 	content = content + alertText
 			+ '</td></tr><tr><td><strong>Product Name</strong></td><td>';
 
-	// get Address
-	// a = window.frames[0].document.evaluate(item[1],
-	// window.frames[0].document,
-	// null, XPathResult.ANY_TYPE, null);
-	// b = a.iterateNext();
-	alertText = "" + preview[1]
-	// while (b) {
-	// if (b.textContent.length < 150) {
-	// alertText += b.textContent + "<br/>";
-	// } else {
-	// alertText += b.textContent.substring(0, 220) + "...<br/>";
-	// }
-	// b = a.iterateNext();
-	// }
+	 //get Address
+	 a = window.frames[0].document.evaluate(preview[1],
+	 window.frames[0].document,
+	 null, XPathResult.ANY_TYPE, null);
+	 b = a.iterateNext();
+	 alertText = b.textContent;
 	content = content
 			+ alertText
 			+ '</td></tr><tr><td><strong>Image</strong></td><td style="width: '
 			+ '150px;  vertical-align: top"><img style="width:150px;height:150px" src =';
-
-	// getImage
-	// a = window.frames[0].document.evaluate(item[2] + '/@src',
-	// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-	// b = a.iterateNext();
-	alertText = "" + preview[2]
-	// while (b) {
-	// alertText += b.textContent+"</br>";
-	// b = a.iterateNext();
-	// }
-	content = content + alertText + '></td></tr></tbody></table>';
+	 //getImage
+	 a = window.frames[0].document.evaluate(preview[2] + '/@src',
+	 window.frames[0].document, null, XPathResult.ANY_TYPE, null);
+	 b = a.iterateNext();
+	 alertText = b.textContent;
+	content = content + alertText + '/></td></tr></tbody></table>';
 	appendto = document.getElementById('popup');
 	appendto.innerHTML = content;
 	// sessionStorage.cart = '';

@@ -11,6 +11,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +30,6 @@ import com.psib.dto.configuration.PageDataDTO;
 import com.psib.model.Address;
 import com.psib.model.District;
 import com.psib.model.ProductDetail;
-import com.psib.service.IConfigurationManager;
 import com.psib.service.IForceParseManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
@@ -48,6 +49,7 @@ public class ForceParseManager implements IForceParseManager {
 	private IDistrictDao districtManager;
 	@Autowired
 	private IFileServerDao fileServerDao;
+	private static final Logger logger = LoggerFactory.getLogger(ForceParseManager.class);
 
 	private String num_of_exits = SpringPropertiesUtil.getProperty("num_exist");
 	private String num_of_page = SpringPropertiesUtil.getProperty("num_page");
@@ -58,7 +60,7 @@ public class ForceParseManager implements IForceParseManager {
 		int numOfScroll = Integer.parseInt(num_of_scroll);
 		String numOfPage = num_of_page;
 		String pageConfigXML = getPageConfigFilePath();
-		System.out.println("Page config: " + pageConfigXML);
+		logger.info("Page config: " + pageConfigXML);
 
 		String xmlFilePath = pageConfigXML;
 		if (!new File(xmlFilePath).exists()) {
@@ -71,20 +73,20 @@ public class ForceParseManager implements IForceParseManager {
 			pages = new PageDTOList();
 			PageDTO page = new PageDTO();
 			page.getPages();
-			
+
 		}
 		List<PageDTO> pageCfig = pages.getConfig();
-		for(int i =0;i<pageCfig.size();i++){
-			if(pageCfig.get(i).getNextPage().equals("N/A")){
+		for (int i = 0; i < pageCfig.size(); i++) {
+			if (pageCfig.get(i).getNextPage().equals("N/A")) {
 				dynamicParse(numOfScroll, pageCfig.get(i).getSite());
-			}
-			else{
+			} else {
 				String noPage = "";
 				staticParse(numOfPage, noPage, pageCfig.get(i).getSite());
 			}
 		}
 		return "done";
 	}
+
 	public String getPageConfigFilePath() throws IOException {
 		if (xmlFilePathFolder == null) {
 			xmlFilePathFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("xml_file_path")).getUrl();
@@ -121,7 +123,7 @@ public class ForceParseManager implements IForceParseManager {
 			xmlFilePath = getParserConfigFilePath();
 			ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
 			List<ConfigDTO> configs = tmp.getConfig();
-			System.out.println("Config Size: " + configs.size());
+			logger.info("Config Size: " + configs.size());
 
 			ConfigDTO config = new ConfigDTO();
 			for (ConfigDTO cfg : configs) {
@@ -131,12 +133,12 @@ public class ForceParseManager implements IForceParseManager {
 				}
 			}
 
-			System.out.println("Page Config Link: " + pageConfig.getSite());
-			System.out.println("Page Config Xpath: " + pageConfig.getXpath());
+			logger.info("Page Config Link: " + pageConfig.getSite());
+			logger.info("Page Config Xpath: " + pageConfig.getXpath());
 
 			driver.manage().deleteAllCookies();
 			driver.get(pageConfig.getLinkPage());
-			System.out.println("Link PAGE: " + pageConfig.getLinkPage());
+			logger.info("Link PAGE: " + pageConfig.getLinkPage());
 			By selBy = By.tagName("body");
 			int initialHeight = driver.findElement(selBy).getSize().getHeight();
 			for (int temp = 1; temp < numOfPage; temp++) {
@@ -145,10 +147,10 @@ public class ForceParseManager implements IForceParseManager {
 				// Scroll to bottom
 				((JavascriptExecutor) driver).executeScript("scroll(0," + initialHeight + ");");
 
-				System.out.println("Sleeping... wleepy " + temp);
+				logger.info("Sleeping... wleepy " + temp);
 				Thread.sleep(2000);
 			}
-			System.out.println("XPath Link: " + pageConfig.getXpath());
+			logger.info("XPath Link: " + pageConfig.getXpath());
 
 			String restaurantName = "", address = "", productName = "", userRate = "", map = "";
 			String thumbpath = "";
@@ -164,18 +166,18 @@ public class ForceParseManager implements IForceParseManager {
 				page.setImageLink(images.get(i).getAttribute("src"));
 				pageList.add(page);
 			}
-			System.out.println("--Number of record: " + pageList.size());
+			logger.info("--Number of record: " + pageList.size());
 
 			int countAdded = 0;
-			int countExits = 0;
+			int countExist = 0;
 			for (int i = 0; i < pageList.size(); i++) {
 				String pageDescriptionLink = pageList.get(i).getNextPageUrl();
 				productName = pageList.get(i).getProductName();
 				String newProductName = CommonUtils.splitName(productName);
 				thumbpath = pageList.get(i).getImageLink();
 
-				System.out.println("==Parsing Page URL: " + pageDescriptionLink);
-				System.out.println("-----Parsing Page Content-----");
+				logger.info("==Parsing Page URL: " + pageDescriptionLink);
+				logger.info("-----Parsing Page Content-----");
 
 				if (pageDescriptionLink.indexOf(url) == -1) {
 					pageDescriptionLink = url + pageDescriptionLink;
@@ -184,7 +186,7 @@ public class ForceParseManager implements IForceParseManager {
 				try {
 					driver.get(pageDescriptionLink);
 				} catch (FailingHttpStatusCodeException e) {
-					System.out.println("some thing wrong");
+					logger.info("some thing wrong");
 				}
 				restaurantName = driver.findElement(By.xpath(config.getName())).getText();
 				address = driver.findElement(By.xpath(config.getAddress())).getText();
@@ -228,8 +230,10 @@ public class ForceParseManager implements IForceParseManager {
 					latitude = CommonUtils.splitLat(map);
 					longitude = CommonUtils.splitLong(map);
 				}
-				String district = CommonUtils.splitDistrict(address);
-				String newAddress = CommonUtils.splitAddress(address);
+				String latlong = "" + latitude + "," + longitude;
+				String district = CommonUtils.splitDistrict(latlong);
+				String newAddress = CommonUtils.splitAddress(district, address);
+				logger.info("bac: "+district+newAddress);
 
 				double rate = 0;
 				if (!userRate.equals("")) {
@@ -242,27 +246,22 @@ public class ForceParseManager implements IForceParseManager {
 				Address addressDAO = new Address();
 				ProductDetail productDetails = new ProductDetail();
 
-				long districtID = districtManager.checkExitDistrict(district);
-				if (districtID == 0) {
-
-					districtDAO.setName(district);
-					districtID = districtManager.inserDistrict(districtDAO);
-
-					System.out.println("Add district done");
-				}
-				if (districtID != 0) {
+				if (!district.isEmpty() && !address.isEmpty() && !newAddress.isEmpty()) {
+					long districtID = districtManager.checkExitDistrict(district);
+					if (districtID == 0) {
+						districtDAO.setName(district);
+						districtID = districtManager.inserDistrict(districtDAO);
+					}
 					addressDAO.setDistrictId(districtID);
 					addressDAO.setName(newAddress);
 					addressDAO.setLatitude(latitude);
 					addressDAO.setLongitude(longitude);
 					addressDAO.setRestaurantName(restaurantName);
-				}
-				long addressID = addressManager.checkAddressExist(addressDAO);
-				if (addressID == 0) {
-					addressID = addressManager.inserAddress(addressDAO);
-					System.out.println("Add address done");
-				}
-				if (addressID != 0) {
+
+					long addressID = addressManager.checkAddressExist(addressDAO);
+					if (addressID == 0) {
+						addressID = addressManager.inserAddress(addressDAO);
+					}
 					productDetails.setProductName(newProductName);
 					productDetails.setAddressName(address);
 					productDetails.setDistrictName(district);
@@ -279,13 +278,13 @@ public class ForceParseManager implements IForceParseManager {
 					if (productDAO == null) {
 						productManager.insertProductDetail(productDetails);
 						countAdded++;
-						System.out.println("Add to database success");
+						logger.info("Add to database success");
 					} else {
-						countExits++;
-						System.out.println("Cannot add to database");
+						countExist++;
+						logger.info("Cannot add to database");
 						int exist = Integer.parseInt(num_of_exits);
-						if (countExits == exist) {
-							System.out.println("more than " + exist + " exist record, closing your parser");
+						if (countExist == exist) {
+							logger.info("more than " + exist + " exist record, closing your parser");
 							driver.close();
 							return "done";
 						}
@@ -293,14 +292,14 @@ public class ForceParseManager implements IForceParseManager {
 				}
 			}
 			driver.close();
-			System.out.println("Sucessfull Added Record: " + countAdded);
-			System.out.println("Exist Record: " + countExits);
+			logger.info("Sucessfull Added Record: " + countAdded);
+			logger.info("Exist Record: " + countExist);
 			long estimatedTime = System.nanoTime() - startTime;
 			double seconds = (double) estimatedTime / 1000000000.0;
-			System.out.println("Elapsed time: " + seconds);
+			logger.info("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
-			System.out.println("STOP PARSE");
+			logger.info("STOP PARSE");
 		}
 		return "done";
 	}
@@ -309,7 +308,7 @@ public class ForceParseManager implements IForceParseManager {
 	public String staticParse(String numPage, String noPage, String url) {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
-		WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38,false);
+		WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
 		try {
 			int numOfPage = 0;
 			int noOfPage = 0;
@@ -320,8 +319,8 @@ public class ForceParseManager implements IForceParseManager {
 			} else {
 				noOfPage = Integer.parseInt(noPage);
 			}
-			System.out.println(numOfPage);
-			System.out.println(noOfPage);
+			logger.info("" + numOfPage);
+			logger.info("" + noOfPage);
 
 			// lay url page
 			String xmlFilePath = getPageConfigFilePath();
@@ -339,7 +338,7 @@ public class ForceParseManager implements IForceParseManager {
 			xmlFilePath = getParserConfigFilePath();
 			ConfigDTOList tmp = XMLUtils.unmarshall(xmlFilePath);
 			List<ConfigDTO> configs = tmp.getConfig();
-			System.out.println("Config Size: " + configs.size());
+			logger.info("Config Size: " + configs.size());
 
 			ConfigDTO config = new ConfigDTO();
 			for (ConfigDTO cfg : configs) {
@@ -349,19 +348,19 @@ public class ForceParseManager implements IForceParseManager {
 				}
 			}
 
-			System.out.println("Page Config Link: " + pageConfig.getSite());
-			System.out.println("Page Config Xpath: " + pageConfig.getXpath());
+			logger.info("Page Config Link: " + pageConfig.getSite());
+			logger.info("Page Config Xpath: " + pageConfig.getXpath());
 
 			int no = 1;
 			if (numOfPage > 0) {
 				while (no <= numOfPage) {
 					if (no == 1) {
-						System.out.println("no = 1");
+						logger.info("no = 1");
 						driver.get(pageConfig.getLinkPage());
 					} else {
-						System.out.println("no = " + no);
+						logger.info("no = " + no);
 						if (pageConfig.getNextPage().equals("N/A")) {
-							System.out.println("STOP BY N/A");
+							logger.info("STOP BY N/A");
 							break;
 						}
 						try {
@@ -371,7 +370,7 @@ public class ForceParseManager implements IForceParseManager {
 								driver.get(pageConfig.getLinkPage() + pageConfig.getNextPage() + no);
 							}
 						} catch (FailingHttpStatusCodeException e) {
-							System.out.println("Error Occurred");
+							logger.info("Error Occurred");
 							return "fail";
 						}
 					}
@@ -391,15 +390,15 @@ public class ForceParseManager implements IForceParseManager {
 						page.setImageLink(images.get(i).getAttribute("src"));
 						pageList.add(page);
 					}
-					System.out.println("--Number of record: " + pageList.size());
+					logger.info("--Number of record: " + pageList.size());
 					for (int i = 0; i < pageList.size(); i++) {
 						String pageDescriptionLink = pageList.get(i).getNextPageUrl();
 						productName = pageList.get(i).getProductName();
 						String newProductName = CommonUtils.splitName(productName);
 						thumbpath = pageList.get(i).getImageLink();
 
-						System.out.println("==Parsing Page URL: " + pageDescriptionLink);
-						System.out.println("-----Parsing Page Content-----");
+						logger.info("==Parsing Page URL: " + pageDescriptionLink);
+						logger.info("-----Parsing Page Content-----");
 
 						if (pageDescriptionLink.indexOf(url) == -1) {
 							pageDescriptionLink = url + pageDescriptionLink;
@@ -408,7 +407,7 @@ public class ForceParseManager implements IForceParseManager {
 						try {
 							driver.get(pageDescriptionLink);
 						} catch (FailingHttpStatusCodeException e) {
-							System.out.println("some thing wrong");
+							logger.info("some thing wrong");
 						}
 						restaurantName = driver.findElement(By.xpath(config.getName())).getText();
 						address = driver.findElement(By.xpath(config.getAddress())).getText();
@@ -452,9 +451,9 @@ public class ForceParseManager implements IForceParseManager {
 							latitude = CommonUtils.splitLat(map);
 							longitude = CommonUtils.splitLong(map);
 						}
-						String district = CommonUtils.splitDistrict(address);
-						String newAddress = CommonUtils.splitAddress(address);
-
+						String latlong = "" + latitude + "," + longitude;
+						String district = CommonUtils.splitDistrict(latlong);
+						String newAddress = CommonUtils.splitAddress(district, address);
 						double rate = 0;
 						if (!userRate.equals("")) {
 							rate = Double.parseDouble(userRate);
@@ -465,53 +464,54 @@ public class ForceParseManager implements IForceParseManager {
 						District districtDAO = new District();
 						Address addressDAO = new Address();
 						ProductDetail productDetails = new ProductDetail();
+						if (!district.isEmpty() && !address.isEmpty() && !newAddress.isEmpty()) {
+							long districtID = districtManager.checkExitDistrict(district);
+							if (districtID == 0) {
+								districtDAO.setName(district);
+								districtID = districtManager.inserDistrict(districtDAO);
+							}
+							addressDAO.setDistrictId(districtID);
+							addressDAO.setName(newAddress);
+							addressDAO.setLatitude(latitude);
+							addressDAO.setLongitude(longitude);
+							addressDAO.setRestaurantName(restaurantName);
 
-						long districtID = districtManager.checkExitDistrict(district);
-						if (districtID == 0) {
+							long addressID = addressManager.checkAddressExist(addressDAO);
+							if (addressID == 0) {
+								addressID = addressManager.inserAddress(addressDAO);
+							}
+							productDetails.setProductName(newProductName);
+							productDetails.setAddressName(address);
+							productDetails.setDistrictName(district);
+							productDetails.setLatitude(latitude);
+							productDetails.setLongitude(longitude);
+							productDetails.setRate(rate);
+							productDetails.setRestaurantName(restaurantName);
+							productDetails.setThumbPath(thumbpath);
+							productDetails.setUrlRelate(pageDescriptionLink);
+							productDetails.setAddressId(addressID);
+							productDetails.setSource(url);
 
-							districtDAO.setName(district);
-							districtID = districtManager.inserDistrict(districtDAO);
-						}
-						addressDAO.setDistrictId(districtID);
-						addressDAO.setName(newAddress);
-						addressDAO.setLatitude(latitude);
-						addressDAO.setLongitude(longitude);
-						addressDAO.setRestaurantName(restaurantName);
-						long addressID = addressManager.checkAddressExist(addressDAO);
-						if (addressID == 0) {
-							addressID = addressManager.inserAddress(addressDAO);
-						}
-						productDetails.setProductName(newProductName);
-						productDetails.setAddressName(address);
-						productDetails.setDistrictName(district);
-						productDetails.setLatitude(latitude);
-						productDetails.setLongitude(longitude);
-						productDetails.setRate(rate);
-						productDetails.setRestaurantName(restaurantName);
-						productDetails.setThumbPath(thumbpath);
-						productDetails.setUrlRelate(pageDescriptionLink);
-						productDetails.setAddressId(addressID);
-						productDetails.setSource(url);
-
-						ProductDetail productDAO = productManager.checkProductExist(productDetails);
-						if (productDAO == null) {
-							productManager.insertProductDetail(productDetails);
-							countAdded++;
-							System.out.println("Add to database success");
-						} else {
-							countExist++;
-							System.out.println("Cannot add to database");
-							int exist = Integer.parseInt(num_of_exits);
-							if (countExist == exist) {
-								System.out.println("more than " + exist + " exist record, closing your parser");
-								driver.close();
-								return "done";
+							ProductDetail productDAO = productManager.checkProductExist(productDetails);
+							if (productDAO == null) {
+								productManager.insertProductDetail(productDetails);
+								countAdded++;
+								logger.info("Add to database success");
+							} else {
+								countExist++;
+								logger.info("Cannot add to database");
+								int exist = Integer.parseInt(num_of_exits);
+								if (countExist == exist) {
+									logger.info("more than " + exist + " exist record, closing your parser");
+									driver.close();
+									return "done";
+								}
 							}
 						}
 					}
 				}
 			} else {
-				System.out.println("no = " + noOfPage);
+				logger.info("no = " + noOfPage);
 				driver.get(pageConfig.getLinkPage());
 				try {
 					if (pageConfig.getNextPage().indexOf('=') == -1) {
@@ -520,10 +520,10 @@ public class ForceParseManager implements IForceParseManager {
 						driver.get(pageConfig.getLinkPage() + pageConfig.getNextPage() + noOfPage);
 					}
 				} catch (FailingHttpStatusCodeException e) {
-					System.out.println("Error Occurred");
+					logger.info("Error Occurred");
 					return "fail";
 				}
-				System.out.println("XPath Link: " + pageConfig.getXpath());
+				logger.info("XPath Link: " + pageConfig.getXpath());
 
 				String restaurantName = "", address = "", productName = "", userRate = "", map = "";
 				String thumbpath = "";
@@ -539,15 +539,15 @@ public class ForceParseManager implements IForceParseManager {
 					page.setImageLink(images.get(i).getAttribute("src"));
 					pageList.add(page);
 				}
-				System.out.println("--Number of record: " + pageList.size());
+				logger.info("--Number of record: " + pageList.size());
 				for (int i = 0; i < pageList.size(); i++) {
 					String pageDescriptionLink = pageList.get(i).getNextPageUrl();
 					productName = pageList.get(i).getProductName();
 					String newProductName = CommonUtils.splitName(productName);
 					thumbpath = pageList.get(i).getImageLink();
 
-					System.out.println("==Parsing Page URL: " + pageDescriptionLink);
-					System.out.println("-----Parsing Page Content-----");
+					logger.info("==Parsing Page URL: " + pageDescriptionLink);
+					logger.info("-----Parsing Page Content-----");
 
 					if (pageDescriptionLink.indexOf(url) == -1) {
 						pageDescriptionLink = url + pageDescriptionLink;
@@ -556,7 +556,7 @@ public class ForceParseManager implements IForceParseManager {
 					try {
 						driver.get(pageDescriptionLink);
 					} catch (FailingHttpStatusCodeException e) {
-						System.out.println("some thing wrong");
+						logger.info("some thing wrong");
 					}
 					restaurantName = driver.findElement(By.xpath(config.getName())).getText();
 					address = driver.findElement(By.xpath(config.getAddress())).getText();
@@ -600,8 +600,9 @@ public class ForceParseManager implements IForceParseManager {
 						latitude = CommonUtils.splitLat(map);
 						longitude = CommonUtils.splitLong(map);
 					}
-					String district = CommonUtils.splitDistrict(address);
-					String newAddress = CommonUtils.splitAddress(address);
+					String latlong = "" + latitude + "," + longitude;
+					String district = CommonUtils.splitDistrict(latlong);
+					String newAddress = CommonUtils.splitAddress(latlong, address);
 
 					double rate = 0;
 					if (!userRate.equals("")) {
@@ -614,62 +615,61 @@ public class ForceParseManager implements IForceParseManager {
 					Address addressDAO = new Address();
 					ProductDetail productDetails = new ProductDetail();
 
-					long districtID = districtManager.checkExitDistrict(district);
-					if (districtID == 0) {
+					if (!district.isEmpty() && !address.isEmpty() && !newAddress.isEmpty()) {
+						long districtID = districtManager.checkExitDistrict(district);
+						if (districtID == 0) {
+							districtDAO.setName(district);
+							districtID = districtManager.inserDistrict(districtDAO);
+						}
+						addressDAO.setDistrictId(districtID);
+						addressDAO.setName(newAddress);
+						addressDAO.setLatitude(latitude);
+						addressDAO.setLongitude(longitude);
+						addressDAO.setRestaurantName(restaurantName);
 
-						districtDAO.setName(district);
-						districtID = districtManager.inserDistrict(districtDAO);
+						long addressID = addressManager.checkAddressExist(addressDAO);
+						if (addressID == 0) {
+							addressID = addressManager.inserAddress(addressDAO);
+						}
+						productDetails.setProductName(newProductName);
+						productDetails.setAddressName(address);
+						productDetails.setDistrictName(district);
+						productDetails.setLatitude(latitude);
+						productDetails.setLongitude(longitude);
+						productDetails.setRate(rate);
+						productDetails.setRestaurantName(restaurantName);
+						productDetails.setThumbPath(thumbpath);
+						productDetails.setUrlRelate(pageDescriptionLink);
+						productDetails.setAddressId(addressID);
+						productDetails.setSource(url);
 
-						System.out.println("Add district done");
-					}
-					addressDAO.setDistrictId(districtID);
-					addressDAO.setName(newAddress);
-					addressDAO.setLatitude(latitude);
-					addressDAO.setLongitude(longitude);
-					addressDAO.setRestaurantName(restaurantName);
-					long addressID = addressManager.checkAddressExist(addressDAO);
-					if (addressID == 0) {
-						addressID = addressManager.inserAddress(addressDAO);
-						System.out.println("Add address done");
-					}
-					productDetails.setProductName(newProductName);
-					productDetails.setAddressName(address);
-					productDetails.setDistrictName(district);
-					productDetails.setLatitude(latitude);
-					productDetails.setLongitude(longitude);
-					productDetails.setRate(rate);
-					productDetails.setRestaurantName(restaurantName);
-					productDetails.setThumbPath(thumbpath);
-					productDetails.setUrlRelate(pageDescriptionLink);
-					productDetails.setAddressId(addressID);
-					productDetails.setSource(url);
-
-					ProductDetail productDAO = productManager.checkProductExist(productDetails);
-					if (productDAO == null) {
-						productManager.insertProductDetail(productDetails);
-						countAdded++;
-						System.out.println("Add to database success");
-					} else {
-						countExist++;
-						System.out.println("Cannot add to database");
-						int exist = Integer.parseInt(num_of_exits);
-						if (countExist == exist) {
-							System.out.println("more than " + exist + " exist record, closing your parser");
-							driver.close();
-							return "done";
+						ProductDetail productDAO = productManager.checkProductExist(productDetails);
+						if (productDAO == null) {
+							productManager.insertProductDetail(productDetails);
+							countAdded++;
+							logger.info("Add to database success");
+						} else {
+							countExist++;
+							logger.info("Cannot add to database");
+							int exist = Integer.parseInt(num_of_exits);
+							if (countExist == exist) {
+								logger.info("more than " + exist + " exist record, closing your parser");
+								driver.close();
+								return "done";
+							}
 						}
 					}
 				}
 			}
 			driver.close();
-			System.out.println("Sucessfull Added Record: " + countAdded);
-			System.out.println("Exist Record: " + countExist);
+			logger.info("Sucessfull Added Record: " + countAdded);
+			logger.info("Exist Record: " + countExist);
 			long estimatedTime = System.nanoTime() - startTime;
 			double seconds = (double) estimatedTime / 1000000000.0;
-			System.out.println("Elapsed time: " + seconds);
+			logger.info("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
-			System.out.println("STOP PARSING");
+			logger.info("STOP PARSING");
 		}
 		return "done";
 	}

@@ -5,16 +5,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href="<c:url value = "/resources/assets/cssCode/runnable.css"/>"
+<link href="<c:url value = "/resources/assets/css/runnable.css"/>"
 	rel="stylesheet">
-<link href='<c:url value="/resources/assets/cssCode/popup.css"/>'
+<link href='<c:url value="/resources/assets/css/popup.css"/>'
 	rel="stylesheet">
 <script
 	src='<c:url value="/resources/assets/configscripts/parseList.js" />'></script>
 
 <!--right slidebar-->
-<link
-	href="<c:url value="/resources/assets/cssboostrap/slidebars.css"/>"
+<link href="<c:url value="/resources/assets/css/slidebars.css"/>"
 	rel="stylesheet">
 </head>
 <body>
@@ -35,27 +34,31 @@
 				<span class="bar half"></span>
 				<div class="circle active">
 					<span class="labelRecipe">1</span> <span class="title"
-						style="margin-left: -50px">PageDescriptionLink</span>
+						style="margin-left: -30px"><a href="#"
+						style="text-decoration: none">DescriptionLink</a></span>
 				</div>
 				<span class="bar"></span>
 				<div class="circle">
 					<span class="labelRecipe">2</span> <span class="title"
-						style="margin-left: -20px">ProductName</span>
+						style="margin-left: -20px"><a href="#"
+						style="text-decoration: none">ProductName</a></span>
 				</div>
 				<span class="bar"></span>
 				<div class="circle">
 					<span class="labelRecipe">3</span> <span class="title"
-						style="margin-left: -20px">ProductImage</span>
+						style="margin-left: -20px"><a href="#"
+						style="text-decoration: none">ProductImage</a></span>
 				</div>
 				<span class="bar"></span>
 				<div class="circle">
-					<span class="labelRecipe">4</span> <span class="title">NextPage</span>
+					<span class="labelRecipe">4</span> <span class="title"><a
+						href="#" style="text-decoration: none">NextPage</a></span>
 				</div>
 			</div>
 			<div class="card-body card-padding"
 				style="padding-top: 0px; padding-bottom: 0px">
-				<button type="button" class="btn btn-primary" value="BACK"
-					onclick="back()">BACK</button>
+				<button type="button" class="btn btn-primary" id="btnBack"
+					value="BACK" onclick="back()">BACK</button>
 				<button type="button" class="btn btn-primary" id="btnNext"
 					value="NEXT" onclick="next()">NEXT</button>
 				<!--disable-->
@@ -76,15 +79,17 @@
 				</div>
 			</div>
 		</div>
-		<div id="popup" class="popup modal" role="dialog" data-toggle="modal"></div>
+		<div id="popup" class="popup modal" role="dialog" data-toggle="modal">
+
+		</div>
 		<div id="bg" class="popup_bg"></div>
 		<div class="col-sm-12 scollchange" style="">
 			<iframe style="width: 100%;" sandbox="allow-same-origin" width="800"
 				height="1200" id="myframe" src="resources/tmp.html"> </iframe>
 		</div>
 		<table id="tbMain">
-
 		</table>
+
 	</form:form>
 </body>
 <script>

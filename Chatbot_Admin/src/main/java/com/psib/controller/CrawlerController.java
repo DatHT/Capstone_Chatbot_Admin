@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.psib.constant.CodeManager;
 import com.psib.dto.configuration.ConfigDTO;
 import com.psib.dto.configuration.PageDTO;
@@ -34,6 +33,7 @@ public class CrawlerController extends HttpServlet {
 	 * 
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(CrawlerController.class);
+	public static final String ERROR = "ERROR";
 	@Autowired
 	private IForceParseManager forceParseManager;
 	@Autowired
@@ -44,13 +44,11 @@ public class CrawlerController extends HttpServlet {
 	@RequestMapping(value = "/staticParse", method = RequestMethod.POST)
 	public String staticParse(Model model, HttpServletRequest request, HttpServletResponse response)
 			throws InterruptedException {
-		java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(java.util.logging.Level.OFF);
-		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 
 		HttpSession session = request.getSession();
 		String numPage = request.getParameter("txtPage");
 		String url = request.getParameter("txtLinkPage");
-		System.out.println("url =" + url);
+		logger.info("url = " + url);
 		String noPage = request.getParameter("txtNoPage");
 		String result = forceParseManager.staticParse(numPage, noPage, url);
 		if (result == "done") {
@@ -70,7 +68,7 @@ public class CrawlerController extends HttpServlet {
 		String numPage = request.getParameter("txtPage");
 		int numOfPage = Integer.parseInt(numPage);
 		String url = request.getParameter("txtLinkPage");
-		System.out.println("url =" + url);
+		logger.info("url = " + url);
 		String result = forceParseManager.dynamicParse(numOfPage, url);
 		if (result == "done") {
 			session.setAttribute("MESSAGE", "Force parse success! New data has been inserted to storage!");
@@ -83,17 +81,26 @@ public class CrawlerController extends HttpServlet {
 	}
 
 	@RequestMapping(value = "/configuration", method = RequestMethod.GET)
-	public String configData(Model model, HttpServletRequest request, HttpServletResponse respone) throws IOException {
+	public String configData(Model model, HttpServletRequest request, HttpServletResponse respone) {
 		// String realPath = CommonUtils.getPath();
 		// get Config
-		String result = configurationManager.loadConfig();
-		String[] config = result.split(",");
-		HttpSession session = request.getSession();
-		System.out.println(result);
-		session.setAttribute("INFOCONFIG", config[0]);
-		session.setAttribute("INFOPAGE", config[1]);
 
-		return "configuration";
+		String result;
+		try {
+			result = configurationManager.loadConfig();
+			String[] config = result.split(",");
+			HttpSession session = request.getSession();
+			session.setAttribute("INFOCONFIG", config[0]);
+			session.setAttribute("INFOPAGE", config[1]);
+			return "configuration";
+		} catch (IOException e) {
+			model.addAttribute(ERROR, e.getMessage());
+			return "error";
+		} catch (NullPointerException e) {
+			model.addAttribute(ERROR, e.getMessage());
+			return "error";
+		}
+
 	}
 
 	@RequestMapping(value = "/setListPage", method = RequestMethod.POST)
@@ -107,41 +114,44 @@ public class CrawlerController extends HttpServlet {
 		session.setAttribute("LINKPAGE", linkPage);
 
 		String htmlFilePath = request.getSession().getServletContext().getRealPath("/resources/") + "tmp.html";
-		String rs ="";
+		boolean rs;
 		try {
-			rs = configurationManager.loadHtmlContentFromUrl(linkPage, url, htmlFilePath);
+			rs = configurationManager.loadHtmlContentFromUrl(linkPage, htmlFilePath);
+			if (rs) {
+				return "setListPage";
+			} else {
+				session.setAttribute("MESSAGE",
+						"Your Inputted Url is not available or your connection error. Please input again or try another with Url");
+				return "errorPage";
+			}
 		} catch (IOException e) {
 			logger.info("cannot load this page");
-		} catch(IllegalStateException ex){
+			return "errorPage";
+		} catch (IllegalStateException ex) {
 			logger.info("cannot load this page");
-		}
-		if(rs=="wrong"){
-			session.setAttribute("MESSAGE", "Your Inputted Url is not available or your connection error. Please input again or try another with Url");
 			return "errorPage";
 		}
-
-		return "setListPage";
 	}
 
 	@RequestMapping(value = "/addPageList", method = RequestMethod.POST)
-	public String addNewPageList(Model model, HttpServletRequest request, HttpServletResponse response) {
-
-		String xpath = request.getParameter("PAGE");
-		String productName = request.getParameter("FOODNAME");
-		String image = request.getParameter("IMAGE");
+	public String addPageList(Model model, HttpServletRequest request,
+			HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		String url = (String) session.getAttribute("URL");
-		String linkPage = (String) session.getAttribute("LINKPAGE");
+		String xpath = request.getParameter("PAGE");
+		String productName = request.getParameter("PRODUCTNAME");
+		String image = request.getParameter("IMAGE");
 		String nextPage = request.getParameter("NEXTPAGE");
-		String descriptionPage = request.getParameter("txtPageContent");
+		String descriptionLink = request.getParameter("txtDescriptionLink");
+		String linkPage = (String) session.getAttribute("LINKPAGE");
 
-		String next = configurationManager.getNextPage(nextPage, linkPage, xpath, url);
+		String next = configurationManager.getNextPage(nextPage, linkPage, url);
 
-		PageDTO newPage = new PageDTO(url, linkPage, xpath, productName, image, next);
+		PageDTO page = new PageDTO(url, linkPage, xpath, productName, image, next);
 
 		boolean add = false;
 		try {
-			add = configurationManager.addPageConfig(newPage, url);
+			add = configurationManager.addPageConfig(page, url);
 		} catch (IOException e1) {
 			logger.info("cannot add page config");
 		}
@@ -154,12 +164,12 @@ public class CrawlerController extends HttpServlet {
 			logger.info("File deleted");
 		}
 		if (add) {
-			String result = CommonUtils.commonUrl(descriptionPage);
+			String result = CommonUtils.commonUrl(descriptionLink);
 			session.setAttribute("URL", result);
-			session.setAttribute("LINKPAGE", descriptionPage);
-			session.setAttribute("PAGECONFIG", newPage);
+			session.setAttribute("LINKPAGE", descriptionLink);
+			session.setAttribute("PAGECONFIG", page);
 			try {
-				configurationManager.loadHtmlContentFromUrl(descriptionPage, url, htmlFilePath);
+				configurationManager.loadHtmlContentFromUrl(descriptionLink, htmlFilePath);
 			} catch (IOException e) {
 				logger.info("cannot load this page");
 			}
@@ -172,14 +182,12 @@ public class CrawlerController extends HttpServlet {
 	}
 
 	@RequestMapping(value = "/addPageDetails", method = RequestMethod.POST)
-	public String addNewConfig(Model model, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public String addPageDetails(@RequestParam("USER_RATE") String userRate, @RequestParam("ADDRESS") String address,
+			@RequestParam("NAME") String restaurantName, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
 
 		HttpSession session = request.getSession();
 		String url = (String) session.getAttribute("URL");
-		String userRate = request.getParameter("USER_RATE");
-		String address = request.getParameter("ADDRESS");
-		String restaurantName = request.getParameter("NAME");
 		String rate = "N/A";
 		if (userRate == null || userRate.isEmpty() || userRate == "") {
 			userRate = rate;
@@ -196,14 +204,14 @@ public class CrawlerController extends HttpServlet {
 		File file = new File(htmlFilePath);
 		if (file.exists()) {
 			file.delete();
-			System.out.println("File deleted");
+			logger.info("File deleted");
 		}
 		if (add) {
 			PageDTO page = (PageDTO) session.getAttribute("PAGECONFIG");
 			session.setAttribute("CFS", newConfig);
-			System.out.println(""+page.getSite() +": "+ page.getNextPage());
+			System.out.println("" + page.getSite() + ": " + page.getNextPage());
 			session.setAttribute("PGS", page);
-			System.out.println(""+newConfig.getSite() + ": " + newConfig.getName());
+			System.out.println("" + newConfig.getSite() + ": " + newConfig.getName());
 			session.setAttribute("MESSAGE", "New page configuration has been inserted to storage!");
 			return "successParse";
 		} else {
@@ -215,7 +223,7 @@ public class CrawlerController extends HttpServlet {
 	@RequestMapping(value = "/checkUrl", method = RequestMethod.POST)
 	public @ResponseBody String checkUrl(@RequestParam("url") String url, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
-		String responseText="";
+		String responseText = "";
 		URL u;
 		try {
 			u = new URL(url);
@@ -224,11 +232,9 @@ public class CrawlerController extends HttpServlet {
 			huc.setRequestMethod("GET"); // OR huc.setRequestMethod ("HEAD");
 			huc.connect();
 			int code = huc.getResponseCode();
-			System.out.println(code);
-			if(code==200||code==302){
+			if (code == 200 || code == 302) {
 				responseText = CodeManager.DONE;
-			}
-			else{
+			} else {
 				responseText = CodeManager.FAIL;
 			}
 		} catch (MalformedURLException e) {
@@ -238,7 +244,7 @@ public class CrawlerController extends HttpServlet {
 			// TODO Auto-generated catch block
 			responseText = CodeManager.FAIL;
 		}
-		
+
 		return responseText;
 	}
 

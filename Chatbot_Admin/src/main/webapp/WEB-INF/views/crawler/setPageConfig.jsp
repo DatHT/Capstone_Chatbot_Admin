@@ -5,15 +5,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href="<c:url value = "/resources/assets/cssCode/runnable.css"/>"
+<link href="<c:url value = "/resources/assets/css/runnable.css"/>"
 	rel="stylesheet">
-<link href='<c:url value="/resources/assets/cssCode/popup.css"/>'
+<link href='<c:url value="/resources/assets/css/popup.css"/>'
 	rel="stylesheet">
 <script src='<c:url value="/resources/assets/configscripts/parse.js" />'></script>
 
-<!--right slidebar-->
 <link
-	href="<c:url value="/resources/assets/cssboostrap/slidebars.css"/>"
+	href="<c:url value="/resources/assets/css/slidebars.css"/>"
 	rel="stylesheet">
 </head>
 <body>
@@ -32,7 +31,7 @@
 				<span class="bar half"></span>
 				<div class="circle active">
 					<span class="labelRecipe">1</span> <span class="title"
-						style="margin-left: -30px" s>RestaurantName</span>
+						style="margin-left: -30px">RestaurantName</span>
 				</div>
 				<span class="bar"></span>
 				<div class="circle">
@@ -45,7 +44,7 @@
 			</div>
 			<div class="card-body card-padding"
 				style="padding-bottom: 0px; padding-top: 0px">
-				<button type="button" class="btn btn-primary" value="BACK"
+				<button type="button" class="btn btn-primary" id ="btnBack" value="BACK"
 					onclick="back()">BACK</button>
 				<button type="button" class="btn btn-primary" id="btnNext"
 					value="NEXT" onclick="next()">NEXT</button>
@@ -95,7 +94,7 @@
 						'width' : document.getElementById("scr").offsetWidth,
 						'position' : 'fixed',
 						'z-index' : '100',
-						'top' : '0px'
+						'top' : '-20px',
 					});
 					// Changing the height of the scroller anchor to that of scroller so that there is no change in the overall height of the page.
 					$('.scroller_anchor').css('height', '50px');

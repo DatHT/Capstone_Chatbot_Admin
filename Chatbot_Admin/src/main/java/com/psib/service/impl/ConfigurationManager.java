@@ -20,6 +20,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +44,8 @@ public class ConfigurationManager implements IConfigurationManager {
 	@Autowired
 	private IFileServerDao fileServerDao;
 	private String xmlFilePathFolder;
-	
+	private static final Logger logger = LoggerFactory.getLogger(ConfigurationManager.class);
+
 	public String getPageConfigFilePath() throws IOException {
 		if (xmlFilePathFolder == null) {
 			xmlFilePathFolder = fileServerDao.getByName(SpringPropertiesUtil.getProperty("xml_file_path")).getUrl();
@@ -60,9 +63,9 @@ public class ConfigurationManager implements IConfigurationManager {
 	@Override
 	public String loadConfig() throws IOException {
 		String pageConfigXML = getPageConfigFilePath();
-		System.out.println("Page config: "+pageConfigXML);
+		logger.info("Page config: " + pageConfigXML);
 		String parserConfigXML = getParserConfigFilePath();
-		System.out.println("Paser config: "+parserConfigXML);
+		logger.info("Paser config: " + parserConfigXML);
 		String xmlFilePath = parserConfigXML;
 		if (!new File(xmlFilePath).exists()) {
 			File file = new File(xmlFilePath);
@@ -79,7 +82,7 @@ public class ConfigurationManager implements IConfigurationManager {
 		String quote = "'";
 		char c = quote.charAt(0);
 		configString = configString.replace('"', c);
-		System.out.println(configString);
+		logger.info(configString);
 
 		// get Page
 		xmlFilePath = pageConfigXML;
@@ -97,12 +100,12 @@ public class ConfigurationManager implements IConfigurationManager {
 		String pageString = XMLUtils.marshallPageToString(pages);
 		pageString = pageString.replace('"', c);
 
-		System.out.println(pageString);
+		logger.info(pageString);
 		return configString + "," + pageString;
 	}
 
-	public static boolean linkExists(String URLName) {
-		String responseText = "";
+	public static boolean checkUrlExisted(String URLName) {
+		// String responseText = "";
 		URL u;
 		try {
 			u = new URL(URLName);
@@ -111,7 +114,6 @@ public class ConfigurationManager implements IConfigurationManager {
 			huc.setRequestMethod("GET"); // OR huc.setRequestMethod ("HEAD");
 			huc.connect();
 			int code = huc.getResponseCode();
-			System.out.println(code);
 			if (code == 200 || code == 302) {
 				return true;
 			} else {
@@ -127,11 +129,12 @@ public class ConfigurationManager implements IConfigurationManager {
 	}
 
 	@Override
-	public String loadHtmlContentFromUrl(String linkPage, String url, String htmlFilePath) throws IOException {
+	public boolean loadHtmlContentFromUrl(String linkPage, String htmlFilePath) throws IOException {
+		String url = CommonUtils.commonUrl(linkPage);
 		// TODO Auto-generated method stub
 		String pageSource = "";
 		HtmlUnitDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38);
-		if (linkExists(linkPage)) {
+		if (checkUrlExisted(linkPage)) {
 			try {
 				driver.get(linkPage);
 				driver.setJavascriptEnabled(true);
@@ -141,14 +144,13 @@ public class ConfigurationManager implements IConfigurationManager {
 				pageSource = "<html>" + pageSource + "</html>";
 
 			} catch (StackOverflowError ex) {
-				System.out.print("Cannot load this url");
-				return "wrong";
+				logger.info("Cannot load this url");
+				return false;
 			} catch (IllegalStateException ex) {
-				return "wrong";
+				return false;
 			}
-		}
-		else{
-			return "wrong";
+		} else {
+			return false;
 		}
 		// catch (WebDriverException ex) {
 		// System.out.print("Cannot load this url 2");
@@ -167,14 +169,14 @@ public class ConfigurationManager implements IConfigurationManager {
 			BufferedReader in;
 			in = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
 			while ((inputLine = in.readLine()) != null) {
-				// System.out.println(in.readLine());
+				// logger.info(in.readLine());
 				res.append(CommonUtils.htmlEncode(inputLine) + "\n");
 				// res.append(inputLine + "\n");
 			}
-			// System.out.println(res);
+			// logger.info(res);
 			in.close();
 		} catch (Exception e) {
-			System.out.println("Cannot encoding");
+			logger.info("Cannot encoding");
 		}
 
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(htmlFilePath));
@@ -187,11 +189,11 @@ public class ConfigurationManager implements IConfigurationManager {
 
 		// close the stream
 		bwr.close();
-		return "done";
+		return true;
 	}
 
 	@Override
-	public String getNextPage(String nextPage, String linkPage, String xpath, String url) {
+	public String getNextPage(String nextPage, String linkPage, String url) {
 		// TODO Auto-generated method stub
 		String next = "N/A";
 		if (nextPage != null && !nextPage.isEmpty()) {
@@ -200,16 +202,6 @@ public class ConfigurationManager implements IConfigurationManager {
 			driver.get(linkPage);
 
 			// go to get nextPage
-
-			List<String> pageUrl = new ArrayList<String>();
-			List<WebElement> content = driver.findElements(By.xpath(xpath));
-			for (WebElement data : content) {
-				pageUrl.add(data.getAttribute("href"));
-			}
-
-			for (String str : pageUrl) {
-				System.out.println(str);
-			}
 			List<WebElement> nextPages = driver.findElements(By.xpath(nextPage));
 			String numNextPage = "";
 			if (nextPages.size() > 1) {
@@ -300,7 +292,7 @@ public class ConfigurationManager implements IConfigurationManager {
 				break;
 			}
 		}
-		System.out.println("EXIST" + exist + pos);// Existed
+		logger.info("EXIST" + exist + pos);// Existed
 		// solution update
 		if (exist) {
 			checkExist.remove(pos);

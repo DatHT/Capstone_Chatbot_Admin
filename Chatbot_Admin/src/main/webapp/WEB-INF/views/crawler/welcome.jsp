@@ -46,7 +46,7 @@
 			<h2>Force Parser</h2>
 		</div>
 		<div class="form-horizental">
-			<div class="card col-sm-6" id="viewStatic">
+			<div class="card col-sm-6" id="viewStatic" style="height: 400px">
 				<!--    Hover Rows  -->
 				<div class="card-header">
 					<h2 id="tableHeader">Static Parse</h2>
@@ -100,30 +100,22 @@
 								<button type="submit" data-toggle="modal" href="#parsing"
 									class="btn btn-primary" value="StaticParse" name="btnAction"
 									onclick="showModal2()">StaticParse</button>
-							</div>
-							<div class="" style="display: none" id="loading_image">
-								<div class="modal-header">
-									<h4 class="modal-title">Your system is parsing now</h4>
-								</div>
-								<div class="modal-body">
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+								<div style="display: none; float: right" id="loading_image">
+									<span>System is parsing...</span> <img
+										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+										src="<c:url value="/resources/assets/img/loader2.gif"/>" />
 								</div>
 							</div>
+
 						</div>
 					</form:form>
 				</div>
 				<!-- End  Hover Rows  -->
 			</div>
-			<div class="card col-md-6" id="viewDynamic">
+			<div class="card col-md-6" id="viewDynamic" style="height: 400px">
 				<!--    Hover Rows  -->
 				<div class="card-header">
 					<h2 id="tableHeader">Dynamic Parse</h2>
@@ -164,28 +156,23 @@
 									</select>
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group" style="">
+								<br> <br>
+							</div>
+							<div class="form-group" style="">
 								<button type="submit" data-toggle="modal" href="#parsing"
-									class="btn btn-primary" style=""
-									value="DynamicParse" name="btnAction" onclick="showModal()">DynamicParse</button>
-							</div>
-							<div class="" style="display: none" id="loading_image2">
-								<div class="modal-header">
-									<h4 class="modal-title">Your system is parsing now</h4>
-								</div>
-								<div class="modal-body">
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-									<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+									class="btn btn-primary" value="DynamicParse" name="btnAction"
+									onclick="showModal()">DynamicParse</button>
+								<div style="display: none;float:right" id="loading_image2">
+									<span>System is parsing...</span> <img
+										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+										src="<c:url value="/resources/assets/img/loader2.gif"/>" />
 								</div>
 							</div>
+
 						</div>
 					</form:form>
 				</div>
@@ -231,8 +218,8 @@
 </script>
 <script>
 	function loadPage() {
-		var a = document.getElementById("viewStatic").offsetHeight;
-		document.getElementById("viewDynamic").style.height = ''+a+'px';
+		var a = document.getElementById("viewStatic").clientHeight;
+		//document.getElementById("viewDynamic").style.height = a + 'px';
 		loadProcess('selectSite');
 		checkSelect();
 	}

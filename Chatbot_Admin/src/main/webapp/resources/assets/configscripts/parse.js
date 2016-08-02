@@ -3,21 +3,25 @@ var col = 0, count = 0, flagBack = 0, flagDeleteName = 0, flagClick = 0, flagEdi
 var currentPosition = 0;
 var step = 3;
 var str1, str2, content, value, oldWrap;
-var preview = [];
+var preview = [ "", "", "", "" ];
 var indexComplete = [ "", "", "", "" ];
 $(document)
 		.ready(
 				function() {
 					var iframeDoc = document.getElementById('myframe').contentWindow;
+					document.getElementById("btnBack").disabled = true;
+					document.getElementById("btnNext").disabled = true;
 					$(iframeDoc)
 							.click(
 									function(event) {
 										event.preventDefault();
 										if (count < 3) {
 											urlXPath = createXPathFromElement(event.target);
-											content = event.target.innerHTML;
-											// alert(standardContent(content));
-											content = standardContent(content);
+											alert(urlXPath);
+											content = event.target.innerText
+											document.getElementById("btnNext").disabled = false;
+											// content =
+											// standardContent(content);
 											if (flagClick == 1) {
 												deleteRow('tbItems', 1);
 
@@ -34,29 +38,19 @@ $(document)
 												value = commonXpath(urlXPath);
 											}
 											if (count == 0) {
-												var no1 = event.target.innerText;
-												preview.push(no1);
-												showCart(no1 + "'\'",
+												showCart(content + "'\'",
 														'tbItems', 1);
 											}
 											if (count == 1) {
-												var no2 = event.target.innerText;
-												preview.push(no2);
-												showCart(no2 + "'\'",
+												showCart(content + "'\'",
 														'tbItems', 1);
+
 											}
 											if (count == 2) {
-												var no3 = event.target.innerText;
-												preview.push(no3);
-												showCart(no3 + "'\'",
+												showCart(content + "'\'",
 														'tbItems', 1);
-											}
-											// alert("CONTENT: " +
-											// event.target.innerHTML +
-											// "\nXPATH: " + urlXPath);
 
-											// Apply highlight div
-											// alert(getEleCss(value));
+											}
 											flagClickNew = 1;
 											try {
 												$("#myframe")
@@ -76,10 +70,6 @@ $(document)
 										}
 									});
 				});
-
-function disableClick() {
-
-}
 
 function getEleCss(value) {
 	var str_array = value.split("/");
@@ -208,10 +198,12 @@ function standardContent(content) {
 function next() {
 	var haveData = 0;
 	if ((count <= 3)) {
+		document.getElementById("btnBack").disabled = false;
 		if ((flagClick != 0) || (indexComplete[currentPosition] != "")
 				|| (count == 2)) {
 			if (flagClick == 1) {
 				indexComplete[count] = value;
+				preview[currentPosition] = content;
 			}
 			if (flagClick == 0 && count == 2) {
 				indexComplete[count] = "";
@@ -238,11 +230,9 @@ function next() {
 			document.getElementById("showXPath").innerHTML = "";
 
 			count++;
-			// if ((count == 1)||(count == 2)||(count == 3)) {
 			if ((count == 3) && (flagDeleteName == 1)) {
 				// deleteRow('tbItems', 1);
-				deleteRow('tbItems', 1);
-				flagDeleteName = 0;
+				// flagDeleteName = 0;
 			}
 			progressBar();
 			showCart(indexComplete[currentPosition - 1] + "'\'", 'tbMain', 2);
@@ -256,9 +246,6 @@ function next() {
 				}
 			}
 			if (count == 3) {
-				// alert("FINISHED");
-				// document.myForm.submit();
-				// openpopup('popup');
 				document.getElementById("btnNext").disabled = true;
 				document.getElementById("btnPreview").disabled = false;
 				document.getElementById("btnAdd").disabled = false;
@@ -281,41 +268,41 @@ function back() {
 			deleteRow('tbItems', 1);
 			flagClick = 0;
 		}
+		if (count == 1) {
+			document.getElementById("btnBack").disabled = true;
+		}
 		currentPosition--;
 		document.getElementById("showXPath").innerHTML = "";
 		col--;
 		deleteRow('tbMain', col);
 		if (flagBack != 1) {
-			// deleteRow('tbItems',1);
 			deleteRow('tbItems', 1);
 		}
 		// show current content
-		var newX = preview[currentPosition];
-		// value = newX;
-		// var a = window.frames[0].document.evaluate(newX,
-		// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
-		// var b = a.iterateNext();
-		// ???
+		var newX = indexComplete[currentPosition];
 		flagClick = 1;
-		// Apply highlight div
-		// alert(getEleCss(newX));
-		// var alertText = ""
-		// while (b) {
-		// alertText += b.textContent + " "
-		// b = a.iterateNext();
-		// }
-		// alert(alertText);
+		value = newX;
+		var a;
+		var b;
+		var alertText;
 		if (currentPosition == 0) {
-			showCart(preview[0] + "'\'", 'tbItems', 1);
+			content = preview[currentPosition];
+			a = window.frames[0].document
+					.evaluate(newX, window.frames[0].document, null,
+							XPathResult.ANY_TYPE, null);
+			b = a.iterateNext();
+			alertText = b.textContent;
+			showCart(alertText + "'\'", 'tbItems', 1);
 		}
 		if (currentPosition == 1) {
-			showCart(preview[1] + "'\'", 'tbItems', 1);
+			content = preview[currentPosition];
+			a = window.frames[0].document
+					.evaluate(newX, window.frames[0].document, null,
+							XPathResult.ANY_TYPE, null);
+			b = a.iterateNext();
+			alertText = b.textContent;
+			showCart(alertText + "'\'", 'tbItems', 1);
 		}
-
-		if (currentPosition == 2) {
-			showCart(preview[2] + "'\'", 'tbItems', 1);
-		}
-
 		try {
 			$("#myframe").contents().find(oldWrap).removeAttr("style",
 					"background-color: #69c2fe;");
@@ -326,17 +313,14 @@ function back() {
 		} catch (e) {
 		}
 		// end show
-
+		flagClick = 1;
 		if (count == 3) {
 			document.getElementById("btnNext").disabled = false;
-			// document.getElementById("btnPreview").disabled = true;
-			// document.getElementById("btnAdd").disabled = true;
 		}
 		flagBack = 1;// danh dau dang back
 		backProgressBar();
 		count--;
 		removeFromCart();
-		// sessionStorage.cart = null;
 		showCart("", 'tbItems');
 		showCart("", 'tbMain');
 	}
@@ -549,8 +533,6 @@ function removeFromCart() {
 
 function editXPath() {
 	flagEditXPath = 1;
-	// alert(document.getElementsByName('txtXPath')[0].value);
-	// get newXpath
 	deleteRow('tbItems', 1);
 	var newX = document.getElementsByName('txtXPath')[0].value;
 	value = newX;
@@ -589,9 +571,6 @@ function addRow(tableId, cells, type) {
 	var newRow;
 	for (var i = 0; i < cells.length - 1; i++) {
 		newRow = tableElem.insertRow(tableElem.rows.length);
-
-		// newCell = newRow.insertCell(newRow.cells.length);
-		// newCell.innerHTML = ++col;
 		newCell = newRow.insertCell(newRow.cells.length);
 		if (type == 1) {
 			newCell.innerHTML = '<input type="text" class="form-control" name="txtTemp" value="'
@@ -659,7 +638,7 @@ function addNew() {
 	while (currentPosition < 3) {
 		count++;
 		progressBar();
-		showCart(indexComplete[currentPosition] + "'\'", 'tbMain', 3);
+		showCart(indexComplete[currentPosition] + "'\'", 'tbMain', 1);
 		addToCart(indexComplete[currentPosition]);
 		currentPosition++;
 	}
@@ -703,13 +682,12 @@ function openpopup(id) {
 	// Put a Close button for closing the popped up Div tag
 	if (divobj.innerHTML.indexOf("closepopup('" + id + "')") < 0)
 		divobj.innerHTML = "<div class=\"panel panel-primary\" style=\"position:fixed\"><div class=\"panel-heading\" style=\"position:relative;height:42px;width:510px;margin:-5px\">"
-			+ "<p style=\"font-size:14px;float:left;padding:10px\">Preview Your Selected Field</p>"
-			+ "<a style=\"float:right;padding:5px;margin-right:20px\" href=\"#\" onclick=\"closepopup('"
-			+ id
-			+ "')\"><span class=\"btn btn-danger m-b-less\" style=\"float:right;position:relative\">Close</span></a>"
-			+ "<button style=\"float:right;margin:5px\" type=\"submit\" class=\"btn btn-info m-b-10\" id=\"btnAdd\" name =\"btnAction\" value=\"AddNewConfiguration\" onclick=\"addNew()\" >AddPageDetails</button>"
-			+"</div></div>"
-			+ divobj.innerHTML;
+				+ "<p style=\"font-size:14px;float:left;padding:10px\">Preview Your Selected Field</p>"
+				+ "<a style=\"float:right;padding:5px;margin-right:20px\" href=\"#\" onclick=\"closepopup('"
+				+ id
+				+ "')\"><span class=\"btn btn-danger m-b-less\" style=\"float:right;position:relative\">Close</span></a>"
+				+ "<button style=\"float:right;margin:5px\" type=\"submit\" class=\"btn btn-info m-b-10\" id=\"btnAdd\" name =\"btnAction\" value=\"AddNewConfiguration\" onclick=\"addNew()\" >AddPageDetails</button>"
+				+ "</div></div>" + divobj.innerHTML;
 }
 function closepopup(id) {
 	var divbg = document.getElementById('bg');
