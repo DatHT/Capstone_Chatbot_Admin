@@ -103,7 +103,7 @@ public class ForceParseManager implements IForceParseManager {
 
 	@Override
 	public String dynamicParse(int numOfPage, String url) {
-		// TODO Auto-generated method stub
+		
 		long startTime = System.nanoTime();
 		WebDriver driver = new FirefoxDriver();
 		try {
@@ -233,7 +233,6 @@ public class ForceParseManager implements IForceParseManager {
 				String latlong = "" + latitude + "," + longitude;
 				String district = CommonUtils.splitDistrict(latlong);
 				String newAddress = CommonUtils.splitAddress(district, address);
-				logger.info("bac: "+district+newAddress);
 
 				double rate = 0;
 				if (!userRate.equals("")) {
@@ -299,6 +298,7 @@ public class ForceParseManager implements IForceParseManager {
 			logger.info("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
+			driver.close();
 			logger.info("STOP PARSE");
 		}
 		return "done";
@@ -306,7 +306,7 @@ public class ForceParseManager implements IForceParseManager {
 
 	@Override
 	public String staticParse(String numPage, String noPage, String url) {
-		// TODO Auto-generated method stub
+		
 		long startTime = System.nanoTime();
 		WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
 		try {
