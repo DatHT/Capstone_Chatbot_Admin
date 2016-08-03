@@ -44,16 +44,13 @@ function drop(ev) {
             }
 
             contentDiv += "<div id='"
-                + name + lexicalMap[name]
+                + guid()
                 + "' class='draggable' draggable='true' ondragstart='drag(event)'>"
-                + name
-                + "</div>"
+                + name + "</div>"
         }
         $('#box-dragable').html(contentDiv);
-
     }
 }
-
 
 function addIntentRows(tableId, data) {
     var jsonData = JSON.parse(data);
@@ -136,7 +133,6 @@ function moveDiv(divFromId, divToId) {
     }
 }
 
-
 function loadIntent(id) {
     $('#loadingModal').modal('show');
     if (window.XMLHttpRequest) {
@@ -151,7 +147,6 @@ function loadIntent(id) {
             if (flagStep2 || flagStep4) {
                 insertPattern(id);
             }
-
 
             if (flagSave) {
 
@@ -184,14 +179,18 @@ function loadIntent(id) {
                     .on(
                         "loaded.rs.jquery.bootgrid",
                         function () {
-                            /* Executes after data is loaded and rendered */
+                            /*
+                             * Executes after data is loaded and
+                             * rendered
+                             */
                             $('#tableIntent')
                                 .find(".btn-delete-example")
                                 .on(
                                     "click",
                                     function (e) {
-                                        var rowname = $(this).data(
-                                            "row-name");
+                                        var rowname = $(this)
+                                            .data(
+                                                "row-name");
                                         var data = rowname
                                             .split(",")[0];
                                         swal(
@@ -222,6 +221,7 @@ function loadIntent(id) {
 }
 
 function insertPattern(intentId) {
+	$('#progress-status').css('width', 100 + '%').attr('aria-valuenow', 100);
     $('#loadingModal').modal('show');
     if (resultIntents != "") {
         var div = document.getElementById("containerDiv");
@@ -242,8 +242,8 @@ function insertPattern(intentId) {
                 newPattern += temp + " ";
                 anyCount++;
             } else {
-                newPattern += "@" + divs[i].textContent.trim() + ":" + divs[i].textContent.trim()
-                    + " ";
+                newPattern += "@" + divs[i].textContent.trim() + ":"
+                    + divs[i].textContent.trim() + " ";
             }
 
         }
@@ -276,8 +276,8 @@ function insertPattern(intentId) {
             };
             jsonData.userSays.push(userSay);
 
-//			var cate = document.getElementById("selectIntent");
-//			var intentId = cate.options[cate.selectedIndex].value;
+            // var cate = document.getElementById("selectIntent");
+            // var intentId = cate.options[cate.selectedIndex].value;
             // action here
             if (window.XMLHttpRequest) {
                 xmlhttp = new XMLHttpRequest();
@@ -294,8 +294,7 @@ function insertPattern(intentId) {
                             flagSave = false;
                         }
                         $('#loadingModal').modal('hide');
-                        notify("Your pattern was saved",
-                            "info");
+                        notify("Your pattern was saved", "info");
                         if (flagStep4) {
                             location.reload();
                         }
@@ -339,7 +338,7 @@ function displayStep2() {
                 "info");
         } else {
             document.getElementById("your-example").innerHTML = ownExample;
-            showCard2();
+            showCard2(ownExample);
             showTextInStep2(ownExample);
         }
     } else {
@@ -353,11 +352,10 @@ function displayStep2() {
     }
 }
 
-function showCard2() {
+function showCard2(ownExample) {
     document.getElementById("card-step1").style.display = "none";
     document.getElementById("card-step2").style.display = "block";
-    $('#progress-status').css('width', 25 + '%').attr('aria-valuenow',
-        25);
+    $('#progress-status').css('width', 25 + '%').attr('aria-valuenow', 25);
     flagStep1 = false;
     flagStep2 = true;
 }
@@ -374,17 +372,14 @@ function displayStep3() {
     if (intentId != "") {
         loadIntent(intentId);
 
-
     }
-
 
 }
 
 function showCard3() {
     document.getElementById("card-step2").style.display = "none";
     document.getElementById("card-step3").style.display = "block";
-    $('#progress-status').css('width', 50 + '%').attr('aria-valuenow',
-        50);
+    $('#progress-status').css('width', 50 + '%').attr('aria-valuenow', 50);
     flagStep2 = false;
     flagStep3 = true;
 }
@@ -392,8 +387,7 @@ function showCard3() {
 function displaStep4() {
     document.getElementById("card-step3").style.display = "none";
     document.getElementById("card-step4").style.display = "block";
-    $('#progress-status').css('width', 75 + '%').attr('aria-valuenow',
-        75);
+    $('#progress-status').css('width', 75 + '%').attr('aria-valuenow', 75);
     flagStep3 = false;
     flagStep4 = true;
 }
@@ -404,7 +398,6 @@ function finalStep() {
     loadIntent(intentId);
 
 }
-
 
 function showTextInStep2(example) {
 
@@ -431,8 +424,7 @@ function showTextInStep2(example) {
                         + "' class='droptarget' ondrop='drop(event)' ondragover='allowDrop(event)'>"
                         + text
                         + " <i class='zmdi zmdi-close-circle-o' style='vertical-align:top' onclick='deleteWord("
-                        + "`#" + divId + "`" + ")'></i>"
-                        + "</div>"
+                        + "`#" + divId + "`" + ")'></i>" + "</div>"
 
                     $("#containerDiv").append(divDrop);
 
@@ -506,7 +498,6 @@ function sendTestQuery() {
         createDivChat("pull-right", userQuery);
         sendQueryToServer(userQuery);
 
-
     }
 }
 
@@ -564,6 +555,50 @@ function createDivChat(pullPosition, textNode) {
     wrapper.appendChild(bodyText);
 
     chatFlow.appendChild(wrapper);
+}
 
 
+function suggestPattern() {
+    $('#loadingModal').modal('show');
+    var ownExample = document.getElementById("own-example").value;
+    var param = document.getElementById("paramName").value;
+    var token = document.getElementById("token").value;
+    $('#containerDiv').empty();
+    var data = {
+        "sentence": ownExample,
+    };
+
+    $.ajax({
+        type: "POST",
+        data: data,
+        url: "example/genPattern?" + param + "=" + token,
+        success: function (data) {
+            console.info(data);
+            if (data != "Sorry something wrong here") {
+                data.forEach(function (d, index) {
+                    var words = d.words;
+                    var lexical = d.lexical;
+                    var divId = guid();
+                    if (lexical.includes('any')) {
+                        lexical = 'any';
+                    }
+
+                    var divDrop = "<div id='"
+                        + divId
+                        + "' class='droptarget' ondrop='drop(event)' ondragover='allowDrop(event)'>"
+                        + words
+                        + " <i class='zmdi zmdi-close-circle-o' style='vertical-align:top' onclick='deleteWord("
+                        + "`#" + divId + "`" + ")'></i>" + "<div id='"
+                        + guid()
+                        + "' class='draggable' draggable='true' ondragstart='drag(event)'>"
+                        + lexical + "</div>" + "</div>"
+
+
+                    $("#containerDiv").append(divDrop);
+                });
+            }
+
+            $('#loadingModal').modal('hide');
+        }
+    });
 }

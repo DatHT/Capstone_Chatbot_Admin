@@ -15,7 +15,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String hompage() {
-		return "manageAccount";
+		return "redirect:login";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -27,7 +27,7 @@ public class HomeController {
 	@RequestMapping(value = "/dashBoard", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 
-		return "dataConfig";
+		return "log";
 	}
 
 	@RequestMapping(value = "/activateTimer", method = RequestMethod.GET)

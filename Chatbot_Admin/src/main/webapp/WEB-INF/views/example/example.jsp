@@ -1,11 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<script src="resources/assets/scripts/commonScript.js"></script>
+<script src="${pageContext.request.contextPath}/resources/assets/scripts/commonScript.js"></script>
 <script>
     var lexicals = '${jsonLexical}';
 </script>
-<script src="resources/assets/scripts/exampleScript.js"></script>
-<script src="resources/assets/scripts/logScript.js"></script>
+<script src="${pageContext.request.contextPath}/resources/assets/scripts/logScript.js"></script>
+<script src="${pageContext.request.contextPath}/resources/assets/scripts/exampleScript.js"></script>
 <c:set var="intents" value="${INTENTS}"/>
 <c:set var="lexicals" value="${LEXICAL}"/>
 <c:set var="logs" value="${LOGS}"/>
@@ -40,13 +40,14 @@
 		</div>
 </div>
 
-<!-- Step 2 -->
+<!-- Step 1 -->
 <div class="card" id="card-step1">
     <div class="card-header">
         <strong>Choose Option To Train Your Bot</strong>
+        
     </div>
     <div class="card-body card-padding">
-        <label class="radio radio-inline m-r-20"> <input id="rd-bag"
+        <label class="radio radio-inline m-r-20"> <input id="rd-bag" checked
                                                          onchange="handleShowBags()" type="radio"
                                                          name="inlineRadioOptions"
                                                          value="option1"> <i class="input-helper"></i> Get Example In
@@ -58,7 +59,7 @@
         Your Own
         Example
     </label>
-        <div class="row" id="train-bag" style="display: none">
+        <div class="row" id="train-bag" style="display: block">
             <div class="col-sm-7 m-b-15">
                 <select class="chosen" data-placeholder="Some suggestion example..."
                         onchange="pitchExample(this)" class="form-control" id="exampleList">
@@ -95,6 +96,10 @@
 <div class="card" id="card-step2" style="display: none">
     <div class="card-header">
         <strong>Training with pattern</strong>
+        <button class="btn btn-default btn-icon-text waves-effect"
+                onclick="suggestPattern()" style="float: right;">
+            <i class="zmdi zmdi-refresh"></i> Generate Pattern
+        </button>
     </div>
     <div class="card-body card-padding">
         <div id="user-say-container">

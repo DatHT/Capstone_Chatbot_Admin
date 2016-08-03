@@ -12,11 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.psib.common.factory.IntentFactory;
+import com.psib.common.factory.LexicalCategoryFactory;
 import com.psib.common.factory.QueryFactory;
 import com.psib.common.restclient.RestfulException;
 import com.psib.constant.CodeManager;
 import com.psib.constant.QueryConstant;
 import com.psib.constant.StatusCode;
+import com.psib.dto.jsonmapper.Entry;
+import com.psib.dto.jsonmapper.LexicalCategoryDto;
+import com.psib.dto.jsonmapper.LexicalDto;
 import com.psib.dto.jsonmapper.StatusDto;
 import com.psib.dto.jsonmapper.intent.ContextDto;
 import com.psib.dto.jsonmapper.intent.IntentDto;
@@ -24,6 +28,7 @@ import com.psib.dto.jsonmapper.intent.IntentsDto;
 import com.psib.dto.jsonmapper.intent.QueryDto;
 import com.psib.dto.jsonmapper.intent.QueryResult;
 import com.psib.service.IIntentManager;
+import com.psib.util.CommonUtils;
 
 /**
  * @author DatHT Jun 9, 2016
@@ -40,6 +45,9 @@ public class IntentManager implements IIntentManager {
 
 	@Autowired
 	private QueryFactory queryFactory;
+	
+	@Autowired
+    private LexicalCategoryFactory lexicalFactory;
 
 	/*
 	 * (non-Javadoc)
@@ -115,5 +123,25 @@ public class IntentManager implements IIntentManager {
 		LOG.info("[checkUserPattern] end-false");
 		return false;
 	}
+	
+	@Override
+	public String generatePattern(String sentence) throws IOException, RestfulException {
+		LOG.info("[generatePattern] start");
+		List<LexicalCategoryDto> listPhrase = lexicalFactory.getLexicals();
+		sentence = sentence.toLowerCase();
+		for(LexicalCategoryDto dto : listPhrase) {
+			LexicalDto phrases = lexicalFactory.getLexicalById(dto.getId());
+			for(Entry entry : phrases.getEntries()) {
+				String name = entry.getValue().toLowerCase();
+				if (CommonUtils.isContain(sentence, name)) {
+					sentence = sentence.replace(name, "*" + dto.getName() + "," + name + "*");
+				}
+			}
+		}
+		LOG.info("[generatePattern] sentence: " + sentence);
+		LOG.info("[generatePattern] end");
+		return sentence;
+	}
+	
 
 }

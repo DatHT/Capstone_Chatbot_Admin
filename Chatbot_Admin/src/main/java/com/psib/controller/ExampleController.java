@@ -25,6 +25,7 @@ import com.psib.common.restclient.RestfulException;
 import com.psib.constant.CodeManager;
 import com.psib.constant.QueryConstant;
 import com.psib.constant.StatusCode;
+import com.psib.dto.SuggestDto;
 import com.psib.dto.jsonmapper.LexicalCategoryDto;
 import com.psib.dto.jsonmapper.TrainDto;
 import com.psib.dto.jsonmapper.intent.DataDto;
@@ -187,4 +188,41 @@ public class ExampleController {
 
         return responseText;
     }
+    
+    @RequestMapping(path = "/genPattern", method = RequestMethod.POST)
+    @ResponseBody
+    public Object suggestPattern(@RequestParam("sentence")String sentence) {
+    	String responseText = "";
+    	List<SuggestDto> listObj = new ArrayList<>();
+    	try {
+			responseText = manager.generatePattern(sentence);
+			//generate map
+			String[] result = responseText.split("\\*");
+			
+			int count = 0;
+			for (int i = 0; i < result.length; i++) {
+				System.out.println(result[i]);
+				if (!result[i].contains(",")) {
+					if (!result[i].equals(" ")) {
+						SuggestDto dto = new SuggestDto("any" + count, result[i].trim());
+						listObj.add(dto);
+						count ++;
+					}
+				}else {
+					if (!result[i].equals(" ")) {
+						String[] temp = result[i].split(",");
+						SuggestDto dto = new SuggestDto(temp[0].trim(), temp[1].trim());
+						listObj.add(dto);
+					}
+					
+				}
+			}
+			
+		} catch (IOException e) {
+			responseText = CodeManager.ERROR;
+		} catch (RestfulException e) {
+			responseText = CodeManager.ERROR;
+		}
+    	return listObj;
+	}
 }

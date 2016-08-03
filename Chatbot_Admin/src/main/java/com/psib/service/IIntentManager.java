@@ -28,4 +28,6 @@ public interface IIntentManager {
 	StatusCode addPattern(String pattern, String id) throws IOException, RestfulException;
 	
 	boolean checkUserPattern(String pattern) throws IOException, RestfulException;;
+	
+	String generatePattern(String pattern)  throws IOException, RestfulException;
 }

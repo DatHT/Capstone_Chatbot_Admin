@@ -378,4 +378,12 @@ public class CommonUtils {
 
 		return result;
 	}
+	
+	
+	public static boolean isContain(String source, String subItem){
+        String pattern = "\\b"+subItem+"\\b";
+        Pattern p=Pattern.compile(pattern);
+        Matcher m=p.matcher(source);
+        return m.find();
+   }
 }
