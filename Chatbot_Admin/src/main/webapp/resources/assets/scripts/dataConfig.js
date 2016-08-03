@@ -16,9 +16,11 @@ function applySynchronize() {
 	var api;
 	var log;
 	var synonym;
+	var crawler;
 	var fromAPI = document.getElementById("ts1");
 	var fromLog = document.getElementById("ts2");
 	var fromSynonym = document.getElementById("ts3");
+	var fromCrawler = document.getElementById("ts4");
 	if (fromAPI.checked) {
 		api = 'yes';
 	}else {
@@ -33,6 +35,11 @@ function applySynchronize() {
 		synonym = 'yes';
 	}else {
 		synonym = 'no';
+	}
+	if (fromCrawler.checked) {
+		crawler = 'yes';
+	}else {
+		crawler = 'no';
 	}
 	if (window.XMLHttpRequest) {
 		xmlhttp = new XMLHttpRequest();
@@ -52,6 +59,6 @@ function applySynchronize() {
 	xmlhttp.open("POST", "/chatbot_admin/config/sync", true);
 	xmlhttp.setRequestHeader("Content-type",
 	"application/x-www-form-urlencoded;charset=utf-8");
-	xmlhttp.send("api=" + api + "&log=" + log + "&synonym=" + synonym + "&day=" + day
+	xmlhttp.send("api=" + api + "&log=" + log + "&synonym=" + synonym + "&crawler=" + crawler + "&day=" + day
 			+ "&hour=" + hour + "&minute=" + minute + "&" + param + "=" + token);
 }

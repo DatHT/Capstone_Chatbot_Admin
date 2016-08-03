@@ -5,8 +5,6 @@ package com.psib.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
 
 import org.slf4j.Logger;
@@ -23,8 +21,6 @@ import com.psib.common.CronExpressionException;
 import com.psib.constant.DayOfWeek;
 import com.psib.constant.TimeSchedule;
 import com.psib.model.Scheduler;
-import com.psib.service.ILexicalCategoryManager;
-import com.psib.service.IPhraseManager;
 import com.psib.service.ISchedulerManager;
 import com.psib.timer.trigger.ScheduleChanger;
 import com.psib.util.CronExpressionUtils;
@@ -44,6 +40,7 @@ public class DataConfigController {
 	private static final String API = "api_sync";
 	private static final String LOG = "log_sync";
 	private static final String SYNONYM = "synonym_sync";
+	private static final String CRAWLER = "crawler_sync";
 
 	@Autowired
 	private ISchedulerManager manager;
@@ -61,16 +58,19 @@ public class DataConfigController {
 		model.addAttribute(API, manager.getSchedularByName("api"));
 		model.addAttribute(LOG, manager.getSchedularByName("log"));
 		model.addAttribute(SYNONYM, manager.getSchedularByName("synonym"));
+		model.addAttribute(CRAWLER, manager.getSchedularByName("crawler"));
 		return "dataConfig";
 	}
 
 	@RequestMapping(value = "/sync", method = RequestMethod.POST)
 	public @ResponseBody String synchronize(Model model, @RequestParam("api") String api,
 			@RequestParam("log") String log, @RequestParam("synonym") String synonym,
+			@RequestParam("crawler") String crawler,
 			@RequestParam("day") String day, @RequestParam("hour") String hour,
 			@RequestParam("minute") String minute) {
 
 		String responseText = "";
+		// sync to API
 		Scheduler apiScheduler = manager.getSchedularByName("api");
 		apiScheduler.setFrequency(day);
 		apiScheduler.setHour(Integer.valueOf(hour));
@@ -81,7 +81,7 @@ public class DataConfigController {
 			apiScheduler.setStatus(false);
 		}
 		manager.updateShedulerStatus(apiScheduler);
-		// sync to api
+		// sync to log
 		Scheduler logScheduler = manager.getSchedularByName("log");
 		logScheduler.setFrequency(day);
 		logScheduler.setHour(Integer.valueOf(hour));
@@ -103,6 +103,17 @@ public class DataConfigController {
 			synonymScheduler.setStatus(false);
 		}
 		manager.updateShedulerStatus(synonymScheduler);
+		//sync crawler
+		Scheduler crawlerScheduler = manager.getSchedularByName("crawler");
+		crawlerScheduler.setFrequency(day);
+		crawlerScheduler.setHour(Integer.valueOf(hour));
+		crawlerScheduler.setMinute(Integer.valueOf(minute));
+		if (synonym.equals("yes")) {
+			crawlerScheduler.setStatus(true);
+		} else {
+			crawlerScheduler.setStatus(false);
+		}
+		manager.updateShedulerStatus(crawlerScheduler);
 		logger.info("[Start Change Scheduler]");
 		String cron = convertToCron(day, hour, minute);
 		logger.info("[CRON_] " + cron);

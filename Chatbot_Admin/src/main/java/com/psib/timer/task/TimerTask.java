@@ -25,6 +25,7 @@ import com.psib.model.LexicalCategory;
 import com.psib.model.Phrase;
 import com.psib.model.ProductDetail;
 import com.psib.model.Scheduler;
+import com.psib.service.IForceParseManager;
 import com.psib.service.IIntentManager;
 import com.psib.service.ILexicalCategoryManager;
 import com.psib.service.ILogManager;
@@ -63,6 +64,9 @@ public class TimerTask {
 	
 	@Autowired
 	private ISynonymManager synonymManager;
+	
+	@Autowired
+	private IForceParseManager forceParseManager;
 
 	public void startTimerForApiAndLog() {
 		//sync phrase from api to db
@@ -79,6 +83,9 @@ public class TimerTask {
 		//sync synonym to API and DB
 		
 		synchronizeSynonymToAPI();
+		
+		//auto run crawler data
+		automaticCrawler();
 		
 
 	}
@@ -261,6 +268,19 @@ public class TimerTask {
 			LOG.error("[Sync error] " + e.getMessage());
 		} catch (RestfulException e) {
 			LOG.error("[Sync error] " + e.getMessage());
+		}
+	}
+	
+	private void automaticCrawler() {
+		LOG.info("[doTimer] Start - Crawler");
+		Scheduler crawlerScheduler = manager.getSchedularByName("crawler");
+		if (crawlerScheduler.isStatus()) {
+			try {
+				forceParseManager.timerAutomaticParse();
+				LOG.info("[doTimer] End - Syn Crawler");
+			} catch (IOException e) {
+				LOG.info("[doTimer] log-error-" + e.getMessage());
+			}
 		}
 	}
 
