@@ -221,7 +221,7 @@ function loadIntent(id) {
 }
 
 function insertPattern(intentId) {
-	$('#progress-status').css('width', 100 + '%').attr('aria-valuenow', 100);
+    $('#progress-status').css('width', 100 + '%').attr('aria-valuenow', 100);
     $('#loadingModal').modal('show');
     if (resultIntents != "") {
         var div = document.getElementById("containerDiv");
@@ -328,6 +328,14 @@ function insertPattern(intentId) {
 
 }
 
+function showCard1Back() {
+    document.getElementById("card-step2").style.display = "none";
+    document.getElementById("card-step1").style.display = "block";
+    $('#progress-status').css('width', 0 + '%').attr('aria-valuenow', 0);
+    flagStep1 = true;
+    flagStep2 = false;
+}
+
 function displayStep2() {
     var step1Example = document.getElementById("exampleList");
     var selectId = step1Example.options[step1Example.selectedIndex].value;
@@ -360,6 +368,14 @@ function showCard2(ownExample) {
     flagStep2 = true;
 }
 
+function showCard2Back() {
+    document.getElementById("card-step3").style.display = "none";
+    document.getElementById("card-step2").style.display = "block";
+    $('#progress-status').css('width', 25 + '%').attr('aria-valuenow', 25);
+    flagStep3 = false;
+    flagStep2 = true;
+}
+
 function displayStep3() {
     var cate = document.getElementById("selectIntent");
     var intentId = "";
@@ -384,6 +400,14 @@ function showCard3() {
     flagStep3 = true;
 }
 
+function showCard3Back() {
+    document.getElementById("card-step4").style.display = "none";
+    document.getElementById("card-step3").style.display = "block";
+    $('#progress-status').css('width', 50 + '%').attr('aria-valuenow', 50);
+    flagStep4 = false;
+    flagStep3 = true;
+}
+
 function displaStep4() {
     document.getElementById("card-step3").style.display = "none";
     document.getElementById("card-step4").style.display = "block";
@@ -405,6 +429,7 @@ function showTextInStep2(example) {
 
     // display example
     var chosenExample = document.getElementById("chosenExample");
+    chosenExample.innerHTML="";
     var para = document.createElement("p");
     var node = document.createTextNode(example);
     para.appendChild(node);
@@ -480,14 +505,22 @@ function handleShowType() {
 function processTraining() {
     if (flagStep1) {
         displayStep2();
-
     } else if (flagStep2) {
         displayStep3();
-
     } else if (flagStep3) {
         displaStep4();
     } else if (flagStep4) {
         finalStep();
+    }
+}
+
+function backTraining() {
+    if (flagStep2) {
+        showCard1Back();
+    } else if (flagStep3) {
+        showCard2Back();
+    } else if (flagStep4) {
+        showCard3Back();
     }
 }
 
