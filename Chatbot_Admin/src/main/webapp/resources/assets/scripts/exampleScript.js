@@ -221,7 +221,6 @@ function loadIntent(id) {
 }
 
 function insertPattern(intentId) {
-    $('#progress-status').css('width', 100 + '%').attr('aria-valuenow', 100);
     $('#loadingModal').modal('show');
     if (resultIntents != "") {
         var div = document.getElementById("containerDiv");
@@ -419,6 +418,7 @@ function displaStep4() {
 function finalStep() {
     var cate = document.getElementById("selectIntent");
     var intentId = cate.options[cate.selectedIndex].value;
+    $('#progress-status').css('width', 100 + '%').attr('aria-valuenow', 100);
     loadIntent(intentId);
 
 }
