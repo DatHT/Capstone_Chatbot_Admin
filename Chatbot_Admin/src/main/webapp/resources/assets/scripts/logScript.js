@@ -82,7 +82,7 @@ function reloadBootgridTable() {
         		}
         	},
             "commands": function (column, row) {
-                return "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add' style='margin: 5px;'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
+                return "<button data-row-usersay=\"" + row.custom + "\" data-row-id='" + row.logid + "' data-toggle='modal' data-target='#myModal' class='btn palette-Cyan btn-icon bg waves-effect waves-circle waves-float action-add' style='margin: 5px;'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i></button>"+
                 "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' data-row-status='" + row.status + "' class='btn btn-default btn-icon waves-effect waves-circle waves-float btn-full-conversation' style='margin: 5px;'><i class='zmdi zmdi-comment-alt-text'></i></button>"+
                 "<button data-row-usersay='" + row.usersay + "' data-row-id='" + row.logid + "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float action-delete' style='margin: 5px;'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
                 
