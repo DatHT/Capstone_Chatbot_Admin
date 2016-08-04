@@ -276,6 +276,7 @@ public class TimerTask {
 		Scheduler crawlerScheduler = manager.getSchedularByName("crawler");
 		if (crawlerScheduler.isStatus()) {
 			try {
+				LOG.info("[doTimer] Do - Syn Crawler");
 				forceParseManager.timerAutomaticParse();
 				LOG.info("[doTimer] End - Syn Crawler");
 			} catch (IOException e) {

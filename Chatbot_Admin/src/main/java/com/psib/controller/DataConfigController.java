@@ -108,7 +108,7 @@ public class DataConfigController {
 		crawlerScheduler.setFrequency(day);
 		crawlerScheduler.setHour(Integer.valueOf(hour));
 		crawlerScheduler.setMinute(Integer.valueOf(minute));
-		if (synonym.equals("yes")) {
+		if (crawler.equals("yes")) {
 			crawlerScheduler.setStatus(true);
 		} else {
 			crawlerScheduler.setStatus(false);
