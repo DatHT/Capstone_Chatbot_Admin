@@ -102,6 +102,9 @@ public class ExampleController {
         } catch (RestfulException e) {
             model.addAttribute(ERROR, e.getMessage());
             return "error";
+        } catch (RuntimeException e) {
+        	model.addAttribute(ERROR, e.getMessage());
+            return "error";
         }
 
     }

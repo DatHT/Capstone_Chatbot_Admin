@@ -593,7 +593,7 @@ function createDivChat(pullPosition, textNode) {
 
 function suggestPattern() {
     $('#loadingModal').modal('show');
-    var ownExample = document.getElementById("own-example").value;
+    var ownExample = document.getElementById("your-example").innerHTML.trim();
     var param = document.getElementById("paramName").value;
     var token = document.getElementById("token").value;
     $('#containerDiv').empty();
