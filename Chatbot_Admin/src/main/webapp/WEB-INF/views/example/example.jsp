@@ -16,6 +16,10 @@
 		<h2>Training Bot By Example</h2>
 	</div>
 	<div class="card-header cw-header palette-Teal-400 bg" style="margin: 2%;">
+        <button onclick="backTraining()" style="left: 25px !important;"
+                class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float">
+            <i class="zmdi zmdi-arrow-left zmdi-hc-fw"></i>
+        </button>
 		<div class="cwh-year">Training your bot step by step</div>
 		<div class="cwh-day" id="your-example"></div>
 			<!-- <h2>Training your bot step by step</h2>
@@ -25,7 +29,7 @@
 				<i class="zmdi zmdi-arrow-right zmdi-hc-fw"></i>
 			</button>
 	</div>
-	<div class="card-body card-padding">
+	<div class="card-body card-padding" style="padding-left:100px">
 			<div class="col-sm-3">Step1</div>
 			<div class="col-sm-3">Step2</div>
 			<div class="col-sm-3">Step3</div>
@@ -44,7 +48,7 @@
 <div class="card" id="card-step1">
     <div class="card-header">
         <strong>Choose Option To Train Your Bot</strong>
-        
+
     </div>
     <div class="card-body card-padding">
         <label class="radio radio-inline m-r-20"> <input id="rd-bag" checked
