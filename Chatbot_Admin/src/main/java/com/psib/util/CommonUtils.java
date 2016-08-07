@@ -222,6 +222,9 @@ public class CommonUtils {
 		} else {
 			logger.info(result.getStatus());
 		}
+		if (district.toLowerCase().contains("district")) {
+			district = district.toLowerCase().replace("district", "Quận");
+		}
 		return district;
 	}
 
@@ -378,12 +381,11 @@ public class CommonUtils {
 
 		return result;
 	}
-	
-	
-	public static boolean isContain(String source, String subItem){
-        String pattern = "\\b"+subItem+"\\b";
-        Pattern p=Pattern.compile(pattern);
-        Matcher m=p.matcher(source);
-        return m.find();
-   }
+
+	public static boolean isContain(String source, String subItem) {
+		String pattern = "\\b" + subItem + "\\b";
+		Pattern p = Pattern.compile(pattern);
+		Matcher m = p.matcher(source);
+		return m.find();
+	}
 }

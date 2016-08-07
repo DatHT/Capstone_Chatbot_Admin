@@ -166,10 +166,13 @@ public class ForceParseManager implements IForceParseManager {
 				page.setImageLink(images.get(i).getAttribute("src"));
 				pageList.add(page);
 			}
+			int total = 0;
+			total = pageList.size();
 			logger.info("--Number of record: " + pageList.size());
 
 			int countAdded = 0;
 			int countExist = 0;
+			
 			for (int i = 0; i < pageList.size(); i++) {
 				String pageDescriptionLink = pageList.get(i).getNextPageUrl();
 				productName = pageList.get(i).getProductName();
@@ -293,12 +296,13 @@ public class ForceParseManager implements IForceParseManager {
 			driver.close();
 			logger.info("Sucessfull Added Record: " + countAdded);
 			logger.info("Exist Record: " + countExist);
+			logger.info("Add fail: "+ (total - (countAdded+countExist)));
 			long estimatedTime = System.nanoTime() - startTime;
 			double seconds = (double) estimatedTime / 1000000000.0;
 			logger.info("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
-			logger.info("STOP PARSE");
+			logger.info("STOP PARSE "+ex.getMessage());
 		}
 		return "done";
 	}
@@ -313,6 +317,7 @@ public class ForceParseManager implements IForceParseManager {
 			int noOfPage = 0;
 			int countAdded = 0;
 			int countExist = 0;
+			int total = 0;
 			if (numPage != null && !numPage.isEmpty()) {
 				numOfPage = Integer.parseInt(numPage);
 			} else {
@@ -389,6 +394,7 @@ public class ForceParseManager implements IForceParseManager {
 						page.setImageLink(images.get(i).getAttribute("src"));
 						pageList.add(page);
 					}
+					total = pageList.size();
 					logger.info("--Number of record: " + pageList.size());
 					for (int i = 0; i < pageList.size(); i++) {
 						String pageDescriptionLink = pageList.get(i).getNextPageUrl();
@@ -538,6 +544,7 @@ public class ForceParseManager implements IForceParseManager {
 					page.setImageLink(images.get(i).getAttribute("src"));
 					pageList.add(page);
 				}
+				total = pageList.size();
 				logger.info("--Number of record: " + pageList.size());
 				for (int i = 0; i < pageList.size(); i++) {
 					String pageDescriptionLink = pageList.get(i).getNextPageUrl();
@@ -663,12 +670,13 @@ public class ForceParseManager implements IForceParseManager {
 			driver.close();
 			logger.info("Sucessfull Added Record: " + countAdded);
 			logger.info("Exist Record: " + countExist);
+			logger.info("Add fail: "+ (total - (countAdded+countExist)));
 			long estimatedTime = System.nanoTime() - startTime;
 			double seconds = (double) estimatedTime / 1000000000.0;
 			logger.info("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
-			logger.info("STOP PARSING");
+			logger.info("STOP PARSING "+ex.getMessage());
 		}
 		return "done";
 	}
