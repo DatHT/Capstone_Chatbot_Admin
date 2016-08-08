@@ -27,7 +27,7 @@ public class HomeController {
 	@RequestMapping(value = "/dashBoard", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 
-		return "log";
+		return "profile";
 	}
 
 	@RequestMapping(value = "/activateTimer", method = RequestMethod.GET)
