@@ -207,7 +207,7 @@
     </div>
     <div class="card-body card-padding">
         <div class="row">
-            <select class="chosen" data-placeholder="Choose a Intent..."
+            <select multiple class="chosen" data-placeholder="Choose a Intent..."
                     class="form-control" id="selectIntent">
                 <option value="empty"></option>
 

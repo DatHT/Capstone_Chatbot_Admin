@@ -6,6 +6,8 @@ package com.psib.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.json.JSONException;
+
 import com.psib.common.restclient.RestfulException;
 import com.psib.constant.StatusCode;
 import com.psib.dto.jsonmapper.intent.IntentDto;
@@ -30,4 +32,6 @@ public interface IIntentManager {
 	boolean checkUserPattern(String pattern) throws IOException, RestfulException;;
 	
 	String generatePattern(String pattern)  throws IOException, RestfulException;
+
+	StatusCode addPatternToRelateIntent(String rawPattern, String rawUsersay, String id) throws IOException, RestfulException, JSONException;
 }

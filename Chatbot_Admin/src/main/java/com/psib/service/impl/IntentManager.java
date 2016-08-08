@@ -8,9 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.JsonObject;
 import com.psib.common.factory.IntentFactory;
 import com.psib.common.factory.LexicalCategoryFactory;
 import com.psib.common.factory.QueryFactory;
@@ -45,9 +49,9 @@ public class IntentManager implements IIntentManager {
 
 	@Autowired
 	private QueryFactory queryFactory;
-	
+
 	@Autowired
-    private LexicalCategoryFactory lexicalFactory;
+	private LexicalCategoryFactory lexicalFactory;
 
 	/*
 	 * (non-Javadoc)
@@ -123,15 +127,15 @@ public class IntentManager implements IIntentManager {
 		LOG.info("[checkUserPattern] end-false");
 		return false;
 	}
-	
+
 	@Override
 	public String generatePattern(String sentence) throws IOException, RestfulException {
 		LOG.info("[generatePattern] start");
 		List<LexicalCategoryDto> listPhrase = lexicalFactory.getLexicals();
 		sentence = sentence.toLowerCase();
-		for(LexicalCategoryDto dto : listPhrase) {
+		for (LexicalCategoryDto dto : listPhrase) {
 			LexicalDto phrases = lexicalFactory.getLexicalById(dto.getId());
-			for(Entry entry : phrases.getEntries()) {
+			for (Entry entry : phrases.getEntries()) {
 				String name = entry.getValue().toLowerCase();
 				if (CommonUtils.isContain(sentence, name)) {
 					sentence = sentence.replace(name, "*" + dto.getName() + "," + name + "*");
@@ -142,6 +146,29 @@ public class IntentManager implements IIntentManager {
 		LOG.info("[generatePattern] end");
 		return sentence;
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.psib.service.IIntentManager#addPatternToRelateIntent(java.lang.
+	 * String, java.lang.String)
+	 */
+	@Override
+	public StatusCode addPatternToRelateIntent(String rawPattern, String userSay, String id)
+			throws IOException, RestfulException, JSONException {
+		LOG.info("[addPatternToRelateIntent] start");
+		String intent = factory.getIntentById(id);
+		JSONObject object = new JSONObject(intent);
+		object.remove("priority");
+		object.remove("webhookUsed");
+		object.remove("lastUpdate");
+		object.remove("auto");
+		JSONArray arr = object.getJSONArray("templates");
+		arr.put(rawPattern);
+		object.getJSONArray("userSays").put(new JSONObject(userSay));
+		LOG.info("[addPatternToRelateIntent] JSON: " + object.toString());
+		LOG.info("[addPatternToRelateIntent] end");
+		return addPattern(object.toString(), id);
+	}
 
 }

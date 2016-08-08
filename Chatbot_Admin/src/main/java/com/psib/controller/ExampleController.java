@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,10 +115,11 @@ public class ExampleController {
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     public
     @ResponseBody
-    String insertPattern(@RequestParam("pattern") String pattern, @RequestParam("id") String id,
-                         @RequestParam("trainingSentence") String trainingSentence, Model model) {
+    String insertPattern(@RequestParam("id") String id,
+                         @RequestParam("trainingSentence") String trainingSentence, Model model,
+                         @RequestParam(name = "rawPattern", required = false) String rawPattern,
+                         @RequestParam(name = "rawUsersay", required = false) String rawUsersay) {
         String responseText = "";
-
         try {
             // set example is true-delete;
             // get example from pool
@@ -133,7 +137,16 @@ public class ExampleController {
                 }
             }
 
-            StatusCode status = manager.addPattern(pattern, id);
+            StatusCode status = null;
+            //StatusCode status = manager.addPattern(pattern, id);
+            //insert relate pattern
+            if (rawPattern != null && rawUsersay != null) {
+            	JSONArray arrId = new JSONArray(id);
+            	for(int i = 0; i < arrId.length(); i++) {
+            		status = manager.addPatternToRelateIntent(rawPattern, rawUsersay, arrId.getString(i));
+            	}
+				
+			}
             switch (status) {
                 case SUCCESS:
                     responseText = CodeManager.SUCCESS;
@@ -149,7 +162,10 @@ public class ExampleController {
             responseText = e.getMessage();
         } catch (RestfulException e) {
             responseText = e.getMessage();
-        }
+        } catch (JSONException e) {
+			// TODO Auto-generated catch block
+        	responseText = e.getMessage();
+		}
 
         return responseText;
 
