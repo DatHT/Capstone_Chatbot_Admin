@@ -252,16 +252,16 @@ public class SynonymManager implements ISynonymManager {
 		String currPhrase = words[currIndex];
 		String lastPhrase = currPhrase;
 		
-		boolean isNext = true;
-		
 		boolean flag = true;
 		
-		List<Synonym> synonyms = searchSynonym(currPhrase);
+		List<Synonym> synonyms = null;
 		
 		while(flag) {
-			isNext = false;
+			boolean isNext = false;
+			synonyms = searchSynonym(currPhrase);
+			
 			if (!synonyms.isEmpty()) {
-				int maxAcceptableResults = currPhrase.split(" ").length == 1 ? 5 : currPhrase.split(" ").length * 5;
+				int maxAcceptableResults = currPhrase.split(" ").length * 5;
 				
 				if (synonyms.size() == 1) {
 					if (currPhrase.equalsIgnoreCase(synonyms.get(0).getName().trim())) {
@@ -318,7 +318,6 @@ public class SynonymManager implements ISynonymManager {
 				lastPhrase = currPhrase;
 				currPhrase = currPhrase + " " + words[currIndex = currIndex + 1];
 			}
-			synonyms = searchSynonym(currPhrase);
 			
 			// trim result
 			result = result.trim();
