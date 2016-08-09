@@ -15,6 +15,11 @@
 		<input type="hidden" value="${_csrf.token}" id="token" />
 		<h2>Training Bot By Example</h2>
 	</div>
+	<form action="viewIntent" method="GET">
+		<button class="btn btn-primary btn-lg waves-effect"
+			onclick="viewIntents()">Show Patterns</button>
+	</form>
+	
 	<div class="card-header cw-header palette-Teal-400 bg" style="margin: 2%;">
         <button onclick="backTraining()" style="left: 25px !important;"
                 class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float">

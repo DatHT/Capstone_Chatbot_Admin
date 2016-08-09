@@ -87,7 +87,7 @@ function deletePattern(deleteId) {
 		}
 	}
 
-	var cate = document.getElementById("selectIntent");
+	var cate = document.getElementById("selectIntentView");
 	var intentId = cate.options[cate.selectedIndex].value;
 	// action here
 	if (window.XMLHttpRequest) {
@@ -114,7 +114,7 @@ function deletePattern(deleteId) {
 	var param = document.getElementById("paramName").value;
 	var token = document.getElementById("token").value;
 	var chosenExample = "";
-	xmlhttp.open("POST", "/chatbot_admin/example/add", true);
+	xmlhttp.open("POST", "/chatbot_admin/example/delete", true);
 	xmlhttp.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded;charset=utf-8");
 	xmlhttp.send("pattern=" + JSON.stringify(jsonData) + "&id=" + intentId
@@ -144,79 +144,70 @@ function loadIntent(id) {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			resultIntents = xmlhttp.responseText;
 
-			// if (flagStep2 || flagStep4) {
-			// insertPattern(id);
-			// }
-
-			if (flagSave) {
-
-				$('#tableIntent').bootgrid("destroy");
-				addIntentRows("intentTable", resultIntents);
-				$('#tableIntent')
-						.bootgrid(
-								{
-									css : {
-										icon : 'zmdi icon',
-										iconColumns : 'zmdi-view-module',
-										iconDown : 'zmdi-expand-more',
-										iconRefresh : 'zmdi-refresh',
-										iconUp : 'zmdi-expand-less'
+			$('#tableIntent').bootgrid("destroy");
+			addIntentRows("intentTable", resultIntents);
+			$('#tableIntent')
+					.bootgrid(
+							{
+								css : {
+									icon : 'zmdi icon',
+									iconColumns : 'zmdi-view-module',
+									iconDown : 'zmdi-expand-more',
+									iconRefresh : 'zmdi-refresh',
+									iconUp : 'zmdi-expand-less'
+								},
+								formatters : {
+									"commands" : function(column, row) {
+										return "<button data-row-name='"
+												+ row.name
+												+ "' id='"
+												+ row.name
+												+ "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float btn-delete-example'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
 									},
-									formatters : {
-										"commands" : function(column, row) {
-											return "<button data-row-name='"
-													+ row.name
-													+ "' id='"
-													+ row.name
-													+ "' class='btn palette-Deep-Orange btn-icon bg waves-effect waves-circle waves-float btn-delete-example'><i class='zmdi zmdi-delete zmdi-hc-fw'></i></button>";
-										},
-										"commands-name" : function(column, row) {
-											var data = row.name.split(",");
-											return data[0] + "<br/>" + data[1];
-										}
+									"commands-name" : function(column, row) {
+										var data = row.name.split(",");
+										return data[0] + "<br/>" + data[1];
 									}
-								})
-						.on(
-								"loaded.rs.jquery.bootgrid",
-								function() {
-									/*
-									 * Executes after data is loaded and
-									 * rendered
-									 */
-									$('#tableIntent')
-											.find(".btn-delete-example")
-											.on(
-													"click",
-													function(e) {
-														var rowname = $(this)
-																.data(
-																		"row-name");
-														var data = rowname
-																.split(",")[0];
-														swal(
-																{
-																	title : "Are you sure to delete this pattern "
-																			+ data
-																			+ "?",
-																	text : "You will not be able to recover it!",
-																	type : "warning",
-																	showCancelButton : true,
-																	confirmButtonColor : "#DD6B55",
-																	confirmButtonText : "Yes, delete it!",
-																	closeOnConfirm : true
-																},
-																function() {
-																	deletePattern(data);
-																});
-													});
-								});
-			}
+								}
+							})
+					.on(
+							"loaded.rs.jquery.bootgrid",
+							function() {
+								/*
+								 * Executes after data is loaded and rendered
+								 */
+								$('#tableIntent')
+										.find(".btn-delete-example")
+										.on(
+												"click",
+												function(e) {
+													var rowname = $(this).data(
+															"row-name");
+													var data = rowname
+															.split(",")[0];
+													swal(
+															{
+																title : "Are you sure to delete this pattern "
+																		+ data
+																		+ "?",
+																text : "You will not be able to recover it!",
+																type : "warning",
+																showCancelButton : true,
+																confirmButtonColor : "#DD6B55",
+																confirmButtonText : "Yes, delete it!",
+																closeOnConfirm : true
+															},
+															function() {
+																deletePattern(data);
+															});
+												});
+							});
 
 			$('#loadingModal').modal('hide');
 		}
 
 	}
-	xmlhttp.open("GET", "/chatbot_admin/example/" + id, true);
+	xmlhttp.open("GET", "/chatbot_admin/example/" + id.value, true);
 	xmlhttp.send();
 }
 
@@ -306,10 +297,9 @@ function insertPattern(intentId) {
 		xmlhttp.open("POST", "/chatbot_admin/example/add", true);
 		xmlhttp.setRequestHeader("Content-type",
 				"application/x-www-form-urlencoded;charset=utf-8");
-		xmlhttp.send("id=" + intentId
-				+ "&" + param + "=" + token + "&trainingSentence="
-				+ chosenExample + "&rawPattern=" + newPattern + "&rawUsersay="
-				+ JSON.stringify(userSay));
+		xmlhttp.send("id=" + intentId + "&" + param + "=" + token
+				+ "&trainingSentence=" + chosenExample + "&rawPattern="
+				+ newPattern + "&rawUsersay=" + JSON.stringify(userSay));
 		// action here
 
 	} else {
@@ -414,16 +404,14 @@ function finalStep() {
 	$('#progress-status').css('width', 100 + '%').attr('aria-valuenow', 100);
 	// loadIntent(intentId);
 	var data = [];
-	$('#selectIntent option:selected').each(function(){
-        data.push($(this).val());
-    });
+	$('#selectIntent option:selected').each(function() {
+		data.push($(this).val());
+	});
 	if (data.length < 1) {
 		notify("Please choose at least 1 intent", "warning");
-	}else {
+	} else {
 		insertPattern(JSON.stringify(data));
 	}
-	
-	
 
 }
 
@@ -643,3 +631,4 @@ function suggestPattern() {
 				}
 			});
 }
+

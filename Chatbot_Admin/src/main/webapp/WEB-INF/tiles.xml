@@ -4,203 +4,206 @@
         "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 
 <tiles-definitions>
-    <definition name="base.definition" template="/WEB-INF/views/layout/layout.jsp">
-        <put-attribute name="title" value=""/>
-        <put-attribute name="body" value=""/>
-        <put-attribute name="header" value="/WEB-INF/views/layout/header.jsp"/>
-        <put-attribute name="footer" value="/WEB-INF/views/layout/footer.jsp"/>
-        <put-attribute name="menu" value="/WEB-INF/views/layout/left.jsp"/>
-    </definition>
-    <!-- Begin Crawler Page -->
+	<definition name="base.definition" template="/WEB-INF/views/layout/layout.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="header" value="/WEB-INF/views/layout/header.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/views/layout/footer.jsp" />
+		<put-attribute name="menu" value="/WEB-INF/views/layout/left.jsp" />
+	</definition>
+	<!-- Begin Crawler Page -->
 	<!-- *************************************************************************** -->
 	<definition name="crawler" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
-		<put-attribute name="body"
-			value="/WEB-INF/views/crawler/welcome.jsp" />
+		<put-attribute name="body" value="/WEB-INF/views/crawler/welcome.jsp" />
 		<put-attribute name="current" value="crawler" />
 	</definition>
 	<definition name="manualAddFood" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/manualAddFood.jsp" />
-		<put-attribute name="current" value="crawler"/>
+		<put-attribute name="current" value="crawler" />
 	</definition>
 	<definition name="configuration" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
-		<put-attribute name="body"
-			value="/WEB-INF/views/crawler/welcome.jsp" />
-		<put-attribute name="current" value="crawler"/>
+		<put-attribute name="body" value="/WEB-INF/views/crawler/welcome.jsp" />
+		<put-attribute name="current" value="crawler" />
 	</definition>
 	<definition name="success" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
-		<put-attribute name="body"
-			value="/WEB-INF/views/crawler/success.jsp" />
-		<put-attribute name="current" value="crawler"/>
+		<put-attribute name="body" value="/WEB-INF/views/crawler/success.jsp" />
+		<put-attribute name="current" value="crawler" />
 	</definition>
 	<definition name="successParse" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/successParse.jsp" />
-		<put-attribute name="current" value="crawler"/>
+		<put-attribute name="current" value="crawler" />
 	</definition>
 	<definition name="errorPage" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
-		<put-attribute name="body"
-			value="/WEB-INF/views/crawler/error.jsp" />
-		<put-attribute name="current" value="crawler"/>
+		<put-attribute name="body" value="/WEB-INF/views/crawler/error.jsp" />
+		<put-attribute name="current" value="crawler" />
 	</definition>
 	<definition name="setListPage" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/setPageList.jsp" />
-		<put-attribute name="current" value="crawler"/>
+		<put-attribute name="current" value="crawler" />
 	</definition>
 	<definition name="setParserConfig" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/setPageConfig.jsp" />
-		<put-attribute name="current" value="setParserConfig"/>
+		<put-attribute name="current" value="setParserConfig" />
 	</definition>
 	<definition name="parseManually" extends="base.definition">
 		<put-attribute name="title" value="Crawler Manager" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/crawler/parseManually.jsp" />
-		<put-attribute name="current" value="crawler"/>
+		<put-attribute name="current" value="crawler" />
 	</definition>
 
-    <!-- Begin Auth Page -->
-    <!-- *************************************************************************** -->
-    <definition name="login" template="/WEB-INF/views/login.jsp">
-    </definition>
+	<!-- Begin Auth Page -->
+	<!-- *************************************************************************** -->
+	<definition name="login" template="/WEB-INF/views/login.jsp">
+	</definition>
 
 
-    <!-- Begin Manage Lexical Catergory Page -->
-    <!-- *************************************************************************** -->
-    <definition name="lexicalCategory" extends="base.definition">
-        <put-attribute name="title" value="Entity Manager"/>
-        <put-attribute name="body"
-                       value="/WEB-INF/views/lexicalCategory/lexical.jsp"/>
+	<!-- Begin Manage Lexical Catergory Page -->
+	<!-- *************************************************************************** -->
+	<definition name="lexicalCategory" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/lexicalCategory/lexical.jsp" />
 
-        <put-attribute name="current" value="lexicalCategory"/>
-    </definition>
+		<put-attribute name="current" value="lexicalCategory" />
+	</definition>
 
-    <!-- Begin Dataconfig Page -->
-    <!-- *************************************************************************** -->
-    <definition name="dataConfig" extends="base.definition">
-        <put-attribute name="title" value="Data Config"/>
-        <put-attribute name="body"
-                       value="/WEB-INF/views/dataConfig/dataConfig.jsp"/>
-        <put-attribute name="current" value="dataConfig"/>
-    </definition>
+	<!-- Begin Dataconfig Page -->
+	<!-- *************************************************************************** -->
+	<definition name="dataConfig" extends="base.definition">
+		<put-attribute name="title" value="Data Config" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/dataConfig/dataConfig.jsp" />
+		<put-attribute name="current" value="dataConfig" />
+	</definition>
 
-    <!-- Begin Manage Account Page -->
-    <!-- *************************************************************************** -->
-    <definition name="manageAccount" extends="base.definition">
-        <put-attribute name="title" value="Account Manager"/>
-        <put-attribute name="body"
-                       value="/WEB-INF/views/accounts/manageAccount.jsp"/>
-        <put-attribute name="current" value="manageAccount"/>
-    </definition>
+	<!-- Begin Manage Account Page -->
+	<!-- *************************************************************************** -->
+	<definition name="manageAccount" extends="base.definition">
+		<put-attribute name="title" value="Account Manager" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/accounts/manageAccount.jsp" />
+		<put-attribute name="current" value="manageAccount" />
+	</definition>
 
-    <!-- Begin User profile Page -->
-    <!-- *************************************************************************** -->
-    <definition name="profile" extends="base.definition">
-        <put-attribute name="title" value="User profile"/>
-        <put-attribute name="body"
-                       value="/WEB-INF/views/accounts/profile.jsp"/>
-        <put-attribute name="current" value="profile"/>
-    </definition>
+	<!-- Begin User profile Page -->
+	<!-- *************************************************************************** -->
+	<definition name="profile" extends="base.definition">
+		<put-attribute name="title" value="User profile" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/accounts/profile.jsp" />
+		<put-attribute name="current" value="profile" />
+	</definition>
 
-    <!-- Begin Example Page -->
-    <!-- *************************************************************************** -->
-    <definition name="example" extends="base.definition">
-        <put-attribute name="title" value="Entity Manager"/>
-        <put-attribute name="body" value="/WEB-INF/views/example/example.jsp"/>
-        <put-attribute name="current" value="example"/>
-    </definition>
+	<!-- Begin Example Page -->
+	<!-- *************************************************************************** -->
+	<definition name="example" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body" value="/WEB-INF/views/example/example.jsp" />
+		<put-attribute name="current" value="example" />
+	</definition>
 
-    <!-- Begin Manage Log Page -->
-    <!-- *************************************************************************** -->
-    <definition name="log" extends="base.definition">
-        <put-attribute name="title" value="Logs Manager"/>
-        <put-attribute name="body" value="/WEB-INF/views/logs/manageLog.jsp"/>
-        <put-attribute name="current" value="log"/>
-    </definition>
+	<definition name="viewIntent" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body" value="/WEB-INF/views/example/viewExample.jsp" />
+		<put-attribute name="current" value="example" />
+	</definition>
 
-    <!-- Begin Manage Full Conversations Page -->
-    <!-- *************************************************************************** -->
-    <definition name="conversations" extends="base.definition">
-        <put-attribute name="title" value="Conversations"/>
-        <put-attribute name="body"
-                       value="/WEB-INF/views/conversations/fullConversations.jsp"/>
-        <put-attribute name="current" value="conversations"/>
-    </definition>
 
-    <!-- Begin Manage Product Page -->
-    <!-- *************************************************************************** -->
-    <definition name="product" extends="base.definition">
-        <put-attribute name="title" value="Manage Product"/>
-        <put-attribute name="body"
-                       value="/WEB-INF/views/product/viewProduct.jsp"/>
-        <put-attribute name="current" value="product"/>
-    </definition>
+	<!-- Begin Manage Log Page -->
+	<!-- *************************************************************************** -->
+	<definition name="log" extends="base.definition">
+		<put-attribute name="title" value="Logs Manager" />
+		<put-attribute name="body" value="/WEB-INF/views/logs/manageLog.jsp" />
+		<put-attribute name="current" value="log" />
+	</definition>
 
-    <!-- Product Details Page -->
-    <!-- *************************************************************************** -->
-    <definition name="productDetails" extends="base.definition">
-        <put-attribute name="title" value="Manage Product"/>
-        <put-attribute name="body"
-                       value="/WEB-INF/views/product/viewProductDetails.jsp"/>
-        <put-attribute name="current" value="product"/>
-    </definition>
+	<!-- Begin Manage Full Conversations Page -->
+	<!-- *************************************************************************** -->
+	<definition name="conversations" extends="base.definition">
+		<put-attribute name="title" value="Conversations" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/conversations/fullConversations.jsp" />
+		<put-attribute name="current" value="conversations" />
+	</definition>
 
-    <!-- Update Product Page -->
-    <!-- *************************************************************************** -->
-    <definition name="viewAddProduct" extends="base.definition">
-        <put-attribute name="title" value="Manage Product"/>
-        <put-attribute name="body"
-                       value="/WEB-INF/views/product/viewAddProduct.jsp"/>
-        <put-attribute name="current" value="product"/>
-    </definition>
+	<!-- Begin Manage Product Page -->
+	<!-- *************************************************************************** -->
+	<definition name="product" extends="base.definition">
+		<put-attribute name="title" value="Manage Product" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/product/viewProduct.jsp" />
+		<put-attribute name="current" value="product" />
+	</definition>
 
-    <!-- Update Product Page -->
-    <!-- *************************************************************************** -->
-    <definition name="viewUpdateProduct" extends="base.definition">
-        <put-attribute name="title" value="Manage Product"/>
-        <put-attribute name="body"
-                       value="/WEB-INF/views/product/viewUpdateProduct.jsp"/>
-        <put-attribute name="current" value="product"/>
-    </definition>
+	<!-- Product Details Page -->
+	<!-- *************************************************************************** -->
+	<definition name="productDetails" extends="base.definition">
+		<put-attribute name="title" value="Manage Product" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/product/viewProductDetails.jsp" />
+		<put-attribute name="current" value="product" />
+	</definition>
 
-    <!-- Begin Manage Synonym Page -->
-    <!-- *************************************************************************** -->
-    <definition name="synonym" extends="base.definition">
-        <put-attribute name="title" value="Manage Synonym"/>
-        <put-attribute name="body"
-                       value="/WEB-INF/views/synonym/viewSynonym.jsp"/>
-        <put-attribute name="current" value="synonym"/>
-    </definition>
+	<!-- Update Product Page -->
+	<!-- *************************************************************************** -->
+	<definition name="viewAddProduct" extends="base.definition">
+		<put-attribute name="title" value="Manage Product" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/product/viewAddProduct.jsp" />
+		<put-attribute name="current" value="product" />
+	</definition>
 
-    <!-- Begin Error Page -->
-    <!-- *************************************************************************** -->
-    <definition name="error" extends="base.definition">
-        <put-attribute name="title" value="Error page"/>
-        <put-attribute name="current" value="error"/>
-        <put-attribute name="body" value="/WEB-INF/views/error/error.jsp"/>
+	<!-- Update Product Page -->
+	<!-- *************************************************************************** -->
+	<definition name="viewUpdateProduct" extends="base.definition">
+		<put-attribute name="title" value="Manage Product" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/product/viewUpdateProduct.jsp" />
+		<put-attribute name="current" value="product" />
+	</definition>
 
-    </definition>
+	<!-- Begin Manage Synonym Page -->
+	<!-- *************************************************************************** -->
+	<definition name="synonym" extends="base.definition">
+		<put-attribute name="title" value="Manage Synonym" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/synonym/viewSynonym.jsp" />
+		<put-attribute name="current" value="synonym" />
+	</definition>
 
-    <!-- Begin Blank Page -->
-    <!-- *************************************************************************** -->
-    <definition name="blank" extends="base.definition">
-        <put-attribute name="title" value="Entity Manager"/>
-        <put-attribute name="body" value="/WEB-INF/views/blank/export.jsp"/>
-        <put-attribute name="current" value="abc"/>
-    </definition>
+	<!-- Begin Error Page -->
+	<!-- *************************************************************************** -->
+	<definition name="error" extends="base.definition">
+		<put-attribute name="title" value="Error page" />
+		<put-attribute name="current" value="error" />
+		<put-attribute name="body" value="/WEB-INF/views/error/error.jsp" />
 
-    <definition name="dashboard" extends="base.definition">
-        <put-attribute name="title" value="Entity Manager"/>
-        <put-attribute name="body" value="/WEB-INF/views/blank/dashboard.jsp"/>
-        <put-attribute name="current" value="abc"/>
-    </definition>
+	</definition>
+
+	<!-- Begin Blank Page -->
+	<!-- *************************************************************************** -->
+	<definition name="blank" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body" value="/WEB-INF/views/blank/export.jsp" />
+		<put-attribute name="current" value="abc" />
+	</definition>
+
+	<definition name="dashboard" extends="base.definition">
+		<put-attribute name="title" value="Entity Manager" />
+		<put-attribute name="body" value="/WEB-INF/views/blank/dashboard.jsp" />
+		<put-attribute name="current" value="abc" />
+	</definition>
 </tiles-definitions>
