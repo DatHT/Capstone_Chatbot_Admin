@@ -15,7 +15,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String hompage() {
-		return "redirect:login";
+		return "redirect:profile";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
