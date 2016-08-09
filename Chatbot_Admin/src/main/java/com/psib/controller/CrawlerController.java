@@ -43,7 +43,9 @@ public class CrawlerController extends HttpServlet {
 
 	@RequestMapping(value = "/staticParse", method = RequestMethod.POST)
 	public String staticParse(Model model, HttpServletRequest request, HttpServletResponse response){
-
+		logger.info("Thread Id: "+Thread.currentThread().getId());
+		long threadID = +Thread.currentThread().getId();
+		System.setProperty("threadID", ""+threadID);
 		HttpSession session = request.getSession();
 		String numPage = request.getParameter("txtPage");
 		String url = request.getParameter("txtLinkPage");
@@ -61,7 +63,8 @@ public class CrawlerController extends HttpServlet {
 
 	@RequestMapping(value = "/dynamicParse", method = RequestMethod.POST)
 	public String dynamicParse(Model model, HttpServletRequest request, HttpServletResponse response){
-
+		long threadID = +Thread.currentThread().getId();
+		System.setProperty("threadID", ""+threadID);
 		HttpSession session = request.getSession();
 		String numPage = request.getParameter("txtPage");
 		int numOfPage = Integer.parseInt(numPage);
@@ -178,7 +181,7 @@ public class CrawlerController extends HttpServlet {
 	}
 
 	@RequestMapping(value = "/addPageDetails", method = RequestMethod.POST)
-	public String addPageDetails(@RequestParam("USER_RATE") String userRate, @RequestParam("ADDRESS") String address,
+	public String addPageDetails(@RequestParam("ratingCoe") String ratingCoe, @RequestParam("USER_RATE") String userRate, @RequestParam("ADDRESS") String address,
 			@RequestParam("NAME") String restaurantName, Model model, HttpServletRequest request,
 			HttpServletResponse response){
 
@@ -188,7 +191,7 @@ public class CrawlerController extends HttpServlet {
 		if (userRate == null || userRate.isEmpty() || userRate == "") {
 			userRate = rate;
 		}
-		ConfigDTO newConfig = new ConfigDTO(url, restaurantName, address, userRate);
+		ConfigDTO newConfig = new ConfigDTO(url, restaurantName, address, userRate,ratingCoe);
 
 		boolean add = false;
 		try {

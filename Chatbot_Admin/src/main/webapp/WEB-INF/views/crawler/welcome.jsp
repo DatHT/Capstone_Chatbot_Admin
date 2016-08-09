@@ -46,7 +46,7 @@
 			<h2>Force Parser</h2>
 		</div>
 		<div class="form-horizental">
-			<div class="card col-sm-6" id="viewStatic" style="height: 400px">
+			<div class="card col-sm-6" id="viewStatic" style="height: 430px">
 				<!--    Hover Rows  -->
 				<div class="card-header">
 					<h2 id="tableHeader">Static Parse</h2>
@@ -100,22 +100,30 @@
 								<button type="submit" data-toggle="modal" href="#parsing"
 									class="btn btn-primary" value="StaticParse" name="btnAction"
 									onclick="showModal2()">StaticParse</button>
-								<div style="display: none; float: right" id="loading_image">
-									<span>System is parsing...</span> <img
-										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
-										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
-										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
-										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
-										src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-								</div>
 							</div>
-
 						</div>
+					</form:form>
+					<form:form action="closeThread" style="display: none"
+						id="stopButton1">
+						<div
+							style="display: none; margin-top: 0px; float: right; margin-right: 20px"
+							id="loading_image">
+							<span>System is Parsing...</span> <img
+								src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+								src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+								src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+								src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+								src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+							<button type="submit" data-toggle="modal" class="btn btn-primary"
+								value="STOP" name="btnAction"
+								style="float: right; margin-left: 20px" onclick="">STOP</button>
+						</div>
+
 					</form:form>
 				</div>
 				<!-- End  Hover Rows  -->
 			</div>
-			<div class="card col-md-6" id="viewDynamic" style="height: 400px">
+			<div class="card col-md-6" id="viewDynamic" style="height: 430px">
 				<!--    Hover Rows  -->
 				<div class="card-header">
 					<h2 id="tableHeader">Dynamic Parse</h2>
@@ -156,23 +164,26 @@
 									</select>
 								</div>
 							</div>
-							<div class="form-group" style="">
-								<br> <br>
-							</div>
-							<div class="form-group" style="">
+							<div class="form-group" style="padding-bottom: 70px">
 								<button type="submit" data-toggle="modal" href="#parsing"
 									class="btn btn-primary" value="DynamicParse" name="btnAction"
-									onclick="showModal()">DynamicParse</button>
-								<div style="display: none;float:right" id="loading_image2">
-									<span>System is parsing...</span> <img
-										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
-										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
-										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
-										src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
-										src="<c:url value="/resources/assets/img/loader2.gif"/>" />
-								</div>
+									style="margin-bottom: -150px" onclick="showModal()">DynamicParse</button>
 							</div>
-
+						</div>
+					</form:form>
+					<form:form action="closeThread" method="post" id="stopButton">
+						<div style="display:none; margin-top: 10px; float: right; margin-right: 20px;position: relative"
+							id="loading_image2">
+							<span>System is Parsing...</span> <img
+								src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+								src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+								src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+								src="<c:url value="/resources/assets/img/loader2.gif"/>" /> <img
+								src="<c:url value="/resources/assets/img/loader2.gif"/>" />
+							<button type="submit" data-toggle="modal" class="btn btn-primary"
+								value="STOP" name="btnAction"
+								style="float: right; margin-left: 20px"
+								onclick="">STOP</button>
 						</div>
 					</form:form>
 				</div>
@@ -203,9 +214,11 @@
 <script>
 	function showModal() {
 		document.getElementById("loading_image2").style.display = 'block';
+		document.getElementById("stopButton").style.display = 'block';
 	}
 	function showModal2() {
 		document.getElementById("loading_image").style.display = 'block';
+		document.getElementById("stopButton1").style.display = 'block';
 	}
 </script>
 <script>

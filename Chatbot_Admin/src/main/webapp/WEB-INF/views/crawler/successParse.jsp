@@ -170,6 +170,11 @@
 								<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
 								<img src="<c:url value="/resources/assets/img/loader2.gif"/>" />
 							</div>
+							<form:form action="closeThread">
+							<button type="submit" data-toggle="modal"
+									class="btn btn-primary" value="STOP" name="btnAction"
+									onclick="">STOP</button>
+									</form:form>
 						</div>
 					</div>
 				</form:form>

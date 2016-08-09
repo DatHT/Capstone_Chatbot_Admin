@@ -11,8 +11,7 @@
 	rel="stylesheet">
 <script src='<c:url value="/resources/assets/configscripts/parse.js" />'></script>
 
-<link
-	href="<c:url value="/resources/assets/css/slidebars.css"/>"
+<link href="<c:url value="/resources/assets/css/slidebars.css"/>"
 	rel="stylesheet">
 </head>
 <body>
@@ -22,9 +21,10 @@
 		<div class="scroller_anchor"></div>
 		<div class="card scroller" id="scr">
 			<div class="card-header">
-				<h2>Please Select An Element And Get XPath</h2>
+				<h2>Please Select Required Field For Each Step</h2>
 			</div>
-			<div class="progressRecipe card-body card-padding" style="padding-bottom: 0px">
+			<div class="progressRecipe card-body card-padding"
+				style="padding-bottom: 0px">
 				<div class="circle done">
 					<span class="labelRecipe">0</span> <span class="title">Welcome</span>
 				</div>
@@ -41,11 +41,19 @@
 				<div class="circle">
 					<span class="labelRecipe">3</span> <span class="title">UserRate</span>
 				</div>
+				<span class="bar" style="display: none" id="ratingId"></span>
+				<div class="circle" style="display: none; color: white"
+					id="ratingCoe">
+					<span class="labelRecipe" style="color: none"> <input
+						type="text" name="ratingCoe" value="" id="ratingText"
+						style="text-align: center; color: black; border: none; width: 32px;" />
+					</span><span class="title" style="margin-left: -30px; color: #b5b5ba">RatingCoefficient</span>
+				</div>
 			</div>
 			<div class="card-body card-padding"
 				style="padding-bottom: 0px; padding-top: 0px">
-				<button type="button" class="btn btn-primary" id ="btnBack" value="BACK"
-					onclick="back()">BACK</button>
+				<button type="button" class="btn btn-primary" id="btnBack"
+					value="BACK" onclick="back()">BACK</button>
 				<button type="button" class="btn btn-primary" id="btnNext"
 					value="NEXT" onclick="next()">NEXT</button>
 				<!--disable-->

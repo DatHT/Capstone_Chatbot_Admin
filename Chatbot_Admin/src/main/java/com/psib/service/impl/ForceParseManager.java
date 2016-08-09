@@ -54,6 +54,7 @@ public class ForceParseManager implements IForceParseManager {
 	private String num_of_exits = SpringPropertiesUtil.getProperty("num_exist");
 	private String num_of_page = SpringPropertiesUtil.getProperty("num_page");
 	private String num_of_scroll = SpringPropertiesUtil.getProperty("num_scroll");
+	private String rating_coefficient = SpringPropertiesUtil.getProperty("rating_coefficient");
 
 	@Override
 	public String timerAutomaticParse() throws IOException {
@@ -106,6 +107,8 @@ public class ForceParseManager implements IForceParseManager {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
 		WebDriver driver = new FirefoxDriver();
+		logger.info("Thread Id: "+Thread.currentThread().getId());
+		
 		try {
 			// lay url page
 			String xmlFilePath = getPageConfigFilePath();
@@ -196,7 +199,7 @@ public class ForceParseManager implements IForceParseManager {
 				if (config.getUserRate() != "N/A") {
 					userRate = driver.findElement(By.xpath(config.getUserRate())).getText();
 				}
-
+				
 				List<WebElement> listimg = driver.findElements(By.tagName("a"));
 				String imgVal = "";
 				for (WebElement elem : listimg) {
@@ -236,13 +239,12 @@ public class ForceParseManager implements IForceParseManager {
 				String latlong = "" + latitude + "," + longitude;
 				String district = CommonUtils.splitDistrict(latlong);
 				String newAddress = CommonUtils.splitAddress(district, address);
-
+				
 				double rate = 0;
+				double rateCoe = Double.parseDouble(config.getRatingCoefficient());
+				double rateCoefficient = Double.parseDouble(rating_coefficient);
 				if (!userRate.equals("")) {
-					rate = Double.parseDouble(userRate);
-					if (rate <= 5) {
-						rate = rate * 2;
-					}
+					rate = (Double.parseDouble(userRate)*rateCoefficient)/rateCoe;
 				}
 				District districtDAO = new District();
 				Address addressDAO = new Address();
@@ -312,6 +314,7 @@ public class ForceParseManager implements IForceParseManager {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
 		WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
+		logger.info("Thread Id: "+Thread.currentThread().getId());
 		try {
 			int numOfPage = 0;
 			int noOfPage = 0;
@@ -460,11 +463,10 @@ public class ForceParseManager implements IForceParseManager {
 						String district = CommonUtils.splitDistrict(latlong);
 						String newAddress = CommonUtils.splitAddress(district, address);
 						double rate = 0;
+						double rateCoe = Double.parseDouble(config.getRatingCoefficient());
+						double rateCoefficient = Double.parseDouble(rating_coefficient);
 						if (!userRate.equals("")) {
-							rate = Double.parseDouble(userRate);
-							if (rate <= 5) {
-								rate = rate * 2;
-							}
+							rate = (Double.parseDouble(userRate)*rateCoefficient)/rateCoe;
 						}
 						District districtDAO = new District();
 						Address addressDAO = new Address();
@@ -611,11 +613,10 @@ public class ForceParseManager implements IForceParseManager {
 					String newAddress = CommonUtils.splitAddress(latlong, address);
 
 					double rate = 0;
+					double rateCoe = Double.parseDouble(config.getRatingCoefficient());
+					double rateCoefficient = Double.parseDouble(rating_coefficient);
 					if (!userRate.equals("")) {
-						rate = Double.parseDouble(userRate);
-						if (rate <= 5) {
-							rate = rate * 2;
-						}
+						rate = (Double.parseDouble(userRate)*rateCoefficient)/rateCoe;
 					}
 					District districtDAO = new District();
 					Address addressDAO = new Address();

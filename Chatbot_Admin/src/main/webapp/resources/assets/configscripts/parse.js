@@ -216,6 +216,18 @@ function next() {
 					closeOnConfirm : false
 				})
 			}
+			if(preview[2]!=""){
+				swal({
+					title : "Warning",
+					text : "Please input Rating Coefficient",
+					type : "warning",
+					confirmButtonColor : "#DD6B55",
+					confirmButtonText : "Ok!",
+					closeOnConfirm : false
+				})
+				document.getElementById("ratingId").style.display="";
+				document.getElementById("ratingCoe").style.display="";
+			}
 			$("#myframe").contents().find(oldWrap).removeAttr("style",
 					"background-color: #69c2fe;");
 			deleteRow('tbItems', 1);
@@ -292,6 +304,15 @@ function back() {
 			showCart(alertText + "'\'", 'tbItems', 1);
 		}
 		if (currentPosition == 1) {
+			content = preview[currentPosition];
+			a = window.frames[0].document
+					.evaluate(newX, window.frames[0].document, null,
+							XPathResult.ANY_TYPE, null);
+			b = a.iterateNext();
+			alertText = b.textContent;
+			showCart(alertText + "'\'", 'tbItems', 1);
+		}
+		if (currentPosition == 2) {
 			content = preview[currentPosition];
 			a = window.frames[0].document
 					.evaluate(newX, window.frames[0].document, null,
@@ -570,7 +591,7 @@ function addRow(tableId, cells, type) {
 		newRow = tableElem.insertRow(tableElem.rows.length);
 		newCell = newRow.insertCell(newRow.cells.length);
 		if (type == 1) {
-			newCell.innerHTML = '<input type="text" class="form-control" name="txtTemp" value="'
+			newCell.innerHTML = '<input type="text" class="form-control" name="txtTemp" id ="temp" value="'
 					+ cells[i]
 					+ '" size="76"/>'
 					+ '<input type="button" class="btn btn-info m-b-less" value="Edit" onclick="showXPath()"/>';
@@ -735,7 +756,9 @@ function appendcontents(item) {
 	// a = window.frames[0].document.evaluate(item[2],
 	// window.frames[0].document, null, XPathResult.ANY_TYPE, null);
 	// b = a.iterateNext();
-	alertText = "" + preview[2]
+	var ratingCode = document.getElementById("ratingText").value;
+	var rate = (preview[2]*10)/ratingCode;
+	alertText = "" + rate;
 	// while (b) {
 	// alertText += b.textContent + "</br>";
 	// b = a.iterateNext();
