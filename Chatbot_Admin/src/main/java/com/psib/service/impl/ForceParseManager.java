@@ -9,14 +9,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
@@ -108,8 +104,6 @@ public class ForceParseManager implements IForceParseManager {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
 		WebDriver driver = SeleniumUtils.createFireFoxDriver();
-		String handler = driver.getWindowHandle();
-		System.setProperty("WindowsHandler", handler);
 		try {
 			// lay url page
 			String xmlFilePath = getPageConfigFilePath();
@@ -316,7 +310,6 @@ public class ForceParseManager implements IForceParseManager {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
 		WebDriver driver = SeleniumUtils.createHtmlUnitDriver();
-		logger.info("Thread Id: " + Thread.currentThread().getId());
 		try {
 			int numOfPage = 0;
 			int noOfPage = 0;
