@@ -63,8 +63,6 @@ public class CrawlerController extends HttpServlet {
 
 	@RequestMapping(value = "/dynamicParse", method = RequestMethod.POST)
 	public String dynamicParse(Model model, HttpServletRequest request, HttpServletResponse response){
-		long threadID = +Thread.currentThread().getId();
-		System.setProperty("threadID", ""+threadID);
 		HttpSession session = request.getSession();
 		String numPage = request.getParameter("txtPage");
 		int numOfPage = Integer.parseInt(numPage);

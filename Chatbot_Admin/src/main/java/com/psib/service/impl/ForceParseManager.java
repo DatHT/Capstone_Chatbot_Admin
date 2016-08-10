@@ -11,6 +11,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.SessionId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,8 +109,8 @@ public class ForceParseManager implements IForceParseManager {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
 		WebDriver driver = new FirefoxDriver();
-		logger.info("Thread Id: "+Thread.currentThread().getId());
-		
+		String handler = driver.getWindowHandle();
+		System.setProperty("WindowsHandler", handler);
 		try {
 			// lay url page
 			String xmlFilePath = getPageConfigFilePath();
