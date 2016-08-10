@@ -43,7 +43,6 @@ public class CrawlerController extends HttpServlet {
 
 	@RequestMapping(value = "/staticParse", method = RequestMethod.POST)
 	public String staticParse(Model model, HttpServletRequest request, HttpServletResponse response){
-		logger.info("Thread Id: "+Thread.currentThread().getId());
 		long threadID = +Thread.currentThread().getId();
 		System.setProperty("threadID", ""+threadID);
 		HttpSession session = request.getSession();
@@ -64,6 +63,8 @@ public class CrawlerController extends HttpServlet {
 	@RequestMapping(value = "/dynamicParse", method = RequestMethod.POST)
 	public String dynamicParse(Model model, HttpServletRequest request, HttpServletResponse response){
 		HttpSession session = request.getSession();
+		long threadID = +Thread.currentThread().getId();
+		System.setProperty("threadID", ""+threadID);
 		String numPage = request.getParameter("txtPage");
 		int numOfPage = Integer.parseInt(numPage);
 		String url = request.getParameter("txtLinkPage");

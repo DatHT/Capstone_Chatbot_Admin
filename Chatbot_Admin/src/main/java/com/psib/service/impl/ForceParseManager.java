@@ -11,8 +11,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.SessionId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,7 +175,7 @@ public class ForceParseManager implements IForceParseManager {
 
 			int countAdded = 0;
 			int countExist = 0;
-			
+
 			for (int i = 0; i < pageList.size(); i++) {
 				String pageDescriptionLink = pageList.get(i).getNextPageUrl();
 				productName = pageList.get(i).getProductName();
@@ -198,10 +196,10 @@ public class ForceParseManager implements IForceParseManager {
 				}
 				restaurantName = driver.findElement(By.xpath(config.getName())).getText();
 				address = driver.findElement(By.xpath(config.getAddress())).getText();
-				if (config.getUserRate() != "N/A") {
+				if (!config.getUserRate().equals("N/A")) {
 					userRate = driver.findElement(By.xpath(config.getUserRate())).getText();
 				}
-				
+
 				List<WebElement> listimg = driver.findElements(By.tagName("a"));
 				String imgVal = "";
 				for (WebElement elem : listimg) {
@@ -241,12 +239,13 @@ public class ForceParseManager implements IForceParseManager {
 				String latlong = "" + latitude + "," + longitude;
 				String district = CommonUtils.splitDistrict(latlong);
 				String newAddress = CommonUtils.splitAddress(district, address);
-				
+
 				double rate = 0;
-				double rateCoe = Double.parseDouble(config.getRatingCoefficient());
-				double rateCoefficient = Double.parseDouble(rating_coefficient);
+				
 				if (!userRate.equals("")) {
-					rate = (Double.parseDouble(userRate)*rateCoefficient)/rateCoe;
+					double rateCoe = Double.parseDouble(config.getRatingCoefficient());
+					double rateCoefficient = Double.parseDouble(rating_coefficient);
+					rate = (Double.parseDouble(userRate) * rateCoefficient) / rateCoe;
 				}
 				District districtDAO = new District();
 				Address addressDAO = new Address();
@@ -300,13 +299,13 @@ public class ForceParseManager implements IForceParseManager {
 			driver.close();
 			logger.info("Sucessfull Added Record: " + countAdded);
 			logger.info("Exist Record: " + countExist);
-			logger.info("Add fail: "+ (total - (countAdded+countExist)));
+			logger.info("Add fail: " + (total - (countAdded + countExist)));
 			long estimatedTime = System.nanoTime() - startTime;
 			double seconds = (double) estimatedTime / 1000000000.0;
 			logger.info("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
-			logger.info("STOP PARSE "+ex.getMessage());
+			logger.info("STOP PARSE " + ex.getMessage());
 		}
 		return "done";
 	}
@@ -316,7 +315,7 @@ public class ForceParseManager implements IForceParseManager {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
 		WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
-		logger.info("Thread Id: "+Thread.currentThread().getId());
+		logger.info("Thread Id: " + Thread.currentThread().getId());
 		try {
 			int numOfPage = 0;
 			int noOfPage = 0;
@@ -421,7 +420,7 @@ public class ForceParseManager implements IForceParseManager {
 						}
 						restaurantName = driver.findElement(By.xpath(config.getName())).getText();
 						address = driver.findElement(By.xpath(config.getAddress())).getText();
-						if (config.getUserRate() != "N/A") {
+						if (!config.getUserRate().equals("N/A")) {
 							userRate = driver.findElement(By.xpath(config.getUserRate())).getText();
 						}
 
@@ -465,10 +464,10 @@ public class ForceParseManager implements IForceParseManager {
 						String district = CommonUtils.splitDistrict(latlong);
 						String newAddress = CommonUtils.splitAddress(district, address);
 						double rate = 0;
-						double rateCoe = Double.parseDouble(config.getRatingCoefficient());
-						double rateCoefficient = Double.parseDouble(rating_coefficient);
 						if (!userRate.equals("")) {
-							rate = (Double.parseDouble(userRate)*rateCoefficient)/rateCoe;
+							double rateCoe = Double.parseDouble(config.getRatingCoefficient());
+							double rateCoefficient = Double.parseDouble(rating_coefficient);
+							rate = (Double.parseDouble(userRate) * rateCoefficient) / rateCoe;
 						}
 						District districtDAO = new District();
 						Address addressDAO = new Address();
@@ -570,7 +569,7 @@ public class ForceParseManager implements IForceParseManager {
 					}
 					restaurantName = driver.findElement(By.xpath(config.getName())).getText();
 					address = driver.findElement(By.xpath(config.getAddress())).getText();
-					if (config.getUserRate() != "N/A") {
+					if (!config.getUserRate().equals("N/A")) {
 						userRate = driver.findElement(By.xpath(config.getUserRate())).getText();
 					}
 
@@ -615,10 +614,11 @@ public class ForceParseManager implements IForceParseManager {
 					String newAddress = CommonUtils.splitAddress(latlong, address);
 
 					double rate = 0;
-					double rateCoe = Double.parseDouble(config.getRatingCoefficient());
-					double rateCoefficient = Double.parseDouble(rating_coefficient);
+					
 					if (!userRate.equals("")) {
-						rate = (Double.parseDouble(userRate)*rateCoefficient)/rateCoe;
+						double rateCoe = Double.parseDouble(config.getRatingCoefficient());
+						double rateCoefficient = Double.parseDouble(rating_coefficient);
+						rate = (Double.parseDouble(userRate) * rateCoefficient) / rateCoe;
 					}
 					District districtDAO = new District();
 					Address addressDAO = new Address();
@@ -673,13 +673,13 @@ public class ForceParseManager implements IForceParseManager {
 			driver.close();
 			logger.info("Sucessfull Added Record: " + countAdded);
 			logger.info("Exist Record: " + countExist);
-			logger.info("Add fail: "+ (total - (countAdded+countExist)));
+			logger.info("Add fail: " + (total - (countAdded + countExist)));
 			long estimatedTime = System.nanoTime() - startTime;
 			double seconds = (double) estimatedTime / 1000000000.0;
 			logger.info("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
-			logger.info("STOP PARSING "+ex.getMessage());
+			logger.info("STOP PARSING " + ex.getMessage());
 		}
 		return "done";
 	}
