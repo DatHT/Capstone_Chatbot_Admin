@@ -33,6 +33,7 @@ import com.psib.model.ProductDetail;
 import com.psib.service.IForceParseManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
+import com.psib.util.SeleniumUtils;
 import com.psib.util.SpringPropertiesUtil;
 import com.psib.util.XMLUtils;
 
@@ -106,7 +107,7 @@ public class ForceParseManager implements IForceParseManager {
 	public String dynamicParse(int numOfPage, String url) {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
-		WebDriver driver = new FirefoxDriver();
+		WebDriver driver = SeleniumUtils.createFireFoxDriver();
 		String handler = driver.getWindowHandle();
 		System.setProperty("WindowsHandler", handler);
 		try {
@@ -314,7 +315,7 @@ public class ForceParseManager implements IForceParseManager {
 	public String staticParse(String numPage, String noPage, String url) {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
-		WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
+		WebDriver driver = SeleniumUtils.createHtmlUnitDriver();
 		logger.info("Thread Id: " + Thread.currentThread().getId());
 		try {
 			int numOfPage = 0;
