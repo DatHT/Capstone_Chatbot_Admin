@@ -75,6 +75,9 @@ public class ProductDetail implements Serializable {
 	@Column(name = "synonymName")
 	@JsonProperty("synonymName")
 	private String synonymName;
+	
+	@Column(name = "originalName")
+	private String originalName;
 
 	public ProductDetail() {
 		// TODO Auto-generated constructor stub
@@ -210,5 +213,13 @@ public class ProductDetail implements Serializable {
 
 	public void setSynonymName(String synonymName) {
 		this.synonymName = synonymName;
+	}
+	
+	public String getOriginalName() {
+		return originalName;
+	}
+	
+	public void setOriginalName(String originalName) {
+		this.originalName = originalName;
 	}
 }
