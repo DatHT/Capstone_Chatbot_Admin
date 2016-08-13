@@ -10,8 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 
+//TODO: will rename class become User
 @Entity
-@Table(name = "Staff")
+@Table(name = "User")
 public class Staff implements Serializable {
 
 	@Id
