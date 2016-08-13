@@ -30,4 +30,8 @@ public interface ISynonymDao {
     public List<Synonym> getSynonyms(String phrase);
     
     public Synonym getSynonymById(int id);
+    
+    public List<Synonym> getAlls();
+    
+    public Synonym getOriginal(Synonym synonym);
 }

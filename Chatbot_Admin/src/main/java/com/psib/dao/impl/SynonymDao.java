@@ -247,4 +247,20 @@ public class SynonymDao extends BaseDao<Synonym, Long> implements ISynonymDao {
     	LOG.info("getSynonymById[] End: id =" + id);
     	return (Synonym)criteria.list().get(0);
     }
+    
+    @Override
+    @Transactional
+    public List<Synonym> getAlls() {
+    	
+    	return getAll();
+    }
+    
+    @Override
+    @Transactional
+    public Synonym getOriginal(Synonym synonym) {
+    	if (synonym.getSynonymId() == 0) {
+			return synonym;
+		}
+    	return getSynonymById(synonym.getSynonymId());
+    }
 }

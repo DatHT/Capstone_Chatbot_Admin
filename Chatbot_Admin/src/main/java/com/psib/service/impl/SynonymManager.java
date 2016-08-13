@@ -1,5 +1,14 @@
 package com.psib.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.psib.dao.ISynonymDao;
@@ -7,14 +16,7 @@ import com.psib.dto.BootGirdDto;
 import com.psib.dto.SynonymJsonDto;
 import com.psib.model.Synonym;
 import com.psib.service.ISynonymManager;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.psib.util.CommonUtils;
 
 @Service
 public class SynonymManager implements ISynonymManager {
@@ -244,85 +246,96 @@ public class SynonymManager implements ISynonymManager {
 	
 	@Override
 	public String replaceSentenceBySynonym(String sentence) {
-		String[] words = sentence.split(" ");
-		String result = "";
-		
-		int currIndex = 0;
-		int lastIndex = currIndex;
-		String currPhrase = words[currIndex];
-		String lastPhrase = currPhrase;
-		
-		boolean flag = true;
-		
-		List<Synonym> synonyms = null;
-		
-		while(flag) {
-			boolean isNext = false;
-			synonyms = searchSynonym(currPhrase);
-			
-			if (!synonyms.isEmpty()) {
-				int maxAcceptableResults = currPhrase.split(" ").length * 5;
-				
-				if (synonyms.size() == 1) {
-					if (currPhrase.equalsIgnoreCase(synonyms.get(0).getName().trim())) {
-						if (synonyms.get(0).getSynonymId() == 0) {
-							result += " " + synonyms.get(0).getName();
-						} else {
-							Synonym synonym = synonymDao.getSynonymById(synonyms.get(0).getSynonymId());
-							result += " " + synonym.getName();
-						}
-						isNext = true;
-					}
-				} else if (synonyms.size() < maxAcceptableResults) {
-					for (Synonym synonym : synonyms) {
-						if (currPhrase.equals(synonym.getName().trim())) {
-							if (synonym.getSynonymId() == 0) {
-								result += " " + synonym.getName();
-							} else {
-								Synonym synonymtmp = synonymDao.getSynonymById(synonym.getSynonymId());
-								result += " " + synonymtmp.getName();
-							}
-							isNext = true;
-							break;
-						}
-					}
-				}
-			} else {
-				if (!isNext) {
-					result += " " + words[lastIndex];
-					currIndex = lastIndex;
-				} else {
-					result += " " + lastPhrase;
-				}
-				isNext = true;
+//		String[] words = sentence.split(" ");
+//		String result = "";
+//		
+//		int currIndex = 0;
+//		int lastIndex = currIndex;
+//		String currPhrase = words[currIndex];
+//		String lastPhrase = currPhrase;
+//		
+//		boolean flag = true;
+//		
+//		List<Synonym> synonyms = null;
+//		
+//		while(flag) {
+//			boolean isNext = false;
+//			synonyms = searchSynonym(currPhrase);
+//			
+//			if (!synonyms.isEmpty()) {
+//				int maxAcceptableResults = currPhrase.split(" ").length * 5;
+//				
+//				if (synonyms.size() == 1) {
+//					if (currPhrase.equalsIgnoreCase(synonyms.get(0).getName().trim())) {
+//						if (synonyms.get(0).getSynonymId() == 0) {
+//							result += " " + synonyms.get(0).getName();
+//						} else {
+//							Synonym synonym = synonymDao.getSynonymById(synonyms.get(0).getSynonymId());
+//							result += " " + synonym.getName();
+//						}
+//						isNext = true;
+//					}
+//				} else if (synonyms.size() < maxAcceptableResults) {
+//					for (Synonym synonym : synonyms) {
+//						if (currPhrase.equals(synonym.getName().trim())) {
+//							if (synonym.getSynonymId() == 0) {
+//								result += " " + synonym.getName();
+//							} else {
+//								Synonym synonymtmp = synonymDao.getSynonymById(synonym.getSynonymId());
+//								result += " " + synonymtmp.getName();
+//							}
+//							isNext = true;
+//							break;
+//						}
+//					}
+//				}
+//			} else {
+//				if (!isNext) {
+//					result += " " + words[lastIndex];
+//					currIndex = lastIndex;
+//				} else {
+//					result += " " + lastPhrase;
+//				}
+//				isNext = true;
+//			}
+//			
+//			if ((currIndex + 1) >= words.length) {
+//				if (currIndex == lastIndex) {
+//					if (!isNext) {
+//						result += " " + words[lastIndex];
+//					}
+//					flag = false;
+//				} else {
+//					// to make the list is empty
+//					synonyms = new ArrayList<>();
+//				}
+//				continue;
+//			}
+//			if (isNext) {
+//				// search new word
+//				currPhrase = words[currIndex = currIndex + 1];
+//				lastIndex = currIndex;
+//			} else {
+//				// add more word to current phrase
+//				lastPhrase = currPhrase;
+//				currPhrase = currPhrase + " " + words[currIndex = currIndex + 1];
+//			}
+//			
+//			// trim result
+//			result = result.trim();
+//		}
+//		
+//		return result;
+//	}
+//	@Override
+//	public String replaceString(String sentence) {
+		List<Synonym> synonyms = synonymDao.getAlls();
+		for (Synonym synonym : synonyms) {
+			if (CommonUtils.isContain(sentence, synonym.getName())) {
+				String synonymName = synonym.getName();
+				sentence = sentence.replaceAll(synonymName, synonymDao.getOriginal(synonym).getName());
 			}
-			
-			if ((currIndex + 1) >= words.length) {
-				if (currIndex == lastIndex) {
-					if (!isNext) {
-						result += " " + words[lastIndex];
-					}
-					flag = false;
-				} else {
-					// to make the list is empty
-					synonyms = new ArrayList<>();
-				}
-				continue;
-			}
-			if (isNext) {
-				// search new word
-				currPhrase = words[currIndex = currIndex + 1];
-				lastIndex = currIndex;
-			} else {
-				// add more word to current phrase
-				lastPhrase = currPhrase;
-				currPhrase = currPhrase + " " + words[currIndex = currIndex + 1];
-			}
-			
-			// trim result
-			result = result.trim();
 		}
-		
-		return result;
+		return sentence;
 	}
 }
