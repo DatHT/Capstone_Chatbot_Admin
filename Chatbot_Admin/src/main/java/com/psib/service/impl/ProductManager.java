@@ -276,6 +276,7 @@ public class ProductManager implements IProductManager {
         ProductDetail productDetail;
         String productName;
         String productSynonym;
+        String productOriginal;
         int i;
 
         while (productListSize != 0) {
@@ -287,8 +288,11 @@ public class ProductManager implements IProductManager {
                 productDetail = productList.get(i);
                 productName = productDetail.getProductName().toLowerCase().trim();
                 productSynonym = synonymManager.calcSynonym(productName);
+                productOriginal = synonymManager.replaceSentenceBySynonym(productName);
+                
 
                 productDetail.setSynonymName(productSynonym);
+                productDetail.setOriginalName(productOriginal);
                 productDetailDao.updateProductDetail(productDetail);
             }
 
