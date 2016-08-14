@@ -9,14 +9,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.psib.dao.IAddressDao;
 import com.psib.dao.IDistrictDao;
@@ -33,6 +29,7 @@ import com.psib.model.ProductDetail;
 import com.psib.service.IForceParseManager;
 import com.psib.util.CommonUtils;
 import com.psib.util.LatitudeAndLongitudeWithPincode;
+import com.psib.util.SeleniumUtils;
 import com.psib.util.SpringPropertiesUtil;
 import com.psib.util.XMLUtils;
 
@@ -54,6 +51,7 @@ public class ForceParseManager implements IForceParseManager {
 	private String num_of_exits = SpringPropertiesUtil.getProperty("num_exist");
 	private String num_of_page = SpringPropertiesUtil.getProperty("num_page");
 	private String num_of_scroll = SpringPropertiesUtil.getProperty("num_scroll");
+	private String rating_coefficient = SpringPropertiesUtil.getProperty("rating_coefficient");
 
 	@Override
 	public String timerAutomaticParse() throws IOException {
@@ -105,7 +103,7 @@ public class ForceParseManager implements IForceParseManager {
 	public String dynamicParse(int numOfPage, String url) {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
-		WebDriver driver = new FirefoxDriver();
+		WebDriver driver = SeleniumUtils.createFireFoxDriver();
 		try {
 			// lay url page
 			String xmlFilePath = getPageConfigFilePath();
@@ -166,10 +164,13 @@ public class ForceParseManager implements IForceParseManager {
 				page.setImageLink(images.get(i).getAttribute("src"));
 				pageList.add(page);
 			}
+			int total = 0;
+			total = pageList.size();
 			logger.info("--Number of record: " + pageList.size());
 
 			int countAdded = 0;
 			int countExist = 0;
+
 			for (int i = 0; i < pageList.size(); i++) {
 				String pageDescriptionLink = pageList.get(i).getNextPageUrl();
 				productName = pageList.get(i).getProductName();
@@ -190,7 +191,7 @@ public class ForceParseManager implements IForceParseManager {
 				}
 				restaurantName = driver.findElement(By.xpath(config.getName())).getText();
 				address = driver.findElement(By.xpath(config.getAddress())).getText();
-				if (config.getUserRate() != "N/A") {
+				if (!config.getUserRate().equals("N/A")) {
 					userRate = driver.findElement(By.xpath(config.getUserRate())).getText();
 				}
 
@@ -235,11 +236,11 @@ public class ForceParseManager implements IForceParseManager {
 				String newAddress = CommonUtils.splitAddress(district, address);
 
 				double rate = 0;
+				
 				if (!userRate.equals("")) {
-					rate = Double.parseDouble(userRate);
-					if (rate <= 5) {
-						rate = rate * 2;
-					}
+					double rateCoe = Double.parseDouble(config.getRatingCoefficient());
+					double rateCoefficient = Double.parseDouble(rating_coefficient);
+					rate = (Double.parseDouble(userRate) * rateCoefficient) / rateCoe;
 				}
 				District districtDAO = new District();
 				Address addressDAO = new Address();
@@ -293,26 +294,28 @@ public class ForceParseManager implements IForceParseManager {
 			driver.close();
 			logger.info("Sucessfull Added Record: " + countAdded);
 			logger.info("Exist Record: " + countExist);
+			logger.info("Add fail: " + (total - (countAdded + countExist)));
 			long estimatedTime = System.nanoTime() - startTime;
 			double seconds = (double) estimatedTime / 1000000000.0;
 			logger.info("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
-			logger.info("STOP PARSE");
+			logger.info("STOP PARSER ");
 		}
-		return "done";
+		return "fail";
 	}
 
 	@Override
 	public String staticParse(String numPage, String noPage, String url) {
 		// TODO Auto-generated method stub
 		long startTime = System.nanoTime();
-		WebDriver driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38, false);
+		WebDriver driver = SeleniumUtils.createHtmlUnitDriver();
 		try {
 			int numOfPage = 0;
 			int noOfPage = 0;
 			int countAdded = 0;
 			int countExist = 0;
+			int total = 0;
 			if (numPage != null && !numPage.isEmpty()) {
 				numOfPage = Integer.parseInt(numPage);
 			} else {
@@ -389,6 +392,7 @@ public class ForceParseManager implements IForceParseManager {
 						page.setImageLink(images.get(i).getAttribute("src"));
 						pageList.add(page);
 					}
+					total = pageList.size();
 					logger.info("--Number of record: " + pageList.size());
 					for (int i = 0; i < pageList.size(); i++) {
 						String pageDescriptionLink = pageList.get(i).getNextPageUrl();
@@ -410,7 +414,7 @@ public class ForceParseManager implements IForceParseManager {
 						}
 						restaurantName = driver.findElement(By.xpath(config.getName())).getText();
 						address = driver.findElement(By.xpath(config.getAddress())).getText();
-						if (config.getUserRate() != "N/A") {
+						if (!config.getUserRate().equals("N/A")) {
 							userRate = driver.findElement(By.xpath(config.getUserRate())).getText();
 						}
 
@@ -455,10 +459,9 @@ public class ForceParseManager implements IForceParseManager {
 						String newAddress = CommonUtils.splitAddress(district, address);
 						double rate = 0;
 						if (!userRate.equals("")) {
-							rate = Double.parseDouble(userRate);
-							if (rate <= 5) {
-								rate = rate * 2;
-							}
+							double rateCoe = Double.parseDouble(config.getRatingCoefficient());
+							double rateCoefficient = Double.parseDouble(rating_coefficient);
+							rate = (Double.parseDouble(userRate) * rateCoefficient) / rateCoe;
 						}
 						District districtDAO = new District();
 						Address addressDAO = new Address();
@@ -538,6 +541,7 @@ public class ForceParseManager implements IForceParseManager {
 					page.setImageLink(images.get(i).getAttribute("src"));
 					pageList.add(page);
 				}
+				total = pageList.size();
 				logger.info("--Number of record: " + pageList.size());
 				for (int i = 0; i < pageList.size(); i++) {
 					String pageDescriptionLink = pageList.get(i).getNextPageUrl();
@@ -559,7 +563,7 @@ public class ForceParseManager implements IForceParseManager {
 					}
 					restaurantName = driver.findElement(By.xpath(config.getName())).getText();
 					address = driver.findElement(By.xpath(config.getAddress())).getText();
-					if (config.getUserRate() != "N/A") {
+					if (!config.getUserRate().equals("N/A")) {
 						userRate = driver.findElement(By.xpath(config.getUserRate())).getText();
 					}
 
@@ -604,11 +608,11 @@ public class ForceParseManager implements IForceParseManager {
 					String newAddress = CommonUtils.splitAddress(latlong, address);
 
 					double rate = 0;
+					
 					if (!userRate.equals("")) {
-						rate = Double.parseDouble(userRate);
-						if (rate <= 5) {
-							rate = rate * 2;
-						}
+						double rateCoe = Double.parseDouble(config.getRatingCoefficient());
+						double rateCoefficient = Double.parseDouble(rating_coefficient);
+						rate = (Double.parseDouble(userRate) * rateCoefficient) / rateCoe;
 					}
 					District districtDAO = new District();
 					Address addressDAO = new Address();
@@ -663,14 +667,15 @@ public class ForceParseManager implements IForceParseManager {
 			driver.close();
 			logger.info("Sucessfull Added Record: " + countAdded);
 			logger.info("Exist Record: " + countExist);
+			logger.info("Add fail: " + (total - (countAdded + countExist)));
 			long estimatedTime = System.nanoTime() - startTime;
 			double seconds = (double) estimatedTime / 1000000000.0;
 			logger.info("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
-			logger.info("STOP PARSING");
+			logger.info("STOP PARSER ");
 		}
-		return "done";
+		return "fail";
 	}
 
 }

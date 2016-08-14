@@ -7,47 +7,94 @@ function getVal() {
 	valueButton = document.getElementById("confirmation").value;
 	return valueButton;
 }
-function checkUrl() {
-	var url = document.getElementById("input-01").value;
-	var rst = "";
+function checkReturn(form) {
 	var xmlhttp;
-	var x;
-	var str_array = url.split("/");
-	for (var i = 0; i < 3; i++) {
-		rst = rst + str_array[i] + "/";
-	}
+	// notify("Product Already Existed!", "warning");
 	if (window.XMLHttpRequest) {
 		xmlhttp = new XMLHttpRequest();
 	} else {
 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			var result = xmlhttp.responseText;
-			if (result.indexOf("not available") > -1) {
-				swal("Inputted Url is not available, please check your input or try with another url");
-			}
-			if (result.indexOf("Valid") > -1) {
-				if (getVal() == "Set List Page") {
-					if (regObjPage.search(rst) != -1) {
-						if (confirm("This configuration existed. Do you want to config again?") == true) {
-							x == 3;
-						} else {
-							return false;
-						}
-					}
-				}
-				return true;
+			if (result.indexOf("success") > -1) {
+				notify("Your Parser had been STOP", "info");
+				setTimeout(function() {
+					location.reload();
+				}, 3000);
 			}
 		}
 	}
 	var param = document.getElementById("paramName").value;
 	var token = document.getElementById("token").value;
-	xmlhttp.open("POST", "/chatbot_admin/checkUrl", true);
+	xmlhttp.open("POST", "/chatbot_admin/closeThread", true);
 	xmlhttp.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded;charset=utf-8");
-	xmlhttp.send("url=" + url + "&" + param + "=" + token);
+	xmlhttp.send("/chatbot_admin/closeThread" + "&" + param + "=" + token);
+	return false;
+}
+function checkSuccess(form) {
+	var url = document.getElementById("selectSite").value;
+	var numPage = document.getElementById("input-num").value;
+	var noPage = document.getElementById("input-no").value;
+	var xmlhttp;
+	// notify("Product Already Existed!", "warning");
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else {
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			var result = xmlhttp.responseText;
+			if (result.indexOf("success") > -1) {
+				notify("Your Parser had been Success parse data", "info");
+				setTimeout(function() {
+					location.reload();
+				}, 3000);
+			}
+		}
+	}
+	var param = document.getElementById("paramName").value;
+	var token = document.getElementById("token").value;
+	xmlhttp.open("POST", "/chatbot_admin/staticParse", true);
+	xmlhttp.setRequestHeader("Content-type",
+			"application/x-www-form-urlencoded;charset=utf-8");
+	xmlhttp.send("/chatbot_admin/staticParse" + "&txtSelectPage=" + numPage
+			+ "&txtLinkPage=" + url + "&txtNoPage=" + noPage + "&" + param
+			+ "=" + token);
+	return false;
+}
+function checkSuccessDynamic(form) {
+	var url = document.getElementById("selectPage").value;
+	var time = document.getElementById("times-no").value;
+	var xmlhttp;
+	// notify("Product Already Existed!", "warning");
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else {
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			var result = xmlhttp.responseText;
+			if (result.indexOf("success") > -1) {
+				notify("Your Parser had been Success parse data", "info");
+				setTimeout(function() {
+					location.reload();
+				}, 3000);
+			}
+		}
+	}
+	var param = document.getElementById("paramName").value;
+	var token = document.getElementById("token").value;
+	xmlhttp.open("POST", "/chatbot_admin/dynamicParse", true);
+	xmlhttp.setRequestHeader("Content-type",
+			"application/x-www-form-urlencoded;charset=utf-8");
+	xmlhttp.send("/chatbot_admin/dynamicParse" + "&txtTimes=" + time
+			+ "&txtPage=" + url + "&" + param
+			+ "=" + token);
 	return false;
 }
 
@@ -111,7 +158,7 @@ function checkInputConfig(form) {
 	}
 	if (getVal() == "Set List Page") {
 		if (regObjPage.search(result) != -1) {
-			swal(	
+			swal(
 					{
 						title : "EXISTED CONFIG",
 						text : "Config for this page is existed! Do you want to update?",
@@ -120,14 +167,12 @@ function checkInputConfig(form) {
 						confirmButtonColor : "#DD6B55",
 						confirmButtonText : "Ok!",
 						closeOnConfirm : false
-					},
-					  function(){
+					}, function() {
 						form.submit();
 					});
-		}
-		else
+		} else
 			form.submit();
 	}
-	
+
 	return false;
 }

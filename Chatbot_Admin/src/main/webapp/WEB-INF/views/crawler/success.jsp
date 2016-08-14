@@ -23,7 +23,7 @@ and open the template in the editor.
 	<section>
 		<div class="card">
 			<div class="card-header">
-				<h3>SUCCESS! CONGRATULATION</h3>
+				<h3>SUCCESS!!!</h3>
 			</div>
 			<div class="card-body card-padding">
 				<div class="row">

@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlType;
     "name",
     "address",
     "userRate",
+    "ratingCoefficient"
 })
 public class ConfigDTO implements Serializable {
 
@@ -24,15 +25,17 @@ public class ConfigDTO implements Serializable {
     private String name;
     private String address;
     private String userRate;
+    private String ratingCoefficient;
 
     public ConfigDTO() {
     }
 
-    public ConfigDTO(String site, String name, String address, String userRate) {
+    public ConfigDTO(String site, String name, String address, String userRate, String ratingCoefficient) {
         this.site = site;
         this.name = name;
         this.address = address;
         this.userRate = userRate;
+        this.ratingCoefficient = ratingCoefficient;
     }
 
     @XmlAttribute
@@ -70,8 +73,18 @@ public class ConfigDTO implements Serializable {
     public void setUserRate(String userRate) {
         this.userRate = userRate;
     }
+    
+    @XmlElement
+    public String getRatingCoefficient() {
+		return ratingCoefficient;
+	}
 
-    private ConfigDTOList configs;
+	public void setRatingCoefficient(String ratingCoefficient) {
+		this.ratingCoefficient = ratingCoefficient;
+	}
+
+
+	private ConfigDTOList configs;
 
     public ConfigDTOList getConfigs() {
         return configs;

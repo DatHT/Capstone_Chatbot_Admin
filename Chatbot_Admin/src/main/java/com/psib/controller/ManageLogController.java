@@ -33,7 +33,7 @@ import com.psib.service.ILogManager;
  */
 @Controller
 public class ManageLogController {
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(ManageLogController.class);
 
 	public static final String ERROR = "ERROR";

@@ -24,7 +24,7 @@
 		<div class="scroller_anchor"></div>
 		<div class="card scroller" id="scr" style="">
 			<div class="card-header">
-				<h2>Please Select An Element And Get XPath</h2>
+				<h2>Please Select Required Field For Each Step</h2>
 			</div>
 			<div class="progressRecipe card-body card-padding"
 				style="padding-top: 0px">
