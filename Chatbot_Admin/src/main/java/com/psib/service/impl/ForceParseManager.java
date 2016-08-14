@@ -300,9 +300,9 @@ public class ForceParseManager implements IForceParseManager {
 			logger.info("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
-			logger.info("STOP PARSE " + ex.getMessage());
+			logger.info("STOP PARSER ");
 		}
-		return "done";
+		return "fail";
 	}
 
 	@Override
@@ -673,9 +673,9 @@ public class ForceParseManager implements IForceParseManager {
 			logger.info("Elapsed time: " + seconds);
 			return "done";
 		} catch (Exception ex) {
-			logger.info("STOP PARSING " + ex.getMessage());
+			logger.info("STOP PARSER ");
 		}
-		return "done";
+		return "fail";
 	}
 
 }

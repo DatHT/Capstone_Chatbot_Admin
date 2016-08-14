@@ -42,16 +42,17 @@ public class CrawlerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@RequestMapping(value = "/staticParse", method = RequestMethod.POST)
-	public String staticParse(Model model, HttpServletRequest request, HttpServletResponse response){
+	public @ResponseBody String staticParse(@RequestParam("txtSelectPage") String numPage,
+			@RequestParam("txtLinkPage") String url,
+			@RequestParam("txtNoPage") String noPage,
+			Model model, HttpServletRequest request, HttpServletResponse response){
 		HttpSession session = request.getSession();
-		String numPage = request.getParameter("txtPage");
-		String url = request.getParameter("txtLinkPage");
-		logger.info("url = " + url);
-		String noPage = request.getParameter("txtNoPage");
+		String responseText="";
+		logger.info("url: "+url+" ---- numPage: "+numPage+" ---- noPage: "+noPage);
 		String result = forceParseManager.staticParse(numPage, noPage, url);
 		if (result == "done") {
-			session.setAttribute("MESSAGE", "Force parse success! New data has been inserted to storage!");
-			return "success";
+			responseText=CodeManager.SUCCESS;
+			return responseText;
 		} else {
 			session.setAttribute("MESSAGE", "STOP! Force Parse Has Been STOP!");
 			return "errorPage";
@@ -59,19 +60,20 @@ public class CrawlerController extends HttpServlet {
 	}
 
 	@RequestMapping(value = "/dynamicParse", method = RequestMethod.POST)
-	public String dynamicParse(Model model, HttpServletRequest request, HttpServletResponse response){
+	public @ResponseBody String dynamicParse(@RequestParam("txtTimes") String times,@RequestParam("txtPage") String url,Model model, HttpServletRequest request, HttpServletResponse response){
 		HttpSession session = request.getSession();
-		String numPage = request.getParameter("txtPage");
-		int numOfPage = Integer.parseInt(numPage);
-		String url = request.getParameter("txtLinkPage");
+		//String times = request.getParameter("txtPage");
+		int timesLoadPage = Integer.parseInt(times);
+		//String url = request.getParameter("txtLinkPage");
 		logger.info("url = " + url);
-		String result = forceParseManager.dynamicParse(numOfPage, url);
+		String responseText="";
+		String result = forceParseManager.dynamicParse(timesLoadPage, url);
 		if (result == "done") {
-			session.setAttribute("MESSAGE", "Force parse success! New data has been inserted to storage!");
-			return "success";
+			responseText=CodeManager.SUCCESS;
+			return responseText;
 		} else {
 			session.setAttribute("MESSAGE", "STOP! Force Parse Has Been STOP!");
-			return "errorPage";
+			return "redirect:/errorPage";
 		}
 
 	}
@@ -206,7 +208,7 @@ public class CrawlerController extends HttpServlet {
 			System.out.println("" + page.getSite() + ": " + page.getNextPage());
 			session.setAttribute("PGS", page);
 			System.out.println("" + newConfig.getSite() + ": " + newConfig.getName());
-			session.setAttribute("MESSAGE", "New page configuration has been inserted to storage!");
+			session.setAttribute("MESSAGE", "Configuration has been saved to storage!");
 			return "successParse";
 		} else {
 			session.setAttribute("MESSAGE", "Page configuration fails!");
