@@ -72,11 +72,11 @@ public class ProductDetail implements Serializable {
 	@JsonProperty("source")
 	private String source;
 
-	@Column(name = "synonymName")
+	@Column(name = "synonymName", length = 4000)
 	@JsonProperty("synonymName")
 	private String synonymName;
 	
-	@Column(name = "originalName")
+	@Column(name = "originalName", length = 4000)
 	private String originalName;
 
 	public ProductDetail() {

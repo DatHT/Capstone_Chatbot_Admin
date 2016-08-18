@@ -530,8 +530,9 @@ public class LogManager implements ILogManager {
 	private String checkSentence(String sentence1, String sentence2) {
 		String repSen1 = synonymManager.replaceSentenceBySynonym(sentence1);
 		String repSen2 = synonymManager.replaceSentenceBySynonym(sentence2);
-		
-		if(SentenceUtils.checkContainSentencePercent(repSen1, repSen2) >= 0.7f) {
+		logger.info("[checkSentence] - sentence1: " + repSen1);
+		logger.info("[checkSentence] - sentence2: " + repSen2);
+		if(SentenceUtils.checkContainSentencePercent(repSen1, repSen2) >= 0.6f) {
 			
 			return sentence1.trim().length() > sentence2.trim().length() ? sentence1 : sentence2;
 		}

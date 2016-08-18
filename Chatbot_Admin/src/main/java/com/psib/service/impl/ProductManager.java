@@ -288,6 +288,7 @@ public class ProductManager implements IProductManager {
                 productDetail = productList.get(i);
                 productName = productDetail.getProductName().toLowerCase().trim();
                 productSynonym = synonymManager.calcSynonym(productName);
+                if (productSynonym.length() >= 4000) productSynonym = productSynonym.substring(0, 3999);
                 productOriginal = synonymManager.replaceSentenceBySynonym(productName);
                 
 

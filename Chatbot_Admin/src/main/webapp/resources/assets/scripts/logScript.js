@@ -107,6 +107,10 @@ function reloadBootgridTable() {
     			if (text && listPhrase[text] === undefined) {
     				listPhraseContent.appendChild(createPhraseElement(text));
     			}
+    			$('.chosen').chosen({
+    	            width: '100%',
+    	            allow_single_deselect: true
+    	        });
     		});
     		
     		var saveButton = document.getElementById('save-button');
@@ -499,18 +503,22 @@ function createPhraseElement(text) {
 
 	var lexicalCategory = document.createElement('div');
 	lexicalCategory.className = 'col-sm-4 m-b-25';
-	var divSelect = document.createElement('div');
-	divSelect.className = 'select';
-	var lexicalList = document.getElementsByClassName('listLexical')[0]
-			.cloneNode(true);
+	var lexicalList = document.createElement('select');
+	lexicalList.className = 'chosen';
+	var listLexical = document.getElementById('listLexical');
+	for(var x = 0; x < listLexical.length; x++) {
+		var opt = document.createElement('option');
+		opt.text = listLexical.options[x].text;
+		opt.value = listLexical.options[x].value;
+		lexicalList.options.add(opt, x);
+	}
+	
 	lexicalList.onchange = function(event) {
 		listPhrase[text] = event.target.value;
 		checkSaveButtonState();
 	}
-	lexicalList.style.display = 'block';
 
-	divSelect.appendChild(lexicalList);
-	lexicalCategory.appendChild(divSelect);
+	lexicalCategory.appendChild(lexicalList);
 	element.appendChild(lexicalCategory);
 
 	var span = document.createElement('span');
