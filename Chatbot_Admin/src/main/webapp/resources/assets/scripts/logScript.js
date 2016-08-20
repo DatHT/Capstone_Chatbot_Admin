@@ -3,6 +3,7 @@
  */
 
 var listPhrase = {};
+var modalId = "";
 
 var xmlhttp;
 if (window.XMLHttpRequest) {
@@ -98,6 +99,7 @@ function reloadBootgridTable() {
     		var modal = document.getElementById('myModal');
     		var pContainer = document.getElementById('user-say-container');
     		var p = document.getElementById('user-say-in-modal').innerHTML = $(this).data("row-usersay");
+    		modalId = $(this).data("row-id");
     		modal.style.display = "block";
     		// Get the <span> element that closes the modal
     		var span = document.getElementsByClassName("close")[0];
@@ -334,6 +336,7 @@ function createRowNoEntry(id, data) {
 
 function closeModalDialog() {
 	listPhrase = {};
+	modalId = "";
 	$('#myModal').modal('hide');
 	$("#conversationModal").modal('hide');
 	$('#loadingModal').modal('hide');
@@ -379,7 +382,7 @@ function requestAddPhrase(param, token) {
 	xmlhttp.open("POST", "/chatbot_admin/addPhrase", true);
 	xmlhttp.setRequestHeader("Content-type",
 			"application/x-www-form-urlencoded;charset=utf-8");
-	xmlhttp.send("listPhrase=" + JSON.stringify(listPhrase) + "&" + param + "=" + token);
+	xmlhttp.send("listPhrase=" + JSON.stringify(listPhrase) + "&" + "logId=" + modalId + "&" + param + "=" + token);
 }
 
 function createRowNotFound(id, data) {

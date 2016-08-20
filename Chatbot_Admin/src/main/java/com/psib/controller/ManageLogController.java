@@ -33,7 +33,7 @@ import com.psib.service.ILogManager;
  */
 @Controller
 public class ManageLogController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ManageLogController.class);
 
 	public static final String ERROR = "ERROR";
@@ -97,11 +97,13 @@ public class ManageLogController {
 	}
 
 	@RequestMapping(value = "/addPhrase", method = RequestMethod.POST)
-	public @ResponseBody String addPhrase(@RequestParam("listPhrase") String listPhrase, Model model) {
+	public @ResponseBody String addPhrase(@RequestParam("listPhrase") String listPhrase,
+			@RequestParam("logId") String logId, Model model) {
 		logger.info("[addPhrase] : Start");
 		String responseText = "";
 		try {
-			StatusCode code = logManager.addPhrase(listPhrase);
+			StatusCode code = logManager.addPhrase(listPhrase, logId);
+			System.out.println("HuyTCM: " + logId);
 			switch (code) {
 			case SUCCESS:
 				responseText = CodeManager.SUCCESS;

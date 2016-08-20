@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.psib.common.JsonParser;
+import com.psib.common.factory.FacebookMessengerFactory;
+import com.psib.common.factory.LexicalCategoryFactory;
 import com.psib.common.restclient.RestfulException;
 import com.psib.constant.LogStatus;
 import com.psib.constant.StatusCode;
@@ -49,9 +52,15 @@ public class LogManager implements ILogManager {
 
 	@Autowired
 	private IProductManager productManager;
-	
+
 	@Autowired
 	private ISynonymManager synonymManager;
+
+	@Autowired
+	private FacebookMessengerFactory facebookFactory;
+	
+	@Autowired
+	private LexicalCategoryFactory lexicalCategoryFactory;
 
 	private static final Logger logger = Logger.getLogger(LogManager.class);
 
@@ -335,7 +344,7 @@ public class LogManager implements ILogManager {
 
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put(contexts, contextJson);
-		
+
 		JSONArray arrId = new JSONArray();
 
 		JSONObject idObj = new JSONObject();
@@ -466,9 +475,10 @@ public class LogManager implements ILogManager {
 			int logStatusCode = Integer.parseInt(log.get(errCode).toString());
 			if (statusCode == logStatusCode) {
 				if (statusCode == NO_ENTRY_CODE) {
-					String sentence = checkSentence(jsonObject.get(userSay).toString(), log.get(userSay).toString()); 
+					String sentence = checkSentence(jsonObject.get(userSay).toString(), log.get(userSay).toString());
 					if (sentence != null) {
-//					if (jsonObject.get(userSay).equals(log.get(userSay))) {
+						// if (jsonObject.get(userSay).equals(log.get(userSay)))
+						// {
 						JSONArray arrId = log.getJSONArray(count);
 						boolean isCount = true;
 						for (int j = 0; j < arrId.length(); j++) {
@@ -526,14 +536,14 @@ public class LogManager implements ILogManager {
 		logger.info("[checkExistLog] : End");
 		return isExist;
 	}
-	
+
 	private String checkSentence(String sentence1, String sentence2) {
 		String repSen1 = synonymManager.replaceSentenceBySynonym(sentence1);
 		String repSen2 = synonymManager.replaceSentenceBySynonym(sentence2);
 		logger.info("[checkSentence] - sentence1: " + repSen1);
 		logger.info("[checkSentence] - sentence2: " + repSen2);
-		if(SentenceUtils.checkContainSentencePercent(repSen1, repSen2) >= 0.6f) {
-			
+		if (SentenceUtils.checkContainSentencePercent(repSen1, repSen2) >= 0.6f) {
+
 			return sentence1.trim().length() > sentence2.trim().length() ? sentence1 : sentence2;
 		}
 		return null;
@@ -563,7 +573,7 @@ public class LogManager implements ILogManager {
 	}
 
 	@Override
-	public StatusCode addPhrase(String listPhrase) throws JSONException, IOException, RestfulException {
+	public StatusCode addPhrase(String listPhrase, String logId) throws JSONException, IOException, RestfulException {
 		logger.info("[addPhrase] : Start");
 		JSONObject jsonObject = new JSONObject(listPhrase);
 
@@ -573,6 +583,18 @@ public class LogManager implements ILogManager {
 		while (keys.hasNext() && code == StatusCode.SUCCESS) {
 			String key = keys.next();
 			String value = jsonObject.getString(key);
+			if (lexicalCategoryFactory.getLexicalById(value).getName().equals("Food")) {
+				Thread thread = new Thread("NotifyFacebookUserThread") {
+					public void run() {
+						try {
+							notifyUser(logId, key);
+						} catch (JSONException | IOException e) {
+							logger.error("[Thread: NotifyFacebookUserThread] -- "+ e.getMessage());
+						}
+					}
+				};
+				thread.start();
+			}
 
 			Entry entry = new Entry();
 			entry.setValue(key);
@@ -775,5 +797,28 @@ public class LogManager implements ILogManager {
 			}
 		}
 		return false;
+	}
+
+	public void notifyUser(String logId, String foodName) throws JSONException, IOException {
+		logger.info("[notifyUser] : Start");
+		JSONArray logs = this.getLogs().getJSONArray(LOG_JSON_FORMAT_CONTENTS);
+		Set<String> recipients = new LinkedHashSet<String>();
+		for (int i = 0; i < logs.length(); i++) {
+			JSONObject log = logs.getJSONObject(i);
+			if (log.has(id) && log.getString(id).equals(logId) && log.has(count)) {
+				JSONArray countArr = log.getJSONArray(count);
+				for (int j = 0; j < countArr.length(); j++) {
+					File file = new File(countArr.getJSONObject(j).getString("filePath"));
+					recipients.add(file.getName());
+				}
+			}
+		}
+		if (!recipients.isEmpty()) {
+			for (String recipient : recipients) {
+				facebookFactory.sendMessage(recipient, "Món " + foodName
+						+ "  bạn yêu cầu trước đó đã được xử lý. Bạn có thể thử yêu cầu lại. Ví dụ: tìm " + foodName);
+			}
+		}
+		logger.info("[notifyUser] : End");
 	}
 }

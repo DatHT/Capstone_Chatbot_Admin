@@ -23,7 +23,7 @@ public interface ILogManager {
 
 	List<JSONObject> getAllLogsFromFile(String atDate) throws IOException, JSONException;
 
-	public StatusCode addPhrase(String listPhrase) throws JSONException, IOException, RestfulException;
+	public StatusCode addPhrase(String listPhrase, String logId) throws JSONException, IOException, RestfulException;
 
 	public List<TrainDto> getTraingPool() throws IOException;
 	
