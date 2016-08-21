@@ -294,7 +294,11 @@ public class ProductManager implements IProductManager {
 
                 productDetail.setSynonymName(productSynonym);
                 productDetail.setOriginalName(productOriginal);
-                productDetailDao.updateProductDetail(productDetail);
+                try {
+                	productDetailDao.updateProductDetail(productDetail);
+				} catch (Exception e) {
+					LOG.error(e);
+				}
             }
 
             skipResultProduct += LIMIT_RESULT_PRODUCT;
