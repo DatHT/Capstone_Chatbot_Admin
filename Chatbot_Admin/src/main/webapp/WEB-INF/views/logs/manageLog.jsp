@@ -172,7 +172,7 @@
 	<!-- End modal -->
 
 	<!-- Lexical list -->
-	<select id="listLexical">
+	<select id="listLexical" style="display: none;">
 		<option value="">----Please select----</option>
 		<c:forEach var="lexical" items="${lexicals}">
 			<option value="${lexical.id}">${lexical.name}</option>
