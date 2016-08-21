@@ -43,5 +43,10 @@ public class HomeController {
 		System.setProperty("timerActive", "false");
 		return "blank";
 	}
+	
+	@RequestMapping(value = "/accessDenied")
+	public String accessDenied() {
+		return "accessDenied";
+	}
 
 }

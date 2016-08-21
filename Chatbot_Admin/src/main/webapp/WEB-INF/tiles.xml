@@ -206,4 +206,10 @@
 		<put-attribute name="body" value="/WEB-INF/views/blank/dashboard.jsp" />
 		<put-attribute name="current" value="abc" />
 	</definition>
+	
+	<definition name="accessDenied" extends="base.definition">
+		<put-attribute name="title" value="Access denied" />
+		<put-attribute name="body" value="/WEB-INF/views/fail.jsp" />
+		<put-attribute name="current" value="accessDenied" />
+	</definition>
 </tiles-definitions>
