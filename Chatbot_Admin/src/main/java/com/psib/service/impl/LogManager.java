@@ -542,7 +542,7 @@ public class LogManager implements ILogManager {
 		String repSen2 = synonymManager.replaceSentenceBySynonym(sentence2);
 		logger.info("[checkSentence] - sentence1: " + repSen1);
 		logger.info("[checkSentence] - sentence2: " + repSen2);
-		if (SentenceUtils.checkContainSentencePercent(repSen1, repSen2) >= 0.6f) {
+		if (SentenceUtils.checkContainSentencePercent(repSen1, repSen2) >= 0.7f) {
 
 			return sentence1.trim().length() > sentence2.trim().length() ? sentence1 : sentence2;
 		}

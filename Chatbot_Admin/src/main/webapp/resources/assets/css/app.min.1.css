@@ -13954,7 +13954,7 @@ html:not(.ie9) .select.fg-line:before {
 }
 
 .fz-inner {
-  max-width: 500px;
+  max-width: 800px;
   padding: 50px;
   background-color: #546e7a;
   border-radius: 3px;
