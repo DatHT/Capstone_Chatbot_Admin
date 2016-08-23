@@ -78,6 +78,7 @@ public class ExampleController {
 
 	@RequestMapping(path = "/example", method = RequestMethod.GET)
 	public String loadExample(Model model) {
+		logger.info("[loadExample] - Start");
 		try {
 			List<IntentsDto> list = manager.getIntents();
 			model.addAttribute(INTENTS, list);
@@ -94,6 +95,7 @@ public class ExampleController {
 
 			model.addAttribute(ExampleController.LOGS, pool);
 
+			logger.info("[loadExample] - End");
 			return "example";
 		} catch (IOException e) {
 			model.addAttribute(ERROR, e.getMessage());

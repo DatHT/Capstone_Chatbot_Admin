@@ -542,7 +542,8 @@ public class LogManager implements ILogManager {
 		String repSen2 = synonymManager.replaceSentenceBySynonym(sentence2);
 		logger.info("[checkSentence] - sentence1: " + repSen1);
 		logger.info("[checkSentence] - sentence2: " + repSen2);
-		if (SentenceUtils.checkContainSentencePercent(repSen1, repSen2) >= 0.7f) {
+		float containRate = Float.valueOf(SpringPropertiesUtil.getProperty("contain_rate"));
+		if (SentenceUtils.checkContainSentencePercent(repSen1, repSen2) >= containRate) {
 
 			return sentence1.trim().length() > sentence2.trim().length() ? sentence1 : sentence2;
 		}
